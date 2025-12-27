@@ -1,0 +1,17 @@
+#pragma once
+#include "IChaosEffect.h"
+
+class ZNoHUDEffect : public IChaosEffect
+{
+public:
+    void Start() override;
+    void Stop() override;
+
+    std::string GetDisplayName() override
+    {
+        return "Where's my HUD?!";
+    }
+
+private:
+    void SetHUDVisibility(const bool p_bVisible);
+};

@@ -1,0 +1,84 @@
+#include "ZExplodeActorsOnTouchEffect.h"
+
+#include <Glacier/ZSpatialEntity.h>
+
+#include "EffectRegistry.h"
+#include "Helpers/Utils.h"
+
+#define TAG "[ZExplodeActorsOnTouchEffect] "
+
+constexpr float32 c_fRadius = 0.75f;
+
+void ZExplodeActorsOnTouchEffect::OnSlowUpdate(const float32 p_fDeltaTime, const float32 p_fEffectTimeRemaining)
+{
+    if (!m_bEnable)
+    {
+        return;
+    }
+
+    // get player pos
+    const auto s_Player = SDK()->GetLocalPlayer();
+    if (!s_Player)
+    {
+        return;
+    }
+
+    const auto s_PlayerSpatial = s_Player.m_ref.QueryInterface<ZSpatialEntity>();
+    if (!s_PlayerSpatial)
+    {
+        return;
+    }
+
+    const auto s_PlayerWM = s_PlayerSpatial->GetWorldMatrix();
+
+    // spawn explosion at all nearby actors
+    m_fNearestActorDistance = 9999.0f;
+    const auto s_aAllActors = Utils::GetActors(true, true);
+    for (auto* s_pActor : s_aAllActors)
+    {
+        ZEntityRef s_Ref;
+        s_pActor->GetID(s_Ref);
+        if (!s_Ref)
+        {
+            continue;
+        }
+
+        const auto* s_pActorSpatial = s_Ref.QueryInterface<ZSpatialEntity>();
+        if (!s_pActorSpatial)
+        {
+            continue;
+        }
+
+        auto s_ActorWM = s_pActorSpatial->GetWorldMatrix();
+        const auto s_fDistance = float4::Distance(s_PlayerWM.Trans, s_ActorWM.Trans);
+
+        m_fNearestActorDistance = s_fDistance < m_fNearestActorDistance ? s_fDistance : m_fNearestActorDistance;
+        if (s_fDistance > c_fRadius)
+        {
+            continue;
+        }
+
+        // disable for debug
+        if (!m_bSpawnExplosions)
+        {
+            continue;
+        }
+
+        // offset explosion a bit upwards so it doesn't clip into the ground
+        s_ActorWM.Trans.z += 0.25f;
+
+        SExplosionParams s_Params{
+            .m_Position = s_ActorWM,
+            .m_fTargetStrength = 10.0f,
+        };
+        SpawnExplosion(s_Params);
+    }
+}
+
+void ZExplodeActorsOnTouchEffect::OnDrawDebugUI()
+{
+    ImGui::TextUnformatted(fmt::format("Nearest Actor Distance: {}", m_fNearestActorDistance).c_str());
+    ImGui::Checkbox("Spawn Explosions", &m_bSpawnExplosions);
+}
+
+REGISTER_CHAOS_EFFECT(ZExplodeActorsOnTouchEffect)

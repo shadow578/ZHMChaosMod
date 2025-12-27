@@ -1,54 +1,207 @@
 #include "ChaosMod.h"
 
-#include <Logging.h>
-#include <IconsMaterialDesign.h>
-#include <Globals.h>
+#include "Logging.h"
 
+#include <Glacier/ZGameTime.h>
 #include <Glacier/ZGameLoopManager.h>
-#include <Glacier/ZScene.h>
+#include <Glacier/ZActor.h>
+#include <Glacier/ZSpatialEntity.h>
 
-void ChaosMod::OnEngineInitialized() {
-    Logger::Info("ChaosMod has been initialized!");
+#include "Helpers/ZTimer.h"
+#include "Helpers/Utils.h"
 
-    // Register a function to be called on every game frame while the game is in play mode.
+#include "EffectRegistry.h"
+
+#define TAG "[ChaosMod] "
+
+ChaosMod::ChaosMod() :
+    m_fFullEffectDuration(60.0f),
+    m_nVoteOptions(4),
+    m_EffectTimer(std::bind(&ChaosMod::OnEffectTimerTrigger, this), 30.0),
+    m_SlowUpdateTimer(std::bind(&ChaosMod::OnEffectSlowUpdate, this), 0.2, true) // ~5 FPS
+{
+
+}
+
+ChaosMod::~ChaosMod()
+{
+    Hooks::ZEntitySceneContext_LoadScene->RemoveDetour(&ChaosMod::OnLoadScene);
+    Hooks::ZEntitySceneContext_ClearScene->RemoveDetour(&ChaosMod::OnClearScene);
+    Hooks::ZEntitySceneContext_SetLoadingStage->RemoveDetour(&ChaosMod::OnSetLoadingStage);
+
+    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
+    {
+        if (s_Effect && s_Effect->Available())
+        {
+            Logger::Debug(TAG "Forwarding OnModUnload to '{}'", s_Effect->GetName());
+            s_Effect->OnModUnload();
+        }
+    }
+}
+
+void ChaosMod::Init()
+{
+    Hooks::ZEntitySceneContext_LoadScene->AddDetour(this, &ChaosMod::OnLoadScene);
+    Hooks::ZEntitySceneContext_ClearScene->AddDetour(this, &ChaosMod::OnClearScene);
+    Hooks::ZEntitySceneContext_SetLoadingStage->AddDetour(this, &ChaosMod::OnSetLoadingStage);
+
+    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
+    {
+        if (s_Effect && s_Effect->Available())
+        {
+            Logger::Debug(TAG "Forwarding OnModInitialized to '{}'", s_Effect->GetName());
+            s_Effect->OnModInitialized();
+        }
+    }
+}
+
+void ChaosMod::OnEngineInitialized()
+{
+    m_EffectTimer.Initialize();
+    m_SlowUpdateTimer.Initialize();
+
     const ZMemberDelegate<ChaosMod, void(const SGameUpdateEvent&)> s_Delegate(this, &ChaosMod::OnFrameUpdate);
     Globals::GameLoopManager->RegisterFrameUpdate(s_Delegate, 1, EUpdateMode::eUpdatePlayMode);
 
-    // Install a hook to print the name of the scene every time the game loads a new one.
-    Hooks::ZEntitySceneContext_LoadScene->AddDetour(this, &ChaosMod::OnLoadScene);
-}
+    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
+    {
+        if (s_Effect && s_Effect->Available())
+        {
+            Logger::Debug(TAG "Forwarding OnEngineInitialized to '{}'", s_Effect->GetName());
+            s_Effect->OnEngineInitialized();
 
-ChaosMod::~ChaosMod() {
-    // Unregister our frame update function when the mod unloads.
-    const ZMemberDelegate<ChaosMod, void(const SGameUpdateEvent&)> s_Delegate(this, &ChaosMod::OnFrameUpdate);
-    Globals::GameLoopManager->UnregisterFrameUpdate(s_Delegate, 1, EUpdateMode::eUpdatePlayMode);
-}
-
-void ChaosMod::OnDrawMenu() {
-    // Toggle our message when the user presses our button.
-    if (ImGui::Button(ICON_MD_LOCAL_FIRE_DEPARTMENT " ChaosMod")) {
-        m_ShowMessage = !m_ShowMessage;
-    }
-}
-
-void ChaosMod::OnDrawUI(bool p_HasFocus) {
-    if (m_ShowMessage) {
-        // Show a window for our mod.
-        if (ImGui::Begin("ChaosMod", &m_ShowMessage)) {
-            // Only show these when the window is expanded.
-            ImGui::Text("Hello from ChaosMod!");
+            if (!s_Effect->Available())
+            {
+                Logger::Warn(
+                    TAG "'{}' reported as unavailable during OnEngineInitialized, it will not be used.",
+                    s_Effect->GetName());
+            }
         }
-        ImGui::End();
     }
 }
 
-void ChaosMod::OnFrameUpdate(const SGameUpdateEvent &p_UpdateEvent) {
-    // This function is called every frame while the game is in play mode.
+void ChaosMod::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent)
+{
+    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
+    {
+        if (s_Effect && s_Effect->Available())
+        {
+            s_Effect->OnFrameUpdate(p_UpdateEvent, GetEffectRemainingTime(s_Effect.get()));
+        }
+    }
+
+    UpdateEffectExpiration(p_UpdateEvent.m_GameTimeDelta.ToSeconds());
+
+    while (!m_qDeferredFrameUpdateActions.empty())
+    {
+        const auto& s_Action = m_qDeferredFrameUpdateActions.front();
+        s_Action();
+
+        m_qDeferredFrameUpdateActions.pop();
+    }
 }
 
-DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnLoadScene, ZEntitySceneContext* th, ZSceneData& p_SceneData) {
-    Logger::Debug("Loading scene: {}", p_SceneData.m_sceneName);
+void ChaosMod::OnEffectSlowUpdate()
+{
+    const float s_fDeltaTime = m_SlowUpdateTimer.GetElapsedSeconds();
+
+    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
+    {
+        if (s_Effect && s_Effect->Available())
+        {
+            s_Effect->OnSlowUpdate(s_fDeltaTime, GetEffectRemainingTime(s_Effect.get()));
+        }
+    }
+}
+
+float32 ChaosMod::GetEffectRemainingTime(const IChaosEffect* p_pEffect) const
+{
+    // debug takes precedence
+    if (p_pEffect == m_pEffectForDebug)
+    {
+        return m_fDebugEffectRemainingTime;
+    }
+
+    for (const auto& s_ActiveEffect : m_aActiveEffects)
+    {
+        if (s_ActiveEffect.m_pEffect == p_pEffect)
+        {
+            return s_ActiveEffect.m_fTimeRemaining;
+        }
+    }
+
+    // not active
+    return 0.0f;
+}
+
+void ChaosMod::LoadEffectResources()
+{
+    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
+    {
+        // note s_Effect->Available() is not checked, as OnPreloadResources explicitly is allowed
+        // to run for unavailable effects
+        if (s_Effect)
+        {
+            Logger::Info(TAG "Loading Resources for '{}'", s_Effect->GetName());
+            s_Effect->LoadResources();
+        }
+    }
+}
+
+void ChaosMod::OnLoadOrClearScene()
+{
+    // ensure all active effects are stopped before unload
+    for (auto& s_Effect : m_aActiveEffects)
+    {
+        if (s_Effect.m_pEffect->Available())
+        {
+            s_Effect.m_pEffect->Stop();
+        }
+
+    }
+
+    m_EffectTimer.m_bEnable = false;
+
+    m_aCurrentVote.clear();
+    m_aActiveEffects.clear();
+}
+
+DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnLoadScene, ZEntitySceneContext* th, SSceneInitParameters&)
+{
+    OnLoadOrClearScene();
     return HookResult<void>(HookAction::Continue());
 }
 
-DECLARE_ZHM_PLUGIN(ChaosMod);
+DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnClearScene, ZEntitySceneContext* th, bool p_FullyUnloadScene)
+{
+    OnLoadOrClearScene();
+
+    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
+    {
+        if (s_Effect && s_Effect->Available())
+        {
+            Logger::Debug(TAG "Forwarding OnClearScene to '{}'", s_Effect->GetName());
+            s_Effect->OnClearScene();
+        }
+    }
+
+    return HookResult<void>(HookAction::Continue());
+}
+
+DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th, ESceneLoadingStage stage)
+{
+    // preload resources after assets are loaded in a level.
+    // loading to early (in OnEngineInit or menu screens) can cause some issues with resource loading,
+    // leading to crashes.
+    const std::string s_sSceneResource = th->GetSceneInitParameters().m_SceneResource.c_str();
+    const bool s_bIsMenu = s_sSceneResource == "assembly:/_PRO/Scenes/Frontend/Boot.entity"
+        || s_sSceneResource == "assembly:/_PRO/Scenes/Frontend/MainMenu.entity";
+    if (!s_bIsMenu && stage == ESceneLoadingStage::eLoading_AssetsLoaded)
+    {
+        LoadEffectResources();
+    }
+
+    return HookResult<void>(HookAction::Continue());
+}
+
+DEFINE_ZHM_PLUGIN(ChaosMod);
