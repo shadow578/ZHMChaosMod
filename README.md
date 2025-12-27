@@ -9,10 +9,11 @@ heavily inspired by the [GTA V chaos mod](https://github.com/gta-chaos-mod/Chaos
 ## Installation Instructions
 
 1. Download the recommended\* version of [ZHMModSDK](https://github.com/OrfeasZ/ZHMModSDK) and install it.
-2. Download the recommended\* version of `ChaosMod` and copy it to the ZHMModSDK `mods` folder (e.g. `C:\Program Files (x86)\Steam\steamapps\common\Hitman 3`).
-3. Run the game and once in the main menu, press the `~` key (`^` on QWERTZ layouts) and enable `ChaosMod` from the menu at the top of the screen (you may need to restart your game afterwards).
-4. Check the `Enable` option in the ChaosMod menu to start the chaos!
-5. Enjoy & good luck!
+2. Download the recommended\* version of `ChaosMod` and copy it to the ZHMModSDK `mods` folder (e.g. `C:\Program Files (x86)\Steam\steamapps\common\Hitman 3\Retail\mods`).
+3. Download the recommended\* version of [Companion Mod](https://github.com/shadow578/ZHMChaosModCompanion) and install it using the [Simple Mod Framework](https://github.com/atampy25/simple-mod-framework) (optional, but recommended).
+4. Run the game and once in the main menu, press the `~` key (`^` on QWERTZ layouts) and enable `ChaosMod` from the menu at the top of the screen (you may need to restart your game afterwards).
+5. Check the `Enable` option in the ChaosMod menu to start the chaos!
+6. Enjoy & good luck!
 
 \* The version to use should generally be the latest release, but check ChaosMod release notes for any specific version requirements.
 
@@ -35,6 +36,17 @@ Make sure you install the C++ and game development workloads.
 #### 3. Open the project in your IDE of choice.
 
 See instructions for [Visual Studio](https://github.com/OrfeasZ/ZHMModSDK/wiki/Setting-up-Visual-Studio-for-development) or [CLion](https://github.com/OrfeasZ/ZHMModSDK/wiki/Setting-up-CLion-for-development).
+
+#### 4. Setup Companion Mod
+
+the chaos mod utilizes a companion mod for adding custom entities and assets to the game.
+while many effects work without it, some require it to function properly.
+for development, it is highly recommended to set up the companion mod as well.
+
+to do so:
+- install SMF to your game directory into the `SMF` folder (e.g. `C:\Program Files (x86)\Steam\steamapps\common\Hitman 3\SMF`).
+- checkout the companion mod repository into the `mods` folder of SMF (e.g. `C:\Program Files (x86)\Steam\steamapps\common\Hitman 3\SMF\Mods\ZHMChaosModCompanion`).
+- any changes made to the companion mod will automatically be re-deployed when you build the chaos mod.
 
 ### Developing Effects
 

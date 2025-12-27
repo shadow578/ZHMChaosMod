@@ -47,3 +47,15 @@ install(TARGETS ChaosMod
 
 # Install the mod to the game folder when the `GAME_INSTALL_PATH` variable is set.
 zhmmodsdk_install(ChaosMod)
+
+# Deploy SMF companion mod on build if SMF was found in the game folder.
+if (EXISTS "${GAME_INSTALL_PATH}/SMF")
+  add_custom_target(run_deploy ALL
+    COMMAND "${GAME_INSTALL_PATH}/SMF/Deploy.exe"
+    WORKING_DIRECTORY "${GAME_INSTALL_PATH}/SMF"
+    COMMENT "Deploy SMF companion mod."
+    VERBATIM
+  )
+else ()
+  message(WARNING "SMF not found, companion mod will not be deployed automatically.")
+endif ()

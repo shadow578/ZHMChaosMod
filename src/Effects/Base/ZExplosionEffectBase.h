@@ -6,7 +6,6 @@ class ZExplosionEffectBase : public virtual IChaosEffect
 {
 public:
     void LoadResources() override;
-    bool Available() const override;
     void OnDrawDebugUI() override;
 
 protected:
@@ -21,7 +20,4 @@ protected:
     };
 
     void SpawnExplosion(const SExplosionParams& p_Params);
-
-private:
-    bool SpawnExplosionEntity(ZEntityRef& p_RootEntityRef, ZEntityRef& p_ExplosionEntity, ZEntityRef& p_TriggerEntityRef);
 };
