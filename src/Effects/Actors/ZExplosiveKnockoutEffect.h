@@ -5,7 +5,7 @@
 class ZExplosiveKnockoutEffect : public ZActorWellbeingChangeEffectBase, public ZExplosionEffectBase
 {
 public:
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const override
     {
         return "Explosive Knockout";
     }

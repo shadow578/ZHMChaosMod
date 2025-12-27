@@ -22,7 +22,7 @@ void ZPlayerFlatulenceEffect::OnDrawDebugUI()
     ZSoundFXEffectBase::OnDrawDebugUI();
 }
 
-bool ZPlayerFlatulenceEffect::Available() 
+bool ZPlayerFlatulenceEffect::Available() const
 {
     return ZPoisonAOEDamageEffectBase::Available() &&
            ZSoundFXEffectBase::Available();

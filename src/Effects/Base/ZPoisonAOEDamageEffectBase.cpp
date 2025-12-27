@@ -619,7 +619,7 @@ void ZPoisonAOEDamageEffectBase::LoadResources()
     g_AOECloudProp.LoadAsync();
 }
 
-bool ZPoisonAOEDamageEffectBase::Available()
+bool ZPoisonAOEDamageEffectBase::Available() const
 {
     return IChaosEffect::Available() &&
         g_AOECloudProp.Ready();

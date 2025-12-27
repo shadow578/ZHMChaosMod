@@ -15,12 +15,12 @@ public:
     void Start() override;
     void Stop() override;
 
-    std::string GetName() override
+    std::string GetName() const override
     {
         return ZGravityModifierEffectBase::GetName() + "_" + m_sNameSuffix;
     }
 
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const override
     {
         return m_sDisplayName;
     }

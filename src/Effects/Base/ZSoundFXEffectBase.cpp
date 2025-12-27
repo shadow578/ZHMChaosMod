@@ -129,7 +129,7 @@ void ZSoundFXEffectBase::LoadResources()
     g_SFXPlayerProp.LoadAsync();
 }
 
-bool ZSoundFXEffectBase::Available()
+bool ZSoundFXEffectBase::Available() const
 {
     return IChaosEffect::Available() &&
         g_SFXPlayerProp.Ready();

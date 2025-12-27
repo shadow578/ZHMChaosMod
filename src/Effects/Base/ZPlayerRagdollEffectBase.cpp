@@ -52,7 +52,7 @@ void ZPlayerRagdollEffectBase::Stop()
     }
 }
 
-bool ZPlayerRagdollEffectBase::Available()
+bool ZPlayerRagdollEffectBase::Available() const
 {
 
     return (m_bPowered ?

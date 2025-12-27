@@ -11,7 +11,7 @@ class IUnlocker
 {
 public:
     virtual void Start() = 0;
-    virtual bool Available() { return true; }
+    virtual bool Available() const { return true; }
     
     virtual std::string GetName() const;
     virtual std::string GetDisplayName() const = 0;

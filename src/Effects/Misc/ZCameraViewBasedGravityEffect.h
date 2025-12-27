@@ -8,7 +8,7 @@ public:
     void Stop() override;
     void OnSlowUpdate(const float32 p_fDeltaTime, const float32 p_fEffectTimeRemaining) override;
 
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const override
     {
         return "Camera View Based Gravity";
     }

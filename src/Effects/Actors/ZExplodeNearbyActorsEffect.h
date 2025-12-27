@@ -11,12 +11,12 @@ class ZExplodeNearbyActorsEffect : public ZExplosionEffectBase
 public:
     void Start() override;
 
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const override
     {
         return "Obliterate All Nearby Actors";
     }
 
-    EDuration GetDuration() override
+    EDuration GetDuration() const override
     {
         return EDuration::OneShot;
     }

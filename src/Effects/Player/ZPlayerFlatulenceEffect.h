@@ -6,15 +6,15 @@ class ZPlayerFlatulenceEffect : public ZPoisonAOEDamageEffectBase, public ZSound
 {
     void LoadResources() override;
     void OnDrawDebugUI() override;
-    bool Available() override;
+    bool Available() const  override;
     void Start() override;
 
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const override
     {
         return "Flatulence";
     }
 
-    EDuration GetDuration() override
+    EDuration GetDuration() const override
     {
         return EDuration::OneShot;
     }

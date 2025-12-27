@@ -214,7 +214,7 @@ void ZExplosionEffectBase::LoadResources()
     g_ExplosionProp.LoadAsync();
 }
 
-bool ZExplosionEffectBase::Available()
+bool ZExplosionEffectBase::Available() const
 {
     return IChaosEffect::Available() &&
         g_ExplosionProp.Ready();

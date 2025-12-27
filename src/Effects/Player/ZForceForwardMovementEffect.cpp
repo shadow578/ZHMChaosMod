@@ -19,7 +19,7 @@ void ZForceForwardMovementEffect::OnModUnload()
     Hooks::ZInputAction_Analog->RemoveDetour(&ZForceForwardMovementEffect::OnInputActionAnalog);
 }
 
-bool ZForceForwardMovementEffect::Available()
+bool ZForceForwardMovementEffect::Available() const
 {
     return IChaosEffect::Available() &&
         Hooks::ZInputAction_Analog != nullptr;

@@ -7,7 +7,7 @@ public:
     void Start() override;
     void Stop() override;
 
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const override
     {
         return "Where's my HUD?!";
     }

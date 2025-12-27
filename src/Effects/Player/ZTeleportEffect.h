@@ -9,12 +9,12 @@ class ZTeleportEffect : public IChaosEffect
     void OnDrawDebugUI() override;
     void Start() override;
 
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const override
     {
         return "Teleport Player";
     }
 
-    EDuration GetDuration() override
+    EDuration GetDuration() const override
     {
         return EDuration::OneShot;
     }

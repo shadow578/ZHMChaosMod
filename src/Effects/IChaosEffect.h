@@ -102,7 +102,7 @@ public:
      * @see IChaosEffect::GetName, @see IChaosEffect::GetDisplayName, 
      * @see LoadResources may be called.
      */
-    virtual bool Available() { return m_bIsAvailable; }
+    virtual bool Available() const { return m_bIsAvailable; }
 
     /**
      * Called at a suitable time for loading of dynamic resources to occur.
@@ -123,23 +123,23 @@ public:
      * Get the internal name of the effect, e.g. for debug menu and settings.
      * Default implementation returns the C++ type name.
      */
-    virtual std::string GetName();
+    virtual std::string GetName() const;
 
     /**
      * Get the display name of the effect, e.g. for enduser facing UI.
      * Default implementation returns @see IChaosEffect::GetName.
      */
-    virtual std::string GetDisplayName(const bool p_bVoting) { return GetDisplayName(); }
+    virtual std::string GetDisplayName(const bool p_bVoting) const { return GetDisplayName(); }
 
     /**
      * Get for how long this effect should remain active.
      * Duration does NOT affect calls to the effect, only how long it is remaining active.
      * OneShot effects DO have Stop() called after some delay.
      */
-    virtual EDuration GetDuration() { return EDuration::Full; }
+    virtual EDuration GetDuration() const { return EDuration::Full; }
 
 protected:
     bool m_bIsAvailable = true;
 
-    virtual std::string GetDisplayName() { return GetName(); }
+    virtual std::string GetDisplayName() const { return GetName(); }
 };

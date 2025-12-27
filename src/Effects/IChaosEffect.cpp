@@ -2,7 +2,7 @@
 
 #include <typeinfo>
 
-std::string IChaosEffect::GetName()
+std::string IChaosEffect::GetName() const
 {
     std::string s_Name = typeid(*this).name();
 

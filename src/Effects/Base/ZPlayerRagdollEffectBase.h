@@ -10,7 +10,7 @@ public:
     void Start() override;
     void Stop() override;
 
-    bool Available() override;
+    bool Available() const override;
     bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
 
 private:

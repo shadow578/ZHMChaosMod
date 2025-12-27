@@ -30,7 +30,7 @@ public:
     {
     }
     
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const override
     {
         return "Social Anxiety Mode";
     }
@@ -44,7 +44,7 @@ public:
     {
     }
     
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const override
     {
         return "Guard-Level Instinct";
     }

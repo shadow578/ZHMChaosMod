@@ -17,12 +17,12 @@ public:
 
     void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining) override;
 
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const override
     {
         return "Turn Turtle";
     }
 
-    EDuration GetDuration() override
+    EDuration GetDuration() const override
     {
         return EDuration::Short; // painful!
     }

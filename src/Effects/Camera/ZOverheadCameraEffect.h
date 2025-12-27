@@ -17,7 +17,7 @@ public:
 
     void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining) override;
 
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const override
     {
         return "GTA1 Mode";
     }

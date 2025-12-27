@@ -17,17 +17,17 @@ void ZSlowTimeScaleEffect::Stop()
     Globals::GameTimeManager->m_fTimeMultiplier1 = m_fPreviousTimeScale;
 }
 
-std::string ZSlowTimeScaleEffect::GetName()
+std::string ZSlowTimeScaleEffect::GetName() const
 {
     return IChaosEffect::GetName() + "_" + std::to_string(static_cast<int>(m_fTargetTimeScale*100));
 }
 
-std::string ZSlowTimeScaleEffect::GetDisplayName()
+std::string ZSlowTimeScaleEffect::GetDisplayName() const
 {
     return fmt::format("{:.1f}x Game Speed", m_fTargetTimeScale);
 }
 
-IChaosEffect::EDuration ZSlowTimeScaleEffect::GetDuration()
+IChaosEffect::EDuration ZSlowTimeScaleEffect::GetDuration() const
 {
     // slower than normal -> short duration
     return (m_fTargetTimeScale < 1.0f) ? EDuration::Short : EDuration::Full;

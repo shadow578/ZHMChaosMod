@@ -15,12 +15,12 @@ public:
     void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining) override;
     void OnDrawDebugUI() override;
 
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const override
     {
         return "Console Experience";
     }
 
-    EDuration GetDuration() override
+    EDuration GetDuration() const override
     {
         return EDuration::Short; // painful!
     }

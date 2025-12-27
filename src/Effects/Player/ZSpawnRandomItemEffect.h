@@ -21,17 +21,17 @@ public:
     void OnDrawDebugUI() override;
     void OnClearScene() override;
 
-    std::string GetName() override
+    std::string GetName() const override
     {
         return IChaosEffect::GetName() + "_" + std::to_string(m_pCount);
     }
 
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const override
     {
         return m_sDisplayName;
     }
 
-    EDuration GetDuration() override
+    EDuration GetDuration() const override
     {
         return EDuration::OneShot;
     }

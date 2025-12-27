@@ -10,11 +10,11 @@ public:
     void Start() override;
     void Stop() override;
 
-    std::string GetName() override;
-    std::string GetDisplayName() override;
-    EDuration GetDuration() override;
+    std::string GetName() const override;
+    std::string GetDisplayName() const override;
+    EDuration GetDuration() const override;
 
 private:
-    float32 m_fTargetTimeScale = 0.2f;
+    const float32 m_fTargetTimeScale = 0.2f;
     float32 m_fPreviousTimeScale = 1.0f;
 };

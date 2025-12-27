@@ -6,13 +6,13 @@ class ZInvertControlsEffect : public IChaosEffect
 public:
     void OnModInitialized() override;
     void OnModUnload() override;
-    bool Available() override;
+    bool Available() const override;
     bool IsCompatibleWith(const IChaosEffect* p_pOtherEffect) const override;
 
     void Start() override;
     void Stop() override;
 
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const  override
     {
         return "Inverted Controls";
     }

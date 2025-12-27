@@ -13,9 +13,9 @@ public:
 
     void Start() override;
     void Stop() override;
-    bool Available() override;
+    bool Available() const override;
 
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const  override
     {
         return "Authoritative Figure";
     }

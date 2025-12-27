@@ -21,7 +21,7 @@ void ZDisableInputsEffect::OnModUnload()
     Hooks::ZInputAction_Analog->RemoveDetour(&ZDisableInputsEffect::OnInputActionAnalog);
 }
 
-bool ZDisableInputsEffect::Available()
+bool ZDisableInputsEffect::Available() const
 {
     return IChaosEffect::Available() &&
         Hooks::ZInputAction_Digital != nullptr &&

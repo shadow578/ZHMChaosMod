@@ -19,7 +19,7 @@ void ZInvertControlsEffect::OnModUnload()
     Hooks::ZInputAction_Analog->RemoveDetour(&ZInvertControlsEffect::OnInputActionAnalog);
 }
 
-bool ZInvertControlsEffect::Available()
+bool ZInvertControlsEffect::Available() const
 {
     return IChaosEffect::Available() &&
         Hooks::ZInputAction_Analog != nullptr;

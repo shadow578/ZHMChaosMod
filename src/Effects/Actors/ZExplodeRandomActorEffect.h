@@ -8,12 +8,12 @@ public:
     void Start() override;
     void OnDrawDebugUI() override;
 
-    std::string GetDisplayName() override
+    std::string GetDisplayName() const override
     {
         return "Random Actor Goes Boom";
     }
 
-    EDuration GetDuration() override
+    EDuration GetDuration() const override
     {
         return EDuration::OneShot;
     }

@@ -6,7 +6,7 @@ class ZExplosionEffectBase : public virtual IChaosEffect
 {
 public:
     void LoadResources() override;
-    bool Available() override;
+    bool Available() const override;
     void OnDrawDebugUI() override;
 
 protected:

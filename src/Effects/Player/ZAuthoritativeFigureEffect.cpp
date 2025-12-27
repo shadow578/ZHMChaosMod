@@ -55,7 +55,7 @@ void ZAuthoritativeFigureEffect::Stop()
     m_SelectedOutfit.m_pInterfaceRef->m_bWeaponsAllowed = m_bOriginalWeaponsAllowed;
 }
 
-bool ZAuthoritativeFigureEffect::Available()
+bool ZAuthoritativeFigureEffect::Available() const
 {
     return IChaosEffect::Available() && Globals::ContentKitManager != nullptr;
 }
