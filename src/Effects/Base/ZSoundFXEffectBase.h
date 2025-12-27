@@ -8,12 +8,8 @@ class ZSoundFXEffectBase : public virtual IChaosEffect
 {
 public:
     void LoadResources() override;
-    bool Available() const override;
     void OnDrawDebugUI() override;
 
 protected:
     void PlayAt(const SMatrix& p_Position, const ZRuntimeResourceID& p_SoundResource);
-
-private:
-    bool SpawnEntity(ZEntityRef& p_RootEntity);
 };

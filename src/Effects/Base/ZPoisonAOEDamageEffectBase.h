@@ -8,7 +8,6 @@ class ZPoisonAOEDamageEffectBase : public virtual IChaosEffect
 {
 public:
     void LoadResources() override;
-    bool Available() const override;
     void OnDrawDebugUI() override;
 
     // Note: poison type values must match those of the Keyword_ITEM_POISON_* entities
@@ -16,10 +15,10 @@ public:
     // for debug to work, you must also add any new one in OnDrawDebugUI().
     enum class EPoisonType
     {
-        SICK = 0x0021,
-        SEDATIVE = 0x0022,
-        LETHAL_SLOW = 0x0023,
-        LETHAL_FAST = 0x0024
+        SICK = 0xe001,
+        SEDATIVE = 0xe002,
+        LETHAL_SLOW = 0xe003,
+        LETHAL_FAST = 0xe004
     };
 
 protected:
@@ -35,7 +34,6 @@ protected:
     void Spawn(const SParams& p_Params);
 
 private:
-    bool SpawnEntity(ZEntityRef& p_RootEntity);
     bool GetPoisonKeywordEntity(const EPoisonType p_eType, ZEntityRef p_RootEntity, ZEntityRef& p_KeywordEntity);
 
     EPoisonType m_eDebugPoisonType = EPoisonType::SICK;

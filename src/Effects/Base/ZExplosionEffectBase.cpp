@@ -2,11 +2,7 @@
 
 #include "IPluginInterface.h"
 
-#include <Glacier/ZModule.h>
-#include <Glacier/ZEntity.h>
 #include <Glacier/ZSpatialEntity.h>
-#include <Glacier/ZHitman5.h>
-#include <Glacier/SExternalReferences.h>
 
 #include "Helpers/ZEntityResourceSpawner.h"
 

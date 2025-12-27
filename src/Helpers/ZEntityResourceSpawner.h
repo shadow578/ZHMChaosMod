@@ -7,7 +7,7 @@
 class ZEntityResourceSpawnerImpl
 {
 public:
-	TResourcePtr<ZTemplateEntityFactory> GetResourcePointer() const;
+	TResourcePtr<ZTemplateEntityFactory> GetResource() const;
 	ZEntityRef Spawn() const;
 	
 	template <typename T>

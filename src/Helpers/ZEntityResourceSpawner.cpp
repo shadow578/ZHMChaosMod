@@ -10,19 +10,25 @@
 
 #define TAG "[ZEntityResourceSpawner] "
 
-TResourcePtr<ZTemplateEntityFactory> ZEntityResourceSpawnerImpl::GetResourcePointer() const
+TResourcePtr<ZTemplateEntityFactory> ZEntityResourceSpawnerImpl::GetResource() const
 {
 	const auto s_ResourceId = GetResourceID();
 
     TResourcePtr<ZTemplateEntityFactory> s_ResourcePtr;
     if (!Globals::ResourceManager->GetResourcePtr(s_ResourcePtr, s_ResourceId, 0) || !s_ResourcePtr)
     {
-        Logger::Debug(TAG "resource '{}' not loaded, attempting to load now", m_sResourcePath);
+        Logger::Debug(TAG "resource '{}' ({:016X}) not loaded, attempting to load now", m_sResourcePath, m_ResourceID.GetID());
 
         if (!Globals::ResourceManager->LoadResource(s_ResourcePtr, s_ResourceId) || !s_ResourcePtr)
         {
-            Logger::Debug(TAG "resource '{}' failed to load", m_sResourcePath);
+            Logger::Debug(TAG "resource '{}' (:016X) failed to load", m_sResourcePath, m_ResourceID.GetID());
             return {};
+        }
+
+        while (!Globals::ResourceManager->DoneLoading())
+        {
+            Logger::Debug("Waiting for resources to load (left: {})!", Globals::ResourceManager->m_nNumProcessing);
+            Globals::ResourceManager->Update(true);
         }
     }
 
@@ -38,7 +44,7 @@ ZEntityRef ZEntityResourceSpawnerImpl::Spawn() const
         return {};
     }
 
-	const auto s_PropFactory = GetResourcePointer();
+	const auto s_PropFactory = GetResource();
     if (!s_PropFactory)
     {
         Logger::Debug(TAG "Cannot spawn entity from resource '{}', resource not loaded.", m_sResourcePath);
@@ -78,7 +84,7 @@ bool ZEntityResourceSpawnerImpl::IsAvailable(const bool p_bAllowCheck)
     // not checked, check now
     if (!m_bAvailableChecked)
     {
-        m_bAvailable = GetResourcePointer();
+        m_bAvailable = GetResource();
 		m_bAvailableChecked = true;
     }
 
