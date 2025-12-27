@@ -8,6 +8,7 @@
 class ZCameraEffectBase : public virtual IChaosEffect
 {
 public:
+    void LoadResources() override;
     void Start() override;
     void Stop() override;
     void OnClearScene() override;

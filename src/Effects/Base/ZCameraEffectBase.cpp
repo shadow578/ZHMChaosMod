@@ -9,8 +9,16 @@
 
 #include "Helpers/Utils.h"
 #include "Helpers/CameraUtils.h"
+#include "Helpers/ZEntityResourceSpawner.h"
 
 #define TAG "[ZCameraEffectBase] "
+
+static ZEntityResourceSpawner<"[assembly:/templates/core/hm5camera.template?/compositeentity_norenderdestination.entitytemplate].pc_entitytype"> g_CameraEntityProp;
+
+void ZCameraEffectBase::LoadResources()
+{
+    m_bIsAvailable = g_CameraEntityProp.IsAvailable();
+}
 
 void ZCameraEffectBase::Start()
 {
@@ -61,6 +69,8 @@ void ZCameraEffectBase::OnClearScene()
 
 void ZCameraEffectBase::OnDrawDebugUI()
 {
+    ImGui::TextUnformatted(fmt::format("Camera Prop: {}", g_CameraEntityProp.ToString()).c_str());
+
     ImGui::TextUnformatted(fmt::format("Effect Camera Active: {}", m_bEffectCameraActive ? "Yes" : "No").c_str());
     ImGui::TextUnformatted(fmt::format("Effect Camera Entity: {}", m_EffectCameraEntity ? "Valid" : "Invalid").c_str());
     ImGui::TextUnformatted(fmt::format("Original Camera Entity: {}", m_OriginalCameraEntity ? "Valid" : "Invalid").c_str());
@@ -88,30 +98,7 @@ bool ZCameraEffectBase::EnsureCameraEntity()
         return false;
     }
 
-    // spawning "[modules:/zcameraentity.class].pc_entitytype" directly didn't work, so 
-    // use a template that contains a camera entity and "steal" it from there
-    const auto s_RuntimeResourceId = ResId<"[assembly:/templates/core/hm5camera.template?/compositeentity_norenderdestination.entitytemplate].pc_entitytype">;
-
-    TResourcePtr<ZTemplateEntityFactory> s_Resource;
-    Globals::ResourceManager->GetResourcePtr(s_Resource, s_RuntimeResourceId, 0);
-    if (!s_Resource)
-    {
-        Logger::Debug(TAG "Resource is not loaded.");
-        return false;
-    }
-
-    ZEntityRef m_CameraHolderEntity;
-    SExternalReferences s_DummyExternalRefs;
-
-    Functions::ZEntityManager_NewEntity->Call(
-        Globals::EntityManager,
-        m_CameraHolderEntity,
-        "",
-        s_Resource,
-        s_Scene.m_ref,
-        s_DummyExternalRefs,
-        -1
-    );
+    auto m_CameraHolderEntity = g_CameraEntityProp.Spawn();
     if (!m_CameraHolderEntity)
     {
         Logger::Debug(TAG "Could not spawn camera entity.");
