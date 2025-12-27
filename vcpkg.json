@@ -1,5 +1,5 @@
 {
-    "name": "mymod",
+    "name": "chaosmod",
     "version": "1.0.0",
     "dependencies": [
         "directx-headers"

@@ -4,19 +4,19 @@
 
 #include <Glacier/SGameUpdateEvent.h>
 
-class MyMod : public IPluginInterface {
+class ChaosMod : public IPluginInterface {
 public:
     void OnEngineInitialized() override;
-    ~MyMod() override;
+    ~ChaosMod() override;
     void OnDrawMenu() override;
     void OnDrawUI(bool p_HasFocus) override;
 
 private:
     void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent);
-    DECLARE_PLUGIN_DETOUR(MyMod, void, OnLoadScene, ZEntitySceneContext* th, ZSceneData& p_SceneData);
+    DECLARE_PLUGIN_DETOUR(ChaosMod, void, OnLoadScene, ZEntitySceneContext* th, ZSceneData& p_SceneData);
 
 private:
     bool m_ShowMessage = false;
 };
 
-DEFINE_ZHM_PLUGIN(MyMod)
+DEFINE_ZHM_PLUGIN(ChaosMod)
