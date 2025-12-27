@@ -20,6 +20,9 @@ namespace Utils
 
             // by entity type. empty = no search by type
             std::string m_sEntityType = "";
+
+			// maximum result count. 0 = no limit
+			size_t m_nMaxResults = 0;
         };
 
         /**

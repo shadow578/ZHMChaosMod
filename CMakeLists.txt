@@ -4,16 +4,27 @@ project(ChaosMod CXX)
 
 # Find latest version at https://github.com/OrfeasZ/ZHMModSDK/releases
 # Set ZHMMODSDK_DIR variable to a local directory to use a local copy of the ZHMModSDK.
-set(ZHMMODSDK_VER "v4.0.0-rc.1")
+set(ZHMMODSDK_VER "v4.0.0-rc.2")
 include(cmake/setup-zhmmodsdk.cmake)
 
 # Set C++ standard to C++23.
 set(CMAKE_CXX_STANDARD 23)
 
 # Create the ChaosMod mod library.
+file(GLOB_RECURSE SRC_FILES
+        CONFIGURE_DEPENDS
+        src/*.cpp
+        src/*.c
+        src/*.hpp
+        src/*.h
+)
+
 add_library(ChaosMod SHARED
-    src/ChaosMod.cpp
-    src/ChaosMod.h
+    ${SRC_FILES}
+)
+
+target_include_directories(ChaosMod PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 # Set UTF-8 flag.

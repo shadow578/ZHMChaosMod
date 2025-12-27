@@ -3,7 +3,7 @@
 #include "Logging.h"
 
 #include <IconsMaterialDesign.h>
-#include <imgui_internal.h>
+#include <imgui.h>
 
 #include "EffectRegistry.h"
 #include "Helpers/ImGuiExtras.h"

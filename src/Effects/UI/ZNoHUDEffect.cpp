@@ -4,6 +4,7 @@
 #include "Logging.h"
 
 #include "EffectRegistry.h"
+#include "Helpers/EntityUtils.h"
 
 #define TAG "[ZNoHUDEffect] "
 
@@ -27,12 +28,20 @@ void ZNoHUDEffect::Stop()
 
 void ZNoHUDEffect::SetHUDVisibility(const bool p_bVisible)
 {
-    if (auto s_HUDRoot = SDK()->GetEntityById(c_nHUDRootId))
+    const Utils::EntityFinder::SSearchParams s_Query{
+        .m_nEntityId = c_nHUDRootId,
+        .m_nMaxResults = 1
+    };
+    auto s_aEntities = Utils::EntityFinder::FindEntities(s_Query);
+    if (s_aEntities.empty())
     {
-        if (!s_HUDRoot.SetProperty(c_sHudVisibilityPropertyName, p_bVisible))
-        {
-            Logger::Debug(TAG "Failed to set visibility property on HUD root entity.");
-        }
+        return;
+    }
+
+    auto& s_HUDRoot = s_aEntities.front();
+    if (!s_HUDRoot.SetProperty(c_sHudVisibilityPropertyName, p_bVisible))
+    {
+        Logger::Debug(TAG "Failed to set visibility property on HUD root entity.");
     }
 }
 

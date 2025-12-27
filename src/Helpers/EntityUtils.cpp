@@ -94,9 +94,17 @@ std::vector<ZEntityRef> Utils::EntityFinder::FindEntities(const SSearchParams& p
                     s_aFoundEntities.push_back(s_SubEntity);
                 }
             }
+
+            // check max results limit
+            if (p_Params.m_nMaxResults > 0 &&
+                s_aFoundEntities.size() >= p_Params.m_nMaxResults)
+            {
+				goto after_outer_loop;
+			}
         }
     }
 
+after_outer_loop:
     return s_aFoundEntities;
 }
 

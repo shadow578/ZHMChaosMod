@@ -3,6 +3,9 @@
 #include "IPluginInterface.h"
 
 #include "EffectRegistry.h"
+#include "Helpers/EntityUtils.h"
+
+#define TAG "[ZMinimapNoActorsEffect] "
 
 /**
  * Static Entity ID for Minimap entity.
@@ -15,18 +18,30 @@ const std::string c_sMinimapTypePropertyName = "m_eMapType";
 
 void ZMinimapNoActorsEffect::Start()
 {
-    if (auto p_MinimapEntity = SDK()->GetEntityById(c_nMinimapRootId))
-    {
-        // MenuMap (and MainMap) = no NPCs, MiniMap = with 
-        p_MinimapEntity.SetProperty(c_sMinimapTypePropertyName, EMapType::E_MAPTYPE_MenuMap);
-    }
+	SetMinimapType(EMapType::E_MAPTYPE_MenuMap);
 }
 
 void ZMinimapNoActorsEffect::Stop()
 {
-    if (auto p_MinimapEntity = SDK()->GetEntityById(c_nMinimapRootId))
+	SetMinimapType(EMapType::E_MAPTYPE_Minimap);
+}
+
+void ZMinimapNoActorsEffect::SetMinimapType(const EMapType p_eMapType)
+{
+    const Utils::EntityFinder::SSearchParams s_Query{
+        .m_nEntityId = c_nMinimapRootId,
+        .m_nMaxResults = 1
+    };
+    auto s_aEntities = Utils::EntityFinder::FindEntities(s_Query);
+    if (s_aEntities.empty())
     {
-        p_MinimapEntity.SetProperty(c_sMinimapTypePropertyName, EMapType::E_MAPTYPE_Minimap);
+        return;
+    }
+
+    auto& s_MinimapRoot = s_aEntities.front();
+    if (!s_MinimapRoot.SetProperty(c_sMinimapTypePropertyName, p_eMapType))
+    {
+        Logger::Debug(TAG "Failed to set minimap type.");
     }
 }
 

@@ -11,4 +11,7 @@ public:
     {
         return "No Actors on Minimap";
     }
+
+private:
+	void SetMinimapType(const EMapType p_eMapType);
 };

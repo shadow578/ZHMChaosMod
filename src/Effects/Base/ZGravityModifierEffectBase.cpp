@@ -4,6 +4,7 @@
 #include "Logging.h"
 
 #include "Helpers/Utils.h"
+#include "Helpers/EntityUtils.h"
 
 #define TAG "[ZGravityModifierEffectBase] "
 
@@ -28,12 +29,20 @@ void ZGravityModifierEffectBase::RestoreDefaultGravity()
 
 void ZGravityModifierEffectBase::SetGravity(const SVector3 p_vGravity)
 {
-    if (auto p_PhysicsWorld = SDK()->GetEntityById(c_nPhysicsWorldId))
+    const Utils::EntityFinder::SSearchParams s_Query{
+        .m_nEntityId = c_nPhysicsWorldId,
+        .m_nMaxResults = 1
+    };
+    auto s_aEntities = Utils::EntityFinder::FindEntities(s_Query);
+    if (s_aEntities.empty())
     {
-        if (!p_PhysicsWorld.SetProperty(c_sGravityPropertyName, p_vGravity))
-        {
-            Logger::Debug(TAG "Failed to set gravity property on PhysicsWorld entity.");
-        }
+        return;
+    }
+
+    auto& s_HUDRoot = s_aEntities.front();
+    if (!s_HUDRoot.SetProperty(c_sGravityPropertyName, p_vGravity))
+    {
+        Logger::Debug(TAG "Failed to set gravity property on PhysicsWorld entity.");
     }
 }
 
