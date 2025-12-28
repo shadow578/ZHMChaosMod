@@ -5,6 +5,7 @@
 class ZPlayerFlatulenceEffect : public ZPoisonAOEDamageEffectBase, public ZSoundFXEffectBase
 {
     void LoadResources() override;
+	void OnClearScene() override;
     void OnDrawDebugUI() override;
     bool Available() const  override;
     void Start() override;

@@ -9,15 +9,21 @@
 
 #include "Helpers/Utils.h"
 #include "Helpers/CameraUtils.h"
-#include "Helpers/ZEntityResourceSpawner.h"
 
 #define TAG "[ZCameraEffectBase] "
 
-static ZEntityResourceSpawner<"[assembly:/templates/core/hm5camera.template?/compositeentity_norenderdestination.entitytemplate].pc_entitytype"> g_CameraEntityProp;
+static ZTemplateEntitySpawner<"[assembly:/templates/core/hm5camera.template?/compositeentity_norenderdestination.entitytemplate].pc_entitytype"> g_CameraEntityProp;
 
 void ZCameraEffectBase::LoadResources()
 {
-    m_bIsAvailable = g_CameraEntityProp.IsAvailable();
+	m_pCameraSpawner = g_CameraEntityProp.CreateSession();
+}
+
+bool ZCameraEffectBase::Available() const
+{
+    return IChaosEffect::Available() &&
+        m_pCameraSpawner &&
+        m_pCameraSpawner->IsAvailable();
 }
 
 void ZCameraEffectBase::Start()
@@ -65,11 +71,12 @@ void ZCameraEffectBase::OnClearScene()
     m_bEffectCameraActive = false;
     m_EffectCameraEntity = {};
     m_OriginalCameraEntity = {};
+	m_pCameraSpawner = nullptr;
 }
 
 void ZCameraEffectBase::OnDrawDebugUI()
 {
-    ImGui::TextUnformatted(fmt::format("Camera Prop: {}", g_CameraEntityProp.ToString()).c_str());
+    ImGui::TextUnformatted(fmt::format("Camera Prop: {}", m_pCameraSpawner->ToString()).c_str());
 
     ImGui::TextUnformatted(fmt::format("Effect Camera Active: {}", m_bEffectCameraActive ? "Yes" : "No").c_str());
     ImGui::TextUnformatted(fmt::format("Effect Camera Entity: {}", m_EffectCameraEntity ? "Valid" : "Invalid").c_str());
@@ -98,7 +105,13 @@ bool ZCameraEffectBase::EnsureCameraEntity()
         return false;
     }
 
-    auto m_CameraHolderEntity = g_CameraEntityProp.Spawn();
+    if (!m_pCameraSpawner)
+    {
+        Logger::Debug(TAG "Camera spawner session not initialized.");
+        return false;
+    }
+
+	auto m_CameraHolderEntity = m_pCameraSpawner->Spawn();
     if (!m_CameraHolderEntity)
     {
         Logger::Debug(TAG "Could not spawn camera entity.");

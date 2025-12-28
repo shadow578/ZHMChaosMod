@@ -13,6 +13,12 @@ void ZPlayerFlatulenceEffect::LoadResources()
     ZSoundFXEffectBase::LoadResources();
 }
 
+void ZPlayerFlatulenceEffect::OnClearScene() 
+{
+    ZPoisonAOEDamageEffectBase::OnClearScene();
+    ZSoundFXEffectBase::OnClearScene();
+}
+
 void ZPlayerFlatulenceEffect::OnDrawDebugUI() 
 {
     ImGui::SeparatorText("ZPoisonAOEDamageEffectBase");

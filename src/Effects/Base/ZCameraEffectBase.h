@@ -5,14 +5,18 @@
 #include <Glacier/ZEntity.h>
 #include <Glacier/ZCameraEntity.h>
 
+#include "Helpers/ZTemplateEntitySpawner.h"
+
 class ZCameraEffectBase : public virtual IChaosEffect
 {
 public:
     void LoadResources() override;
-    void Start() override;
-    void Stop() override;
     void OnClearScene() override;
     void OnDrawDebugUI() override;
+	bool Available() const override;
+    
+    void Start() override;
+    void Stop() override;
 
     bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
 
@@ -34,6 +38,7 @@ protected:
 
 private:
     bool EnsureCameraEntity();
+    std::unique_ptr<ZTemplateEntitySpawnerSession> m_pCameraSpawner;
 
     bool m_bEffectCameraActive = false;
     ZEntityRef m_EffectCameraEntity;

@@ -4,11 +4,16 @@
 
 #include <Glacier/SColorRGB.h>
 
+#include "Helpers/ZTemplateEntitySpawner.h"
+
 class ZPoisonAOEDamageEffectBase : public virtual IChaosEffect
 {
 public:
     void LoadResources() override;
+    void OnClearScene() override;
     void OnDrawDebugUI() override;
+
+	bool Available() const override;
 
     // Note: poison type values must match those of the Keyword_ITEM_POISON_* entities
     // in the g_AOECloudProp template.
@@ -36,5 +41,6 @@ protected:
 private:
     bool GetPoisonKeywordEntity(const EPoisonType p_eType, ZEntityRef p_RootEntity, ZEntityRef& p_KeywordEntity);
 
+    std::unique_ptr<ZTemplateEntitySpawnerSession> m_pEffectCloudSpawner;
     EPoisonType m_eDebugPoisonType = EPoisonType::SICK;
 };

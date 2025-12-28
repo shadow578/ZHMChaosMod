@@ -5,22 +5,32 @@
 
 #include <Glacier/ZSpatialEntity.h>
 
-#include "Helpers/ZEntityResourceSpawner.h"
-
 #define TAG "[ZSoundFXEffectBase] "
 
-static ZEntityResourceSpawner<"[assembly:/_pro/chaosmod/sfxplayer.entitytemplate].pc_entitytype"> g_SFXPlayerProp;
+static ZTemplateEntitySpawner<"[assembly:/_pro/chaosmod/sfxplayer.entitytemplate].pc_entitytype"> g_SFXPlayerProp;
 
 void ZSoundFXEffectBase::LoadResources()
 {
-	m_bIsAvailable = g_SFXPlayerProp.IsAvailable();
+	m_pSoundPlayerSpawner = g_SFXPlayerProp.CreateSession();
+}
+
+void ZSoundFXEffectBase::OnClearScene()
+{
+    m_pSoundPlayerSpawner = nullptr;
+}
+
+bool ZSoundFXEffectBase::Available() const
+{
+    return IChaosEffect::Available() &&
+        m_pSoundPlayerSpawner &&
+        m_pSoundPlayerSpawner->IsAvailable();
 }
 
 void ZSoundFXEffectBase::OnDrawDebugUI()
 {
-    ImGui::TextUnformatted(fmt::format("Prop: {}", g_SFXPlayerProp.ToString()).c_str());
+    ImGui::TextUnformatted(fmt::format("Prop: {}", m_pSoundPlayerSpawner->ToString()).c_str());
 
-    ImGui::BeginDisabled(!g_SFXPlayerProp.IsAvailable(false));
+    ImGui::BeginDisabled(!Available());
 
     if (ImGui::Button("Play Test SFX"))
     {
@@ -44,7 +54,12 @@ void ZSoundFXEffectBase::OnDrawDebugUI()
 
 void ZSoundFXEffectBase::PlayAt(const SMatrix& p_Position, const ZRuntimeResourceID& p_SoundResource)
 {
-	auto s_RootEntity = g_SFXPlayerProp.SpawnAs<ZSpatialEntity>();
+    if (!m_pSoundPlayerSpawner)
+    {
+        return;
+    }
+
+	auto s_RootEntity = m_pSoundPlayerSpawner->SpawnAs<ZSpatialEntity>();
     if (!s_RootEntity)
     {
         Logger::Debug(TAG "Failed to spawn SFX player entity.");

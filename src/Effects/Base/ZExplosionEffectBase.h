@@ -1,12 +1,15 @@
 #pragma once
-
 #include "IChaosEffect.h"
+
+#include "Helpers/ZTemplateEntitySpawner.h"
 
 class ZExplosionEffectBase : public virtual IChaosEffect
 {
 public:
     void LoadResources() override;
+    void OnClearScene() override;
     void OnDrawDebugUI() override;
+    bool Available() const override;
 
 protected:
     struct SExplosionParams
@@ -20,4 +23,7 @@ protected:
     };
 
     void SpawnExplosion(const SExplosionParams& p_Params);
+
+private:
+    std::unique_ptr<ZTemplateEntitySpawnerSession> m_pSpawnerSession;
 };

@@ -5,15 +5,25 @@
 
 #include <Glacier/ZSpatialEntity.h>
 
-#include "Helpers/ZEntityResourceSpawner.h"
-
 #define TAG "[ZPoisonAOEDamageEffectBase] "
 
-static ZEntityResourceSpawner<"[assembly:/_pro/chaosmod/areaeffect_poison.entitytemplate].pc_entitytype"> g_AOECloudProp;
+static ZTemplateEntitySpawner<"[assembly:/_pro/chaosmod/areaeffect_poison.entitytemplate].pc_entitytype"> g_AOECloudProp;
 
 void ZPoisonAOEDamageEffectBase::LoadResources()
 {
-	m_bIsAvailable = g_AOECloudProp.IsAvailable();
+	m_pEffectCloudSpawner = g_AOECloudProp.CreateSession();
+}
+
+void ZPoisonAOEDamageEffectBase::OnClearScene()
+{
+    m_pEffectCloudSpawner = nullptr;
+}
+
+bool ZPoisonAOEDamageEffectBase::Available() const
+{
+    return IChaosEffect::Available() &&
+        m_pEffectCloudSpawner &&
+        m_pEffectCloudSpawner->IsAvailable();
 }
 
 void ZPoisonAOEDamageEffectBase::OnDrawDebugUI()
@@ -25,11 +35,11 @@ void ZPoisonAOEDamageEffectBase::OnDrawDebugUI()
         { EPoisonType::LETHAL_FAST, "Lethal Fast" },
     };
 
-    ImGui::TextUnformatted(fmt::format("Prop: {}", g_AOECloudProp.ToString()).c_str());
+    ImGui::TextUnformatted(fmt::format("Prop: {}", m_pEffectCloudSpawner->ToString()).c_str());
 
     ImGui::Separator();
 
-    ImGui::BeginDisabled(!g_AOECloudProp.IsAvailable(false));
+    ImGui::BeginDisabled(!Available());
 
     if (ImGui::BeginCombo("DBG Poison Type", c_mPoisonTypesToNames.at(m_eDebugPoisonType).c_str()))
     {
@@ -73,7 +83,12 @@ void ZPoisonAOEDamageEffectBase::OnDrawDebugUI()
 
 void ZPoisonAOEDamageEffectBase::Spawn(const SParams& p_Params)
 {
-	auto s_RootEntity = g_AOECloudProp.SpawnAs<ZSpatialEntity>();
+    if (!m_pEffectCloudSpawner)
+    {
+        return;
+	}
+
+	auto s_RootEntity = m_pEffectCloudSpawner->SpawnAs<ZSpatialEntity>();
     if (!s_RootEntity)
     {
         return;

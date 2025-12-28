@@ -4,22 +4,32 @@
 
 #include <Glacier/ZSpatialEntity.h>
 
-#include "Helpers/ZEntityResourceSpawner.h"
-
 #define TAG "[ZExplosionEffectBase] "
 
-static ZEntityResourceSpawner<"[assembly:/_pro/chaosmod/explosioneffect.entitytemplate].pc_entitytype"> g_ExplosionProp;
+static ZTemplateEntitySpawner<"[assembly:/_pro/chaosmod/explosioneffect.entitytemplate].pc_entitytype"> g_ExplosionProp;
 
 void ZExplosionEffectBase::LoadResources()
 {
-    m_bIsAvailable = g_ExplosionProp.IsAvailable();
+    m_pSpawnerSession = g_ExplosionProp.CreateSession();
+}
+
+void ZExplosionEffectBase::OnClearScene()
+{
+    m_pSpawnerSession = nullptr;
+}
+
+bool ZExplosionEffectBase::Available() const
+{
+    return IChaosEffect::Available() &&
+        m_pSpawnerSession &&
+        m_pSpawnerSession->IsAvailable();
 }
 
 void ZExplosionEffectBase::OnDrawDebugUI()
 {
-    ImGui::TextUnformatted(fmt::format("Prop: {}", g_ExplosionProp.ToString()).c_str());
+    ImGui::TextUnformatted(fmt::format("Prop: {}", m_pSpawnerSession->ToString()).c_str());
 
-    ImGui::BeginDisabled(!g_ExplosionProp.IsAvailable(false));
+    ImGui::BeginDisabled(!m_pSpawnerSession->IsAvailable());
 
     if (ImGui::Button("Spawn Nearby"))
     {
@@ -46,7 +56,12 @@ void ZExplosionEffectBase::OnDrawDebugUI()
 
 void ZExplosionEffectBase::SpawnExplosion(const SExplosionParams& p_Params)
 {
-    if (auto s_RootEntity = g_ExplosionProp.SpawnAs<ZSpatialEntity>())
+    if (!m_pSpawnerSession)
+    {
+        return;
+    }
+
+    if (auto s_RootEntity = m_pSpawnerSession->SpawnAs<ZSpatialEntity>())
     {
         s_RootEntity.m_pInterfaceRef->SetWorldMatrix(p_Params.m_Position);
         s_RootEntity.m_ref.SetProperty("m_fTimeMin", p_Params.m_fFuseTimeMin);
