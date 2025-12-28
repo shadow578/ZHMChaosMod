@@ -2,6 +2,8 @@
 #include "Glacier/ZMath.h"
 
 #include <vector>
+#include <random>
+#include <type_traits>
 
 namespace Math
 {
@@ -10,16 +12,17 @@ namespace Math
     {
         static_assert(std::is_arithmetic<T>::value, "GetRandomNumber only supports arithmetic types.");
 
+        static thread_local std::mt19937 s_Generator{ std::random_device{}() };
+
         if constexpr (std::is_integral<T>::value)
         {
-            const auto s_Range = p_Max - p_Min + 1;
-            const auto s_RandomValue = rand() % s_Range;
-            return p_Min + s_RandomValue;
+            std::uniform_int_distribution<T> s_Distribution(p_Min, p_Max);
+			return s_Distribution(s_Generator);
         }
         else
         {
-            const auto s_RandomValue = static_cast<T>(rand()) / static_cast<T>(RAND_MAX);
-            return p_Min + s_RandomValue * (p_Max - p_Min);
+            std::uniform_real_distribution<T> s_Distribution(p_Min, p_Max);
+            return s_Distribution(s_Generator);
         }
     }
 
