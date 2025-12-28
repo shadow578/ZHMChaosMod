@@ -22,4 +22,20 @@ namespace ImGuiEx
             p_nFlags
         );
     }
+
+    inline void ProgressBarTextFit(
+        const float p_fFraction,
+        const char* p_sOverlayText,
+        const float p_fTextPadding = 10.0f)
+    {
+		const auto s_vTextSize = ImGui::CalcTextSize(p_sOverlayText);
+        const auto s_fTextWidth = s_vTextSize.x + (p_fTextPadding * 2.0f);
+        const auto s_fWindowWidth = ImGui::GetContentRegionAvail().x;
+
+        ImGui::ProgressBar(
+            p_fFraction,
+            ImVec2(max(s_fWindowWidth, s_fTextWidth), 0.0f),
+            p_sOverlayText
+        );
+    }
 };

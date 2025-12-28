@@ -29,7 +29,12 @@ private: // hooks
     DECLARE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th, ESceneLoadingStage stage);
 
 private: // general UI
-    void DrawUnlockersSection();
+	void DrawMainUI(const bool p_bHasFocus);
+	void DrawOverlayUI(const bool p_bHasFocus);
+
+	void DrawConfigurationContents();
+    void DrawOverlayContents();
+    void DrawUnlockersContents();
 
 private: // misc.
     bool m_bMenuActive = false;
@@ -43,6 +48,12 @@ private: // misc.
 
     void OnLoadOrClearScene();
     float32 GetEffectRemainingTime(const IChaosEffect* p_pEffect) const;
+
+    std::string GetVersion() const
+    {
+		// FIXME version retrieval
+        return "0.0.0";
+    }
 
 private: // Selection & Countdown logic
     struct SActiveEffect
@@ -66,7 +77,7 @@ private: // Selection & Countdown logic
     bool IsCompatibleWithAllActive(const IChaosEffect* p_pEffect);
 
 private: // Debug
-    void DrawDebugWindow();
+    void DrawDebugUI(const bool p_bHasFocus);
     void DrawEffectDebugPane();
 
     bool m_bDebugMenuActive = false;

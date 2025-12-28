@@ -44,6 +44,27 @@ public:
     {
         return m_aUnlockers;
     }
+
+    void Sort()
+    {
+        std::sort(
+            m_aEffects.begin(),
+            m_aEffects.end(),
+            [](const std::unique_ptr<IChaosEffect>& a, const std::unique_ptr<IChaosEffect>& b)
+            {
+                return a->GetName() < b->GetName();
+            }
+		);
+
+        std::sort(
+            m_aUnlockers.begin(),
+            m_aUnlockers.end(),
+            [](const std::unique_ptr<IUnlocker>& a, const std::unique_ptr<IUnlocker>& b)
+            {
+                return a->GetName() < b->GetName();
+            }
+		);
+    }
 };
 
 struct EffectRegistrar

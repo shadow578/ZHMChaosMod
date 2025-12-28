@@ -45,6 +45,9 @@ void ChaosMod::Init()
     Hooks::ZEntitySceneContext_ClearScene->AddDetour(this, &ChaosMod::OnClearScene);
     Hooks::ZEntitySceneContext_SetLoadingStage->AddDetour(this, &ChaosMod::OnSetLoadingStage);
 
+    // sort effect registry to make it more pleasing in debug ui
+    EffectRegistry::GetInstance().Sort();
+
     for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
     {
         if (s_Effect && s_Effect->Available())
