@@ -39,6 +39,7 @@ private: // misc.
     void OnEffectSlowUpdate();
 
     void LoadEffectResources();
+    void ForwardEnterScene();
 
     void OnLoadOrClearScene();
     float32 GetEffectRemainingTime(const IChaosEffect* p_pEffect) const;

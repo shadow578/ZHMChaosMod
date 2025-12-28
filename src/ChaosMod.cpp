@@ -148,6 +148,18 @@ void ChaosMod::LoadEffectResources()
     }
 }
 
+void ChaosMod::ForwardEnterScene()
+{
+    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
+    {
+        if (s_Effect && s_Effect->Available())
+        {
+            Logger::Debug(TAG "Forwarding OnEnterScene to '{}'", s_Effect->GetName());
+            s_Effect->OnEnterScene();
+        }
+	}
+}
+
 void ChaosMod::OnLoadOrClearScene()
 {
     // ensure all active effects are stopped before unload
@@ -200,6 +212,11 @@ DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th,
     {
         LoadEffectResources();
     }
+
+    if (!s_bIsMenu && stage == ESceneLoadingStage::eLoading_ScenePlaying)
+    {
+        ForwardEnterScene();
+	}
 
     return HookResult<void>(HookAction::Continue());
 }

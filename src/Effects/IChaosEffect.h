@@ -48,6 +48,11 @@ public:
     virtual void OnEngineInitialized() {};
 
     /**
+     * Called when a new scene finished loading and enters play mode. 
+     */
+	virtual void OnEnterScene() {};
+
+    /**
      * Called when the current scene unloads.
      * Effects shall clean up any spawned entities, as they will no longer be valid.
      */
