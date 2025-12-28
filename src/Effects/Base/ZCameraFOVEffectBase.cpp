@@ -3,7 +3,7 @@
 #include <Glacier/ZEntity.h>
 #include <Glacier/ZSpatialEntity.h>
 
-#include "Helpers/Utils.h"
+#include "Helpers/Math.h"
 
 const std::string c_CameraFOVPropertyName = "m_fFovYDeg";
 
@@ -69,7 +69,7 @@ void ZCameraFOVEffectBase::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, 
     auto s_fTargetFOV = m_fTargetFOV;
 
     // interpolation
-    s_fTargetFOV = Utils::Interpolate(m_fOriginalFOV, s_fTargetFOV, GetInterpolationPoint());
+    s_fTargetFOV = Math::Interpolate(m_fOriginalFOV, s_fTargetFOV, GetInterpolationPoint());
 
     GetEffectCameraEntity().SetProperty(c_CameraFOVPropertyName, s_fTargetFOV);
 }

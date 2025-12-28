@@ -1,6 +1,5 @@
 #include "ZSpawnRandomItemEffect.h"
 
-
 #include <Glacier/ZContentKitManager.h>
 #include <Glacier/ZInventory.h>
 #include <Glacier/ZModule.h>
@@ -8,8 +7,10 @@
 #include <Glacier/ZItem.h>
 #include <Glacier/SExternalReferences.h>
 
+#include <Logging.h>
+
 #include "EffectRegistry.h"
-#include "Helpers/Utils.h"
+#include "Helpers/Math.h"
 
 #define TAG "[ZSpawnRandomItemEffect] "
 
@@ -43,11 +44,11 @@ void ZSpawnRandomItemEffect::Start()
             for (int i = 0; i < m_pCount; i++)
             {
                 // vary spawn position a bit
-                s_WM.Trans += s_Right * Utils::GetRandomNumber(-0.2f, 0.2f)
-                    + s_Forward * Utils::GetRandomNumber(-0.2f, 0.2f)
-                    + s_Up * Utils::GetRandomNumber(-0.2f, 0.2f);
+                s_WM.Trans += s_Right * Math::GetRandomNumber(-0.2f, 0.2f)
+                    + s_Forward * Math::GetRandomNumber(-0.2f, 0.2f)
+                    + s_Up * Math::GetRandomNumber(-0.2f, 0.2f);
 
-                const auto s_Selection = Utils::SelectRandomElement(g_aRepositoryProps);
+                const auto s_Selection = Math::SelectRandomElement(g_aRepositoryProps);
 
                 Logger::Debug(TAG "spawning item {}", s_Selection.second);
                 if (!SpawnRepositoryPropAt(s_Selection.first, s_WM))

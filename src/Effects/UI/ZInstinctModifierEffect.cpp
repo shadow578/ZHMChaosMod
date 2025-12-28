@@ -3,7 +3,7 @@
 #include <Glacier/ZActor.h>
 
 #include "EffectRegistry.h"
-#include "Helpers/Utils.h"
+#include "Helpers/ActorUtils.h"
 
 const std::string c_GlowTypePropertyName = "m_eGlowType";
 

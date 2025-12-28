@@ -3,7 +3,7 @@
 #include <Glacier/ZSpatialEntity.h>
 
 #include "EffectRegistry.h"
-#include "Helpers/Utils.h"
+#include "Helpers/ActorUtils.h"
 
 #define TAG "[ZExplodeActorsOnTouchEffect] "
 

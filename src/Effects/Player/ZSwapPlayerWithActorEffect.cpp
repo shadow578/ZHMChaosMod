@@ -3,7 +3,8 @@
 #include "Glacier/ZSpatialEntity.h"
 
 #include "EffectRegistry.h"
-#include "Helpers/Utils.h"
+#include "Helpers/ActorUtils.h"
+#include "Helpers/PlayerUtils.h"
 
 #define TAG "[ZSwapPlayerWithActorEffect] "
 

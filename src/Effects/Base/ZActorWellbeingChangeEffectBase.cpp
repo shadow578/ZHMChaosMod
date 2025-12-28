@@ -1,6 +1,6 @@
 #include "ZActorWellbeingChangeEffectBase.h"
 
-#include "Helpers/Utils.h"
+#include "Helpers/ActorUtils.h"
 
 void ZActorWellbeingChangeEffectBase::Start()
 {

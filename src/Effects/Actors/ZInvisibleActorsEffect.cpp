@@ -1,7 +1,7 @@
 #include "ZInvisibleActorsEffect.h"
 
 #include "EffectRegistry.h"
-#include "Helpers/Utils.h"
+#include "Helpers/ActorUtils.h"
 
 void ZInvisibleActorsEffect::Start()
 {

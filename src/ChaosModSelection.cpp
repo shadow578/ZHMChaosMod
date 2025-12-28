@@ -6,7 +6,7 @@
 #include <random>
 
 #include "EffectRegistry.h"
-#include "Helpers/Utils.h"
+#include "Helpers/Math.h"
 
 #define TAG "[ChaosMod] "
 
@@ -17,7 +17,7 @@ void ChaosMod::OnEffectTimerTrigger()
     if (!m_aCurrentVote.empty())
     {
         // TODO: if social voting was to be implemented, votes processing would go here
-        auto s_pSelectedEffect = Utils::SelectRandomElement(m_aCurrentVote);
+        auto s_pSelectedEffect = Math::SelectRandomElement(m_aCurrentVote);
 
         // fallback to randomly selected effect if selected is unavailable
         // no compatibility check here, as there should only be compatible effects in the vote

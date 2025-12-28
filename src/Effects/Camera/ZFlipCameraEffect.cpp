@@ -4,7 +4,7 @@
 #include <Glacier/ZSpatialEntity.h>
 
 #include "EffectRegistry.h"
-#include "Helpers/Utils.h"
+#include "Helpers/Math.h"
 
 void ZFlipCameraEffect::Start()
 {
@@ -63,7 +63,7 @@ void ZFlipCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, con
     s_TargetWM = s_RotationMatrix * s_TargetWM;
 
     // interpolation
-    s_TargetWM = Utils::InterpolateAffine(s_OriginalWM, s_TargetWM, GetInterpolationPoint());
+    s_TargetWM = Math::InterpolateAffine(s_OriginalWM, s_TargetWM, GetInterpolationPoint());
 
     s_CameraSpatialEntity->SetWorldMatrix(s_TargetWM);
 }

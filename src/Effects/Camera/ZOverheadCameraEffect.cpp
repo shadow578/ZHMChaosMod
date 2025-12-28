@@ -5,7 +5,7 @@
 #include <Glacier/ZCollision.h>
 
 #include "EffectRegistry.h"
-#include "Helpers/Utils.h"
+#include "Helpers/Math.h"
 
 constexpr float32 c_fOverheadMinDistance = 2.0f; // at least 47's height
 constexpr float32 c_fOverheadMaxDistance = 15.0f;
@@ -74,7 +74,7 @@ void ZOverheadCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent,
     s_TargetWM.ZAxis = float4(-0.0f, 0.0f, 1.0f, 0.0f);
 
     // interpolation
-    s_TargetWM = Utils::InterpolateAffine(s_OriginalWM, s_TargetWM, GetInterpolationPoint());
+    s_TargetWM = Math::InterpolateAffine(s_OriginalWM, s_TargetWM, GetInterpolationPoint());
 
     s_CameraSpatialEntity->SetWorldMatrix(s_TargetWM);
 }

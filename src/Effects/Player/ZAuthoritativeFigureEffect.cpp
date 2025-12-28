@@ -4,7 +4,8 @@
 
 
 #include "EffectRegistry.h"
-#include "Helpers/Utils.h"
+#include "Helpers/Math.h"
+#include "Helpers/PlayerUtils.h"
 
 #define TAG "[ZAuthoritativeFigureEffect] "
 
@@ -27,7 +28,7 @@ ZAuthoritativeFigureEffect::ZAuthoritativeFigureEffect() : m_bOriginalAuthorityF
 
 void ZAuthoritativeFigureEffect::Start()
 {
-    const auto s_sOutfitName = Utils::SelectRandomElement(m_aOutfitCommonNames);
+    const auto s_sOutfitName = Math::SelectRandomElement(m_aOutfitCommonNames);
     Logger::Debug(TAG "Selected outfit '{}'", s_sOutfitName);
 
     if (!Utils::SetPlayerOutfit(s_sOutfitName, m_SelectedOutfit))
