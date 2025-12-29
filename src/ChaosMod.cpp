@@ -48,6 +48,8 @@ void ChaosMod::Init()
     // sort effect registry to make it more pleasing in debug ui
     EffectRegistry::GetInstance().Sort();
 
+    InitAuthorNames();
+
     for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
     {
         if (s_Effect && s_Effect->Available())

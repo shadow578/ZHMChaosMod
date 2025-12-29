@@ -105,7 +105,8 @@ public:
      * Unavailable effects will not be selected by the ChaosMod.
      * No functions except for @see IChaosEffect::Available,
      * @see IChaosEffect::GetName, @see IChaosEffect::GetDisplayName, 
-     * @see LoadResources may be called.
+     * @see IChaosEffect::GetDuration, @see IChaosEffect::GetAuthor
+     * and @see LoadResources may be called.
      */
     virtual bool Available() const { return m_bIsAvailable; }
 
@@ -142,6 +143,11 @@ public:
      * OneShot effects DO have Stop() called after some delay.
      */
     virtual EDuration GetDuration() const { return EDuration::Full; }
+
+    /**
+	 * Get the display name of the person who authored this effect.
+     */
+    virtual std::string GetAuthor() const { return ""; }
 
 protected:
     bool m_bIsAvailable = true;

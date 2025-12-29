@@ -29,6 +29,9 @@ private: // hooks
     DECLARE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th, ESceneLoadingStage stage);
 
 private: // general UI
+    std::string m_sAuthorNames;
+	void InitAuthorNames();
+
 	void DrawMainUI(const bool p_bHasFocus);
 	void DrawOverlayUI(const bool p_bHasFocus);
 

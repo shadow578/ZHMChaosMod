@@ -8,6 +8,8 @@
 #include "EffectRegistry.h"
 #include "Helpers/ImGuiExtras.h"
 
+#include <set>
+
 #define TAG "[ChaosModUI] "
 
 std::string EffectDurationToString(const IChaosEffect::EDuration p_Duration)
@@ -23,6 +25,34 @@ std::string EffectDurationToString(const IChaosEffect::EDuration p_Duration)
     default:
         return "<INVALID>";
     }
+}
+
+void ChaosMod::InitAuthorNames()
+{
+    std::set<std::string> s_AuthorNames;
+	s_AuthorNames.insert("shadow578");
+
+    for (const auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
+    {
+        if (s_Effect)
+        {
+            const auto s_sAuthor = s_Effect->GetAuthor();
+            if (!s_sAuthor.empty())
+            {
+				s_AuthorNames.insert(s_sAuthor);
+            }
+        }
+    }
+
+    m_sAuthorNames.clear();
+    for (const auto& s_AuthorName : s_AuthorNames)
+    {
+        if (!m_sAuthorNames.empty())
+        {
+            m_sAuthorNames += ", ";
+		}
+        m_sAuthorNames += s_AuthorName;
+	}
 }
 
 void ChaosMod::OnDrawMenu()
@@ -61,6 +91,9 @@ void ChaosMod::DrawMainUI(const bool p_bHasFocus)
         return;
 	}
 
+    // start at a sensible size
+	ImGui::SetNextWindowSize({ 400.0f, 350.0f }, ImGuiCond_FirstUseEver);
+
     ImGui::PushFont(SDK()->GetImGuiBlackFont());
     const auto s_ConfigShowing = ImGui::Begin(ICON_MD_QUESTION_MARK "CHAOS MOD CONFIGURATION", &m_bMenuActive);
     ImGui::PushFont(SDK()->GetImGuiRegularFont());
@@ -74,9 +107,10 @@ void ChaosMod::DrawMainUI(const bool p_bHasFocus)
         DrawUnlockersContents();
 
         ImGui::SeparatorText("About");
-        ImGui::TextUnformatted(fmt::format(
-            "ZHMChaosMod Version {}, by shadow578",
-            GetVersion()
+        ImGui::TextWrapped(fmt::format(
+            "ZHMChaosMod Version {}, developed by {}.",
+            GetVersion(),
+            m_sAuthorNames
         ).c_str());
     }
 
@@ -107,6 +141,7 @@ void ChaosMod::DrawConfigurationContents()
 			}
 
 			m_aActiveEffects.clear();
+			m_aCurrentVote.clear();
         }
     }
 
@@ -269,7 +304,7 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 
         ImGui::Separator();
 
-        ImGui::BeginChild("chaos left pane", ImVec2(300, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
+        ImGui::BeginChild("##effect_list_pane", ImVec2(300, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
 
         for (auto& s_Effect : s_aEffects)
         {
@@ -280,7 +315,7 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
                 if (!s_bAvailable)
                 {
                     s_sEffectName += "*";
-                    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+                    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.75f, 0.0f, 0.0f, 1.0f));
 				}
 
                 if (ImGui::Selectable(
@@ -302,7 +337,7 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 
         ImGui::SameLine();
         ImGui::BeginGroup();
-        ImGui::BeginChild("effect debug pane", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
+        ImGui::BeginChild("##effect_debug_pane", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
 
         if (m_pEffectForDebug)
         {
@@ -326,8 +361,9 @@ void ChaosMod::DrawEffectDebugPane()
 {
     ImGui::TextUnformatted(fmt::format("Name:         {}", m_pEffectForDebug->GetName()).c_str());
     ImGui::TextUnformatted(fmt::format("Display Name: {} / {}", m_pEffectForDebug->GetDisplayName(false), m_pEffectForDebug->GetDisplayName(true)).c_str());
-    ImGui::TextUnformatted(fmt::format("Available:    {}", m_pEffectForDebug->Available() ? "Yes" : "No").c_str());
+    ImGui::TextUnformatted(fmt::format("Author:       {}", m_pEffectForDebug->GetAuthor()).c_str());
     ImGui::TextUnformatted(fmt::format("Duration:     {}", EffectDurationToString(m_pEffectForDebug->GetDuration())).c_str());
+    ImGui::TextUnformatted(fmt::format("Available:    {}", m_pEffectForDebug->Available() ? "Yes" : "No").c_str());
 
     ImGui::BeginDisabled(!m_pEffectForDebug->Available());
     if (ImGui::Button("Start() now"))
