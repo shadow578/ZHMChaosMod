@@ -40,6 +40,7 @@ private: // Misc.
 private: // UI & Debug
     bool m_bMenuActive = false;
     bool m_bDebugMenuActive = false;
+    bool m_bDebugMenuAlwaysVisible = false;
     float32 m_fDebugEffectRemainingTime = 30.0f;
     IChaosEffect* m_pEffectForDebug = nullptr;
     std::string m_sAuthorNames;

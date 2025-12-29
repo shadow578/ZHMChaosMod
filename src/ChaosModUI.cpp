@@ -257,7 +257,7 @@ void ChaosMod::DrawOverlayContents()
         if (s_ActiveEffect.m_pEffect->GetDuration() != IChaosEffect::EDuration::OneShot)
         {
             s_fPercentRemaining = s_ActiveEffect.m_fTimeRemaining / s_ActiveEffect.m_fDuration;
-			s_sOverlayText += fmt::format(" - {:.0f} S", s_ActiveEffect.m_fTimeRemaining);
+			s_sOverlayText += fmt::format(" - {:.0f}s", s_ActiveEffect.m_fTimeRemaining);
         }
 
         ImGuiEx::ProgressBarTextFit(s_fPercentRemaining, s_sOverlayText.c_str());
@@ -268,7 +268,7 @@ void ChaosMod::DrawOverlayContents()
 #pragma region Debug UI
 void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 {
-    if (!m_bDebugMenuActive)
+    if (!m_bDebugMenuActive || (!m_bDebugMenuAlwaysVisible && !p_bHasFocus))
     {
         return;
     }
@@ -300,7 +300,7 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
             s_nAvailableEffects
         ).c_str());
 
-        SDKVersion();
+		ImGui::Checkbox("Menu Always Visible", &m_bDebugMenuAlwaysVisible);
 
         ImGui::Separator();
 

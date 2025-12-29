@@ -19,7 +19,7 @@ ChaosMod::ChaosMod() :
     m_fFullEffectDuration(60.0f),
     m_nVoteOptions(4),
     m_EffectTimer(std::bind(&ChaosMod::OnEffectTimerTrigger, this), 30.0),
-    m_SlowUpdateTimer(std::bind(&ChaosMod::OnEffectSlowUpdate, this), 0.2, true) // ~5 FPS
+    m_SlowUpdateTimer(std::bind(&ChaosMod::OnEffectSlowUpdate, this), 0.2, ZTimer::ETimeMode::RealTime, true) // ~5 FPS
 {
 
 }
@@ -36,6 +36,9 @@ ChaosMod::~ChaosMod()
             p_pEffect->OnModUnload();
         }
 	);
+
+    m_EffectTimer.Deinitialize();
+    m_SlowUpdateTimer.Deinitialize();
 }
 
 void ChaosMod::Init()
@@ -129,7 +132,8 @@ void ChaosMod::OnLoadOrClearScene()
         }
     );
 
-    m_EffectTimer.m_bEnable = false;
+	m_EffectTimer.m_bEnable = false;
+    m_EffectTimer.Reset();
 
     m_aCurrentVote.clear();
     m_aActiveEffects.clear();

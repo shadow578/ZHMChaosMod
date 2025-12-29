@@ -13,18 +13,41 @@ typedef std::function<void()> ZTimerCallback;
 class ZTimer
 {
 public:
-    ZTimer(const ZTimerCallback p_Callback, const float32 p_fIntervalSeconds, const bool p_bStartEnabled = false);
+    enum class ETimeMode
+    {
+        GameTime,
+        RealTime
+	};
+
+    ZTimer(const ZTimerCallback p_Callback, const float32 p_fIntervalSeconds, const ETimeMode p_eTimeMode = ETimeMode::GameTime, const bool p_bStartEnabled = false)
+        : m_bEnable(p_bStartEnabled),
+        m_fIntervalSeconds(p_fIntervalSeconds),
+        m_fElapsedSeconds(0),
+		m_eTimeMode(p_eTimeMode),
+        m_Callback(p_Callback)
+    {
+    }
 
     void Initialize();
+    void Deinitialize();
+
+    void Reset()
+    {
+		m_fElapsedSeconds = 0;
+    }
 
     /**
      * Elapsed seconds. 
      * Reset after callback is invoked, thus this may be used to track delta time since last callback.
      */
-    float32 GetElapsedSeconds() const;
+    float32 GetElapsedSeconds() const
+    {
+		return m_fElapsedSeconds;
+    }
 
     bool m_bEnable;
     float32 m_fIntervalSeconds;
+	ETimeMode m_eTimeMode;
 
 private:
     void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent);
