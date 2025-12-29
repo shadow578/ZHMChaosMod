@@ -30,14 +30,12 @@ ChaosMod::~ChaosMod()
     Hooks::ZEntitySceneContext_ClearScene->RemoveDetour(&ChaosMod::OnClearScene);
     Hooks::ZEntitySceneContext_SetLoadingStage->RemoveDetour(&ChaosMod::OnSetLoadingStage);
 
-    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
-    {
-        if (s_Effect && s_Effect->Available())
+    ForeachEffect([](IChaosEffect* p_pEffect)
         {
-            Logger::Debug(TAG "Forwarding OnModUnload to '{}'", s_Effect->GetName());
-            s_Effect->OnModUnload();
+            Logger::Debug(TAG "Forwarding OnModUnload to '{}'", p_pEffect->GetName());
+            p_pEffect->OnModUnload();
         }
-    }
+	);
 }
 
 void ChaosMod::Init()
@@ -56,14 +54,12 @@ void ChaosMod::Init()
 
     InitAuthorNames();
 
-    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
-    {
-        if (s_Effect && s_Effect->Available())
+    ForeachEffect([](IChaosEffect* p_pEffect)
         {
-            Logger::Debug(TAG "Forwarding OnModInitialized to '{}'", s_Effect->GetName());
-            s_Effect->OnModInitialized();
+            Logger::Debug(TAG "Forwarding OnModInitialized to '{}'", p_pEffect->GetName());
+            p_pEffect->OnModInitialized();
         }
-    }
+    );
 }
 
 void ChaosMod::OnEngineInitialized()
@@ -74,32 +70,21 @@ void ChaosMod::OnEngineInitialized()
     const ZMemberDelegate<ChaosMod, void(const SGameUpdateEvent&)> s_Delegate(this, &ChaosMod::OnFrameUpdate);
     Globals::GameLoopManager->RegisterFrameUpdate(s_Delegate, 1, EUpdateMode::eUpdatePlayMode);
 
-    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
-    {
-        if (s_Effect && s_Effect->Available())
+    ForeachEffect([](IChaosEffect* p_pEffect)
         {
-            Logger::Debug(TAG "Forwarding OnEngineInitialized to '{}'", s_Effect->GetName());
-            s_Effect->OnEngineInitialized();
-
-            if (!s_Effect->Available())
-            {
-                Logger::Warn(
-                    TAG "'{}' reported as unavailable during OnEngineInitialized, it will not be used.",
-                    s_Effect->GetName());
-            }
+            Logger::Debug(TAG "Forwarding OnEngineInitialized to '{}'", p_pEffect->GetName());
+            p_pEffect->OnEngineInitialized();
         }
-    }
+    );
 }
 
 void ChaosMod::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent)
 {
-    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
-    {
-        if (s_Effect && s_Effect->Available())
+    ForeachEffect([this, p_UpdateEvent](IChaosEffect* p_pEffect)
         {
-            s_Effect->OnFrameUpdate(p_UpdateEvent, GetEffectRemainingTime(s_Effect.get()));
+            p_pEffect->OnFrameUpdate(p_UpdateEvent, GetEffectRemainingTime(p_pEffect));
         }
-    }
+    );
 
     UpdateEffectExpiration(p_UpdateEvent.m_GameTimeDelta.ToSeconds());
 
@@ -112,76 +97,37 @@ void ChaosMod::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent)
     }
 }
 
+void ChaosMod::ForeachEffect(std::function<void(IChaosEffect* p_pEffect)> p_Callback, const bool p_bOnlyAvailable)
+{
+    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
+    {
+        if (!s_Effect || (p_bOnlyAvailable && !s_Effect->Available()))
+        {
+            continue;
+        }
+
+		p_Callback(s_Effect.get());
+    }
+}
+
+
 void ChaosMod::OnEffectSlowUpdate()
 {
-    const float s_fDeltaTime = m_SlowUpdateTimer.GetElapsedSeconds();
-
-    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
-    {
-        if (s_Effect && s_Effect->Available())
+    ForeachEffect([this](IChaosEffect* p_pEffect)
         {
-            s_Effect->OnSlowUpdate(s_fDeltaTime, GetEffectRemainingTime(s_Effect.get()));
+            p_pEffect->OnSlowUpdate(m_SlowUpdateTimer.GetElapsedSeconds(), GetEffectRemainingTime(p_pEffect));
         }
-    }
-}
-
-float32 ChaosMod::GetEffectRemainingTime(const IChaosEffect* p_pEffect) const
-{
-    // debug takes precedence
-    if (p_pEffect == m_pEffectForDebug)
-    {
-        return m_fDebugEffectRemainingTime;
-    }
-
-    for (const auto& s_ActiveEffect : m_aActiveEffects)
-    {
-        if (s_ActiveEffect.m_pEffect == p_pEffect)
-        {
-            return s_ActiveEffect.m_fTimeRemaining;
-        }
-    }
-
-    // not active
-    return 0.0f;
-}
-
-void ChaosMod::LoadEffectResources()
-{
-    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
-    {
-        // note s_Effect->Available() is not checked, as OnPreloadResources explicitly is allowed
-        // to run for unavailable effects
-        if (s_Effect)
-        {
-            Logger::Info(TAG "Loading Resources for '{}'", s_Effect->GetName());
-            s_Effect->LoadResources();
-        }
-    }
-}
-
-void ChaosMod::ForwardEnterScene()
-{
-    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
-    {
-        if (s_Effect && s_Effect->Available())
-        {
-            Logger::Debug(TAG "Forwarding OnEnterScene to '{}'", s_Effect->GetName());
-            s_Effect->OnEnterScene();
-        }
-	}
+    );
 }
 
 void ChaosMod::OnLoadOrClearScene()
 {
     // ensure all active effects are stopped before unload
-    for (auto& s_Effect : m_aActiveEffects)
-    {
-        if (s_Effect.m_pEffect->Available())
+    ForeachEffect([](IChaosEffect* p_pEffect)
         {
-            s_Effect.m_pEffect->Stop();
+            p_pEffect->Stop();
         }
-
-    }
+    );
 
     m_EffectTimer.m_bEnable = false;
 
@@ -199,14 +145,12 @@ DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnClearScene, ZEntitySceneContext* th, bool
 {
     OnLoadOrClearScene();
 
-    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
-    {
-        if (s_Effect && s_Effect->Available())
+    ForeachEffect([](IChaosEffect* p_pEffect)
         {
-            Logger::Debug(TAG "Forwarding OnClearScene to '{}'", s_Effect->GetName());
-            s_Effect->OnClearScene();
+            Logger::Debug(TAG "Forwarding OnClearScene to '{}'", p_pEffect->GetName());
+            p_pEffect->OnClearScene();
         }
-    }
+    );
 
     return HookResult<void>(HookAction::Continue());
 }
@@ -221,12 +165,23 @@ DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th,
         || s_sSceneResource == "assembly:/_PRO/Scenes/Frontend/MainMenu.entity";
     if (!s_bIsMenu && stage == ESceneLoadingStage::eLoading_AssetsLoaded)
     {
-        LoadEffectResources();
+        ForeachEffect([](IChaosEffect* p_pEffect)
+            {
+                Logger::Debug(TAG "Loading Resources for '{}'", p_pEffect->GetName());
+                p_pEffect->LoadResources();
+            },
+            false // even when not available
+        );
     }
 
     if (!s_bIsMenu && stage == ESceneLoadingStage::eLoading_ScenePlaying)
     {
-        ForwardEnterScene();
+        ForeachEffect([](IChaosEffect* p_pEffect)
+            {
+                Logger::Debug(TAG "Forwarding OnEnterScene to '{}'", p_pEffect->GetName());
+                p_pEffect->OnEnterScene();
+            }
+        );
 	}
 
     return HookResult<void>(HookAction::Continue());

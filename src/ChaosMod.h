@@ -13,7 +13,7 @@
 
 class ChaosMod : public IPluginInterface
 {
-public:
+public: // Plugin Interface
     ChaosMod();
     ~ChaosMod();
 
@@ -23,13 +23,27 @@ public:
     void OnDrawMenu() override;
     void OnDrawUI(bool p_HasFocus) override;
 
-private: // hooks
+private: // Hooks
     DECLARE_PLUGIN_DETOUR(ChaosMod, void, OnLoadScene, ZEntitySceneContext*, SSceneInitParameters&);
     DECLARE_PLUGIN_DETOUR(ChaosMod, void, OnClearScene, ZEntitySceneContext* th, bool p_FullyUnloadScene);
     DECLARE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th, ESceneLoadingStage stage);
 
-private: // general UI
+private: // Misc.
+    ZTimer m_SlowUpdateTimer;
+    std::queue<std::function<void()>> m_qDeferredFrameUpdateActions;
+
+    void ForeachEffect(std::function<void(IChaosEffect* p_pEffect)> p_Callback, const bool p_bOnlyAvailable = true);
+
+    void OnEffectSlowUpdate();
+    void OnLoadOrClearScene();
+
+private: // UI & Debug
+    bool m_bMenuActive = false;
+    bool m_bDebugMenuActive = false;
+    float32 m_fDebugEffectRemainingTime = 30.0f;
+    IChaosEffect* m_pEffectForDebug = nullptr;
     std::string m_sAuthorNames;
+
 	void InitAuthorNames();
 
 	void DrawMainUI(const bool p_bHasFocus);
@@ -39,18 +53,8 @@ private: // general UI
     void DrawOverlayContents();
     void DrawUnlockersContents();
 
-private: // misc.
-    bool m_bMenuActive = false;
-    ZTimer m_SlowUpdateTimer;
-    std::queue<std::function<void()>> m_qDeferredFrameUpdateActions;
-
-    void OnEffectSlowUpdate();
-
-    void LoadEffectResources();
-    void ForwardEnterScene();
-
-    void OnLoadOrClearScene();
-    float32 GetEffectRemainingTime(const IChaosEffect* p_pEffect) const;
+    void DrawDebugUI(const bool p_bHasFocus);
+    void DrawEffectDebugPane();
 
 private: // Selection & Countdown logic
     struct SActiveEffect
@@ -72,14 +76,7 @@ private: // Selection & Countdown logic
     void UpdateEffectExpiration(const float32 p_fDeltaTime);
     std::vector<IChaosEffect*> GetRandomEffectSelection(const int p_nCount);
     bool IsCompatibleWithAllActive(const IChaosEffect* p_pEffect);
-
-private: // Debug
-    void DrawDebugUI(const bool p_bHasFocus);
-    void DrawEffectDebugPane();
-
-    bool m_bDebugMenuActive = false;
-    float32 m_fDebugEffectRemainingTime = 30.0f;
-    IChaosEffect* m_pEffectForDebug = nullptr;
+    float32 GetEffectRemainingTime(const IChaosEffect* p_pEffect) const;
 };
 
 DECLARE_ZHM_PLUGIN(ChaosMod)

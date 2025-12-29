@@ -14,7 +14,7 @@
 
 #define TAG "[ChaosModUI] "
 
-std::string EffectDurationToString(const IChaosEffect::EDuration p_Duration)
+static std::string EffectDurationToString(const IChaosEffect::EDuration p_Duration)
 {
     switch (p_Duration)
     {
@@ -72,13 +72,11 @@ void ChaosMod::OnDrawMenu()
 
 void ChaosMod::OnDrawUI(const bool p_HasFocus)
 {
-    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
-    {
-        if (s_Effect && s_Effect->Available())
+    ForeachEffect([p_HasFocus](IChaosEffect* p_pEffect)
         {
-            s_Effect->OnDrawUI(p_HasFocus);
+            p_pEffect->OnDrawUI(p_HasFocus);
         }
-    }
+    );
 
     DrawMainUI(p_HasFocus);
 	DrawOverlayUI(p_HasFocus);
@@ -210,7 +208,7 @@ void ChaosMod::DrawOverlayUI(const bool p_bHasFocus)
     }
 
 	// start out at a sensible position
-    const auto s_ImgGuiIO = ImGui::GetIO();
+    const auto& s_ImgGuiIO = ImGui::GetIO();
     ImGui::SetNextWindowPos({ s_ImgGuiIO.DisplaySize.x - 300.0f, 100.0f }, ImGuiCond_FirstUseEver);
 
     // overlay has full opacity, even without focus
@@ -296,7 +294,7 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 
         ImGui::TextUnformatted(fmt::format(
             "ZHMChaosMod version {} (with ZHMModSDK {}); {} effects loaded, {} effects available",
-			GetVersion(),
+			BuildInfo::GetVersion(),
 			SDKVersion(),
             s_aEffects.size(),
             s_nAvailableEffects

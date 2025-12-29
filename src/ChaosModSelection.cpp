@@ -76,6 +76,11 @@ void ChaosMod::UpdateEffectExpiration(const float32 p_fDeltaTime)
 {
     for (auto& s_ActiveEffect : m_aActiveEffects)
     {
+        if (!s_ActiveEffect.m_pEffect)
+        {
+            continue;
+		}
+
         s_ActiveEffect.m_fTimeRemaining -= p_fDeltaTime;
         if (s_ActiveEffect.m_fTimeRemaining > 0.0f)
         {
@@ -163,4 +168,24 @@ bool ChaosMod::IsCompatibleWithAllActive(const IChaosEffect* p_pEffect)
     }
 
     return true;
+}
+
+float32 ChaosMod::GetEffectRemainingTime(const IChaosEffect* p_pEffect) const
+{
+    // debug takes precedence
+    if (p_pEffect == m_pEffectForDebug)
+    {
+        return m_fDebugEffectRemainingTime;
+    }
+
+    for (const auto& s_ActiveEffect : m_aActiveEffects)
+    {
+        if (s_ActiveEffect.m_pEffect == p_pEffect)
+        {
+            return s_ActiveEffect.m_fTimeRemaining;
+        }
+    }
+
+    // not active
+    return 0.0f;
 }
