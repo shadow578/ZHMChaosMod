@@ -52,12 +52,6 @@ private: // misc.
     void OnLoadOrClearScene();
     float32 GetEffectRemainingTime(const IChaosEffect* p_pEffect) const;
 
-    std::string GetVersion() const
-    {
-		// FIXME version retrieval
-        return "0.0.0";
-    }
-
 private: // Selection & Countdown logic
     struct SActiveEffect
     {

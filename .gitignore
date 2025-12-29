@@ -377,3 +377,6 @@ FodyWeavers.xsd
 
 out/
 CMakeUserPresets.json
+
+# ZHMChaosMod BuildInfo.h
+src/BuildInfo.cpp

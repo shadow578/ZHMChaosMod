@@ -11,6 +11,7 @@
 #include "Helpers/Utils.h"
 
 #include "EffectRegistry.h"
+#include "BuildInfo.h"
 
 #define TAG "[ChaosMod] "
 
@@ -41,6 +42,11 @@ ChaosMod::~ChaosMod()
 
 void ChaosMod::Init()
 {
+    Logger::Info(TAG " ChaosMod Version {} ({}) loaded.",
+        BuildInfo::GetVersion(),
+        BuildInfo::c_sRemoteUrl
+    );
+
     Hooks::ZEntitySceneContext_LoadScene->AddDetour(this, &ChaosMod::OnLoadScene);
     Hooks::ZEntitySceneContext_ClearScene->AddDetour(this, &ChaosMod::OnClearScene);
     Hooks::ZEntitySceneContext_SetLoadingStage->AddDetour(this, &ChaosMod::OnSetLoadingStage);

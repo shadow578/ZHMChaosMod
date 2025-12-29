@@ -21,6 +21,7 @@ file(GLOB_RECURSE SRC_FILES
 
 add_library(ChaosMod SHARED
     ${SRC_FILES}
+    src/BuildInfo.cpp
 )
 
 target_include_directories(ChaosMod PRIVATE
@@ -48,9 +49,26 @@ install(TARGETS ChaosMod
 # Install the mod to the game folder when the `GAME_INSTALL_PATH` variable is set.
 zhmmodsdk_install(ChaosMod)
 
+# Write build info file before build.
+set(BUILD_INFO_HEADER ${CMAKE_SOURCE_DIR}/src/BuildInfo.cpp)
+add_custom_command(
+    OUTPUT ${BUILD_INFO_HEADER}
+    COMMAND ${CMAKE_COMMAND}
+        -DOUTPUT_FILE=${BUILD_INFO_HEADER}
+        -P ${CMAKE_SOURCE_DIR}/cmake/gen-build-info.cmake
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    DEPENDS
+        ${CMAKE_SOURCE_DIR}/.git/HEAD
+        ${CMAKE_SOURCE_DIR}/.git/index
+    COMMENT "Generating Build Info."
+)
+
+add_custom_target(mod_build_info DEPENDS ${BUILD_INFO_HEADER})
+add_dependencies(ChaosMod mod_build_info)
+
 # Deploy SMF companion mod on build if SMF was found in the game folder.
 if (EXISTS "${GAME_INSTALL_PATH}/SMF")
-  add_custom_target(run_deploy ALL
+  add_custom_target(run_deploy ChaosMod
     COMMAND "${GAME_INSTALL_PATH}/SMF/Deploy.exe"
     WORKING_DIRECTORY "${GAME_INSTALL_PATH}/SMF"
     COMMENT "Deploy SMF companion mod."
@@ -59,3 +77,4 @@ if (EXISTS "${GAME_INSTALL_PATH}/SMF")
 else ()
   message(WARNING "SMF not found, companion mod will not be deployed automatically.")
 endif ()
+

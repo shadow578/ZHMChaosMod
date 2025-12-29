@@ -8,6 +8,8 @@
 #include "EffectRegistry.h"
 #include "Helpers/ImGuiExtras.h"
 
+#include "BuildInfo.h"
+
 #include <set>
 
 #define TAG "[ChaosModUI] "
@@ -109,7 +111,7 @@ void ChaosMod::DrawMainUI(const bool p_bHasFocus)
         ImGui::SeparatorText("About");
         ImGui::TextWrapped(fmt::format(
             "ZHMChaosMod Version {}, developed by {}.",
-            GetVersion(),
+            BuildInfo::GetVersion(),
             m_sAuthorNames
         ).c_str());
     }
