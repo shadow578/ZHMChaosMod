@@ -1,30 +1,20 @@
 #pragma once
-#include <Glacier/ZResource.h>
-#include <Glacier/ZEntity.h>
-#include <Glacier/CompileReflection.h>
-#include <Glacier/EntityFactory.h>
+#include "ZResourceProvider.h"
 
 #include <string>
 #include <vector>
 #include <memory>
 
-class ZTemplateEntitySpawnerSession
+class ZTemplateEntitySpawnerSession : public ZResourceProviderSession
 {
 public:
-	ZTemplateEntitySpawnerSession(const std::string p_sResourcePath, const ZRuntimeResourceID p_ResourceId);
+	ZTemplateEntitySpawnerSession(const std::string p_sResourcePath, const ZRuntimeResourceID p_ResourceId)
+		: ZResourceProviderSession(p_sResourcePath, p_ResourceId)
+	{
+
+	}
+
 	~ZTemplateEntitySpawnerSession();
-
-	const ZRuntimeResourceID& GetResourceID() const
-	{
-		return m_ResourceID;
-	}
-
-	const std::string& GetResourcePath() const
-	{
-		return m_sResourcePath;
-	}
-
-	bool IsAvailable() const;
 
 	ZEntityRef Spawn();
 	
@@ -45,12 +35,7 @@ public:
 	std::string ToString() const;
 
 private:
-	const std::string m_sResourcePath;
-	const ZRuntimeResourceID m_ResourceID;
-	TResourcePtr<ZTemplateEntityFactory> m_ResourcePtr;
 	std::vector<ZEntityRef> m_aSpawnedEntities;
-
-	bool LoadResource(TResourcePtr<ZTemplateEntityFactory>& p_ResourcePtr) const;
 };
 
 template <detail::StringLiteral ResPath>
