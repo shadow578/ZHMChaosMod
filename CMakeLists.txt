@@ -68,7 +68,7 @@ add_dependencies(ChaosMod mod_build_info)
 
 # Deploy SMF companion mod on build if SMF was found in the game folder.
 if (EXISTS "${GAME_INSTALL_PATH}/SMF")
-  add_custom_target(run_deploy ChaosMod
+  add_custom_target(run_deploy ALL
     COMMAND "${GAME_INSTALL_PATH}/SMF/Deploy.exe"
     WORKING_DIRECTORY "${GAME_INSTALL_PATH}/SMF"
     COMMENT "Deploy SMF companion mod."

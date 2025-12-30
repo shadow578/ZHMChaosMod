@@ -39,6 +39,9 @@ public:
 		return {};
 	}
 
+	void Despawn(ZEntityRef p_rEntity);
+	void DespawnAll();
+
 	std::string ToString() const;
 
 private:

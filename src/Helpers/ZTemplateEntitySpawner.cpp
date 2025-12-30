@@ -35,18 +35,11 @@ ZTemplateEntitySpawnerSession::ZTemplateEntitySpawnerSession(const std::string p
 
 ZTemplateEntitySpawnerSession::~ZTemplateEntitySpawnerSession()
 {
-    // despawn entities
     // since we (potentially) uninstall the resource of the entities when m_ResourcePtr is released,
 	// we need to make sure to delete the entities first.
 	// otherwise, the entities may linger around with invalid resource pointers, leading to crashes shortly after.
     // alternatively, one could also just leave the resource loaded, but this is cleaner.
-    for (auto& s_Entity : m_aSpawnedEntities)
-    {
-        if (s_Entity)
-        {
-		    Functions::ZEntityManager_DeleteEntity->Call(Globals::EntityManager, s_Entity, {});
-        }
-    }
+    DespawnAll();
 
 	// m_ResourcePtr will be automatically released
 }
@@ -121,6 +114,41 @@ ZEntityRef ZTemplateEntitySpawnerSession::Spawn()
 
 	m_aSpawnedEntities.push_back(s_EntityRef);
     return s_EntityRef;
+}
+
+void ZTemplateEntitySpawnerSession::Despawn(ZEntityRef p_rEntity)
+{
+    if (!p_rEntity)
+    {
+        return;
+    }
+
+    m_aSpawnedEntities.erase(
+        std::remove_if(
+            m_aSpawnedEntities.begin(),
+            m_aSpawnedEntities.end(),
+            [&](const ZEntityRef& p_Ref) {
+                return p_Ref == p_rEntity;
+            }
+        ),
+        m_aSpawnedEntities.end()
+	);
+
+    Functions::ZEntityManager_DeleteEntity->Call(Globals::EntityManager, p_rEntity, {});
+}
+
+void ZTemplateEntitySpawnerSession::DespawnAll()
+{
+    for (auto& s_Entity : m_aSpawnedEntities)
+    {
+		// note: not using Despawn() here to avoid modifying m_aSpawnedEntities while iterating over it
+        if (s_Entity)
+        {
+            Functions::ZEntityManager_DeleteEntity->Call(Globals::EntityManager, s_Entity, {});
+        }
+    }
+
+	m_aSpawnedEntities.clear();
 }
 
 bool ZTemplateEntitySpawnerSession::IsAvailable() const

@@ -167,7 +167,7 @@ std::string Utils::GetEntityTypeName(const ZEntityRef& p_Entity)
         return "";
     }
 
-    // ´FIXME ugly unpacking
+    // FIXME ugly unpacking
     if (const auto s_pEntity = p_Entity.GetEntity())
     {
         if (const auto s_pType = s_pEntity->GetType(); s_pType->m_pInterfaces)
@@ -186,4 +186,39 @@ std::string Utils::GetEntityTypeName(const ZEntityRef& p_Entity)
     }
 
     return "";
+}
+
+ZEntityBlueprintFactoryBase* Utils::GetEntityBlueprintFactoryFor(ZEntityRef p_rEntity)
+{
+    // has BP factory?
+    if (auto* s_pBpFactory = p_rEntity.GetBlueprintFactory())
+    {
+        return s_pBpFactory;
+    }
+
+    // try get sub-blueprint from owner
+    if (auto* s_pParentBPFactory = GetEntityBlueprintFactoryFor(p_rEntity.GetOwningEntity()))
+    {
+        const auto s_nEntityId = p_rEntity.GetEntity()->GetType()->m_nEntityId;
+        if (const auto s_nSubIndex = s_pParentBPFactory->GetSubEntityIndex(s_nEntityId); s_nSubIndex != -1)
+        {
+            auto* s_pBPFactory = s_pParentBPFactory->GetSubEntityBlueprint(s_nSubIndex);
+
+            // if aspect, get template sub-blueprint
+            // TODO untested, does this work?!
+            if (s_pBPFactory->IsAspectEntityBlueprintFactory())
+            {
+                const auto* s_pAspectBPFactory = reinterpret_cast<const ZAspectEntityBlueprintFactory*>(s_pBPFactory);
+
+                const auto s_AspectSubIndex = s_pAspectBPFactory->m_aSubEntitiesLookUp[s_nSubIndex];
+
+                s_pBPFactory = reinterpret_cast<ZEntityBlueprintFactoryBase*>(s_pAspectBPFactory->m_aBlueprintFactories[s_AspectSubIndex.m_nSubentityIdx]);
+            }
+
+            return s_pBPFactory;
+        }
+    }
+
+    // no luck :(
+    return nullptr;
 }

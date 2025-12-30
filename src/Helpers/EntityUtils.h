@@ -34,4 +34,9 @@ namespace Utils
     std::string GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFactoryBase* p_pFactory = nullptr, int p_nSubIndex = -1);
 
     std::string GetEntityTypeName(const ZEntityRef& p_Entity);
+
+    /**
+	 * Get the blueprint factory for the given entity, even if it's a sub-entity.
+     */
+    ZEntityBlueprintFactoryBase* GetEntityBlueprintFactoryFor(ZEntityRef p_rEntity);
 };
