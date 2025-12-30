@@ -21,6 +21,10 @@ namespace Utils
             // by entity type. empty = no search by type
             std::string m_sEntityType = "";
 
+			// by (sub-entity) blueprint resource id. 0 = no search by blueprint id
+			// this is the id of a .pc_entityblueprint resource, not .pc_entitytype!
+			ZRuntimeResourceID m_ridBlueprint = ZRuntimeResourceID(0);
+
 			// maximum result count. 0 = no limit
 			size_t m_nMaxResults = 0;
         };

@@ -95,6 +95,15 @@ std::vector<ZEntityRef> Utils::EntityFinder::FindEntities(const SSearchParams& p
                 }
             }
 
+            // check blueprint resource
+            if (s_SubEntityFactory && p_Params.m_ridBlueprint.GetID() != 0)
+            {
+                if (s_SubEntityFactory->m_ridResource == p_Params.m_ridBlueprint)
+                {
+                    s_aFoundEntities.push_back(s_SubEntity);
+				}
+            }
+
             // check max results limit
             if (p_Params.m_nMaxResults > 0 &&
                 s_aFoundEntities.size() >= p_Params.m_nMaxResults)
