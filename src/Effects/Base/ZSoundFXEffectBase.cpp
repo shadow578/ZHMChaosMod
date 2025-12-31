@@ -52,22 +52,24 @@ void ZSoundFXEffectBase::OnDrawDebugUI()
     ImGui::EndDisabled();
 }
 
-void ZSoundFXEffectBase::PlayAt(const SMatrix& p_Position, const ZRuntimeResourceID& p_SoundResource)
+ZEntityRef ZSoundFXEffectBase::PlayAt(const SMatrix& p_Position, const ZRuntimeResourceID& p_SoundResource)
 {
     if (!m_pSoundPlayerSpawner)
     {
-        return;
+        return {};
     }
 
 	auto s_RootEntity = m_pSoundPlayerSpawner->SpawnAs<ZSpatialEntity>();
     if (!s_RootEntity)
     {
         Logger::Debug(TAG "Failed to spawn SFX player entity.");
-        return;
+        return {};
     }
 
     s_RootEntity.m_pInterfaceRef->SetWorldMatrix(p_Position);
     s_RootEntity.m_ref.SetProperty("m_pMainEvent", p_SoundResource);
 
     s_RootEntity.m_ref.SignalInputPin("Start");
+
+	return s_RootEntity.m_ref;
 }

@@ -36,7 +36,7 @@ protected:
         SColorRGB m_ParticleColorRangeEnd{ .r = 255, .g = 0, .b = 0 };
     };
 
-    void Spawn(const SParams& p_Params);
+    ZEntityRef Spawn(const SParams& p_Params);
 
 private:
     bool GetPoisonKeywordEntity(const EPoisonType p_eType, ZEntityRef p_RootEntity, ZEntityRef& p_KeywordEntity);

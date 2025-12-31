@@ -54,11 +54,11 @@ void ZExplosionEffectBase::OnDrawDebugUI()
     ImGui::EndDisabled();
 }
 
-void ZExplosionEffectBase::SpawnExplosion(const SExplosionParams& p_Params)
+ZEntityRef ZExplosionEffectBase::SpawnExplosion(const SExplosionParams& p_Params)
 {
     if (!m_pSpawnerSession)
     {
-        return;
+        return {};
     }
 
     if (auto s_RootEntity = m_pSpawnerSession->SpawnAs<ZSpatialEntity>())
@@ -71,5 +71,9 @@ void ZExplosionEffectBase::SpawnExplosion(const SExplosionParams& p_Params)
         s_RootEntity.m_ref.SetProperty("m_eDeathType", p_Params.m_eDeathContext);
 
         s_RootEntity.m_ref.SignalInputPin("Start");
+
+		return s_RootEntity.m_ref;
     }
+
+    return {};
 }

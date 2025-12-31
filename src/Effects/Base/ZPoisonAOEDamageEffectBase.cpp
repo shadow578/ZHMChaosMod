@@ -81,17 +81,17 @@ void ZPoisonAOEDamageEffectBase::OnDrawDebugUI()
     ImGui::EndDisabled();
 }
 
-void ZPoisonAOEDamageEffectBase::Spawn(const SParams& p_Params)
+ZEntityRef ZPoisonAOEDamageEffectBase::Spawn(const SParams& p_Params)
 {
     if (!m_pEffectCloudSpawner)
     {
-        return;
-	}
+        return {};
+    }
 
 	auto s_RootEntity = m_pEffectCloudSpawner->SpawnAs<ZSpatialEntity>();
     if (!s_RootEntity)
     {
-        return;
+        return {};
     }
 
     s_RootEntity.m_pInterfaceRef->SetWorldMatrix(p_Params.m_Position);
@@ -101,7 +101,7 @@ void ZPoisonAOEDamageEffectBase::Spawn(const SParams& p_Params)
     if (!GetPoisonKeywordEntity(p_Params.m_eType, s_RootEntity.m_ref, s_KeywordEntity))
     {
         Logger::Debug(TAG "Could not find poison keyword entity for type {}", static_cast<int>(p_Params.m_eType));
-        return;
+        return {};
     }
 
     s_RootEntity.m_ref.SetProperty("m_rTarget", s_KeywordEntity);
@@ -113,6 +113,8 @@ void ZPoisonAOEDamageEffectBase::Spawn(const SParams& p_Params)
 
     // trigger
     s_RootEntity.m_ref.SignalInputPin("Start");
+
+	return s_RootEntity.m_ref;
 }
 
 bool ZPoisonAOEDamageEffectBase::GetPoisonKeywordEntity(const EPoisonType p_eType, ZEntityRef p_RootEntity, ZEntityRef& p_KeywordEntity)

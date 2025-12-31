@@ -47,29 +47,32 @@ void ZPlayerFlatulenceEffect::Start()
 {
     if (const auto s_Player = SDK()->GetLocalPlayer())
     {
-        if (const auto s_PlayerSpatial = s_Player.m_ref.QueryInterface<ZSpatialEntity>())
+        if (auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_Player.m_ref))
         {
-            auto s_WM = s_PlayerSpatial->GetWorldMatrix();
-
-            // position roughly at ass level
-            const auto s_Forward = (-s_WM.Backward).Normalized();
-            const auto s_Upward = (s_WM.Up).Normalized();
-            s_WM.Trans += (s_Upward * 0.60f) + (s_Forward * -0.20f);
+            // position roughly at ass level when relative to player
+            auto s_WM = SMatrix();
+            s_WM.Trans.x = 0.0f;
+            s_WM.Trans.y = 0.1f;
+            s_WM.Trans.z = 0.9f;
 
             // poison AOE
             const ZPoisonAOEDamageEffectBase::SParams s_PoisonParams{
                 .m_Position = s_WM,
                 .m_eType = ZPoisonAOEDamageEffectBase::EPoisonType::SICK,
                 .m_AreaSize = SVector3(8.0f, 8.0f, 8.0f),
-                .m_ParticleColorRangeStart{.r = 69, .g = 191, .b = 0 },
-                .m_ParticleColorRangeEnd{.r = 94, .g = 255, .b = 0 }
+                .m_ParticleColorRangeStart{.r = 25, .g = 240, .b = 0 },
+                .m_ParticleColorRangeEnd{.r = 25, .g = 200, .b = 0 }
             };
-            ZPoisonAOEDamageEffectBase::Spawn(s_PoisonParams);
+            auto s_rPoisonEntity = ZPoisonAOEDamageEffectBase::Spawn(s_PoisonParams);
 
             // sound effect
-            ZSoundFXEffectBase::PlayAt(s_WM, 
+            auto s_rSFXEntity = ZSoundFXEffectBase::PlayAt(s_WM, 
                 m_pSFXResource->IsAvailable() ? m_pSFXResource->GetResourceID() : c_ridSFXFallback
             );
+
+            // set player as parent of entities
+            s_rPoisonEntity.SetProperty("m_eidParent", /*TEntityRef<SpatialEntity>*/ s_rPlayerSpatial);
+			s_rSFXEntity.SetProperty("m_eidParent", /*TEntityRef<SpatialEntity>*/ s_rPlayerSpatial);
         }
     }
 }

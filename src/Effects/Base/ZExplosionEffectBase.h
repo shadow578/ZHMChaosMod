@@ -22,7 +22,7 @@ protected:
         EDeathType m_eDeathType = EDeathType::eDT_KILL;
     };
 
-    void SpawnExplosion(const SExplosionParams& p_Params);
+    ZEntityRef SpawnExplosion(const SExplosionParams& p_Params);
 
 private:
     std::unique_ptr<ZTemplateEntitySpawnerSession> m_pSpawnerSession;

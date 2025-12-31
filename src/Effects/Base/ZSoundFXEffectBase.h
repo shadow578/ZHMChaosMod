@@ -16,7 +16,7 @@ public:
     bool Available() const override;
 
 protected:
-    void PlayAt(const SMatrix& p_Position, const ZRuntimeResourceID& p_SoundResource);
+    ZEntityRef PlayAt(const SMatrix& p_Position, const ZRuntimeResourceID& p_SoundResource);
 
 private:
     std::unique_ptr<ZTemplateEntitySpawnerSession> m_pSoundPlayerSpawner;
