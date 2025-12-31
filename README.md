@@ -1,10 +1,9 @@
 # Hitman 3 (WOA) ChaosMod
 
-This is __ChaosMod__, a mod for Hitman 3!
+This is **ChaosMod**, a mod for Hitman 3!
 
 the chaos mod mod injects random effects into your gameplay to create unpredictable, entertaining and often very difficult to handle scenarios.
 heavily inspired by the [GTA V chaos mod](https://github.com/gta-chaos-mod/ChaosModV).
-
 
 ## Installation Instructions
 
@@ -16,7 +15,6 @@ heavily inspired by the [GTA V chaos mod](https://github.com/gta-chaos-mod/Chaos
 6. Enjoy & good luck!
 
 \* The version to use should generally be the latest release, but check ChaosMod release notes for any specific version requirements.
-
 
 ## Development
 
@@ -44,9 +42,10 @@ while many effects work without it, some require it to function properly.
 for development, it is highly recommended to set up the companion mod as well.
 
 to do so:
-- install SMF to your game directory into the `SMF` folder (e.g. `C:\Program Files (x86)\Steam\steamapps\common\Hitman 3\SMF`).
-- checkout the companion mod repository into the `mods` folder of SMF (e.g. `C:\Program Files (x86)\Steam\steamapps\common\Hitman 3\SMF\Mods\ZHMChaosModCompanion`).
-- any changes made to the companion mod will automatically be re-deployed when you build the chaos mod.
+
+-   install SMF to your game directory into the `SMF` folder (e.g. `C:\Program Files (x86)\Steam\steamapps\common\Hitman 3\SMF`).
+-   checkout the companion mod repository into the `mods` folder of SMF (e.g. `C:\Program Files (x86)\Steam\steamapps\common\Hitman 3\SMF\Mods\ZHMChaosModCompanion`).
+-   any changes made to the companion mod will automatically be re-deployed when you build the chaos mod.
 
 ### Developing Effects
 
@@ -56,6 +55,7 @@ reusable effect bases (like for interpolating in/out) are also available, and ar
 generally, if you're creating a new effect that has some reusable logic, consider adding it to the base effects for future use.
 
 minimal mod example:
+
 ```cpp
 // MyChaosEffect.h
 #pragma once
@@ -100,7 +100,6 @@ refer to existing effects in the `Effects` folder for more complex examples.
 
 for any other functions, refer to the `IChaosEffect` interface definition.
 
-
 #### Effects vs Unlockers
 
 effects are the main mechanism of the chaos mod.
@@ -108,3 +107,13 @@ they implement the actual chaotic behavior, and are selected at random during ga
 
 unlockers are a special, cut-down type of effect that aim to help the player in case of soft-lock situations.
 they may be selected at any time by the player, even with other effects active.
+
+#### Custom Entities & Assets
+
+effects that require custom entities or assets need to use the companion mod.
+for usage of these assets, always use the `ZResourceProvider` / `ZTemplateEntitySpawner` classes from the companion mod, as they handle loading and unloading of resources properly.
+
+## Related
+
+-   [SMF Companion Mod](https://github.com/shadow578/ZHMChaosModCompanion)
+-   [G2WwiseProject](https://github.com/shadow578/ChaosMod_G2WwiseProject)

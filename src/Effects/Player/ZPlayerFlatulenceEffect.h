@@ -2,8 +2,11 @@
 #include "Effects/Base/ZPoisonAOEDamageEffectBase.h"
 #include "Effects/Base/ZSoundFXEffectBase.h"
 
+#include "Helpers/ZResourceProvider.h"
+
 class ZPlayerFlatulenceEffect : public ZPoisonAOEDamageEffectBase, public ZSoundFXEffectBase
 {
+public:
     void LoadResources() override;
 	void OnClearScene() override;
     void OnDrawDebugUI() override;
@@ -19,4 +22,7 @@ class ZPlayerFlatulenceEffect : public ZPoisonAOEDamageEffectBase, public ZSound
     {
         return EDuration::OneShot;
     }
+
+private:
+    std::unique_ptr<ZResourceProviderSession> m_pSFXResource;
 };

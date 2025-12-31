@@ -7,20 +7,29 @@
 
 #include "EffectRegistry.h"
 
+constexpr auto c_ridSFXFallback = ResId<"[assembly:/sound/wwise/exportedwwisedata/events/props_events/play_sfx_inflatable_deflate_01.wwiseevent].pc_wwisebank">;
+static ZResourceProvider<"[assembly:/sound/wwise/exportedwwisedata/events/chaosmod/play_sfx_flatulence.wwiseevent].pc_wwisebank"> g_SFXResourceProvider;
+
 void ZPlayerFlatulenceEffect::LoadResources() 
 {
     ZPoisonAOEDamageEffectBase::LoadResources();
     ZSoundFXEffectBase::LoadResources();
+
+	m_pSFXResource = g_SFXResourceProvider.CreateSession();
 }
 
 void ZPlayerFlatulenceEffect::OnClearScene() 
 {
     ZPoisonAOEDamageEffectBase::OnClearScene();
     ZSoundFXEffectBase::OnClearScene();
+
+	m_pSFXResource = nullptr;
 }
 
 void ZPlayerFlatulenceEffect::OnDrawDebugUI() 
 {
+	ImGui::TextUnformatted(fmt::format("SFX Resource: {}", m_pSFXResource->ToString()).c_str());
+
     ImGui::SeparatorText("ZPoisonAOEDamageEffectBase");
     ZPoisonAOEDamageEffectBase::OnDrawDebugUI();
 
@@ -51,15 +60,16 @@ void ZPlayerFlatulenceEffect::Start()
             const ZPoisonAOEDamageEffectBase::SParams s_PoisonParams{
                 .m_Position = s_WM,
                 .m_eType = ZPoisonAOEDamageEffectBase::EPoisonType::SICK,
-                .m_AreaSize = SVector3(5.0f, 5.0f, 5.0f),
+                .m_AreaSize = SVector3(8.0f, 8.0f, 8.0f),
                 .m_ParticleColorRangeStart{.r = 69, .g = 191, .b = 0 },
                 .m_ParticleColorRangeEnd{.r = 94, .g = 255, .b = 0 }
             };
             ZPoisonAOEDamageEffectBase::Spawn(s_PoisonParams);
 
             // sound effect
-            constexpr auto s_SoundResourceId = ResId<"[assembly:/sound/wwise/exportedwwisedata/events/props_events/play_sfx_inflatable_deflate_01.wwiseevent].pc_wwisebank">;
-            ZSoundFXEffectBase::PlayAt(s_WM, s_SoundResourceId);
+            ZSoundFXEffectBase::PlayAt(s_WM, 
+                m_pSFXResource->IsAvailable() ? m_pSFXResource->GetResourceID() : c_ridSFXFallback
+            );
         }
     }
 }
