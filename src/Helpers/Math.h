@@ -1,5 +1,6 @@
 #pragma once
 #include "Glacier/ZMath.h"
+#include "Glacier/SColorRGB.h"
 
 #include <vector>
 #include <random>
@@ -54,4 +55,17 @@ namespace Math
     }
 
     SMatrix InterpolateAffine(const SMatrix& p_A, const SMatrix& p_B, const float32 p_fT);
+
+    static SColorRGB GetRainbowColor(const float32 p_fTime, const float32 p_fOffset)
+    {
+        constexpr float32 c_fTwoPi = 6.28318530718f;
+
+        float32 s_fT = p_fTime + p_fOffset * c_fTwoPi;
+
+        return SColorRGB{
+            .r = (std::sin(s_fT) + 1.0f) * 0.5f,
+            .g = (std::sin(s_fT + (c_fTwoPi / 3.0f)) + 1.0f) * 0.5f,
+            .b = (std::sin(s_fT + (2.0f * c_fTwoPi / 3.0f)) + 1.0f) * 0.5f
+        };
+    }
 };

@@ -68,24 +68,11 @@ void ZRainbowVehiclesEffect::OnSlowUpdate(const float32 p_fDeltaTime, const floa
 	float32 s_fOffset = 0.0f;
 	for (auto& s_rVehicle : m_aVehicles)
 	{
-		const SColorRGB s_Color = GetRainbowColor(m_fTimeElapsed, s_fOffset);
+		const SColorRGB s_Color = Math::GetRainbowColor(m_fTimeElapsed, s_fOffset);
 		s_rVehicle.SetProperty("VehiclePaintDiffuse", /*SColorRGB*/ s_Color);
 
 		s_fOffset += 0.137f;
 	}
-}
-
-SColorRGB ZRainbowVehiclesEffect::GetRainbowColor(const float32 p_fTime, const float32 p_fOffset)
-{
-	constexpr float32 c_fTwoPi = 6.28318530718f;
-
-	float32 s_fT = p_fTime + p_fOffset * c_fTwoPi;
-
-	return SColorRGB{
-		.r = (std::sin(s_fT) + 1.0f) * 0.5f,
-		.g = (std::sin(s_fT + (c_fTwoPi / 3.0f)) + 1.0f) * 0.5f,
-		.b = (std::sin(s_fT + (2.0f * c_fTwoPi / 3.0f)) + 1.0f) * 0.5f
-	};
 }
 
 REGISTER_CHAOS_EFFECT(ZRainbowVehiclesEffect)
