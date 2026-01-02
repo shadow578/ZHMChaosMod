@@ -126,11 +126,13 @@ void ChaosMod::OnEffectSlowUpdate()
 void ChaosMod::OnLoadOrClearScene()
 {
     // ensure all active effects are stopped before unload
-    ForeachEffect([](IChaosEffect* p_pEffect)
+    for (auto& s_ActiveEffect : m_aActiveEffects)
+    {
+        if (s_ActiveEffect.m_pEffect && s_ActiveEffect.m_pEffect->Available())
         {
-            p_pEffect->Stop();
+            s_ActiveEffect.m_pEffect->Stop();
         }
-    );
+    }
 
 	m_EffectTimer.m_bEnable = false;
     m_EffectTimer.Reset();
