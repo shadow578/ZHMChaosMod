@@ -3,9 +3,14 @@
 
 #include <Glacier/ZEntity.h>
 
+#include <Helpers/ZTemplateEntitySpawner.h>
+
 class ZRenderPostfilerEffect : public IChaosEffect
 {
 public:
+	void LoadResources() override;
+
+	void OnActivatingScene() override;
 	void OnEnterScene() override;
 	void OnClearScene() override;
 	bool Available() const override;
@@ -14,7 +19,8 @@ public:
 	void Stop() override;
 
 private:
-	ZEntityRef m_rPostfilterLayerEntity;
-	ZEntityRef m_rPostfilterParametersEntity;
-	bool m_bPostfilterLoaded = false;
+	ZEntityRef m_rPostfilterGraphEntity;
+	bool m_bPostfilterGraphEntityLoaded = false;
+
+	std::unique_ptr<ZTemplateEntitySpawnerSession> m_pCustomLayer;
 };

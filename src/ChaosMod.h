@@ -27,6 +27,7 @@ private: // Hooks
     DECLARE_PLUGIN_DETOUR(ChaosMod, void, OnLoadScene, ZEntitySceneContext*, SSceneInitParameters&);
     DECLARE_PLUGIN_DETOUR(ChaosMod, void, OnClearScene, ZEntitySceneContext* th, bool p_FullyUnloadScene);
     DECLARE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th, ESceneLoadingStage stage);
+    DECLARE_PLUGIN_DETOUR(ChaosMod, void, OnSetGameState, ZLevelManager* th, ZLevelManager::EGameState state);
 
 private: // Misc.
     ZTimer m_SlowUpdateTimer;

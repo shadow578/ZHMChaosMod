@@ -29,6 +29,7 @@ ChaosMod::~ChaosMod()
     Hooks::ZEntitySceneContext_LoadScene->RemoveDetour(&ChaosMod::OnLoadScene);
     Hooks::ZEntitySceneContext_ClearScene->RemoveDetour(&ChaosMod::OnClearScene);
     Hooks::ZEntitySceneContext_SetLoadingStage->RemoveDetour(&ChaosMod::OnSetLoadingStage);
+    Hooks::ZLevelManager_SetGameState->RemoveDetour(&ChaosMod::OnSetGameState);
 
     ForeachEffect([](IChaosEffect* p_pEffect)
         {
@@ -51,6 +52,7 @@ void ChaosMod::Init()
     Hooks::ZEntitySceneContext_LoadScene->AddDetour(this, &ChaosMod::OnLoadScene);
     Hooks::ZEntitySceneContext_ClearScene->AddDetour(this, &ChaosMod::OnClearScene);
     Hooks::ZEntitySceneContext_SetLoadingStage->AddDetour(this, &ChaosMod::OnSetLoadingStage);
+	Hooks::ZLevelManager_SetGameState->AddDetour(this, &ChaosMod::OnSetGameState);
 
     // sort effect registry to make it more pleasing in debug ui
     EffectRegistry::GetInstance().Sort();
@@ -187,6 +189,21 @@ DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th,
             }
         );
 	}
+
+    return HookResult<void>(HookAction::Continue());
+}
+
+DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnSetGameState, ZLevelManager* th, ZLevelManager::EGameState state)
+{
+    if (state == ZLevelManager::EGameState::EGS_Activating)
+    {
+        ForeachEffect([](IChaosEffect* p_pEffect)
+            {
+                Logger::Debug(TAG "Forwarding OnActivatingScene to '{}'", p_pEffect->GetName());
+                p_pEffect->OnActivatingScene();
+            }
+        );
+    }
 
     return HookResult<void>(HookAction::Continue());
 }
