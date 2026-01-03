@@ -28,21 +28,16 @@ void ZRainbowVehiclesEffect::OnEnterScene()
 
 		m_aVehicles.push_back(s_rVehicle);
 	}
-
-	m_bVehiclesLoaded = true;
 }
 
 void ZRainbowVehiclesEffect::OnClearScene()
 {
 	m_aVehicles.clear();
-	m_bVehiclesLoaded = false;
 }
 
 bool ZRainbowVehiclesEffect::Available() const
 {
-	return IChaosEffect::Available() &&
-		// if not yet loaded, report Available so that OnEnterScene gets called
-		(!m_bVehiclesLoaded || !m_aVehicles.empty());
+	return IChaosEffect::Available() && !m_aVehicles.empty();
 }
 
 void ZRainbowVehiclesEffect::Start()

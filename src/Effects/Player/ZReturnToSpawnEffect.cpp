@@ -15,7 +15,6 @@
 void ZReturnToSpawnEffect::OnEnterScene()
 {
     m_aSpawnPoints.clear();
-	m_bSpawnPointsLoaded = true;
 
     const Utils::EntityFinder::SSearchParams s_Query{
         .m_sEntityType = "ZHeroSpawn"
@@ -50,14 +49,11 @@ void ZReturnToSpawnEffect::OnEnterScene()
 void ZReturnToSpawnEffect::OnClearScene()
 {
     m_aSpawnPoints.clear();
-	m_bSpawnPointsLoaded = false;
 }
 
 bool ZReturnToSpawnEffect::Available() const
 {
-    return IChaosEffect::Available() &&
-		// if not yet loaded, report Available so that OnEnterScene gets called
-        (!m_bSpawnPointsLoaded || !m_aSpawnPoints.empty());
+    return IChaosEffect::Available() && !m_aSpawnPoints.empty();
 }
 
 void ZReturnToSpawnEffect::Start()

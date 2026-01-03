@@ -72,7 +72,7 @@ void ChaosMod::OnDrawMenu()
 
 void ChaosMod::OnDrawUI(const bool p_HasFocus)
 {
-    ForeachEffect([p_HasFocus](IChaosEffect* p_pEffect)
+    ForeachEffect(false, [p_HasFocus](IChaosEffect* p_pEffect)
         {
             p_pEffect->OnDrawUI(p_HasFocus);
         }

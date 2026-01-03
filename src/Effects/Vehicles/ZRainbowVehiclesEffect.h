@@ -24,7 +24,6 @@ public:
 
 private:
 	std::vector<ZEntityRef> m_aVehicles;
-	bool m_bVehiclesLoaded = false;
 
 	bool m_bActive = false;
 	float32 m_fTimeElapsed = 0.0f;

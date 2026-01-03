@@ -143,5 +143,4 @@ protected: // API
 private:
 	LayerEntityWrapper m_PostfilterLayer;
 	ParametersEntityWrapper m_PostfilterParameters;
-	bool m_bPostfilterLoaded = false;
 };

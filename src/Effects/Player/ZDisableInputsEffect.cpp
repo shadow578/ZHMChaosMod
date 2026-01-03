@@ -11,12 +11,22 @@
 
 void ZDisableInputsEffect::OnModInitialized()
 {
+    if (!Hooks::ZInputAction_Digital || !Hooks::ZInputAction_Analog)
+    {
+        return;
+    }
+
     Hooks::ZInputAction_Digital->AddDetour(this, &ZDisableInputsEffect::OnInputActionDigital);
     Hooks::ZInputAction_Analog->AddDetour(this, &ZDisableInputsEffect::OnInputActionAnalog);
 }
 
 void ZDisableInputsEffect::OnModUnload()
 {
+    if (!Hooks::ZInputAction_Digital || !Hooks::ZInputAction_Analog)
+    {
+        return;
+    }
+    
     Hooks::ZInputAction_Digital->RemoveDetour(&ZDisableInputsEffect::OnInputActionDigital);
     Hooks::ZInputAction_Analog->RemoveDetour(&ZDisableInputsEffect::OnInputActionAnalog);
 }

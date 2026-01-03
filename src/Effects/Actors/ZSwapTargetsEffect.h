@@ -29,5 +29,4 @@ public:
 
 private:
 	std::vector<TEntityRef<ZSpatialEntity>> m_aTargetSpatials;
-	bool m_bTargetsLoaded = false;
 };

@@ -64,7 +64,6 @@ private:
 	};
 	
 	std::vector<SLightEntityInfo> m_aLights;
-	bool m_bLightsLoaded = false;
 
 	bool m_bActive = false;
 	float32 m_fTimeElapsed = 0.0f;

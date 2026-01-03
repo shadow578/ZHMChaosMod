@@ -22,7 +22,6 @@ public:
 
 private:
 	std::vector<ZEntityRef> m_aVehicleCores;
-	bool m_bVehiclesLoaded = false;
 
 	bool m_bActive = false;
 };

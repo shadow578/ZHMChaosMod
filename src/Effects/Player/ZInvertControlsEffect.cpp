@@ -11,11 +11,21 @@
 
 void ZInvertControlsEffect::OnModInitialized()
 {
+    if (!Hooks::ZInputAction_Digital || !Hooks::ZInputAction_Analog)
+    {
+        return;
+    }
+
     Hooks::ZInputAction_Analog->AddDetour(this, &ZInvertControlsEffect::OnInputActionAnalog);
 }
 
 void ZInvertControlsEffect::OnModUnload()
 {
+    if (!Hooks::ZInputAction_Digital || !Hooks::ZInputAction_Analog)
+    {
+        return;
+    }
+
     Hooks::ZInputAction_Analog->RemoveDetour(&ZInvertControlsEffect::OnInputActionAnalog);
 }
 

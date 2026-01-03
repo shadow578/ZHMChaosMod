@@ -24,5 +24,4 @@ public:
 
 private:
 	std::vector<ZEntityRef> m_aFuelTanks;
-	bool m_bVehiclesLoaded = false;
 };

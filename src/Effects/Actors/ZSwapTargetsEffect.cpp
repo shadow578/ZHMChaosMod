@@ -13,7 +13,6 @@
 
 void ZSwapTargetsEffect::OnEnterScene()
 {
-	m_bTargetsLoaded = true;
 	m_aTargetSpatials.clear();
 
 	const Utils::EntityFinder::SSearchParams s_Query{
@@ -66,15 +65,13 @@ void ZSwapTargetsEffect::OnEnterScene()
 void ZSwapTargetsEffect::OnClearScene()
 {
 	m_aTargetSpatials.clear();
-	m_bTargetsLoaded = false;
 }
 
 
 bool ZSwapTargetsEffect::Available() const
 {
-	return IChaosEffect::Available() &&
-		// if not yet loaded, report Available so that OnEnterScene gets called
-		(!m_bTargetsLoaded || m_aTargetSpatials.size() >= 2);
+	return IChaosEffect::Available() && 
+		m_aTargetSpatials.size() >= 2;
 }
 
 void ZSwapTargetsEffect::Start()

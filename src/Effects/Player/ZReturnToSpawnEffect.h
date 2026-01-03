@@ -26,6 +26,5 @@ public:
 	}
 
 private:
-	bool m_bSpawnPointsLoaded = false;
 	std::vector<SMatrix> m_aSpawnPoints;
 };

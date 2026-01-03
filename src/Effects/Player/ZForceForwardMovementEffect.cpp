@@ -11,11 +11,21 @@
 
 void ZForceForwardMovementEffect::OnModInitialized()
 {
+    if (!Hooks::ZInputAction_Digital || !Hooks::ZInputAction_Analog)
+    {
+        return;
+    }
+    
     Hooks::ZInputAction_Analog->AddDetour(this, &ZForceForwardMovementEffect::OnInputActionAnalog);
 }
 
 void ZForceForwardMovementEffect::OnModUnload()
 {
+    if (!Hooks::ZInputAction_Digital || !Hooks::ZInputAction_Analog)
+    {
+        return;
+    }
+    
     Hooks::ZInputAction_Analog->RemoveDetour(&ZForceForwardMovementEffect::OnInputActionAnalog);
 }
 
