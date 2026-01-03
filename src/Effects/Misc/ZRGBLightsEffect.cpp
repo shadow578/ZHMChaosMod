@@ -19,7 +19,15 @@ void ZRGBLightsEffect::OnEnterScene()
 	const auto s_aLightEntities = Utils::EntityFinder::FindEntities(s_Query);
 	for (auto& s_rLightEntity : s_aLightEntities)
 	{
-		m_aLights.push_back(SLightEntityInfo(s_rLightEntity));
+		// exclude environmental and area lights
+		const auto s_eType = s_rLightEntity.GetProperty<ILightEntity_ELightType>("m_eLightType").Get();
+		if (s_eType == ILightEntity_ELightType::LT_DIRECTIONAL ||
+			s_eType == ILightEntity_ELightType::LT_OMNI ||
+			s_eType == ILightEntity_ELightType::LT_SPOT || 
+			s_eType == ILightEntity_ELightType::LT_SQUARESPOT)
+		{
+			m_aLights.push_back(SLightEntityInfo(s_rLightEntity));
+		}
 	}
 
 	Logger::Debug(TAG "Found {} light entities!", m_aLights.size());
