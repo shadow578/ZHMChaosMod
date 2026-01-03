@@ -165,31 +165,31 @@ void ZLiveReactionCamEffect::SpawnLiveReactionCam(TEntityRef<ZSpatialEntity> p_r
 	//
 	// x offset (0.055) needed since head pivot is roughly at the neck, but we want head center
 	// y offset (0.700) to be a bit in front of the face
-	m_rPIPCameraEntity.SetProperty("m_eidParent", /*TEntityRef<SpatialEntity>*/ p_rTargetHead);
+	Utils::SetProperty<TEntityRef<ZSpatialEntity>>(m_rPIPCameraEntity, "m_eidParent", p_rTargetHead);
 
 	SMatrix43 s_mLocalTransform;
 	s_mLocalTransform.XAxis = { 0.000f, -0.000f,  1.000f };
 	s_mLocalTransform.YAxis = { 1.000f,  0.000f, -0.000f };
 	s_mLocalTransform.ZAxis = { -0.000f, 1.000f,  0.000f };
 	s_mLocalTransform.Trans = { 0.055f,  0.700f,  0.000 };
-	m_rPIPCameraEntity.SetProperty("m_mTransform", /*SMatrix43*/ s_mLocalTransform);
+	Utils::SetProperty<SMatrix43>(m_rPIPCameraEntity, "m_mTransform", s_mLocalTransform);
 
 	// prevent PIP view from automatically closing after timer (we do it manually)
-	m_rPIPCameraEntity.SetProperty("m_bValueusepiptimer", /*bool*/ false);
+	Utils::SetProperty<bool>(m_rPIPCameraEntity, "m_bValueusepiptimer", false);
 
 	// take highes PIP priority so it overrides other PIP cameras
-	m_rPIPCameraEntity.SetProperty("m_nValuePiPPriority", /*int32*/ 9999);
+	Utils::SetProperty<int32>(m_rPIPCameraEntity, "m_nValuePiPPriority", 9999);
 
 	// mess with the camera properties to do a funny
-	m_rPIPCameraEntity.SetProperty("m_bAutoAspect", /*bool*/ false); // manual aspect
-	m_rPIPCameraEntity.SetProperty("m_fAspectWByH", /*float32*/ 0.8f); // stretch horizontally
-	m_rPIPCameraEntity.SetProperty("m_fFovYDeg", /*float32*/ 20.0f); // really zoom in on the face
+	Utils::SetProperty<bool>(m_rPIPCameraEntity, "m_bAutoAspect", false); // manual aspect
+	Utils::SetProperty<float32>(m_rPIPCameraEntity, "m_fAspectWByH", 0.8f); // stretch horizontally
+	Utils::SetProperty<float32>(m_rPIPCameraEntity, "m_fFovYDeg", 20.0f); // really zoom in on the face
 
 	// the PIP view needs a HUD message, otherwise only the camera feed shows
-	m_rPIPCameraEntity.SetProperty("m_rHUDMessagepip", /*TResourcePtr (actually ZRuntimeResourceID)*/ p_HudMessageId);
+	Utils::SetProperty<ZRuntimeResourceID>(m_rPIPCameraEntity, "m_rHUDMessagepip", p_HudMessageId);
 
 	// set icon
-	m_rPIPCameraEntity.SetProperty("m_eIcon", /*ZPIPMessageEntity.EIcon*/ p_eIcon);
+	Utils::SetProperty<ZPIPMessageEntity_EIcon>(m_rPIPCameraEntity, "m_eIcon", p_eIcon);
 
 	// by default, the PIP is automatically closed when looking at it (via look-at trigger)
 	// there's no direct way to disable this, but we can manipulate the look-at trigger to effectively never trigger
@@ -201,8 +201,8 @@ void ZLiveReactionCamEffect::SpawnLiveReactionCam(TEntityRef<ZSpatialEntity> p_r
 			{
 				auto s_rLookAtTrigger = ZEntityRef(s_pLookAtTrigger);
 
-				s_rLookAtTrigger.SetProperty("m_nTriggerCount", /*int32*/ 0);
-				s_rLookAtTrigger.SetProperty("m_fTriggerDelay", /*float32*/ 9999.0f);
+				Utils::SetProperty<int32>(s_rLookAtTrigger, "m_nTriggerCount", 0);
+				Utils::SetProperty<float32>(s_rLookAtTrigger, "m_fTriggerDelay", 9999.0f);
 			}
 		}
 	}

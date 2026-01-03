@@ -4,6 +4,8 @@
 #include <Glacier/ZEntity.h>
 #include <Glacier/SColorRGB.h>
 
+#include "Helpers/EntityUtils.h"
+
 #include <vector>
 
 class ZRGBLightsEffect : public IChaosEffect
@@ -32,13 +34,16 @@ private:
 		SColorRGB m_vOriginalColor;
 
 		SLightEntityInfo(ZEntityRef p_rLightEntity) :
-			m_rLightEntity(p_rLightEntity)
+			m_rLightEntity(p_rLightEntity),
+			m_bOriginalVisible(false),
+			m_fOriginalBrightness(0.0f),
+			m_vOriginalColor({ 0.0f, 0.0f, 0.0f })
 		{
 			if (m_rLightEntity)
 			{
-				m_bOriginalVisible = m_rLightEntity.GetProperty<bool>("m_bVisible").Get();
-				m_fOriginalBrightness = m_rLightEntity.GetProperty<float32>("m_fDiffusePower").Get();
-				m_vOriginalColor = m_rLightEntity.GetProperty<SColorRGB>("m_diffuseColor").Get();
+				m_bOriginalVisible = Utils::GetProperty<bool>(m_rLightEntity, "m_bVisible").value_or(false);
+				m_fOriginalBrightness = Utils::GetProperty<float32>(m_rLightEntity, "m_fDiffusePower").value_or(0.0f);
+				m_vOriginalColor = Utils::GetProperty<SColorRGB>(m_rLightEntity, "m_diffuseColor").value_or(SColorRGB{ 1.0f, 1.0f, 1.0f });
 			}
 		}
 
@@ -46,9 +51,9 @@ private:
 		{
 			if (m_rLightEntity)
 			{
-				m_rLightEntity.SetProperty("m_bVisible", p_bVisible);
-				m_rLightEntity.SetProperty("m_fDiffusePower", p_fNewBrightness);
-				m_rLightEntity.SetProperty("m_diffuseColor", p_NewColor);
+				Utils::SetProperty<bool>(m_rLightEntity, "m_bVisible", p_bVisible);
+				Utils::SetProperty<float32>(m_rLightEntity, "m_fDiffusePower", p_fNewBrightness);
+				Utils::SetProperty<SColorRGB>(m_rLightEntity, "m_diffuseColor", p_NewColor);
 			}
 		}
 

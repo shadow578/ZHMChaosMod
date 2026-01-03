@@ -113,8 +113,8 @@ void ZFireworksEffect::Start()
 	}
 
 	// detach FX entity from barge and move barge out of sight
-	Utils::SetProperty(s_rFireworksFXEntity, "m_eidParent", ZEntityRef{});
-	Utils::SetProperty(s_rFireworksBarge, "m_bVisible", false);
+	Utils::SetProperty<ZEntityRef>(s_rFireworksFXEntity, "m_eidParent", ZEntityRef{});
+	Utils::SetProperty<bool>(s_rFireworksBarge, "m_bVisible", false);
 	if (auto* s_pBargeSpatial = s_rFireworksBarge.QueryInterface<ZSpatialEntity>())
 	{
 		SMatrix s_mWorldAway;
@@ -124,26 +124,26 @@ void ZFireworksEffect::Start()
 
 	// hide swirlmachines (yes, IOI calls them that...)
 	// not deparenting to also hide trails
-	Utils::SetProperty(s_rSwirlMachine1, "m_bVisible", false);
-	Utils::SetProperty(s_rSwirlMachine2, "m_bVisible", false);
+	Utils::SetProperty<bool>(s_rSwirlMachine1, "m_bVisible", false);
+	Utils::SetProperty<bool>(s_rSwirlMachine2, "m_bVisible", false);
 
 	// speed up timers to make more fireworks appear
 	const std::string c_sDelayName = "Delay time (ms)";
 	if (auto s_nDelay = Utils::GetProperty<int32>(s_rTimer0, c_sDelayName))
 	{
-		Utils::SetProperty(s_rTimer0, c_sDelayName, *s_nDelay / 2);
+		Utils::SetProperty<int32>(s_rTimer0, c_sDelayName, *s_nDelay / 2);
 	}
 	if (auto s_nDelay = Utils::GetProperty<int32>(s_rTimer1, c_sDelayName))
 	{
-		Utils::SetProperty(s_rTimer1, c_sDelayName, *s_nDelay / 2);
+		Utils::SetProperty<int32>(s_rTimer1, c_sDelayName, *s_nDelay / 2);
 	}
 	if (auto s_nDelay = Utils::GetProperty<int32>(s_rTimer2, c_sDelayName))
 	{
-		Utils::SetProperty(s_rTimer2, c_sDelayName, *s_nDelay / 2);
+		Utils::SetProperty<int32>(s_rTimer2, c_sDelayName, *s_nDelay / 2);
 	}
 	if (auto s_nDelay = Utils::GetProperty<int32>(s_rTimer3, c_sDelayName))
 	{
-		Utils::SetProperty(s_rTimer3, c_sDelayName, *s_nDelay / 2);
+		Utils::SetProperty<int32>(s_rTimer3, c_sDelayName, *s_nDelay / 2);
 	}
 
 	// move FX to player

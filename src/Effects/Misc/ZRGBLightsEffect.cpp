@@ -20,7 +20,7 @@ void ZRGBLightsEffect::OnEnterScene()
 	for (auto& s_rLightEntity : s_aLightEntities)
 	{
 		// exclude environmental and area lights
-		const auto s_eType = s_rLightEntity.GetProperty<ILightEntity_ELightType>("m_eLightType").Get();
+		const auto s_eType = Utils::GetProperty<ILightEntity_ELightType>(s_rLightEntity, "m_eLightType");
 		if (s_eType == ILightEntity_ELightType::LT_DIRECTIONAL ||
 			s_eType == ILightEntity_ELightType::LT_OMNI ||
 			s_eType == ILightEntity_ELightType::LT_SPOT || 

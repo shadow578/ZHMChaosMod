@@ -6,6 +6,7 @@
 #include <Glacier/ZSpatialEntity.h>
 
 #include "EffectRegistry.h"
+#include "Helpers/EntityUtils.h"
 
 constexpr auto c_ridSFXFallback = ResId<"[assembly:/sound/wwise/exportedwwisedata/events/props_events/play_sfx_inflatable_deflate_01.wwiseevent].pc_wwisebank">;
 static ZResourceProvider<"[assembly:/sound/wwise/exportedwwisedata/events/chaosmod/play_sfx_flatulence.wwiseevent].pc_wwisebank"> g_SFXResourceProvider;
@@ -71,8 +72,8 @@ void ZPlayerFlatulenceEffect::Start()
             );
 
             // set player as parent of entities
-            s_rPoisonEntity.SetProperty("m_eidParent", /*TEntityRef<SpatialEntity>*/ s_rPlayerSpatial);
-			s_rSFXEntity.SetProperty("m_eidParent", /*TEntityRef<SpatialEntity>*/ s_rPlayerSpatial);
+			Utils::SetProperty<TEntityRef<ZSpatialEntity>>(s_rPoisonEntity, "m_eidParent", s_rPlayerSpatial);
+			Utils::SetProperty<TEntityRef<ZSpatialEntity>>(s_rSFXEntity, "m_eidParent", s_rPlayerSpatial);
         }
     }
 }

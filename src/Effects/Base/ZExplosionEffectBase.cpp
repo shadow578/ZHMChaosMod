@@ -4,6 +4,8 @@
 
 #include <Glacier/ZSpatialEntity.h>
 
+#include "Helpers/EntityUtils.h"
+
 #define TAG "[ZExplosionEffectBase] "
 
 static ZTemplateEntitySpawner<"[assembly:/_pro/chaosmod/explosioneffect.entitytemplate].pc_entitytype"> g_ExplosionProp;
@@ -64,11 +66,12 @@ ZEntityRef ZExplosionEffectBase::SpawnExplosion(const SExplosionParams& p_Params
     if (auto s_RootEntity = m_pSpawnerSession->SpawnAs<ZSpatialEntity>())
     {
         s_RootEntity.m_pInterfaceRef->SetWorldMatrix(p_Params.m_Position);
-        s_RootEntity.m_ref.SetProperty("m_fTimeMin", p_Params.m_fFuseTimeMin);
-        s_RootEntity.m_ref.SetProperty("m_fTimeMax", p_Params.m_fFuseTimeMax);
-        s_RootEntity.m_ref.SetProperty("m_fTargetStrength", p_Params.m_fTargetStrength);
-        s_RootEntity.m_ref.SetProperty("m_eDeathContext", p_Params.m_eDeathContext);
-        s_RootEntity.m_ref.SetProperty("m_eDeathType", p_Params.m_eDeathContext);
+
+        Utils::SetProperty<float32>(s_RootEntity.m_ref, "m_fTimeMin", p_Params.m_fFuseTimeMin);
+        Utils::SetProperty<float32>(s_RootEntity.m_ref, "m_fTimeMax", p_Params.m_fFuseTimeMax);
+        Utils::SetProperty<float32>(s_RootEntity.m_ref, "m_fTargetStrength", p_Params.m_fTargetStrength);
+        Utils::SetProperty<EDeathContext>(s_RootEntity.m_ref, "m_eDeathContext", p_Params.m_eDeathContext);
+        Utils::SetProperty<EDeathType>(s_RootEntity.m_ref, "m_eDeathType", p_Params.m_eDeathType);
 
         s_RootEntity.m_ref.SignalInputPin("Start");
 

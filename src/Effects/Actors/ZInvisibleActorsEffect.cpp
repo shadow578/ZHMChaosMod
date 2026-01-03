@@ -2,6 +2,7 @@
 
 #include "EffectRegistry.h"
 #include "Helpers/ActorUtils.h"
+#include "Helpers/EntityUtils.h"
 
 void ZInvisibleActorsEffect::Start()
 {
@@ -27,7 +28,7 @@ void ZInvisibleActorsEffect::SetAllActorsVisibility(const bool p_bVisible)
         ZEntityRef s_ActorRef;
         s_pActor->GetID(s_ActorRef);
 
-        s_ActorRef.SetProperty("m_bVisible", p_bVisible);
+        Utils::SetProperty<bool>(s_ActorRef, "m_bVisible", p_bVisible);
     }
 }
 

@@ -29,7 +29,7 @@ void ZReturnToSpawnEffect::OnEnterScene()
     for (const auto& s_StartingLocation : s_aStartingLocations)
     {
         // attempt to get position property first
-        auto s_rPosition = s_StartingLocation.GetProperty<TEntityRef<ZSpatialEntity>>("m_rPosition").Get();
+        auto s_rPosition = Utils::GetProperty<TEntityRef<ZSpatialEntity>>(s_StartingLocation, "m_rPosition").value_or({});
         if (!s_rPosition)
         {
             // if that fails, fall back to the spatial entity of the location itself

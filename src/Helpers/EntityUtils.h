@@ -83,7 +83,7 @@ namespace Utils
 	 * @param p_sProperty The property name. If not found or of wrong type, returns false.
 	 * @param p_Value The value to set.
      */
-    template <class T>
+    template <typename T>
     inline bool SetProperty(ZEntityRef& p_rEntity, const std::string& p_sProperty, const T& p_Value, bool p_bInvokeChangeHandlers = true)
     {
         if (!p_rEntity)

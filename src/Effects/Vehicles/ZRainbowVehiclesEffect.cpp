@@ -20,8 +20,8 @@ void ZRainbowVehiclesEffect::OnEnterScene()
 			continue;
 		}
 
-		const auto s_ColorProp = s_rVehicle.GetProperty<SColorRGB>("VehiclePaintDiffuse");
-		if (s_ColorProp.IsEmpty())
+		const auto s_ColorProp = Utils::GetProperty<SColorRGB>(s_rVehicle, "VehiclePaintDiffuse");
+		if (!s_ColorProp)
 		{
 			continue;
 		}
@@ -69,7 +69,7 @@ void ZRainbowVehiclesEffect::OnSlowUpdate(const float32 p_fDeltaTime, const floa
 	for (auto& s_rVehicle : m_aVehicles)
 	{
 		const SColorRGB s_Color = Math::GetRainbowColor(m_fTimeElapsed, s_fOffset);
-		s_rVehicle.SetProperty("VehiclePaintDiffuse", /*SColorRGB*/ s_Color);
+		Utils::SetProperty<SColorRGB>(s_rVehicle, "VehiclePaintDiffuse", s_Color);
 
 		s_fOffset += 0.137f;
 	}

@@ -4,6 +4,7 @@
 #include <Glacier/ZSpatialEntity.h>
 
 #include "Helpers/Math.h"
+#include "Helpers/EntityUtils.h"
 
 const std::string c_CameraFOVPropertyName = "m_fFovYDeg";
 
@@ -63,7 +64,7 @@ void ZCameraFOVEffectBase::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, 
     // get original FOV once for interpolation
     if (m_fOriginalFOV <= 0.0f)
     {
-        m_fOriginalFOV = *GetOriginalCameraEntity().GetProperty<float32>(c_CameraFOVPropertyName).As<float32>();
+		m_fOriginalFOV = Utils::GetProperty<float32>(GetOriginalCameraEntity(), c_CameraFOVPropertyName).value_or(80.0f);
     }
 
     auto s_fTargetFOV = m_fTargetFOV;
@@ -71,5 +72,6 @@ void ZCameraFOVEffectBase::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, 
     // interpolation
     s_fTargetFOV = Math::Interpolate(m_fOriginalFOV, s_fTargetFOV, GetInterpolationPoint());
 
-    GetEffectCameraEntity().SetProperty(c_CameraFOVPropertyName, s_fTargetFOV);
+    auto s_rEffectCamera = GetEffectCameraEntity();
+    Utils::SetProperty<float32>(s_rEffectCamera, c_CameraFOVPropertyName, s_fTargetFOV);
 }

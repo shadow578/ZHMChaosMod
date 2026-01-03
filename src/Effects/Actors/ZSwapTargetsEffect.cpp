@@ -25,7 +25,7 @@ void ZSwapTargetsEffect::OnEnterScene()
 	for (const auto& s_rMapTracker : s_aMapTrackers)
 	{
 		// check maker is on "targets" layer
-		const auto s_eLayer = s_rMapTracker.GetProperty<UIMapLayer_EUIMapLayerID>("m_eLayer").Get();
+		const auto s_eLayer = Utils::GetProperty<UIMapLayer_EUIMapLayerID>(s_rMapTracker, "m_eLayer");
 		if (s_eLayer != UIMapLayer_EUIMapLayerID::eUIMLI_TARGET)
 		{
 			continue;

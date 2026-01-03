@@ -39,7 +39,7 @@ void ZMinimapNoActorsEffect::SetMinimapType(const EMapType p_eMapType)
     }
 
     auto& s_MinimapRoot = s_aEntities.front();
-    if (!s_MinimapRoot.SetProperty(c_sMinimapTypePropertyName, p_eMapType))
+    if (!Utils::SetProperty<EMapType>(s_MinimapRoot, c_sMinimapTypePropertyName, p_eMapType))
     {
         Logger::Debug(TAG "Failed to set minimap type.");
     }

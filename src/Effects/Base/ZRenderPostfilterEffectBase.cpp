@@ -3,7 +3,6 @@
 #include <Logging.h>
 
 #include "EffectRegistry.h"
-#include "Helpers/EntityUtils.h"
 
 #define TAG "[ZRenderPostfilterEffectBase] "
 
@@ -39,7 +38,7 @@ void ZRenderPostfilterEffectBase::OnEnterScene()
 	auto m_rPostfilterLayerEntity = m_aPostfilterEntities.front();
 
 	// grab parameters entity from the layer
-	auto s_rParametersEntity = m_rPostfilterLayerEntity.GetProperty<TEntityRef<IRenderPostfilterParametersEntity>>("m_parametersEntity").Get();
+	auto s_rParametersEntity = Utils::GetProperty<TEntityRef<IRenderPostfilterParametersEntity>>(m_rPostfilterLayerEntity, "m_parametersEntity");
 	if (!s_rParametersEntity)
 	{
 		Logger::Warn(TAG "Failed to grab parameters entity from CustomPFController.");
@@ -47,7 +46,7 @@ void ZRenderPostfilterEffectBase::OnEnterScene()
 	}
 
 	m_PostfilterLayer = LayerEntityWrapper(m_rPostfilterLayerEntity);
-	m_PostfilterParameters = ParametersEntityWrapper(s_rParametersEntity.m_ref);
+	m_PostfilterParameters = ParametersEntityWrapper(s_rParametersEntity.value().m_ref);
 }
 
 void ZRenderPostfilterEffectBase::OnClearScene()

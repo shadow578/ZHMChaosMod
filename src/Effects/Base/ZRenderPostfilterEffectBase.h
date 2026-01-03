@@ -3,6 +3,7 @@
 
 #include <Glacier/ZEntity.h>
 #include <Glacier/SColorRGB.h>
+#include "Helpers/EntityUtils.h"
 
 class ZRenderPostfilterEffectBase : public virtual IChaosEffect
 {
@@ -18,8 +19,8 @@ public:
 protected: // Wrappers
 
 #define PROPERTY(TYPE, NAME) \
-     inline TYPE Get##NAME() const { return m_rEntity.GetProperty<TYPE>(#NAME).Get(); } \
-	 inline void Set##NAME(const TYPE& value) { m_rEntity.SetProperty<TYPE>(#NAME, value); }
+     inline std::optional<TYPE> Get##NAME() const { return Utils::GetProperty<TYPE>(m_rEntity, #NAME); } \
+	 inline void Set##NAME(const TYPE& value) { Utils::SetProperty<TYPE>(m_rEntity, #NAME, value); }
 
 #define INPUT_PIN(NAME) \
 	inline void SignalInputPin_##NAME() { m_rEntity.SignalInputPin(#NAME); }

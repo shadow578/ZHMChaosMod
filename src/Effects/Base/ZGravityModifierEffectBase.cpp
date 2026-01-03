@@ -39,8 +39,8 @@ void ZGravityModifierEffectBase::SetGravity(const SVector3 p_vGravity)
         return;
     }
 
-    auto& s_HUDRoot = s_aEntities.front();
-    if (!s_HUDRoot.SetProperty(c_sGravityPropertyName, p_vGravity))
+    auto& s_rPhysicsEntity = s_aEntities.front();
+    if (!Utils::SetProperty<SVector3>(s_rPhysicsEntity, c_sGravityPropertyName, p_vGravity))
     {
         Logger::Debug(TAG "Failed to set gravity property on PhysicsWorld entity.");
     }

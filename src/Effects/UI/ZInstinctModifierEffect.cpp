@@ -4,6 +4,7 @@
 
 #include "EffectRegistry.h"
 #include "Helpers/ActorUtils.h"
+#include "Helpers/EntityUtils.h"
 
 const std::string c_GlowTypePropertyName = "m_eGlowType";
 
@@ -24,8 +25,9 @@ void ZInstinctModifierEffectBase::Start()
             continue;
         }
 
-        auto s_eOriginalGlowType = s_rCharacter.m_ref.GetProperty<ERenderGlowTypes>(c_GlowTypePropertyName).Get();
-        s_rCharacter.m_ref.SetProperty(c_GlowTypePropertyName, m_eGlowType);
+        auto s_eOriginalGlowType = Utils::GetProperty<ERenderGlowTypes>(s_rCharacter.m_ref, c_GlowTypePropertyName).value_or(ERenderGlowTypes::ERENDERGLOWTYPE_CIVILIAN);
+        Utils::SetProperty<ERenderGlowTypes>(s_rCharacter.m_ref, c_GlowTypePropertyName, m_eGlowType);
+
 
         m_mOriginalGlowTypes[s_pActor] = s_eOriginalGlowType;
     }
@@ -46,7 +48,7 @@ void ZInstinctModifierEffectBase::Stop()
             continue;
         }
 
-        s_rCharacter.m_ref.SetProperty(c_GlowTypePropertyName, s_eOriginalGlowType);
+		Utils::SetProperty<ERenderGlowTypes>(s_rCharacter.m_ref, c_GlowTypePropertyName, s_eOriginalGlowType);
     }
 
     m_mOriginalGlowTypes.clear();

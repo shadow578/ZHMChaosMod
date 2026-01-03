@@ -5,6 +5,8 @@
 
 #include <Glacier/ZSpatialEntity.h>
 
+#include "Helpers/EntityUtils.h"
+
 #define TAG "[ZPoisonAOEDamageEffectBase] "
 
 static ZTemplateEntitySpawner<"[assembly:/_pro/chaosmod/areaeffect_poison.entitytemplate].pc_entitytype"> g_AOECloudProp;
@@ -104,12 +106,12 @@ ZEntityRef ZPoisonAOEDamageEffectBase::Spawn(const SParams& p_Params)
         return {};
     }
 
-    s_RootEntity.m_ref.SetProperty("m_rTarget", s_KeywordEntity);
+	Utils::SetProperty<ZEntityRef>(s_RootEntity.m_ref, "m_rTarget", s_KeywordEntity);
 
     // misc. properties
-    s_RootEntity.m_ref.SetProperty("m_vGlobalSize", p_Params.m_AreaSize);
-    s_RootEntity.m_ref.SetProperty("m_ParticleColorRangeStart", p_Params.m_ParticleColorRangeStart);
-    s_RootEntity.m_ref.SetProperty("m_ParticleColorRangeEnd", p_Params.m_ParticleColorRangeEnd);
+	Utils::SetProperty<SVector3>(s_RootEntity.m_ref, "m_vGlobalSize", p_Params.m_AreaSize);
+	Utils::SetProperty<SColorRGB>(s_RootEntity.m_ref, "m_ParticleColorRangeStart", p_Params.m_ParticleColorRangeStart);
+	Utils::SetProperty<SColorRGB>(s_RootEntity.m_ref, "m_ParticleColorRangeEnd", p_Params.m_ParticleColorRangeEnd);
 
     // trigger
     s_RootEntity.m_ref.SignalInputPin("Start");

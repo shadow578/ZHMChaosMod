@@ -21,7 +21,7 @@ void ZFixPlayerPositionUnlocker::Start()
 
     const auto s_StartingLocation = s_aStartingLocations.front();
 
-    const auto s_rPosition = s_StartingLocation.GetProperty<TEntityRef<ZSpatialEntity>>("m_rPosition").Get();
+	const auto s_rPosition = Utils::GetProperty<TEntityRef<ZSpatialEntity>>(s_StartingLocation, "m_rPosition");
     if (!s_rPosition)
     {
         return;
@@ -32,7 +32,7 @@ void ZFixPlayerPositionUnlocker::Start()
         if (const auto s_SpatialEntity = s_Player.m_ref.QueryInterface<ZSpatialEntity>())
         {
             s_SpatialEntity->SetWorldMatrix(
-                s_rPosition.m_pInterfaceRef->GetWorldMatrix()
+                s_rPosition.value().m_pInterfaceRef->GetWorldMatrix()
             );
         }
     }

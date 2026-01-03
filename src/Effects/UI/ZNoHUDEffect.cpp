@@ -39,7 +39,7 @@ void ZNoHUDEffect::SetHUDVisibility(const bool p_bVisible)
     }
 
     auto& s_HUDRoot = s_aEntities.front();
-    if (!s_HUDRoot.SetProperty(c_sHudVisibilityPropertyName, p_bVisible))
+    if (!Utils::SetProperty<bool>(s_HUDRoot, c_sHudVisibilityPropertyName, p_bVisible))
     {
         Logger::Debug(TAG "Failed to set visibility property on HUD root entity.");
     }

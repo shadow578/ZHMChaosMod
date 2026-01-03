@@ -5,6 +5,8 @@
 
 #include <Glacier/ZSpatialEntity.h>
 
+#include "Helpers/EntityUtils.h"
+
 #define TAG "[ZSoundFXEffectBase] "
 
 static ZTemplateEntitySpawner<"[assembly:/_pro/chaosmod/sfxplayer.entitytemplate].pc_entitytype"> g_SFXPlayerProp;
@@ -67,7 +69,7 @@ ZEntityRef ZSoundFXEffectBase::PlayAt(const SMatrix& p_Position, const ZRuntimeR
     }
 
     s_RootEntity.m_pInterfaceRef->SetWorldMatrix(p_Position);
-    s_RootEntity.m_ref.SetProperty("m_pMainEvent", p_SoundResource);
+	Utils::SetProperty<ZRuntimeResourceID>(s_RootEntity.m_ref, "m_pMainEvent", p_SoundResource);
 
     s_RootEntity.m_ref.SignalInputPin("Start");
 
