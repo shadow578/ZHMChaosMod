@@ -9,11 +9,9 @@
 
 #define TAG "[ZPoisonAOEDamageEffectBase] "
 
-static ZTemplateEntitySpawner<"[assembly:/_pro/chaosmod/areaeffect_poison.entitytemplate].pc_entitytype"> g_AOECloudProp;
-
 void ZPoisonAOEDamageEffectBase::LoadResources()
 {
-	m_pEffectCloudSpawner = g_AOECloudProp.CreateSession();
+    m_pEffectCloudSpawner = ZTemplateEntitySpawner::Create<"[assembly:/_pro/chaosmod/areaeffect_poison.entitytemplate].pc_entitytype">();
 }
 
 void ZPoisonAOEDamageEffectBase::OnClearScene()

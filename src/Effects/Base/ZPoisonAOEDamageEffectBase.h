@@ -41,6 +41,6 @@ protected:
 private:
     bool GetPoisonKeywordEntity(const EPoisonType p_eType, ZEntityRef p_RootEntity, ZEntityRef& p_KeywordEntity);
 
-    std::unique_ptr<ZTemplateEntitySpawnerSession> m_pEffectCloudSpawner;
+    std::unique_ptr<ZTemplateEntitySpawner> m_pEffectCloudSpawner;
     EPoisonType m_eDebugPoisonType = EPoisonType::SICK;
 };

@@ -19,7 +19,7 @@ static std::string ResourceStatusToString(const EResourceStatus p_eStatus)
 	}
 }
 
-ZResourceProviderSession::ZResourceProviderSession(const std::string p_sResourcePath, const ZRuntimeResourceID p_ResourceId) :
+ZResourceProvider::ZResourceProvider(const std::string p_sResourcePath, const ZRuntimeResourceID p_ResourceId) :
 	m_sResourcePath(p_sResourcePath),
 	m_ResourceID(p_ResourceId)
 {
@@ -29,12 +29,12 @@ ZResourceProviderSession::ZResourceProviderSession(const std::string p_sResource
 	}
 }
 
-ZResourceProviderSession::~ZResourceProviderSession()
+ZResourceProvider::~ZResourceProvider()
 {
 	// m_ResourcePtr will be automatically released
 }
 
-bool ZResourceProviderSession::IsAvailable() const
+bool ZResourceProvider::IsAvailable() const
 {
 	if (!m_ResourcePtr)
 	{
@@ -45,7 +45,7 @@ bool ZResourceProviderSession::IsAvailable() const
 	return s_Info.refCount > 0 && s_Info.status == RESOURCE_STATUS_VALID;
 }
 
-std::string ZResourceProviderSession::ToString() const
+std::string ZResourceProvider::ToString() const
 {
 	return fmt::format("{} (RID={:016X}; ResIndex={}, ResStatus={}, ResRefCount={})",
 		GetResourcePath(),
@@ -56,7 +56,7 @@ std::string ZResourceProviderSession::ToString() const
 	);
 }
 
-bool ZResourceProviderSession::LoadResource(ZResourcePtr& p_ResourcePtr) const
+bool ZResourceProvider::LoadResource(ZResourcePtr& p_ResourcePtr) const
 {
 	const auto& s_ResourceId = GetResourceID();
 

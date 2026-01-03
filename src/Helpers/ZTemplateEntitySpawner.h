@@ -5,16 +5,22 @@
 #include <vector>
 #include <memory>
 
-class ZTemplateEntitySpawnerSession : public ZResourceProviderSession
+class ZTemplateEntitySpawner : public ZResourceProvider
 {
 public:
-	ZTemplateEntitySpawnerSession(const std::string p_sResourcePath, const ZRuntimeResourceID p_ResourceId)
-		: ZResourceProviderSession(p_sResourcePath, p_ResourceId)
+	template <detail::StringLiteral ResPath>
+	static std::unique_ptr<ZTemplateEntitySpawner> Create()
+	{
+		return std::make_unique<ZTemplateEntitySpawner>(ResPath.Value, ResId<ResPath>);
+	}
+
+	ZTemplateEntitySpawner(const std::string p_sResourcePath, const ZRuntimeResourceID p_ResourceId)
+		: ZResourceProvider(p_sResourcePath, p_ResourceId)
 	{
 
 	}
 
-	~ZTemplateEntitySpawnerSession();
+	~ZTemplateEntitySpawner();
 
 	ZEntityRef Spawn();
 	
@@ -36,14 +42,4 @@ public:
 
 private:
 	std::vector<ZEntityRef> m_aSpawnedEntities;
-};
-
-template <detail::StringLiteral ResPath>
-class ZTemplateEntitySpawner
-{
-public:
-	std::unique_ptr<ZTemplateEntitySpawnerSession> CreateSession() const
-	{
-		return std::make_unique<ZTemplateEntitySpawnerSession>(ResPath.Value, ResId<ResPath>);
-	}
 };

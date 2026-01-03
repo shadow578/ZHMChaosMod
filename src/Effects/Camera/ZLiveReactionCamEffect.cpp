@@ -7,22 +7,17 @@
 #include "Helpers/ActorUtils.h"
 #include "Helpers/EntityUtils.h"
 
-static ZTemplateEntitySpawner<"[assembly:/_pro/design/templates/camera/pictureinpicture.template?/pip_camera_custom_event.entitytemplate].pc_entitytype"> g_PIPCameraProp;
-
-static ZResourceProvider<"[assembly:/_pro/chaosmod/localization/ui/hud_pip_livereaction/actor.sweetline].pc_sweetline"> g_HudMessageActor;
-static ZResourceProvider<"[assembly:/_pro/chaosmod/localization/ui/hud_pip_livereaction/player.sweetline].pc_sweetline"> g_HudMessagePlayer;
-
 void ZLiveReactionCamEffect::LoadResources()
 {
-	m_pPIPCameraSpawner = g_PIPCameraProp.CreateSession();
+	m_pPIPCameraSpawner = ZTemplateEntitySpawner::Create<"[assembly:/_pro/design/templates/camera/pictureinpicture.template?/pip_camera_custom_event.entitytemplate].pc_entitytype">();
 
 	if (m_bTargetPlayer)
 	{
-		m_pHudMessageResource = g_HudMessagePlayer.CreateSession();
+		m_pHudMessageResource = ZResourceProvider::Create<"[assembly:/_pro/chaosmod/localization/ui/hud_pip_livereaction/player.sweetline].pc_sweetline">();
 	}
 	else
 	{
-		m_pHudMessageResource = g_HudMessageActor.CreateSession();
+		m_pHudMessageResource = ZResourceProvider::Create<"[assembly:/_pro/chaosmod/localization/ui/hud_pip_livereaction/player.sweetline].pc_sweetline">();
 	}
 }
 

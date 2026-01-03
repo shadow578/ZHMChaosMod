@@ -8,30 +8,29 @@
 
 #define TAG "[ZExplosionEffectBase] "
 
-static ZTemplateEntitySpawner<"[assembly:/_pro/chaosmod/explosioneffect.entitytemplate].pc_entitytype"> g_ExplosionProp;
 
 void ZExplosionEffectBase::LoadResources()
 {
-    m_pSpawnerSession = g_ExplosionProp.CreateSession();
+    m_pExplosionSpawner = ZTemplateEntitySpawner::Create<"[assembly:/_pro/chaosmod/explosioneffect.entitytemplate].pc_entitytype">();
 }
 
 void ZExplosionEffectBase::OnClearScene()
 {
-    m_pSpawnerSession = nullptr;
+    m_pExplosionSpawner = nullptr;
 }
 
 bool ZExplosionEffectBase::Available() const
 {
     return IChaosEffect::Available() &&
-        m_pSpawnerSession &&
-        m_pSpawnerSession->IsAvailable();
+        m_pExplosionSpawner &&
+        m_pExplosionSpawner->IsAvailable();
 }
 
 void ZExplosionEffectBase::OnDrawDebugUI()
 {
-    ImGui::TextUnformatted(fmt::format("Prop: {}", m_pSpawnerSession->ToString()).c_str());
+    ImGui::TextUnformatted(fmt::format("Prop: {}", m_pExplosionSpawner->ToString()).c_str());
 
-    ImGui::BeginDisabled(!m_pSpawnerSession->IsAvailable());
+    ImGui::BeginDisabled(!m_pExplosionSpawner->IsAvailable());
 
     if (ImGui::Button("Spawn Nearby"))
     {
@@ -58,12 +57,12 @@ void ZExplosionEffectBase::OnDrawDebugUI()
 
 ZEntityRef ZExplosionEffectBase::SpawnExplosion(const SExplosionParams& p_Params)
 {
-    if (!m_pSpawnerSession)
+    if (!m_pExplosionSpawner)
     {
         return {};
     }
 
-    if (auto s_RootEntity = m_pSpawnerSession->SpawnAs<ZSpatialEntity>())
+    if (auto s_RootEntity = m_pExplosionSpawner->SpawnAs<ZSpatialEntity>())
     {
         s_RootEntity.m_pInterfaceRef->SetWorldMatrix(p_Params.m_Position);
 

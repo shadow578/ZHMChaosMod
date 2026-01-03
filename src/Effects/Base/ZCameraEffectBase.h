@@ -38,7 +38,7 @@ protected:
 
 private:
     bool EnsureCameraEntity();
-    std::unique_ptr<ZTemplateEntitySpawnerSession> m_pCameraSpawner;
+    std::unique_ptr<ZTemplateEntitySpawner> m_pCameraSpawner;
 
     bool m_bEffectCameraActive = false;
     ZEntityRef m_EffectCameraEntity;

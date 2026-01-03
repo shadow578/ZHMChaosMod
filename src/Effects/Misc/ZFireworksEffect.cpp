@@ -5,11 +5,9 @@
 #include "EffectRegistry.h"
 #include <Helpers/EntityUtils.h>
 
-static ZTemplateEntitySpawner<"[assembly:/_pro/effects/templates/fire/fx_fireworks.template?/fx_fireworks_launchpad.entitytemplate].pc_entitytype"> g_FireworksProp;
-
 void ZFireworksEffect::LoadResources()
 {
-	m_pFireworksSpawner = g_FireworksProp.CreateSession();
+	m_pFireworksSpawner = ZTemplateEntitySpawner::Create<"[assembly:/_pro/effects/templates/fire/fx_fireworks.template?/fx_fireworks_launchpad.entitytemplate].pc_entitytype">();
 }
 
 void ZFireworksEffect::OnClearScene()

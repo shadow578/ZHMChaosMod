@@ -15,6 +15,6 @@ public:
 	void Stop() override;
 
 private:
-	std::unique_ptr<ZTemplateEntitySpawnerSession> m_pFireworksSpawner;
+	std::unique_ptr<ZTemplateEntitySpawner> m_pFireworksSpawner;
 	ZEntityRef m_rFireworksEntity;
 };

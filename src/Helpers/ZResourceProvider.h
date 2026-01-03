@@ -10,11 +10,17 @@
 
 #include "Utils.h"
 
-class ZResourceProviderSession
+class ZResourceProvider
 {
 public:
-	ZResourceProviderSession(const std::string p_sResourcePath, const ZRuntimeResourceID p_ResourceId);
-	~ZResourceProviderSession();
+	template <detail::StringLiteral ResPath>
+	static std::unique_ptr<ZResourceProvider> Create()
+	{
+		return std::make_unique<ZResourceProvider>(ResPath.Value, ResId<ResPath>);
+	}
+
+	ZResourceProvider(const std::string p_sResourcePath, const ZRuntimeResourceID p_ResourceId);
+	~ZResourceProvider();
 
 	const ZRuntimeResourceID& GetResourceID() const
 	{
@@ -47,14 +53,4 @@ private:
 	ZResourcePtr m_ResourcePtr;
 
 	bool LoadResource(ZResourcePtr& p_ResourcePtr) const;
-};
-
-template <detail::StringLiteral ResPath>
-class ZResourceProvider
-{
-public:
-	std::unique_ptr<ZResourceProviderSession> CreateSession() const
-	{
-		return std::make_unique<ZResourceProviderSession>(ResPath.Value, ResId<ResPath>);
-	}
 };

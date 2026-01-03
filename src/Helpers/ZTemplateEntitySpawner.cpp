@@ -10,7 +10,7 @@
 
 #define TAG "[ZTemplateEntitySpawner] "
 
-ZTemplateEntitySpawnerSession::~ZTemplateEntitySpawnerSession()
+ZTemplateEntitySpawner::~ZTemplateEntitySpawner()
 {
     // since we (potentially) uninstall the resource of the entities when m_ResourcePtr is released,
 	// we need to make sure to delete the entities first.
@@ -19,10 +19,10 @@ ZTemplateEntitySpawnerSession::~ZTemplateEntitySpawnerSession()
     DespawnAll();
 
     // free resource
-    ZResourceProviderSession::~ZResourceProviderSession();
+    ZResourceProvider::~ZResourceProvider();
 }
 
-ZEntityRef ZTemplateEntitySpawnerSession::Spawn()
+ZEntityRef ZTemplateEntitySpawner::Spawn()
 {
     const auto s_Scene = Globals::Hitman5Module->m_pEntitySceneContext->m_pScene;
     if (!s_Scene)
@@ -62,7 +62,7 @@ ZEntityRef ZTemplateEntitySpawnerSession::Spawn()
     return s_EntityRef;
 }
 
-void ZTemplateEntitySpawnerSession::Despawn(ZEntityRef p_rEntity)
+void ZTemplateEntitySpawner::Despawn(ZEntityRef p_rEntity)
 {
     if (!p_rEntity)
     {
@@ -83,7 +83,7 @@ void ZTemplateEntitySpawnerSession::Despawn(ZEntityRef p_rEntity)
     Functions::ZEntityManager_DeleteEntity->Call(Globals::EntityManager, p_rEntity, {});
 }
 
-void ZTemplateEntitySpawnerSession::DespawnAll()
+void ZTemplateEntitySpawner::DespawnAll()
 {
     for (auto& s_Entity : m_aSpawnedEntities)
     {
@@ -97,10 +97,10 @@ void ZTemplateEntitySpawnerSession::DespawnAll()
 	m_aSpawnedEntities.clear();
 }
 
-std::string ZTemplateEntitySpawnerSession::ToString() const
+std::string ZTemplateEntitySpawner::ToString() const
 {
     return fmt::format("{}; Active Entities: {}",
-        ZResourceProviderSession::ToString(),
+        ZResourceProvider::ToString(),
         m_aSpawnedEntities.size()
     );
 }

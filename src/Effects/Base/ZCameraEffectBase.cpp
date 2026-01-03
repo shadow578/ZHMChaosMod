@@ -12,11 +12,9 @@
 
 #define TAG "[ZCameraEffectBase] "
 
-static ZTemplateEntitySpawner<"[assembly:/templates/core/hm5camera.template?/compositeentity_norenderdestination.entitytemplate].pc_entitytype"> g_CameraEntityProp;
-
 void ZCameraEffectBase::LoadResources()
 {
-	m_pCameraSpawner = g_CameraEntityProp.CreateSession();
+    m_pCameraSpawner = ZTemplateEntitySpawner::Create<"[assembly:/templates/core/hm5camera.template?/compositeentity_norenderdestination.entitytemplate].pc_entitytype">();
 }
 
 bool ZCameraEffectBase::Available() const

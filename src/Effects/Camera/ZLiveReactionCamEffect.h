@@ -38,8 +38,8 @@ public:
 private:
 	const bool m_bTargetPlayer;
 
-	std::unique_ptr<ZTemplateEntitySpawnerSession> m_pPIPCameraSpawner;
-	std::unique_ptr<ZResourceProviderSession> m_pHudMessageResource;
+	std::unique_ptr<ZTemplateEntitySpawner> m_pPIPCameraSpawner;
+	std::unique_ptr<ZResourceProvider> m_pHudMessageResource;
 
 	ZEntityRef m_rPIPCameraEntity;
 

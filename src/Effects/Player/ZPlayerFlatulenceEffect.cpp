@@ -9,14 +9,13 @@
 #include "Helpers/EntityUtils.h"
 
 constexpr auto c_ridSFXFallback = ResId<"[assembly:/sound/wwise/exportedwwisedata/events/props_events/play_sfx_inflatable_deflate_01.wwiseevent].pc_wwisebank">;
-static ZResourceProvider<"[assembly:/sound/wwise/exportedwwisedata/events/chaosmod/play_sfx_flatulence.wwiseevent].pc_wwisebank"> g_SFXResourceProvider;
 
 void ZPlayerFlatulenceEffect::LoadResources() 
 {
     ZPoisonAOEDamageEffectBase::LoadResources();
     ZSoundFXEffectBase::LoadResources();
 
-	m_pSFXResource = g_SFXResourceProvider.CreateSession();
+	m_pSFXResource = ZResourceProvider::Create<"[assembly:/sound/wwise/exportedwwisedata/events/chaosmod/play_sfx_flatulence.wwiseevent].pc_wwisebank">();
 }
 
 void ZPlayerFlatulenceEffect::OnClearScene() 

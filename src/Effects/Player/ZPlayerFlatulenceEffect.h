@@ -24,5 +24,5 @@ public:
     }
 
 private:
-    std::unique_ptr<ZResourceProviderSession> m_pSFXResource;
+    std::unique_ptr<ZResourceProvider> m_pSFXResource;
 };

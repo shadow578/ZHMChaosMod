@@ -19,5 +19,5 @@ protected:
     ZEntityRef PlayAt(const SMatrix& p_Position, const ZRuntimeResourceID& p_SoundResource);
 
 private:
-    std::unique_ptr<ZTemplateEntitySpawnerSession> m_pSoundPlayerSpawner;
+    std::unique_ptr<ZTemplateEntitySpawner> m_pSoundPlayerSpawner;
 };

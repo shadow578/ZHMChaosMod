@@ -9,11 +9,9 @@
 
 #define TAG "[ZSoundFXEffectBase] "
 
-static ZTemplateEntitySpawner<"[assembly:/_pro/chaosmod/sfxplayer.entitytemplate].pc_entitytype"> g_SFXPlayerProp;
-
 void ZSoundFXEffectBase::LoadResources()
 {
-	m_pSoundPlayerSpawner = g_SFXPlayerProp.CreateSession();
+	m_pSoundPlayerSpawner = ZTemplateEntitySpawner::Create<"[assembly:/_pro/chaosmod/sfxplayer.entitytemplate].pc_entitytype">();
 }
 
 void ZSoundFXEffectBase::OnClearScene()

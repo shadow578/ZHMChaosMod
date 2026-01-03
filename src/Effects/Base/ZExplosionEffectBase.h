@@ -25,5 +25,5 @@ protected:
     ZEntityRef SpawnExplosion(const SExplosionParams& p_Params);
 
 private:
-    std::unique_ptr<ZTemplateEntitySpawnerSession> m_pSpawnerSession;
+    std::unique_ptr<ZTemplateEntitySpawner> m_pExplosionSpawner;
 };
