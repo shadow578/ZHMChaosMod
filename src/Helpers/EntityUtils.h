@@ -3,8 +3,13 @@
 #include <Glacier/ZEntity.h>
 #include <Glacier/EntityFactory.h>
 
+#include <Logging.h>
+
 #include <vector>
 #include <string>
+#include <optional>
+
+#define TAG "[EntityUtils] "
 
 namespace Utils
 {
@@ -43,4 +48,60 @@ namespace Utils
 	 * Get the blueprint factory for the given entity, even if it's a sub-entity.
      */
     ZEntityBlueprintFactoryBase* GetEntityBlueprintFactoryFor(ZEntityRef p_rEntity);
+
+    /**
+     * safely get a property from an entity. Returns std::nullopt if failed.
+	 * @template T The property type.
+	 * @param p_rEntity The entity to get the property from. if invalid, returns std::nullopt.
+	 * @param p_sProperty The property name. If not found or of wrong type, returns std::nullopt.
+     */
+    template <typename T>
+    std::optional<T> GetProperty(const ZEntityRef& p_rEntity, const std::string& p_sProperty)
+    {
+        if (!p_rEntity)
+        {
+            return std::nullopt;
+		}
+
+        auto s_PropValue = p_rEntity.GetProperty<T>(p_sProperty);
+        if (!s_PropValue.Is<T>())
+        {
+            Logger::Warn(TAG "Failed to get '{}' on EID {:016X}",
+                p_sProperty,
+                p_rEntity ? p_rEntity.GetEntity()->GetType()->m_nEntityId : 0
+            );
+            return std::nullopt;
+        }
+
+        return s_PropValue.Get();
+    }
+
+    /**
+	 * safely set a property on an entity. Returns false if failed.
+	 * @template T The property type.
+	 * @param p_rEntity The entity to set the property on. if invalid, returns false.
+	 * @param p_sProperty The property name. If not found or of wrong type, returns false.
+	 * @param p_Value The value to set.
+     */
+    template <class T>
+    inline bool SetProperty(ZEntityRef& p_rEntity, const std::string& p_sProperty, const T& p_Value, bool p_bInvokeChangeHandlers = true)
+    {
+        if (!p_rEntity)
+        {
+            return false;
+        }
+
+        if (!p_rEntity.SetProperty<T>(p_sProperty, p_Value, p_bInvokeChangeHandlers))
+        {
+            Logger::Warn(TAG "Failed to set '{}' on EID {:016X}",
+                p_sProperty,
+                p_rEntity ? p_rEntity.GetEntity()->GetType()->m_nEntityId : 0
+            );
+            return false;
+        }
+
+		return true;
+    }
 };
+
+#undef TAG
