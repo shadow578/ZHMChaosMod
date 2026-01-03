@@ -69,14 +69,14 @@ std::vector<ZEntityRef> Utils::EntityFinder::FindEntities(const SSearchParams& p
             }
 
             // check entity id
-            if (p_Params.m_nEntityId != 0 &&
+            if (p_Params.m_nEntityId.has_value() &&
                 s_SubEntity->GetType()->m_nEntityId == p_Params.m_nEntityId)
             {
                 s_aFoundEntities.push_back(s_SubEntity);
             }
 
             // check entity name
-            if (!p_Params.m_sEntityName.empty())
+            if (p_Params.m_sEntityName.has_value())
             {
                 const auto s_sSubEntityName = GetEntityName(s_SubEntity, s_pCurrentFactory, i);
                 if (s_sSubEntityName == p_Params.m_sEntityName)
@@ -86,7 +86,7 @@ std::vector<ZEntityRef> Utils::EntityFinder::FindEntities(const SSearchParams& p
             }
 
             // check entity type
-            if (!p_Params.m_sEntityType.empty())
+            if (p_Params.m_sEntityType.has_value())
             {
                 const auto s_sSubEntityType = GetEntityTypeName(s_SubEntity);
                 if (s_sSubEntityType == p_Params.m_sEntityType)
@@ -96,7 +96,7 @@ std::vector<ZEntityRef> Utils::EntityFinder::FindEntities(const SSearchParams& p
             }
 
             // check blueprint resource
-            if (s_SubEntityFactory && p_Params.m_ridBlueprint.GetID() != 0)
+            if (s_SubEntityFactory && p_Params.m_ridBlueprint.has_value())
             {
                 if (s_SubEntityFactory->m_ridResource == p_Params.m_ridBlueprint)
                 {
@@ -105,7 +105,7 @@ std::vector<ZEntityRef> Utils::EntityFinder::FindEntities(const SSearchParams& p
             }
 
             // check max results limit
-            if (p_Params.m_nMaxResults > 0 &&
+            if (p_Params.m_nMaxResults.has_value() &&
                 s_aFoundEntities.size() >= p_Params.m_nMaxResults)
             {
 				goto after_outer_loop;

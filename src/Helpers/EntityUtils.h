@@ -17,21 +17,21 @@ namespace Utils
     {
         struct SSearchParams
         {
-            // by entity id. 0 = no search by id
-            uint64_t m_nEntityId = 0;
+            // by entity id.
+            std::optional <uint64_t> m_nEntityId = std::nullopt;
 
-            // by entity name. empty = no search by name
-            std::string m_sEntityName = "";
+            // by entity name.
+            std::optional <std::string> m_sEntityName = std::nullopt;
 
-            // by entity type. empty = no search by type
-            std::string m_sEntityType = "";
+            // by entity type.
+            std::optional <std::string> m_sEntityType = std::nullopt;
 
-			// by (sub-entity) blueprint resource id. 0 = no search by blueprint id
+			// by (sub-entity) blueprint resource id.
 			// this is the id of a .pc_entityblueprint resource, not .pc_entitytype!
-			ZRuntimeResourceID m_ridBlueprint = ZRuntimeResourceID(0);
+            std::optional <ZRuntimeResourceID> m_ridBlueprint = std::nullopt;
 
-			// maximum result count. 0 = no limit
-			size_t m_nMaxResults = 0;
+			// maximum result count.
+			std::optional<size_t> m_nMaxResults = std::nullopt;
         };
 
         /**
