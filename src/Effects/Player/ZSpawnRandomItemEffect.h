@@ -13,7 +13,6 @@ public:
         : m_sDisplayName(std::move(m_sDisplayName)),
         m_pCount(p_nCount)
     {
-
     }
 
     void LoadResources() override;
@@ -26,7 +25,7 @@ public:
         return IChaosEffect::GetName() + "_" + std::to_string(m_pCount);
     }
 
-    std::string GetDisplayName() const override
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return m_sDisplayName;
     }

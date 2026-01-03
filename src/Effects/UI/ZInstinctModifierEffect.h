@@ -29,8 +29,8 @@ public:
         : ZInstinctModifierEffectBase(ERenderGlowTypes::ERENDERGLOWTYPE_CONTRACT_TARGET)
     {
     }
-    
-    std::string GetDisplayName() const override
+
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "Social Anxiety Mode";
     }
@@ -43,8 +43,8 @@ public:
         : ZInstinctModifierEffectBase(ERenderGlowTypes::ERENDERGLOWTYPE_NONE)
     {
     }
-    
-    std::string GetDisplayName() const override
+
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "Guard-Level Instinct";
     }

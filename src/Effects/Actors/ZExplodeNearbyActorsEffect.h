@@ -11,7 +11,7 @@ class ZExplodeNearbyActorsEffect : public ZExplosionEffectBase
 public:
     void Start() override;
 
-    std::string GetDisplayName() const override
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "Obliterate All Nearby Actors";
     }

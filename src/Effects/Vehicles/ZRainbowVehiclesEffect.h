@@ -17,7 +17,7 @@ public:
 
 	void OnSlowUpdate(const float32 p_fDeltaTime, const float32 p_fEffectTimeRemaining) override;
 
-	std::string GetDisplayName() const override
+	std::string GetDisplayName(const bool p_bVoting) const override
 	{
 		return "Rainbow Vehicles";
 	}

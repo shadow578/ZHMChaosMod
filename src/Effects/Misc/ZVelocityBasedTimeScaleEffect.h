@@ -16,7 +16,7 @@ public:
 
     bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
 
-    std::string GetDisplayName() const override
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "SUPERHOT";
     }

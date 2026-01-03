@@ -30,7 +30,7 @@ public:
 		return IChaosEffect::GetName() + (m_bTargetPlayer ? "_player" : "_actor");
 	}
 
-	std::string GetDisplayName() const override
+	std::string GetDisplayName(const bool p_bVoting) const override
 	{
 		return m_bTargetPlayer ? "Live Agent 47 Reaction" : "Live Victim Reaction";
 	}

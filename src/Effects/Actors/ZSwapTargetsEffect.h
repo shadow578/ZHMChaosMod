@@ -17,7 +17,7 @@ public:
 
 	void OnDrawDebugUI() override;
 
-	std::string GetDisplayName() const override
+	std::string GetDisplayName(const bool p_bVoting) const override
 	{
 		return "Swap Targets";
 	}

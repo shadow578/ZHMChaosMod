@@ -65,7 +65,7 @@ class MyChaosEffect : public IChaosEffect {
 public:
     void Start() override;
 
-    std::string GetDisplayName() override
+    std::string GetDisplayName(const bool p_bVoting) override
     {
       return "My Chaos Effect";
     }

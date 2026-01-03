@@ -8,12 +8,12 @@ class ZPlayerSimpleRagdollEffect : public ZPlayerRagdollEffectBase
 public:
     ZPlayerSimpleRagdollEffect() : ZPlayerRagdollEffectBase(false) {}
 
-    std::string GetDisplayName() const  override
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "Ragdoll Player";
     }
 
-    EDuration GetDuration() const  override
+    EDuration GetDuration() const override
     {
         return EDuration::Short; // boring if too long
     }
@@ -24,7 +24,7 @@ class ZPlayerPoweredRagdollEffect : public ZPlayerRagdollEffectBase
 public:
     ZPlayerPoweredRagdollEffect() : ZPlayerRagdollEffectBase(true) {}
 
-    std::string GetDisplayName() const override
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "Floppy 47";
     }
@@ -40,7 +40,7 @@ public:
     void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining) override;
     void OnDrawDebugUI() override;
 
-    std::string GetDisplayName() const override
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "Super Stunt";
     }

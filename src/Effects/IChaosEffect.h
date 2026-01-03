@@ -134,7 +134,7 @@ public: // Metadata
     /**
      * Get the display name of the effect, e.g. for enduser facing UI.
      */
-    virtual std::string GetDisplayName(const bool p_bVoting) const { return GetDisplayName(); }
+    virtual std::string GetDisplayName(const bool p_bVoting) const { return GetName(); }
 
     /**
      * Get for how long this effect should remain active.
@@ -150,7 +150,4 @@ public: // Metadata
 
 protected:
     bool m_bIsAvailable = true;
-
-	[[deprecated("Use GetDisplayName(bool) instead")]]
-    virtual std::string GetDisplayName() const { return GetName(); }
 };

@@ -22,7 +22,7 @@ std::string ZSlowTimeScaleEffect::GetName() const
     return IChaosEffect::GetName() + "_" + std::to_string(static_cast<int>(m_fTargetTimeScale*100));
 }
 
-std::string ZSlowTimeScaleEffect::GetDisplayName() const
+std::string ZSlowTimeScaleEffect::GetDisplayName(const bool p_bVoting) const
 {
     return fmt::format("{:.1f}x Game Speed", m_fTargetTimeScale);
 }

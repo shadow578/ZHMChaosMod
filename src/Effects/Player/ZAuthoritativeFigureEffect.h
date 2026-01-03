@@ -15,7 +15,7 @@ public:
     void Stop() override;
     bool Available() const override;
 
-    std::string GetDisplayName() const  override
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "Authoritative Figure";
     }

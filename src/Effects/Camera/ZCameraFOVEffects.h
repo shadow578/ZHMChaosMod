@@ -9,12 +9,12 @@ public:
     {
     }
 
-    std::string GetDisplayName() const override
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "Binoculars";
     }
 
-    EDuration GetDuration() const  override
+    EDuration GetDuration() const override
     {
         return EDuration::Short; // painful!
     }
@@ -27,7 +27,7 @@ public:
     {
     }
 
-    std::string GetDisplayName() const override
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "Quake PRO";
     }
@@ -37,4 +37,3 @@ public:
         return EDuration::Full;
     }
 };
-

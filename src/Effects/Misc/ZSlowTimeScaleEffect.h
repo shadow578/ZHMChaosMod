@@ -11,7 +11,7 @@ public:
     void Stop() override;
 
     std::string GetName() const override;
-    std::string GetDisplayName() const override;
+    std::string GetDisplayName(const bool p_bVoting) const override;
     EDuration GetDuration() const override;
 
 private:

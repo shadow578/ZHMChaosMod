@@ -8,7 +8,7 @@ public:
     void Start() override;
     void OnDrawDebugUI() override;
 
-    std::string GetDisplayName() const override
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "Random Actor Goes Boom";
     }

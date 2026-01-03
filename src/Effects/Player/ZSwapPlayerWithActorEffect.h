@@ -10,7 +10,7 @@ class ZSwapPlayerWithActorEffect : public IChaosEffect
 
     void Start() override;
 
-    std::string GetDisplayName() const override
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "Swap Player with Random Actor";
     }

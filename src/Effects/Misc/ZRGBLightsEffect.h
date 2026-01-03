@@ -20,7 +20,7 @@ public:
 
 	void OnSlowUpdate(const float32 p_fDeltaTime, const float32 p_fEffectTimeRemaining) override;
 
-	std::string GetDisplayName() const override
+	std::string GetDisplayName(const bool p_bVoting) const override
 	{
 		return "Party Lights";
 	}
@@ -47,7 +47,7 @@ private:
 			}
 		}
 
-		inline void Apply(const bool p_bVisible, const float32 p_fNewBrightness, const SColorRGB& p_NewColor)
+		inline void Apply(const bool p_bVisible, const float32 p_fNewBrightness, const SColorRGB &p_NewColor)
 		{
 			if (m_rLightEntity)
 			{
