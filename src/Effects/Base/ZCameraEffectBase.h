@@ -20,6 +20,12 @@ public:
 
     bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
 
+    ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+    {
+        return IChaosEffect::AlwaysActiveLifecycleMethods() |
+            ELifecycleMethodFlag::OnClearScene;
+    }
+
 protected:
     inline ZEntityRef GetEffectCameraEntity() const
     {

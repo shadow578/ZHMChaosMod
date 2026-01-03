@@ -16,6 +16,13 @@ public:
 
 	void OnDrawDebugUI() override;
 
+	ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+	{
+		return IChaosEffect::AlwaysActiveLifecycleMethods() |
+			ELifecycleMethodFlag::OnEnterScene |
+			ELifecycleMethodFlag::OnClearScene;
+	}
+
 protected: // Wrappers
 
 #define PROPERTY(TYPE, NAME) \
@@ -143,5 +150,4 @@ protected: // API
 private:
 	LayerEntityWrapper m_PostfilterLayer;
 	ParametersEntityWrapper m_PostfilterParameters;
-	bool m_bPostfilterLoaded = false;
 };

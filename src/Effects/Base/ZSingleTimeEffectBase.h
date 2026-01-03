@@ -19,6 +19,12 @@ public:
 		return IChaosEffect::Available() && !m_bTriggered;
 	}
 
+	ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+	{
+		return IChaosEffect::AlwaysActiveLifecycleMethods() |
+			ELifecycleMethodFlag::OnEnterScene;
+	}
+
 private:
 	bool m_bTriggered = false;
 };

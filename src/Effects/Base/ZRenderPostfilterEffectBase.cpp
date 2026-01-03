@@ -12,7 +12,6 @@ void ZRenderPostfilterEffectBase::OnEnterScene()
 {
 	m_PostfilterLayer = {};
 	m_PostfilterParameters = {};
-	m_bPostfilterLoaded = true;
 
 	const Utils::EntityFinder::SSearchParams s_Query{
 		// we use a pre-defined ZPostFilterLayerEntity "CustomPFController".
@@ -53,14 +52,13 @@ void ZRenderPostfilterEffectBase::OnClearScene()
 {
 	m_PostfilterLayer = {};
 	m_PostfilterParameters = {};
-	m_bPostfilterLoaded = false;
 }
 
 bool ZRenderPostfilterEffectBase::Available() const
 {
-	return IChaosEffect::Available() &&
-		// if not yet loaded, report Available so that OnEnterScene gets called
-		(!m_bPostfilterLoaded || (m_PostfilterLayer && m_PostfilterParameters));
+	return IChaosEffect::Available() && 
+		m_PostfilterLayer && 
+		m_PostfilterParameters;
 }
 
 void ZRenderPostfilterEffectBase::OnDrawDebugUI()

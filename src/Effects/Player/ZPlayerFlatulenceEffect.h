@@ -23,6 +23,13 @@ public:
         return EDuration::OneShot;
     }
 
+    ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+    {
+        return ZPoisonAOEDamageEffectBase::AlwaysActiveLifecycleMethods() |
+            ZSoundFXEffectBase::AlwaysActiveLifecycleMethods() |
+			ELifecycleMethodFlag::OnClearScene;
+    }
+
 private:
     std::unique_ptr<ZResourceProvider> m_pSFXResource;
 };

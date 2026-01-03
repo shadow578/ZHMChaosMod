@@ -26,4 +26,10 @@ public:
     {
         return EDuration::Short; // painful!
     }
+
+    ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+    {
+        return ZCameraEffectBase::AlwaysActiveLifecycleMethods() |
+			ZInterpolatingEffectBase::AlwaysActiveLifecycleMethods();
+    }
 };

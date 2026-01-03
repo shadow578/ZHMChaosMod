@@ -25,7 +25,13 @@ public:
 		return EDuration::OneShot;
 	}
 
+	ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+	{
+		return IChaosEffect::AlwaysActiveLifecycleMethods() |
+			ELifecycleMethodFlag::OnEnterScene |
+			ELifecycleMethodFlag::OnClearScene;
+	}
+
 private:
-	bool m_bSpawnPointsLoaded = false;
 	std::vector<SMatrix> m_aSpawnPoints;
 };

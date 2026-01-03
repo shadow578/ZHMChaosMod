@@ -22,7 +22,13 @@ public:
 		return EDuration::OneShot;
 	}
 
+	ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+	{
+		return ZSingleTimeEffectBase::AlwaysActiveLifecycleMethods() |
+			ELifecycleMethodFlag::OnEnterScene |
+			ELifecycleMethodFlag::OnClearScene;
+	}
+
 private:
 	std::vector<ZEntityRef> m_aFuelTanks;
-	bool m_bVehiclesLoaded = false;
 };

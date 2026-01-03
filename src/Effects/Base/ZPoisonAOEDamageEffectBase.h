@@ -15,6 +15,12 @@ public:
 
 	bool Available() const override;
 
+    ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+    {
+        return IChaosEffect::AlwaysActiveLifecycleMethods() |
+            ELifecycleMethodFlag::OnClearScene;
+    }
+
     // Note: poison type values must match those of the Keyword_ITEM_POISON_* entities
     // in the g_AOECloudProp template.
     // for debug to work, you must also add any new one in OnDrawDebugUI().

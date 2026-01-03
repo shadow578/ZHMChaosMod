@@ -15,6 +15,12 @@ public:
 
     bool Available() const override;
 
+    ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+    {
+        return IChaosEffect::AlwaysActiveLifecycleMethods() |
+            ELifecycleMethodFlag::OnClearScene;
+    }
+
 protected:
     ZEntityRef PlayAt(const SMatrix& p_Position, const ZRuntimeResourceID& p_SoundResource);
 

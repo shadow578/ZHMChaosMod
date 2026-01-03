@@ -35,6 +35,12 @@ public:
 		return m_bTargetPlayer ? "Live Agent 47 Reaction" : "Live Victim Reaction";
 	}
 
+	ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+	{
+		return IChaosEffect::AlwaysActiveLifecycleMethods() |
+			ELifecycleMethodFlag::OnClearScene;
+	}
+
 private:
 	const bool m_bTargetPlayer;
 

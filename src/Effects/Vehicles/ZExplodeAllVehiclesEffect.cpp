@@ -11,20 +11,16 @@ void ZExplodeAllVehiclesEffect::OnEnterScene()
 		.m_ridBlueprint = ResId<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_fueltank_a.entitytemplate].pc_entityblueprint">
 	};
 	m_aFuelTanks = Utils::EntityFinder::FindEntities(s_Query);
-	m_bVehiclesLoaded = true;
 }
 
 void ZExplodeAllVehiclesEffect::OnClearScene()
 {
 	m_aFuelTanks.clear();
-	m_bVehiclesLoaded = false;
 }
 
 bool ZExplodeAllVehiclesEffect::Available() const
 {
-	return ZSingleTimeEffectBase::Available() &&
-		// if not yet loaded, report Available so that OnEnterScene gets called
-		(!m_bVehiclesLoaded || !m_aFuelTanks.empty());
+	return ZSingleTimeEffectBase::Available() && !m_aFuelTanks.empty();
 }
 
 void ZExplodeAllVehiclesEffect::Start()

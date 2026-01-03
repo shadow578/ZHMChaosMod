@@ -27,7 +27,13 @@ public:
 		return EDuration::OneShot;
 	}
 
+	ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+	{
+		return IChaosEffect::AlwaysActiveLifecycleMethods() |
+			ELifecycleMethodFlag::OnEnterScene |
+			ELifecycleMethodFlag::OnClearScene;
+	}
+
 private:
 	std::vector<TEntityRef<ZSpatialEntity>> m_aTargetSpatials;
-	bool m_bTargetsLoaded = false;
 };

@@ -17,6 +17,12 @@ public:
 
     void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining) override;
 
+    ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+    {
+        return ZCameraEffectBase::AlwaysActiveLifecycleMethods() |
+			ZInterpolatingEffectBase::AlwaysActiveLifecycleMethods();
+    }
+
 private:
     float32 m_fTargetFOV;
     float32 m_fOriginalFOV = -1.0f;

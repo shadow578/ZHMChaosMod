@@ -20,9 +20,15 @@ public:
 		return "Oops! All Car Alarms";
 	}
 
+	ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+	{
+		return IChaosEffect::AlwaysActiveLifecycleMethods() |
+			ELifecycleMethodFlag::OnEnterScene |
+			ELifecycleMethodFlag::OnClearScene;
+	}
+
 private:
 	std::vector<ZEntityRef> m_aVehicleCores;
-	bool m_bVehiclesLoaded = false;
 
 	bool m_bActive = false;
 };

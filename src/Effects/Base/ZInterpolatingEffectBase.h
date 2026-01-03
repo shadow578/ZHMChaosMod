@@ -11,6 +11,12 @@ public:
     void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining) override;
     void OnDrawDebugUI() override;
 
+    ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+    {
+        return IChaosEffect::AlwaysActiveLifecycleMethods() |
+            ELifecycleMethodFlag::OnClearScene;
+    }
+
 protected:
     ZInterpolatingEffectBase(const float32 p_fInterpolationTime) : m_fInterpolationTime(p_fInterpolationTime)
     {

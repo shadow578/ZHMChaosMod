@@ -14,6 +14,12 @@ public:
 	void Start() override;
 	void Stop() override;
 
+	ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+	{
+		return IChaosEffect::AlwaysActiveLifecycleMethods() |
+			ELifecycleMethodFlag::OnClearScene;
+	}
+
 private:
 	std::unique_ptr<ZTemplateEntitySpawner> m_pFireworksSpawner;
 	ZEntityRef m_rFireworksEntity;

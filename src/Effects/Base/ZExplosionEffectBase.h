@@ -11,6 +11,12 @@ public:
     void OnDrawDebugUI() override;
     bool Available() const override;
 
+    ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+    {
+        return IChaosEffect::AlwaysActiveLifecycleMethods() |
+            ELifecycleMethodFlag::OnClearScene;
+    }
+
 protected:
     struct SExplosionParams
     {

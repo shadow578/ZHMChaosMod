@@ -9,20 +9,16 @@ void ZTriggerCarAlarmsEffect::OnEnterScene()
 		.m_ridBlueprint = ResId<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_core.entitytemplate].pc_entityblueprint">
 	};
 	m_aVehicleCores = Utils::EntityFinder::FindEntities(s_Query);
-	m_bVehiclesLoaded = true;
 }
 
 void ZTriggerCarAlarmsEffect::OnClearScene()
 {
 	m_aVehicleCores.clear();
-	m_bVehiclesLoaded = false;
 }
 
 bool ZTriggerCarAlarmsEffect::Available() const
 {
-	return IChaosEffect::Available() &&
-		// if not yet loaded, report Available so that OnEnterScene gets called
-		(!m_bVehiclesLoaded || !m_aVehicleCores.empty());
+	return IChaosEffect::Available() && !m_aVehicleCores.empty();
 }
 
 void ZTriggerCarAlarmsEffect::Start()

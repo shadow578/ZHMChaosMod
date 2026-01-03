@@ -11,7 +11,6 @@
 void ZRGBLightsEffect::OnEnterScene()
 {
 	m_aLights.clear();
-	m_bLightsLoaded = true;
 
 	const Utils::EntityFinder::SSearchParams s_Query{
 	   .m_sEntityType = "ZLightEntity"
@@ -36,14 +35,11 @@ void ZRGBLightsEffect::OnEnterScene()
 void ZRGBLightsEffect::OnClearScene()
 {
 	m_aLights.clear();
-	m_bLightsLoaded = false;
 }
 
 bool ZRGBLightsEffect::Available() const
 {
-	return IChaosEffect::Available() &&
-		// if not yet loaded, report Available so that OnEnterScene gets called
-		(!m_bLightsLoaded || !m_aLights.empty());
+	return IChaosEffect::Available() && !m_aLights.empty();
 }
 
 void ZRGBLightsEffect::Start()

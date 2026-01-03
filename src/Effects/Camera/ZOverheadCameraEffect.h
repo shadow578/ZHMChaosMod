@@ -22,6 +22,12 @@ public:
         return "GTA1 Mode";
     }
 
+    ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+    {
+        return ZCameraEffectBase::AlwaysActiveLifecycleMethods() |
+            ZInterpolatingEffectBase::AlwaysActiveLifecycleMethods();
+    }
+
 private:
     float32 GetMaxOverheadZAt(const SMatrix& p_Position, const float32 p_fMax);
 };

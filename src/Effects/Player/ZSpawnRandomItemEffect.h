@@ -36,6 +36,12 @@ public:
         return EDuration::OneShot;
     }
 
+    ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const override
+    {
+        return IChaosEffect::AlwaysActiveLifecycleMethods() |
+            ELifecycleMethodFlag::OnClearScene;
+    }
+
 private:
     std::string m_sDisplayName;
     int m_pCount;
