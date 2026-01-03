@@ -29,6 +29,19 @@ public:
         Full
     };
 
+    enum class ELifecycleMethodFlag
+    {
+		None = 0,
+        OnModInitialized = 1 << 0,
+        OnModUnload = 1 << 1,
+        OnEngineInitialized = 1 << 2,
+        OnEnterScene = 1 << 3,
+        OnClearScene = 1 << 4,
+        OnDrawDebugUI = 1 << 5,
+        LoadResources = 1 << 6
+    };
+
+public: // lifecycle
     /**
      * Called when the mod itself is initialized.
      * Forwards @see IPluginInterface::Init
@@ -48,9 +61,9 @@ public:
     virtual void OnEngineInitialized() {};
 
     /**
-     * Called when a new scene finished loading and enters play mode. 
+     * Called when a new scene finished loading and enters play mode.
      */
-	virtual void OnEnterScene() {};
+    virtual void OnEnterScene() {};
 
     /**
      * Called when the current scene unloads.
@@ -59,11 +72,28 @@ public:
     virtual void OnClearScene() {};
 
     /**
+     * Called within the rendering pass of the ChaosMod debug menu, allowing
+     * effects to display debug information (when selected for debug).
+     * since a window is already created, effects only need to use ImGui controls.
+     */
+    virtual void OnDrawDebugUI() {};
+
+    /**
+     * Called at a suitable time for loading of dynamic resources to occur.
+     * At this point, the engine is initialized (after OnEngineInitialized).
+     * A Scene may or may not be loaded at this point.
+     * Note that LoadResources may be called multiple times during the mod's lifetime.
+	 * Effects should release loaded resources in OnClearScene as appropriate.
+     */
+    virtual void LoadResources() {};
+
+public: // Effect logic
+    /**
      * Called every frame during play mode (not when paused).
      * @param p_UpdateEvent Engine update event containing timing information.
      * @param p_fEffectTimeRemaining Time remaining for the effect in seconds, or 0 if effect is inactive.
      */
-    virtual void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining) {};
+    virtual void OnFrameUpdate(const SGameUpdateEvent &p_UpdateEvent, const float32 p_fEffectTimeRemaining) {};
 
     /**
      * Called during frame update during play mode (not when paused), but at a lower frequency.
@@ -82,13 +112,6 @@ public:
     virtual void OnDrawUI(const bool p_HasFocus) {};
 
     /**
-     * Called within the rendering pass of the ChaosMod debug menu, allowing
-     * effects to display debug information (when selected for debug).
-     * since a window is already created, effects only need to use ImGui controls.
-     */
-    virtual void OnDrawDebugUI() {};
-
-    /**
      * Called to start the effect.
      * One-Shot effects should do their activities here.
      */
@@ -100,40 +123,27 @@ public:
      */
     virtual void Stop() {};
 
+public: // Metadata
     /**
      * Check whether the effect is available to be used.
      * Unavailable effects will not be selected by the ChaosMod.
-     * No functions except for @see IChaosEffect::Available,
-     * @see IChaosEffect::GetName, @see IChaosEffect::GetDisplayName, 
-     * @see IChaosEffect::GetDuration, @see IChaosEffect::GetAuthor
-     * and @see LoadResources may be called.
+	 * When unavailable, only methods allowed by AllowedMethodsWhenUnavailable() may be called.
      */
     virtual bool Available() const { return m_bIsAvailable; }
-
-    /**
-     * Called at a suitable time for loading of dynamic resources to occur.
-     * At this point, the engine is initialized (after OnEngineInitialized).
-     * A Scene may or may not be loaded at this point.
-     * Any calls to @see ZQuickEntityLoader::Load or @see ZQuickEntityLoader::LoadAsync should occur here.
-     * Note that LoadResources may be called multiple times during the mod's lifetime.
-     */
-    virtual void LoadResources() {};
 
     /**
      * Check whether "other" can be activated or active at the same
      * time as this effect without causing issues.
      */
-    virtual bool IsCompatibleWith(const IChaosEffect* p_pOther) const { return this != p_pOther; }
+    virtual bool IsCompatibleWith(const IChaosEffect *p_pOther) const { return this != p_pOther; }
 
     /**
      * Get the internal name of the effect, e.g. for debug menu and settings.
-     * Default implementation returns the C++ type name.
      */
     virtual std::string GetName() const;
 
     /**
      * Get the display name of the effect, e.g. for enduser facing UI.
-     * Default implementation returns @see IChaosEffect::GetName.
      */
     virtual std::string GetDisplayName(const bool p_bVoting) const { return GetDisplayName(); }
 
@@ -145,12 +155,39 @@ public:
     virtual EDuration GetDuration() const { return EDuration::Full; }
 
     /**
-	 * Get the display name of the person who authored this effect.
+     * Get the display name of the person who authored this effect.
      */
     virtual std::string GetAuthor() const { return ""; }
+
+    /**
+     * Get which *lifecycle* methods are allowed to be called when Available() returns false.
+     *
+     * Note:
+     * Metadata methods are *always* allowed when not available:
+     * - Available
+     * - GetName
+     * - GetDisplayName
+     * - GetDuration
+     * - GetAuthor
+     *
+     * Effect Logic methods are *never* allowed when not available:
+     * - OnFrameUpdate
+     * - OnSlowUpdate
+     * - OnDrawUI
+     * - Start
+     * - Stop
+     */
+    virtual ELifecycleMethodFlag AlwaysActiveLifecycleMethods() const
+    {
+        GetDisplayName();
+        return ELifecycleMethodFlag::LoadResources;
+    }
 
 protected:
     bool m_bIsAvailable = true;
 
+	[[deprecated("Use GetDisplayName(bool) instead")]]
     virtual std::string GetDisplayName() const { return GetName(); }
 };
+
+DEFINE_ENUM_FLAG_OPERATORS(IChaosEffect::ELifecycleMethodFlag);

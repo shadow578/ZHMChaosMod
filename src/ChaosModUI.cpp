@@ -7,6 +7,7 @@
 
 #include "EffectRegistry.h"
 #include "Helpers/ImGuiExtras.h"
+#include "Helpers/ZChaosEffectProxy.h"
 
 #include "BuildInfo.h"
 
@@ -38,7 +39,8 @@ void ChaosMod::InitAuthorNames()
     {
         if (s_Effect)
         {
-            const auto s_sAuthor = s_Effect->GetAuthor();
+			ZChaosEffectProxy s_EffectProxy(s_Effect.get());
+            const auto s_sAuthor = s_EffectProxy.GetAuthor();
             if (!s_sAuthor.empty())
             {
 				s_AuthorNames.insert(s_sAuthor);
@@ -252,9 +254,11 @@ void ChaosMod::DrawOverlayContents()
     ImGui::SeparatorText("Active Effects");
     for (const auto& s_ActiveEffect : m_aActiveEffects)
     {
+		ZChaosEffectProxy s_EffectProxy(s_ActiveEffect.m_pEffect);
+
         float32 s_fPercentRemaining = 0.0f;
-        std::string s_sOverlayText = s_ActiveEffect.m_pEffect->GetDisplayName(false);
-        if (s_ActiveEffect.m_pEffect->GetDuration() != IChaosEffect::EDuration::OneShot)
+        std::string s_sOverlayText = s_EffectProxy.GetDisplayName(false);
+        if (s_EffectProxy.GetDuration() != IChaosEffect::EDuration::OneShot)
         {
             s_fPercentRemaining = s_ActiveEffect.m_fTimeRemaining / s_ActiveEffect.m_fDuration;
 			s_sOverlayText += fmt::format(" - {:.0f}s", s_ActiveEffect.m_fTimeRemaining);
@@ -310,8 +314,10 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
         {
             if (s_Effect)
             {
-				auto s_sEffectName = s_Effect->GetName();
-				const auto s_bAvailable = s_Effect->Available();
+				ZChaosEffectProxy s_EffectProxy(s_Effect.get());
+
+				auto s_sEffectName = s_EffectProxy.GetName();
+				const auto s_bAvailable = s_EffectProxy.Available();
                 if (!s_bAvailable)
                 {
                     s_sEffectName += "*";
@@ -323,7 +329,7 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
                     m_pEffectForDebug == s_Effect.get()))
                 {
                     m_pEffectForDebug = s_Effect.get();
-                    Logger::Debug(TAG "Selected '{}' for debug", s_Effect->GetName());
+                    Logger::Debug(TAG "Selected '{}' for debug", s_EffectProxy.GetName());
                 }
 
                 if (!s_bAvailable)
@@ -359,19 +365,23 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 
 void ChaosMod::DrawEffectDebugPane()
 {
-    ImGui::TextUnformatted(fmt::format("Name:         {}", m_pEffectForDebug->GetName()).c_str());
-    ImGui::TextUnformatted(fmt::format("Display Name: {} / {}", m_pEffectForDebug->GetDisplayName(false), m_pEffectForDebug->GetDisplayName(true)).c_str());
-    ImGui::TextUnformatted(fmt::format("Author:       {}", m_pEffectForDebug->GetAuthor()).c_str());
-    ImGui::TextUnformatted(fmt::format("Duration:     {}", EffectDurationToString(m_pEffectForDebug->GetDuration())).c_str());
-    ImGui::TextUnformatted(fmt::format("Available:    {}", m_pEffectForDebug->Available() ? "Yes" : "No").c_str());
+	ZChaosEffectProxy s_EffectProxy(m_pEffectForDebug);
 
-    ImGui::BeginDisabled(!m_pEffectForDebug->Available());
+    ImGui::TextUnformatted(fmt::format("Name:         {}", s_EffectProxy.GetName()).c_str());
+    ImGui::TextUnformatted(fmt::format("Display Name: {} / {}", s_EffectProxy.GetDisplayName(false), s_EffectProxy.GetDisplayName(true)).c_str());
+    ImGui::TextUnformatted(fmt::format("Author:       {}", s_EffectProxy.GetAuthor()).c_str());
+    ImGui::TextUnformatted(fmt::format("Duration:     {}", EffectDurationToString(s_EffectProxy.GetDuration())).c_str());
+    ImGui::TextUnformatted(fmt::format("Available:    {}", s_EffectProxy.Available() ? "Yes" : "No").c_str());
+
+    ImGui::BeginDisabled(!s_EffectProxy.Available());
     if (ImGui::Button("Start() now"))
     {
         m_qDeferredFrameUpdateActions.push([this]()
             {
-                Logger::Info(TAG "Calling Start() for '{}'", m_pEffectForDebug->GetName());
-                m_pEffectForDebug->Start();
+                ZChaosEffectProxy s_EffectProxy(m_pEffectForDebug);
+
+                Logger::Info(TAG "Calling Start() for '{}'", s_EffectProxy.GetName());
+                s_EffectProxy.Start();
                 m_fDebugEffectRemainingTime = 30.0f;
             });
     }
@@ -379,9 +389,11 @@ void ChaosMod::DrawEffectDebugPane()
     if (ImGui::Button("Stop() now"))
     {
         m_qDeferredFrameUpdateActions.push([this]()
-            {
-                Logger::Info(TAG "Calling Stop() for '{}'", m_pEffectForDebug->GetName());
-                m_pEffectForDebug->Stop();
+            {	
+                ZChaosEffectProxy s_EffectProxy(m_pEffectForDebug);
+
+                Logger::Info(TAG "Calling Stop() for '{}'", s_EffectProxy.GetName());
+                s_EffectProxy.Stop();
             });
     }
 
@@ -425,9 +437,9 @@ void ChaosMod::DrawEffectDebugPane()
 
     ImGui::Separator();
 
-    if (m_pEffectForDebug->Available())
+    if (s_EffectProxy.Available())
     {
-        m_pEffectForDebug->OnDrawDebugUI();
+        s_EffectProxy.OnDrawDebugUI();
     }
     else
     {

@@ -32,7 +32,7 @@ private: // Misc.
     ZTimer m_SlowUpdateTimer;
     std::queue<std::function<void()>> m_qDeferredFrameUpdateActions;
 
-    void ForeachEffect(std::function<void(IChaosEffect* p_pEffect)> p_Callback, const bool p_bOnlyAvailable = true);
+    void ForeachEffect(std::function<void(IChaosEffect* p_pEffect)> p_Callback);
 
     void OnEffectSlowUpdate();
     void OnLoadOrClearScene();

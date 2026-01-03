@@ -8,6 +8,8 @@
 #include "EffectRegistry.h"
 #include "Helpers/Math.h"
 
+#include "Helpers/ZChaosEffectProxy.h"
+
 #define TAG "[ChaosMod] "
 
 void ChaosMod::OnEffectTimerTrigger()
@@ -43,16 +45,21 @@ void ChaosMod::OnEffectTimerTrigger()
 
 void ChaosMod::ActivateEffect(IChaosEffect* p_pEffect)
 {
-    if (!p_pEffect || !p_pEffect->Available())
+    if (!p_pEffect)
     {
         return;
     }
 
-    Logger::Debug(TAG "Activating Effect '{}'.", p_pEffect->GetName());
-    p_pEffect->Start();
+	ZChaosEffectProxy s_EffectProxy(p_pEffect);
+    if (!s_EffectProxy.Available())
+    {
+		return;
+    }
+
+	s_EffectProxy.Start();
 
     float32 s_fDuration;
-    switch (p_pEffect->GetDuration())
+    switch (s_EffectProxy.GetDuration())
     {
     case IChaosEffect::EDuration::OneShot:
     case IChaosEffect::EDuration::Short:
@@ -87,10 +94,10 @@ void ChaosMod::UpdateEffectExpiration(const float32 p_fDeltaTime)
             continue;
         }
 
-        Logger::Debug(TAG "Stopping Effect '{}'.", s_ActiveEffect.m_pEffect->GetName());
-        if (s_ActiveEffect.m_pEffect && s_ActiveEffect.m_pEffect->Available())
+        if (s_ActiveEffect.m_pEffect)
         {
-            s_ActiveEffect.m_pEffect->Stop();
+			ZChaosEffectProxy s_EffectProxy(s_ActiveEffect.m_pEffect);
+            s_EffectProxy.Stop();
         }
     }
 

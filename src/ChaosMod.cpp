@@ -9,6 +9,7 @@
 
 #include "Helpers/ZTimer.h"
 #include "Helpers/Utils.h"
+#include "Helpers/ZChaosEffectProxy.h"
 
 #include "EffectRegistry.h"
 #include "BuildInfo.h"
@@ -32,7 +33,6 @@ ChaosMod::~ChaosMod()
 
     ForeachEffect([](IChaosEffect* p_pEffect)
         {
-            Logger::Debug(TAG "Forwarding OnModUnload to '{}'", p_pEffect->GetName());
             p_pEffect->OnModUnload();
         }
 	);
@@ -59,7 +59,6 @@ void ChaosMod::Init()
 
     ForeachEffect([](IChaosEffect* p_pEffect)
         {
-            Logger::Debug(TAG "Forwarding OnModInitialized to '{}'", p_pEffect->GetName());
             p_pEffect->OnModInitialized();
         }
     );
@@ -75,7 +74,6 @@ void ChaosMod::OnEngineInitialized()
 
     ForeachEffect([](IChaosEffect* p_pEffect)
         {
-            Logger::Debug(TAG "Forwarding OnEngineInitialized to '{}'", p_pEffect->GetName());
             p_pEffect->OnEngineInitialized();
         }
     );
@@ -100,19 +98,19 @@ void ChaosMod::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent)
     }
 }
 
-void ChaosMod::ForeachEffect(std::function<void(IChaosEffect* p_pEffect)> p_Callback, const bool p_bOnlyAvailable)
+void ChaosMod::ForeachEffect(std::function<void(IChaosEffect* p_pEffect)> p_Callback)
 {
     for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
     {
-        if (!s_Effect || (p_bOnlyAvailable && !s_Effect->Available()))
+        if (!s_Effect)
         {
             continue;
-        }
+		}
 
-		p_Callback(s_Effect.get());
+		ZChaosEffectProxy s_EffectProxy(s_Effect.get());
+		p_Callback(&s_EffectProxy);
     }
 }
-
 
 void ChaosMod::OnEffectSlowUpdate()
 {
@@ -153,7 +151,6 @@ DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnClearScene, ZEntitySceneContext* th, bool
 
     ForeachEffect([](IChaosEffect* p_pEffect)
         {
-            Logger::Debug(TAG "Forwarding OnClearScene to '{}'", p_pEffect->GetName());
             p_pEffect->OnClearScene();
         }
     );
@@ -173,10 +170,8 @@ DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th,
     {
         ForeachEffect([](IChaosEffect* p_pEffect)
             {
-                Logger::Debug(TAG "Loading Resources for '{}'", p_pEffect->GetName());
                 p_pEffect->LoadResources();
-            },
-            false // even when not available
+            }
         );
     }
 
@@ -184,7 +179,6 @@ DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th,
     {
         ForeachEffect([](IChaosEffect* p_pEffect)
             {
-                Logger::Debug(TAG "Forwarding OnEnterScene to '{}'", p_pEffect->GetName());
                 p_pEffect->OnEnterScene();
             }
         );
