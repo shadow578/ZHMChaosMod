@@ -4,6 +4,7 @@
 #include <Glacier/ZEntity.h>
 #include <Glacier/SColorRGB.h>
 #include "Helpers/EntityUtils.h"
+#include "Helpers/EntityWrapper.h"
 
 class ZRenderPostfilterEffectBase : public virtual IChaosEffect
 {
@@ -18,27 +19,10 @@ public:
 
 protected: // Wrappers
 
-#define PROPERTY(TYPE, NAME) \
-     inline std::optional<TYPE> Get##NAME() const { return Utils::GetProperty<TYPE>(m_rEntity, #NAME); } \
-	 inline void Set##NAME(const TYPE& value) { Utils::SetProperty<TYPE>(m_rEntity, #NAME, value); }
-
-#define INPUT_PIN(NAME) \
-	inline void SignalInputPin_##NAME() { m_rEntity.SignalInputPin(#NAME); }
-
 #pragma region Layer Entity Wrapper
 	struct LayerEntityWrapper
 	{
-	public:
-		ZEntityRef m_rEntity;
-		LayerEntityWrapper(ZEntityRef p_rEntity = {}) :
-			m_rEntity(p_rEntity)
-		{
-		}
-
-		operator bool() const
-		{
-			return !!m_rEntity;
-		}
+		WRAPPER_CONSTRUCTOR(LayerEntityWrapper);
 
 		PROPERTY(float32, m_fBlendInDuration);
 		PROPERTY(float32, m_fBlendOutDuration);
@@ -53,19 +37,8 @@ protected: // Wrappers
 #pragma region Parameters Entity Wrapper
 	struct ParametersEntityWrapper
 	{
-	public:
-		ZEntityRef m_rEntity;
-		ParametersEntityWrapper(ZEntityRef p_rEntity = {}) :
-			m_rEntity(p_rEntity)
-		{
-		}
-
-		operator bool() const
-		{
-			return !!m_rEntity;
-		}
-
 		// note: this is only partial, only things i care about and got to work are here
+		WRAPPER_CONSTRUCTOR(ParametersEntityWrapper);
 
 		PROPERTY(bool, m_bFogEnabled); // enable fog
 		PROPERTY(bool, m_bFogGlobal); // fog is global / only in some area box ?
@@ -122,9 +95,6 @@ protected: // Wrappers
 		INPUT_PIN(BlendInOut);
 	};
 #pragma endregion
-
-#undef PROPERTY
-#undef INPUT_PIN
 
 protected: // API
 	void BlendIn(const float32 p_fBlendInDuration = 1.0f);
