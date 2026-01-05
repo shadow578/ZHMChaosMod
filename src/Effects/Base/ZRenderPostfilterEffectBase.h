@@ -6,6 +6,12 @@
 #include "Helpers/EntityUtils.h"
 #include "Helpers/EntityWrapper.h"
 
+/**
+ * Reusable base providing access to the render postfilter graph.
+ * Allows setting custom parameters via GetParameters(), and enabling and disabling
+ * using BlendIn(), BlendOut() and BlendInOut() methods.
+ * Lifecycle is handled automatically.
+ */
 class ZRenderPostfilterEffectBase : public virtual IChaosEffect
 {
 public:

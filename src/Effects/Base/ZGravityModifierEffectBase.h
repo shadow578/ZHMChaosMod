@@ -3,7 +3,12 @@
 
 #include <Glacier/ZMath.h>
 
-class ZGravityModifierEffectBase : public IChaosEffect
+/**
+ * Reusable base for modifying physics gravity.
+ * Use SetGravity() to set a custom gravity, and 
+ * RestoreDefaultGravity() to restore default.
+ */
+class ZGravityModifierEffectBase : public virtual IChaosEffect
 {
 public:
     bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;

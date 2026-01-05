@@ -3,6 +3,11 @@
 #include "ZCameraEffectBase.h"
 #include "ZInterpolatingEffectBase.h"
 
+/**
+ * Reusable base for changing camera FOV.
+ * FOV is applied to an ZCameraEffectBase.
+ * FOV change is smoothly interpolated in Start() and Stop().
+ */
 class ZCameraFOVEffectBase : public ZCameraEffectBase, public ZInterpolatingEffectBase
 {
 public:

@@ -7,6 +7,10 @@
 
 #include "Helpers/ZTemplateEntitySpawner.h"
 
+/**
+ * Reusable base for camera effects.
+ * Handles spawning, enabling and disabling of a effect camera via Start() and Stop().
+ */
 class ZCameraEffectBase : public virtual IChaosEffect
 {
 public:
@@ -21,16 +25,25 @@ public:
     bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
 
 protected:
+    /**
+     * Effect camera, if IsEffectCameraActive() == true.
+     */
     inline ZEntityRef GetEffectCameraEntity() const
     {
         return m_EffectCameraEntity;
     }
 
+    /**
+     * Stock Player camera, if IsEffectCameraActive() == true.
+     */
     inline ZEntityRef GetOriginalCameraEntity() const
     {
         return m_OriginalCameraEntity;
     }
 
+    /**
+     * Is the effect's camera spawned and currently active?
+     */
     inline bool IsEffectCameraActive() const
     {
         return m_bEffectCameraActive && m_EffectCameraEntity && m_OriginalCameraEntity;

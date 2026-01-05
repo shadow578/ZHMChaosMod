@@ -3,6 +3,9 @@
 
 namespace ImGuiEx
 {
+    /**
+     * Drop-in replacement of ImGui::SliderFloat with ImGui::DragScalar, for floats. 
+     */
     inline bool DragFloat(
         const char* p_sLabel,
         float* p_fValue,
@@ -23,6 +26,12 @@ namespace ImGuiEx
         );
     }
 
+    /**
+     * Like ImGui::ProgressBar, but automatically resizes so text fits fully.
+     * @param p_fFraction Progress fraction. 0.0 - 1.0.
+     * @param p_sOverlayText Text to overlay in the progress bar.
+     * @param p_fTextPadding Horizontal padding of the overlay text.
+     */
     inline void ProgressBarTextFit(
         const float p_fFraction,
         const char* p_sOverlayText,

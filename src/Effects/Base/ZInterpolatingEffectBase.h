@@ -2,6 +2,11 @@
 
 #include "IChaosEffect.h"
 
+/**
+ * Reusable effect for handling smoothly interpolating in and out.
+ * Provides GetInterpolationPoint(), which provides interpolating value to effects.
+ * Automatically handles interpolate in on Start(), out on Stop().
+ */
 class ZInterpolatingEffectBase : public virtual IChaosEffect
 {
 public:
@@ -17,7 +22,7 @@ protected:
     }
 
     /**
-     * Interpolation point between 0.0 and 1.0.
+     * Interpolation point (0.0 - 1.0).
      */
     inline float32 GetInterpolationPoint() const
     {

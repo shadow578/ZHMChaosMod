@@ -6,6 +6,12 @@
 #include "Helpers/ZTemplateEntitySpawner.h"
 #include "Helpers/EntityWrapper.h"
 
+/**
+ * Reusable base for playing voicelines on actors.
+ * Handles resource loading, unloading and spawning.
+ * Use Speak() to make a actor speak, or Spawn() to 
+ * spawn SpeakEntities to manage manually.
+ */
 class ZSpeakEntityEffectBase : public virtual IChaosEffect
 {
 public:
@@ -37,6 +43,15 @@ protected:
 	};
 #pragma endregion
 
+	/**
+	 * Spawn a SpeakEntity bound to the given actor.
+	 * @param p_rActor Actor to bind to.
+	 * @param p_eSoundDef Voiceline to play.
+	 * @param p_eGesture Gesture animation to use.
+	 * @param p_bAllowInterrupt Allow interrupting current voiceline?
+	 * @param p_bStartNow Start SpeakEntity automatically.
+	*                     If false, you must Start the entity manually.
+	 */
 	SSpeakEntityWrapper Speak(
 		const ZEntityRef& p_rActor, 
 		const EActorSoundDefs p_eSoundDef, 
@@ -44,6 +59,9 @@ protected:
 		const bool p_bAllowInterrupt = false,
 		const bool p_bStartNow = true);
 
+	/**
+	 * Spawn a SpeakEntity. No further assignments are made.
+	 */
 	SSpeakEntityWrapper Spawn();
 
 private:

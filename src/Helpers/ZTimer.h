@@ -7,8 +7,9 @@
 typedef std::function<void()> ZTimerCallback;
 
 /**
- * Calls a function every n Seconds, via FrameUpdate handler.
- * Can only be Initialize()-d after engine has initialized.
+ * Helper for calling a function on a regular interval, via FrameUpdate handler.
+ * Initialize() *must* be called manually in or after OnEngineInitialized! 
+ * Deinitialize() *must* be called manually in mod unload!
  */
 class ZTimer
 {
@@ -37,8 +38,8 @@ public:
     }
 
     /**
-     * Elapsed seconds. 
-     * Reset after callback is invoked, thus this may be used to track delta time since last callback.
+     * Get elapsed seconds. 
+     * NOTE: Reset after callback is invoked, thus this may be used to track delta time since last callback.
      */
     float32 GetElapsedSeconds() const
     {

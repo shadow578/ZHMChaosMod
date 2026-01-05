@@ -17,40 +17,67 @@ namespace Utils
     {
         struct SSearchParams
         {
-            // by entity id.
+            /**
+             * Search for entity with matching id, as per entity template.
+             * e.g. 0x859611037148f21b
+             */
             std::optional <uint64_t> m_nEntityId = std::nullopt;
 
-            // by entity name.
+            /**
+             * Search for entity with matching name, as per entity template.
+             * e.g. "LD_MapTracker_NPCActor"
+             */
             std::optional <std::string> m_sEntityName = std::nullopt;
 
-            // by entity type.
+            /**
+             * Search for entity with matching (primary) type name.
+             * e.g. "ZLightEntity"
+             */
             std::optional <std::string> m_sEntityType = std::nullopt;
 
-			// by (sub-entity) blueprint resource id.
-			// this is the id of a .pc_entityblueprint resource, not .pc_entitytype!
+            /**
+             * Search for (sub-) entity with matching blueprint resource id.
+             * This refers to a resource id of a .pc_entityblueprint resource, not .pc_entitytype!
+             * e.g. ResId<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_fueltank_a.entitytemplate].pc_entityblueprint">
+             */
             std::optional <ZRuntimeResourceID> m_ridBlueprint = std::nullopt;
 
-			// maximum result count.
+            /**
+             * Limit to a maximum number of results.
+             * When this number of results is reached, the search ends early.
+             */
 			std::optional<size_t> m_nMaxResults = std::nullopt;
         };
 
         /**
-         * Search for entities matching given parameters. Parameters are combined with OR logic. 
+         * Search for entities matching given parameters. 
+         * Parameters are combined with OR logic. 
          */
         std::vector<ZEntityRef> FindEntities(const SSearchParams& p_Params);
     };
 
+    /**
+     * Attempt to get the name (as per template) of an entity.
+     * @param p_Entity Entity reference.
+     * @param p_pFactory Entity Blueprint pointer. If nullptr, attempt to find from entity ref.
+     * @param p_nSubIndex Entity sub-index in blueprint. If -1, attempt to find from entity ref.
+     */
     std::string GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFactoryBase* p_pFactory = nullptr, int p_nSubIndex = -1);
 
+    /**
+     * Attempt to get the (primary) type name of an entity.
+     * @param p_Entity Entity reference.
+     */
     std::string GetEntityTypeName(const ZEntityRef& p_Entity);
 
     /**
-	 * Get the blueprint factory for the given entity, even if it's a sub-entity.
+	 * Attempt to get the blueprint factory of an entity, even if it's a sub-entity.
+     * @param p_rEntity Entity reference.
      */
     ZEntityBlueprintFactoryBase* GetEntityBlueprintFactoryFor(ZEntityRef p_rEntity);
 
     /**
-     * safely get a property from an entity. Returns std::nullopt if failed.
+     * safely get a property from an entity. Returns std::nullopt if failed or invalid.
 	 * @template T The property type.
 	 * @param p_rEntity The entity to get the property from. if invalid, returns std::nullopt.
 	 * @param p_sProperty The property name. If not found or of wrong type, returns std::nullopt.
@@ -82,6 +109,7 @@ namespace Utils
 	 * @param p_rEntity The entity to set the property on. if invalid, returns false.
 	 * @param p_sProperty The property name. If not found or of wrong type, returns false.
 	 * @param p_Value The value to set.
+     * @param p_bInvokeChangeHandlers Invoke property change handlers.
      */
     template <typename T>
     inline bool SetProperty(ZEntityRef& p_rEntity, const std::string& p_sProperty, const T& p_Value, bool p_bInvokeChangeHandlers = true)

@@ -6,6 +6,11 @@
 
 #include "Helpers/ZTemplateEntitySpawner.h"
 
+/**
+ * Reusable base for spawning Poison Area-of-Effect Damage Clouds.
+ * Handles resource loading, unloading and spawning.
+ * Spawn a AOE Cloud using Spawn().
+ */
 class ZPoisonAOEDamageEffectBase : public virtual IChaosEffect
 {
 public:
@@ -29,9 +34,24 @@ public:
 protected:
     struct SParams
     {
+        /**
+         * Center position of the AOE box.
+         */
         SMatrix m_Position;
+
+        /**
+         * Type of poison damage to apply.
+         */
         EPoisonType m_eType;
+
+        /**
+         * Size of the AOE box.
+         */
         SVector3 m_AreaSize = SVector3(4.0f, 4.0f, 4.0f);
+
+        /**
+         * Colors of the Particle effect.
+         */
         SColorRGB m_ParticleColorRangeStart{ .r = 255, .g = 0, .b = 0 };
         SColorRGB m_ParticleColorRangeEnd{ .r = 255, .g = 0, .b = 0 };
     };

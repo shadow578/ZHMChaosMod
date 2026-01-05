@@ -6,6 +6,10 @@
 
 #include <map>
 
+/**
+ * Reuseable base for monitoring of the wellbeing state of all active actors. 
+ * Callback OnActorWellbeingStateChanged is called each time a actor is pacified or killed.
+ */
 class ZActorWellbeingChangeEffectBase : public virtual IChaosEffect
 {
 public:

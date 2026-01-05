@@ -2,6 +2,10 @@
 
 #include "IChaosEffect.h"
 
+/**
+ * Reusable base for ragdolling the player.
+ * Player ragdolls on Start() and is restored on Stop().
+ */
 class ZPlayerRagdollEffectBase : public virtual IChaosEffect
 {
 public:

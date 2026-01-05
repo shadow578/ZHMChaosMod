@@ -1,6 +1,9 @@
 #pragma once
 #include "IChaosEffect.h"
 
+/**
+ * Reusable base for effects that are only available a single time per game.
+ */
 class ZSingleTimeEffectBase : public virtual IChaosEffect
 {
 public:
