@@ -1,13 +1,14 @@
 name: Build
 
 on:
-  push:
-    branches:
-      - master
+  #push:
+  #  branches:
+  #    - main
   release:
     types: [ created ]
   pull_request:
     types: [ opened, synchronize, reopened ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -55,13 +56,13 @@ jobs:
     - name: Archive debug
       uses: actions/upload-artifact@v4
       with:
-        name: MyMod-Debug
+        name: ChaosMod-Debug
         path: _dist-debug/*
 
     - name: Archive release
       uses: actions/upload-artifact@v4
       with:
-        name: MyMod-Release
+        name: ChaosMod-Release
         path: _dist-release/*
 
   upload_release:
@@ -74,21 +75,21 @@ jobs:
     - name: Download debug artifact
       uses: actions/download-artifact@v4
       with:
-        name: MyMod-Debug
-        path: MyMod-Debug
+        name: ChaosMod-Debug
+        path: ChaosMod-Debug
 
     - name: Download release artifact
       uses: actions/download-artifact@v4
       with:
-        name: MyMod-Release
-        path: MyMod-Release
+        name: ChaosMod-Release
+        path: ChaosMod-Release
 
     - name: Archive artifact files
       run: |
-        cd MyMod-Debug
-        zip -r MyMod-Debug.zip *
-        cd ../MyMod-Release
-        zip -r MyMod-Release.zip *
+        cd ChaosMod-Debug
+        zip -r ChaosMod-Debug.zip *
+        cd ../ChaosMod-Release
+        zip -r ChaosMod-Release.zip *
         
     - name: Get release
       id: get_release
@@ -102,8 +103,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: MyMod-Debug/MyMod-Debug.zip
-        asset_name: MyMod-Debug.zip
+        asset_path: ChaosMod-Debug/ChaosMod-Debug.zip
+        asset_name: ChaosMod-Debug.zip
         asset_content_type: application/zip
 
     - name: Upload release assets
@@ -112,6 +113,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: MyMod-Release/MyMod-Release.zip
-        asset_name: MyMod-Release.zip
+        asset_path: ChaosMod-Release/ChaosMod-Release.zip
+        asset_name: ChaosMod-Release.zip
         asset_content_type: application/zip
