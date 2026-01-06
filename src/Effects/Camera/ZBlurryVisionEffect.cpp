@@ -5,8 +5,8 @@
 void ZBlurryVisionEffect::Start()
 {
 	auto& s_Params = GetParameters();
-	s_Params.Setm_bGaussianBlurEnabled(true);
-	s_Params.Setm_fGaussianBlurriness(0.05f);
+	s_Params.m_bGaussianBlurEnabled = true;
+	s_Params.m_fGaussianBlurriness = 0.05f;
 
 	BlendIn();
 }
@@ -16,7 +16,7 @@ void ZBlurryVisionEffect::Stop()
 	BlendOut();
 
 	auto& s_Params = GetParameters();
-	s_Params.Setm_bGaussianBlurEnabled(false);
+	s_Params.m_bGaussianBlurEnabled = false;
 }
 
 REGISTER_CHAOS_EFFECT(ZBlurryVisionEffect)

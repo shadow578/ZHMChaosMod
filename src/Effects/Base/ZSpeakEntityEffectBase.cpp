@@ -537,10 +537,10 @@ ZSpeakEntityEffectBase::SSpeakEntityWrapper ZSpeakEntityEffectBase::Speak(
 {
 	auto s_SpeakEntity = Spawn();
 
-	s_SpeakEntity.Setm_rActor(p_rActor);
-	s_SpeakEntity.Setm_eSoundDef(p_eSoundDef);
-	s_SpeakEntity.Setm_eGesture(p_eGesture);
-	s_SpeakEntity.Setm_bAllowInterrupt(p_bAllowInterrupt);
+	s_SpeakEntity.m_rActor = p_rActor;
+	s_SpeakEntity.m_eSoundDef = p_eSoundDef;
+	s_SpeakEntity.m_eGesture = p_eGesture;
+	s_SpeakEntity.m_bAllowInterrupt = p_bAllowInterrupt;
 
 	if (p_bStartNow)
 	{

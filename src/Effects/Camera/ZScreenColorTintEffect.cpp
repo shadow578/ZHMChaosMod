@@ -5,8 +5,8 @@
 void ZScreenColorTintEffect::Start()
 {
 	auto& s_Params = GetParameters();
-	s_Params.Setm_bHDREnabled(true);
-	s_Params.Setm_HDRColorTint(m_vColor);
+	s_Params.m_bHDREnabled = true;
+	s_Params.m_HDRColorTint= m_vColor;
 
 	BlendIn();
 }
@@ -16,7 +16,7 @@ void ZScreenColorTintEffect::Stop()
 	BlendOut();
 
 	auto& s_Params = GetParameters();
-	s_Params.Setm_bHDREnabled(false);
+	s_Params.m_bHDREnabled = false;
 }
 
 void ZScreenColorTintEffect::OnDrawDebugUI()

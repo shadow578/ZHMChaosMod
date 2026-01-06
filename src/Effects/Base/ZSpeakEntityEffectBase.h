@@ -28,7 +28,7 @@ protected:
 		WRAPPER_CONSTRUCTOR(SSpeakEntityWrapper);
 
 		PROPERTY(ZEntityRef, m_rActor);         // actor that will speak
-		PROPERTY(TEntityRef<ZActor>, m_rSpeakingActor); // while speaking, == m_rActor. null when not speaking
+		PROPERTY_RO(TEntityRef<ZActor>, m_rSpeakingActor); // while speaking, == m_rActor. null when not speaking
 		PROPERTY(EActorSoundDefs, m_eSoundDef); // voiceline to play
 		PROPERTY(EGestureCategory, m_eGesture); // gesture to play while speaking
 		PROPERTY(bool, m_bAllowInterrupt);      // allow interruption
@@ -37,7 +37,7 @@ protected:
 
 		inline bool IsSpeaking() const
 		{
-			const auto s_rSpeakingActor = Getm_rSpeakingActor();
+			const auto s_rSpeakingActor = m_rSpeakingActor;
 			return s_rSpeakingActor && *s_rSpeakingActor;
 		}
 	};

@@ -157,7 +157,7 @@ void ZNearbyActorSpeakEffect::RefreshActiveSpeakers(const float32 p_fDeltaTime)
 			}
 
 			// restart with new sound pick
-			s_SpeakWrapper.Setm_eSoundDef(GetRandomSoundDef());
+			s_SpeakWrapper.m_eSoundDef = GetRandomSoundDef();
 			s_SpeakWrapper.SignalInputPin_Start();
 
 			s_ActiveSpeaker.m_fTimeToNextRepetition = GetRepetitionDelay();
