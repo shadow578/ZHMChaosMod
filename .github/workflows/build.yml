@@ -10,9 +10,13 @@ on:
     types: [ opened, synchronize, reopened ]
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   build:
     name: Build
+    permissions:
+      contents: read
     runs-on: [ windows-latest ]
 
     steps:
@@ -70,6 +74,8 @@ jobs:
     needs: build
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - name: Download debug artifact
@@ -90,29 +96,10 @@ jobs:
         zip -r ChaosMod-Debug.zip *
         cd ../ChaosMod-Release
         zip -r ChaosMod-Release.zip *
-        
-    - name: Get release
-      id: get_release
-      uses: bruceadams/get-release@v1.2.2
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
 
-    - name: Upload debug assets
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload the files to release
+      uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # 2.5.0
       with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: ChaosMod-Debug/ChaosMod-Debug.zip
-        asset_name: ChaosMod-Debug.zip
-        asset_content_type: application/zip
-
-    - name: Upload release assets
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: ChaosMod-Release/ChaosMod-Release.zip
-        asset_name: ChaosMod-Release.zip
-        asset_content_type: application/zip
+        files: |
+          ChaosMod-Debug/ChaosMod-Debug.zip
+          ChaosMod-Release/ChaosMod-Release.zip
