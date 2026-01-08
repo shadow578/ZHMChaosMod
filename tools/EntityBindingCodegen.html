@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entity Binding Code Generation Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .content-body {
+      margin: 0 auto;
+      padding: 0 0;
+      flex: 1 1 auto;
+      max-width: 80rem;
+    }
+
+    .title {
+      color: #333;
+      text-align: center;
+      margin-bottom: 0;
+    }
+
+    .tagline {
+      color: #666;
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin: 5px 0;
+    }
+
+    .card>h2,
+    .card>summary {
+      margin-top: 0;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .card>summary {
+      cursor: pointer;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .notice {
+      color: #666;
+    }
+
+    .vspace {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="content-body">
+    <h1 class="title">Entity Binding Code Generation Tool</h1>
+    <p class="tagline">Quickly generate entity binding from CPPT</p>
+
+    <div class="card">
+      <h2>Inputs</h2>
+
+      <div style="display: flex; flex-direction: column;">
+        <lable for="binding_name">Binding name</lable>
+        <input type="text" id="binding_name" name="binding_name" placeholder="MyEntity" />
+
+        <div class="vspace"></div>
+
+        <label for="hash_or_path">CPPT hash / res path</label>
+        <input type="text" id="hash_or_path" name="hash_or_path" placeholder="[modules:/zentity.class].pc_entitytype" />
+
+        <div class="vspace"></div>
+
+        <label for="cppt_json">CPPT JSON</label>
+        <textarea id="cppt_json" name="cppt_json" rows="10" cols="50" style="width: 70rem;"
+          placeholder="Paste CPPT JSON here"></textarea>
+
+        <div class="vspace"></div>
+
+        <button id="generate">Generate</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display: flex; flex-direction: row; align-items: center;">
+        <h2>Output</h2>
+
+        <div style="flex-grow: 1;"></div>
+
+        <button id="copy_button">Copy to Clipboard</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column;">
+        <textarea id="output_area" name="output_area" rows="15" cols="80" readonly></textarea>
+      </div>
+    </div>
+
+
+    <script>
+      "use strict";
+
+      (async () => {
+        async function loadPinDefs() {
+          const url = "https://raw.githubusercontent.com/glacier-modding/glaciermodding.org/refs/heads/main/docs/modding/hitman/guides/pins.json";
+          const response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`Failed to load PINs definition: ${response.status} ${response.statusText}`);
+          }
+          const pinsDef = await response.json();
+
+          console.log(`loaded ${pinsDef.length} PIN definitions`);
+          return pinsDef;
+        }
+
+        function findPinDef(pinDefs, hashOrPath) {
+          return pinDefs.find(def => def.hash === hashOrPath || def.path === hashOrPath);
+        }
+
+        function generateProperties(cpptJson) {
+          const cppTypeOverrides = {
+            "ZEntityReference": "ZEntityRef",
+          };
+
+          const cppt = JSON.parse(cpptJson);
+          let output = [];
+          for (const prop of cppt.propertyValues) {
+            console.log(prop);
+
+            const name = prop.nPropertyID;
+            let type = prop.value.$type;
+
+            if (cppTypeOverrides[type]) {
+              type = cppTypeOverrides[type];
+            }
+
+            output.push(`PROPERTY(${type}, ${name});`);
+          }
+
+          return output;
+        }
+
+        function generatePins(pins, type /* input | output */) {
+          let output = [];
+          for (const pin of pins) {
+            output.push(`${type.toUpperCase()}_PIN(${pin.pin});${pin.description ? ` // ${pin.description}` : ""}`);
+          }
+          return output;
+        }
+
+        const page = {
+          inputs: {
+            binding_name: document.getElementById("binding_name"),
+            hash_or_path: document.getElementById("hash_or_path"),
+            cppt_json: document.getElementById("cppt_json"),
+            generate_button: document.getElementById("generate"),
+          },
+          outputs: {
+            copy_button: document.getElementById("copy_button"),
+            output_area: document.getElementById("output_area"),
+          }
+        };
+
+        function validatePageElements(container) {
+          for (const key in container) {
+            if (container[key] === null) {
+              throw new Error(`Element '${key}' not found`);
+            }
+          }
+        }
+        validatePageElements(page.inputs);
+        validatePageElements(page.outputs);
+
+        const pins = await loadPinDefs();
+
+        page.inputs.generate_button.onclick = () => {
+          const bindingName = page.inputs.binding_name.value.trim() || "MyEntity";
+          const hashOrPath = page.inputs.hash_or_path.value.trim();
+          const cpptJson = page.inputs.cppt_json.value.trim();
+
+          if (cpptJson === "") {
+            alert("Please fill in all input fields.");
+            return;
+          }
+
+          const structName = `S${bindingName} Binding`;
+
+          let output = [];
+          if (hashOrPath && hashOrPath !== "") {
+            output.push(`// ${hashOrPath}`);
+          }
+          output.push(`struct ${structName} {`);
+
+          output.push(`  BINDING_CONSTRUCTOR(${structName});`);
+          output.push("");
+
+          output.push(...generateProperties(cpptJson).map(line => `  ${line}`));
+
+          if (hashOrPath && hashOrPath !== "") {
+            const pinDef = findPinDef(pins, hashOrPath);
+            console.log(pinDef);
+
+            if (pinDef) {
+              console.log(pinDef.in, pinDef.out);
+
+              output.push("");
+              output.push(...generatePins(pinDef.in, "input").map(line => `  ${line}`));
+              output.push("");
+              output.push(...generatePins(pinDef.out, "output").map(line => `  ${line}`));
+            }
+          }
+
+          output.push("};");
+
+          page.outputs.output_area.value = output.join("\n");
+          page.outputs.copy_button.disabled = false;
+        };
+
+        page.outputs.copy_button.onclick = () => {
+          const outputText = page.outputs.output_area.value;
+          navigator.clipboard.writeText(outputText);
+        };
+      })();
+    </script>
+</body>
+
+</html>
