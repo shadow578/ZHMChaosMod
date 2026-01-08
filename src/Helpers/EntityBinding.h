@@ -1,10 +1,10 @@
 /**
- * Helper Macros to define wrappers around ZEntityRef.
+ * Helper Macros to define bindings around ZEntityRef.
  * Example usage:
  * 
- * struct SMyEntityWrapper
+ * struct SMyEntityBinding
  * {
- *   WRAPPER_CONSTRUCTOR(SMyEntityWrapper);
+ *   BINDING_CONSTRUCTOR(SMyEntityBinding);
  * 
  *   PROPERTY(int32, m_nSomeIntProperty);
  *   PROPERTY(float32, m_fSomeFloatProperty);
@@ -14,9 +14,10 @@
  * };
  * 
  * This allows accessing properties and signaling pins like:
- * SMyEntityWrapper s_Wrapper(s_rEntity);
- * auto s_nValue = s_Wrapper.m_nSomeIntProperty;
- * s_Wrapper.SignalInputPin_SomeInputPin();
+ * SMyEntityBinding s_Binding(s_rEntity);
+ * auto s_nValue = s_Binding.m_nSomeIntProperty;
+ * s_Binding.SomeInputPin();
+ * s_Binding.SomeOutputPin_Out();
  */
 #pragma once
 #include <Glacier/ZEntity.h>
@@ -25,9 +26,9 @@
 
 #include <optional>
 
-#define WRAPPER_CONSTRUCTOR(NAME)											\
+#define BINDING_CONSTRUCTOR(NAME)											\
 	ZEntityRef m_rEntity;													\
-	NAME##(ZEntityRef p_rEntity = {}) : m_rEntity(p_rEntity) {} \
+	NAME##(ZEntityRef p_rEntity = {}) : m_rEntity(p_rEntity) {}             \
 	operator bool() const {	return !!m_rEntity; }
 
 #define PROPERTY(TYPE, NAME)    																		      \
@@ -40,7 +41,7 @@
 	 __declspec(property(get = __##NAME##_Get)) std::optional<TYPE> NAME;
 
 #define INPUT_PIN(NAME) \
-	inline void SignalInputPin_##NAME() { m_rEntity.SignalInputPin(#NAME); }
+	inline void NAME() { m_rEntity.SignalInputPin(#NAME); }
 
 #define OUTPUT_PIN(NAME) \
-	inline void SignalOutputPin_##NAME() { m_rEntity.SignalInputPin(#NAME); }
+	inline void NAME##_Out() { m_rEntity.SignalInputPin(#NAME); }

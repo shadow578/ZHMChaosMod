@@ -130,7 +130,7 @@ void ZNearbyActorSpeakEffect::FindAndRemoveSpeakersNearby()
 
 		const SActiveSpeakerEntry s_NewEntry{
 			.m_rActor = s_rActor,
-			.m_SpeakWrapper = s_SpeakerWrapper,
+			.m_SpeakBinding = s_SpeakerWrapper,
 			.m_fTimeToNextRepetition = GetRepetitionDelay()
 		};
 		m_aActiveSpeakers.push_back(s_NewEntry);
@@ -141,7 +141,7 @@ void ZNearbyActorSpeakEffect::RefreshActiveSpeakers(const float32 p_fDeltaTime)
 {
 	for (auto& s_ActiveSpeaker : m_aActiveSpeakers)
 	{
-		auto& s_SpeakWrapper = s_ActiveSpeaker.m_SpeakWrapper;
+		auto& s_SpeakWrapper = s_ActiveSpeaker.m_SpeakBinding;
 		if (!s_SpeakWrapper.IsSpeaking())
 		{
 			if (!m_bRepeat && s_ActiveSpeaker.m_nRepetitions > 0)
@@ -158,7 +158,7 @@ void ZNearbyActorSpeakEffect::RefreshActiveSpeakers(const float32 p_fDeltaTime)
 
 			// restart with new sound pick
 			s_SpeakWrapper.m_eSoundDef = GetRandomSoundDef();
-			s_SpeakWrapper.SignalInputPin_Start();
+			s_SpeakWrapper.Start();
 
 			s_ActiveSpeaker.m_fTimeToNextRepetition = GetRepetitionDelay();
 			s_ActiveSpeaker.m_nRepetitions++;

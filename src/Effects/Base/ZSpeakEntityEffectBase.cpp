@@ -528,7 +528,7 @@ void ZSpeakEntityEffectBase::DebugSpeakAtNearestActor()
 	}
 }
 
-ZSpeakEntityEffectBase::SSpeakEntityWrapper ZSpeakEntityEffectBase::Speak(
+ZSpeakEntityEffectBase::SSpeakEntityBinding ZSpeakEntityEffectBase::Speak(
 	const ZEntityRef& p_rActor,
 	const EActorSoundDefs p_eSoundDef,
 	const EGestureCategory p_eGesture,
@@ -544,13 +544,13 @@ ZSpeakEntityEffectBase::SSpeakEntityWrapper ZSpeakEntityEffectBase::Speak(
 
 	if (p_bStartNow)
 	{
-		s_SpeakEntity.SignalInputPin_Start();
+		s_SpeakEntity.Start();
 	}
 
 	return s_SpeakEntity;
 }
 
-ZSpeakEntityEffectBase::SSpeakEntityWrapper ZSpeakEntityEffectBase::Spawn()
+ZSpeakEntityEffectBase::SSpeakEntityBinding ZSpeakEntityEffectBase::Spawn()
 {
-	return SSpeakEntityWrapper(m_pSpeakEntitySpawner->Spawn());
+	return SSpeakEntityBinding(m_pSpeakEntitySpawner->Spawn());
 }

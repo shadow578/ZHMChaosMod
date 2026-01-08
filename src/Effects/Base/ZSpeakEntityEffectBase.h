@@ -4,7 +4,7 @@
 #include <Glacier/ZActor.h>
 
 #include "Helpers/ZTemplateEntitySpawner.h"
-#include "Helpers/EntityWrapper.h"
+#include "Helpers/EntityBinding.h"
 
 /**
  * Reusable base for playing voicelines on actors.
@@ -23,9 +23,9 @@ public:
 
 protected:
 #pragma region SpeakEntity Wrapper
-	struct SSpeakEntityWrapper
+	struct SSpeakEntityBinding
 	{
-		WRAPPER_CONSTRUCTOR(SSpeakEntityWrapper);
+		BINDING_CONSTRUCTOR(SSpeakEntityBinding);
 
 		PROPERTY(ZEntityRef, m_rActor);         // actor that will speak
 		PROPERTY_RO(TEntityRef<ZActor>, m_rSpeakingActor); // while speaking, == m_rActor. null when not speaking
@@ -52,7 +52,7 @@ protected:
 	 * @param p_bStartNow Start SpeakEntity automatically.
 	*                     If false, you must Start the entity manually.
 	 */
-	SSpeakEntityWrapper Speak(
+	SSpeakEntityBinding Speak(
 		const ZEntityRef& p_rActor, 
 		const EActorSoundDefs p_eSoundDef, 
 		const EGestureCategory p_eGesture = EGestureCategory::EGC_None, 
@@ -62,7 +62,7 @@ protected:
 	/**
 	 * Spawn a SpeakEntity. No further assignments are made.
 	 */
-	SSpeakEntityWrapper Spawn();
+	SSpeakEntityBinding Spawn();
 
 private:
 	std::unique_ptr<ZTemplateEntitySpawner> m_pSpeakEntitySpawner;

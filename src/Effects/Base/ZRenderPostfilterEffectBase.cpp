@@ -44,8 +44,8 @@ void ZRenderPostfilterEffectBase::OnEnterScene()
 		return;
 	}
 
-	m_PostfilterLayer = LayerEntityWrapper(m_rPostfilterLayerEntity);
-	m_PostfilterParameters = ParametersEntityWrapper(s_rParametersEntity.value().m_ref);
+	m_PostfilterLayer = SLayerEntityBinding(m_rPostfilterLayerEntity);
+	m_PostfilterParameters = SParametersEntityBinding(s_rParametersEntity.value().m_ref);
 }
 
 void ZRenderPostfilterEffectBase::OnClearScene()
@@ -75,7 +75,7 @@ void ZRenderPostfilterEffectBase::BlendIn(const float32 p_fBlendInDuration)
 	}
 
 	m_PostfilterLayer.m_fBlendInDuration = p_fBlendInDuration;
-	m_PostfilterLayer.SignalInputPin_BlendIn();
+	m_PostfilterLayer.BlendIn();
 }
 
 void ZRenderPostfilterEffectBase::BlendOut(const float32 p_fBlendOutDuration)
@@ -86,7 +86,7 @@ void ZRenderPostfilterEffectBase::BlendOut(const float32 p_fBlendOutDuration)
 	}
 
 	m_PostfilterLayer.m_fBlendOutDuration = p_fBlendOutDuration;
-	m_PostfilterLayer.SignalInputPin_BlendOut();
+	m_PostfilterLayer.BlendOut();
 }
 
 void ZRenderPostfilterEffectBase::BlendInOut(const float32 p_fBlendInDuration, const float32 p_fBlendOutDuration, const float32 p_fBlendSustainDuration)
@@ -100,5 +100,5 @@ void ZRenderPostfilterEffectBase::BlendInOut(const float32 p_fBlendInDuration, c
 	m_PostfilterLayer.m_fBlendOutDuration = p_fBlendOutDuration;
 	m_PostfilterLayer.m_fBlendSustainDuration = p_fBlendSustainDuration;
 
-	m_PostfilterLayer.SignalInputPin_BlendInOut();
+	m_PostfilterLayer.BlendInOut();
 }

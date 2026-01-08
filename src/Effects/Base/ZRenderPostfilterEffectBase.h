@@ -4,7 +4,7 @@
 #include <Glacier/ZEntity.h>
 #include <Glacier/SColorRGB.h>
 #include "Helpers/EntityUtils.h"
-#include "Helpers/EntityWrapper.h"
+#include "Helpers/EntityBinding.h"
 
 /**
  * Reusable base providing access to the render postfilter graph.
@@ -26,9 +26,9 @@ public:
 protected: // Wrappers
 
 #pragma region Layer Entity Wrapper
-	struct LayerEntityWrapper
+	struct SLayerEntityBinding
 	{
-		WRAPPER_CONSTRUCTOR(LayerEntityWrapper);
+		BINDING_CONSTRUCTOR(SLayerEntityBinding);
 
 		PROPERTY(float32, m_fBlendInDuration);
 		PROPERTY(float32, m_fBlendOutDuration);
@@ -41,10 +41,10 @@ protected: // Wrappers
 #pragma endregion
 
 #pragma region Parameters Entity Wrapper
-	struct ParametersEntityWrapper
+	struct SParametersEntityBinding
 	{
 		// note: this is only partial, only things i care about and got to work are here
-		WRAPPER_CONSTRUCTOR(ParametersEntityWrapper);
+		BINDING_CONSTRUCTOR(SParametersEntityBinding);
 
 		PROPERTY(bool, m_bFogEnabled); // enable fog
 		PROPERTY(bool, m_bFogGlobal); // fog is global / only in some area box ?
@@ -111,12 +111,12 @@ protected: // API
 	 * Get wrapper to parameters entity.
 	 * Set your parameters on this, then call BlendIn/BlendOut/BlendInOut on the layer to activate and deactivate.
 	 */
-	inline ParametersEntityWrapper& GetParameters()
+	inline SParametersEntityBinding& GetParameters()
 	{
 		return m_PostfilterParameters;
 	}
 
 private:
-	LayerEntityWrapper m_PostfilterLayer;
-	ParametersEntityWrapper m_PostfilterParameters;
+	SLayerEntityBinding m_PostfilterLayer;
+	SParametersEntityBinding m_PostfilterParameters;
 };
