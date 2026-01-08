@@ -6,10 +6,9 @@
 
 void ZFixCameraUnlocker::Start()
 {
-    const Utils::EntityFinder::SSearchParams s_Query{
-           .m_sEntityType = "ZHM5MainCamera"
-    };
-    auto s_aCameras = Utils::EntityFinder::FindEntities(s_Query);
+    auto s_aCameras = Utils::ZEntityFinder()
+        .EntityType("ZHM5MainCamera")
+        .Find();
     if (s_aCameras.empty())
     {
         return;

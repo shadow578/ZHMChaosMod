@@ -29,17 +29,16 @@ void ZGravityModifierEffectBase::RestoreDefaultGravity()
 
 void ZGravityModifierEffectBase::SetGravity(const SVector3 p_vGravity)
 {
-    const Utils::EntityFinder::SSearchParams s_Query{
-        .m_nEntityId = c_nPhysicsWorldId,
-        .m_nMaxResults = 1
-    };
-    auto s_aEntities = Utils::EntityFinder::FindEntities(s_Query);
-    if (s_aEntities.empty())
-    {
-        return;
-    }
+    auto s_rPhysicsEntity = Utils::ZEntityFinder()
+        .EntityID(c_nPhysicsWorldId)
+		.FindFirst();
 
-    auto& s_rPhysicsEntity = s_aEntities.front();
+    if (!s_rPhysicsEntity)
+    {
+        Logger::Debug(TAG "Failed to find PhysicsWorld entity.");
+        return;
+	}
+
     if (!Utils::SetProperty<SVector3>(s_rPhysicsEntity, c_sGravityPropertyName, p_vGravity))
     {
         Logger::Debug(TAG "Failed to set gravity property on PhysicsWorld entity.");

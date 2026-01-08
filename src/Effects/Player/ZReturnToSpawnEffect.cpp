@@ -16,10 +16,9 @@ void ZReturnToSpawnEffect::OnEnterScene()
 {
     m_aSpawnPoints.clear();
 
-    const Utils::EntityFinder::SSearchParams s_Query{
-        .m_sEntityType = "ZHeroSpawn"
-    };
-    const auto s_aStartingLocations = Utils::EntityFinder::FindEntities(s_Query);
+    const auto s_aStartingLocations = Utils::ZEntityFinder()
+        .EntityType("ZHeroSpawn")
+        .Find();
     if (s_aStartingLocations.empty())
     {
         return;

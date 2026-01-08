@@ -10,16 +10,14 @@
 
 void ZFixPlayerPositionUnlocker::Start()
 {
-    const Utils::EntityFinder::SSearchParams s_Query{
-        .m_sEntityType = "ZHeroSpawn"
-    };
-    const auto s_aStartingLocations = Utils::EntityFinder::FindEntities(s_Query);
-    if (s_aStartingLocations.empty())
+    const auto& s_StartingLocation = Utils::ZEntityFinder()
+		.EntityType("ZHeroSpawn")
+		.FindFirst();
+
+    if (!s_StartingLocation)
     {
         return;
-    }
-
-    const auto s_StartingLocation = s_aStartingLocations.front();
+	}
 
 	const auto s_rPosition = Utils::GetProperty<TEntityRef<ZSpatialEntity>>(s_StartingLocation, "m_rPosition");
     if (!s_rPosition)

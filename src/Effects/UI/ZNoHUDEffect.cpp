@@ -28,17 +28,15 @@ void ZNoHUDEffect::Stop()
 
 void ZNoHUDEffect::SetHUDVisibility(const bool p_bVisible)
 {
-    const Utils::EntityFinder::SSearchParams s_Query{
-        .m_nEntityId = c_nHUDRootId,
-        .m_nMaxResults = 1
-    };
-    auto s_aEntities = Utils::EntityFinder::FindEntities(s_Query);
-    if (s_aEntities.empty())
+    auto s_HUDRoot = Utils::ZEntityFinder()
+        .EntityID(c_nHUDRootId)
+        .FindFirst();
+
+    if (!s_HUDRoot)
     {
         return;
-    }
+	}
 
-    auto& s_HUDRoot = s_aEntities.front();
     if (!Utils::SetProperty<bool>(s_HUDRoot, c_sHudVisibilityPropertyName, p_bVisible))
     {
         Logger::Debug(TAG "Failed to set visibility property on HUD root entity.");

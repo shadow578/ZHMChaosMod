@@ -17,7 +17,7 @@ void ZLiveReactionCamEffect::LoadResources()
 	}
 	else
 	{
-		m_pHudMessageResource = ZResourceProvider::Create<"[assembly:/_pro/chaosmod/localization/ui/hud_pip_livereaction/player.sweetline].pc_sweetline">();
+		m_pHudMessageResource = ZResourceProvider::Create<"[assembly:/_pro/chaosmod/localization/ui/hud_pip_livereaction/actor.sweetline].pc_sweetline">();
 	}
 }
 

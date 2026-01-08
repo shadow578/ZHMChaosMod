@@ -13,7 +13,7 @@ void ZRenderPostfilterEffectBase::OnEnterScene()
 	m_PostfilterLayer = {};
 	m_PostfilterParameters = {};
 
-	const Utils::EntityFinder::SSearchParams s_Query{
+	const auto& s_rPostfilterLayerEntity = Utils::ZEntityFinder()
 		// we use a pre-defined ZPostFilterLayerEntity "CustomPFController".
 		// that way, we can bypass having to modify the PF Graph, at the cost of only having one postfilter effect to use.
 		// 
@@ -22,29 +22,25 @@ void ZRenderPostfilterEffectBase::OnEnterScene()
 		// for the ZPostFilterLayerEntity in this path:
 		// "FX_PF_PostfilterController/CustomPFController/PostfilterLayerEntity11"
 		// (yes, IOI got really bad at naming things here...)
-	   .m_nEntityId = 0x87805acc41dd775e,
+		.EntityID(0x87805acc41dd775e)
 
-	   // hopefully there's only one...
-	   .m_nMaxResults = 1
-	};
-	const auto m_aPostfilterEntities = Utils::EntityFinder::FindEntities(s_Query);
-	if (m_aPostfilterEntities.empty())
+		// there should only be one
+		.FindFirst();
+
+	if (!s_rPostfilterLayerEntity)
 	{
-		Logger::Warn(TAG "Failed to grab CustomPFController entity.");
 		return;
 	}
 
-	auto m_rPostfilterLayerEntity = m_aPostfilterEntities.front();
-
 	// grab parameters entity from the layer
-	auto s_rParametersEntity = Utils::GetProperty<TEntityRef<IRenderPostfilterParametersEntity>>(m_rPostfilterLayerEntity, "m_parametersEntity");
+	auto s_rParametersEntity = Utils::GetProperty<TEntityRef<IRenderPostfilterParametersEntity>>(s_rPostfilterLayerEntity, "m_parametersEntity");
 	if (!s_rParametersEntity)
 	{
 		Logger::Warn(TAG "Failed to grab parameters entity from CustomPFController.");
 		return;
 	}
 
-	m_PostfilterLayer = SLayerEntityBinding(m_rPostfilterLayerEntity);
+	m_PostfilterLayer = SLayerEntityBinding(s_rPostfilterLayerEntity);
 	m_PostfilterParameters = SParametersEntityBinding(s_rParametersEntity.value().m_ref);
 }
 

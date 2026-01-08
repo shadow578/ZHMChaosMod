@@ -15,11 +15,10 @@ void ZSwapTargetsEffect::OnEnterScene()
 {
 	m_aTargetSpatials.clear();
 
-	const Utils::EntityFinder::SSearchParams s_Query{
+	const auto& s_aMapTrackers = Utils::ZEntityFinder()
 		// probably ok...
-		.m_sEntityName = "LD_MapTracker_NPCActor"
-	};
-	const auto& s_aMapTrackers = Utils::EntityFinder::FindEntities(s_Query);
+		.EntityName("LD_MapTracker_NPCActor")
+		.Find();
 
 	for (const auto& s_rMapTracker : s_aMapTrackers)
 	{

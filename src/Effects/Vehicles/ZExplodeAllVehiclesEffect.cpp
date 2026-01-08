@@ -7,10 +7,9 @@ void ZExplodeAllVehiclesEffect::OnEnterScene()
 {
 	ZSingleTimeEffectBase::OnEnterScene();
 
-	const Utils::EntityFinder::SSearchParams s_Query{
-		.m_ridBlueprint = ResId<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_fueltank_a.entitytemplate].pc_entityblueprint">
-	};
-	m_aFuelTanks = Utils::EntityFinder::FindEntities(s_Query);
+	m_aFuelTanks = Utils::ZEntityFinder()
+		.BlueprintResource<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_fueltank_a.entitytemplate].pc_entityblueprint">()
+		.Find();
 }
 
 void ZExplodeAllVehiclesEffect::OnClearScene()

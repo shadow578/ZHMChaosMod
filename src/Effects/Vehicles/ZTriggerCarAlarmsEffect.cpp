@@ -5,10 +5,9 @@
 
 void ZTriggerCarAlarmsEffect::OnEnterScene()
 {
-	const Utils::EntityFinder::SSearchParams s_Query{
-		.m_ridBlueprint = ResId<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_core.entitytemplate].pc_entityblueprint">
-	};
-	m_aVehicleCores = Utils::EntityFinder::FindEntities(s_Query);
+	m_aVehicleCores = Utils::ZEntityFinder()
+		.BlueprintResource<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_core.entitytemplate].pc_entityblueprint">()
+		.Find();
 }
 
 void ZTriggerCarAlarmsEffect::OnClearScene()

@@ -28,18 +28,11 @@ void ZMinimapNoActorsEffect::Stop()
 
 void ZMinimapNoActorsEffect::SetMinimapType(const EMapType p_eMapType)
 {
-    const Utils::EntityFinder::SSearchParams s_Query{
-        .m_nEntityId = c_nMinimapRootId,
-        .m_nMaxResults = 1
-    };
-    auto s_aEntities = Utils::EntityFinder::FindEntities(s_Query);
-    if (s_aEntities.empty())
-    {
-        return;
-    }
+    auto s_rMinimapRoot = Utils::ZEntityFinder()
+        .EntityID(c_nMinimapRootId)
+		.FindFirst();
 
-    auto& s_MinimapRoot = s_aEntities.front();
-    if (!Utils::SetProperty<EMapType>(s_MinimapRoot, c_sMinimapTypePropertyName, p_eMapType))
+    if (!s_rMinimapRoot || !Utils::SetProperty<EMapType>(s_rMinimapRoot, c_sMinimapTypePropertyName, p_eMapType))
     {
         Logger::Debug(TAG "Failed to set minimap type.");
     }

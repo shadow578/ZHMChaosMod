@@ -7,10 +7,9 @@
 
 void ZRainbowVehiclesEffect::OnEnterScene()
 {
-	const Utils::EntityFinder::SSearchParams s_Query{
-		.m_ridBlueprint = ResId<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_core.entitytemplate].pc_entityblueprint">
-	};
-	const auto& s_aVehicleCores = Utils::EntityFinder::FindEntities(s_Query);
+	const auto& s_aVehicleCores = Utils::ZEntityFinder()
+		.BlueprintResource<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_core.entitytemplate].pc_entityblueprint">()
+		.Find();
 
 	for (auto& s_rVehicleCore : s_aVehicleCores)
 	{

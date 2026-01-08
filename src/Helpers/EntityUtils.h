@@ -13,47 +13,82 @@
 
 namespace Utils
 {
-    namespace EntityFinder
+
+    class ZEntityFinder
     {
-        struct SSearchParams
-        {
-            /**
-             * Search for entity with matching id, as per entity template.
-             * e.g. 0x859611037148f21b
-             */
-            std::optional <uint64_t> m_nEntityId = std::nullopt;
-
-            /**
-             * Search for entity with matching name, as per entity template.
-             * e.g. "LD_MapTracker_NPCActor"
-             */
-            std::optional <std::string> m_sEntityName = std::nullopt;
-
-            /**
-             * Search for entity with matching (primary) type name.
-             * e.g. "ZLightEntity"
-             */
-            std::optional <std::string> m_sEntityType = std::nullopt;
-
-            /**
-             * Search for (sub-) entity with matching blueprint resource id.
-             * This refers to a resource id of a .pc_entityblueprint resource, not .pc_entitytype!
-             * e.g. ResId<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_fueltank_a.entitytemplate].pc_entityblueprint">
-             */
-            std::optional <ZRuntimeResourceID> m_ridBlueprint = std::nullopt;
-
-            /**
-             * Limit to a maximum number of results.
-             * When this number of results is reached, the search ends early.
-             */
-			std::optional<size_t> m_nMaxResults = std::nullopt;
-        };
+    public:
+        ZEntityFinder() {}
 
         /**
-         * Search for entities matching given parameters. 
-         * Parameters are combined with OR logic. 
+         * Search for entity with matching id, as per entity template.
+         * e.g. 0x859611037148f21b
          */
-        std::vector<ZEntityRef> FindEntities(const SSearchParams& p_Params);
+        ZEntityFinder& EntityID(const uint64_t p_nEntityId)
+        {
+            m_nEntityId = p_nEntityId;
+            return *this;
+        }
+
+        /**
+         * Search for entity with matching name, as per entity template.
+         * e.g. "LD_MapTracker_NPCActor"
+         */
+        ZEntityFinder& EntityName(const std::string& p_sEntityName)
+        {
+            m_sEntityName = p_sEntityName;
+            return *this;
+        }
+
+        /**
+         * Search for entity with matching (primary) type name.
+         * e.g. "ZLightEntity"
+         */
+        ZEntityFinder& EntityType(const std::string& p_sEntityType)
+        {
+            m_sEntityType = p_sEntityType;
+            return *this;
+        }
+
+        /**
+         * Search for (sub-) entity with matching blueprint resource id.
+         * This refers to a resource id of a .pc_entityblueprint resource, not .pc_entitytype!
+         * e.g. ResId<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_fueltank_a.entitytemplate].pc_entityblueprint">
+         */
+        template<detail::StringLiteral ResPath>
+        ZEntityFinder& BlueprintResource()
+        {
+            return BlueprintResource(ResId<ResPath>);
+        }
+        
+        ZEntityFinder& BlueprintResource(const ZRuntimeResourceID& p_ridBlueprint)
+        {
+            m_ridBlueprint = p_ridBlueprint;
+            return *this;
+        }
+
+        /**
+         * Search for entities matching all given parameters.
+         * @param p_nMaxResults Limit to a maximum number of results. 0 = no limit.
+         */
+        std::vector<ZEntityRef> Find(const size_t p_nMaxResults = 0) const;
+        ZEntityRef FindFirst() const
+        {
+            auto s_aResults = Find(1);
+            if (!s_aResults.empty())
+            {
+                return s_aResults[0];
+            }
+            
+            return {};
+        }
+
+    private:
+        std::optional <uint64_t> m_nEntityId = std::nullopt;
+        std::optional <std::string> m_sEntityName = std::nullopt;
+        std::optional <std::string> m_sEntityType = std::nullopt;
+        std::optional <ZRuntimeResourceID> m_ridBlueprint = std::nullopt;
+
+        bool Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprintFactoryBase* p_pFactory, int p_nSubIndex) const;
     };
 
     /**

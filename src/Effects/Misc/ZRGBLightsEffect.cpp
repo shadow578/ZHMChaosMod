@@ -12,10 +12,10 @@ void ZRGBLightsEffect::OnEnterScene()
 {
 	m_aLights.clear();
 
-	const Utils::EntityFinder::SSearchParams s_Query{
-	   .m_sEntityType = "ZLightEntity"
-	};
-	const auto s_aLightEntities = Utils::EntityFinder::FindEntities(s_Query);
+	const auto s_aLightEntities = Utils::ZEntityFinder()
+		.EntityType("ZLightEntity")
+		.Find();
+
 	for (auto& s_rLightEntity : s_aLightEntities)
 	{
 		// exclude environmental and area lights
