@@ -18,7 +18,7 @@ heavily inspired by the [GTA V chaos mod](https://github.com/gta-chaos-mod/Chaos
 
 ## Development
 
-See [Setting up the Development environment](./docs/DEV_SETUP.md), [Developing new Effects](./docs/DEV_EFFECTS.md) and [About Code Style](./docs/DEV_NOTATION.md).
+See [Setting up the Development environment](./docs/DEV_SETUP.md), [Developing new Effects](./docs/DEV_EFFECTS.md), [Chaos Mod Concepts and Helpers](./docs/DEV_CONCEPTS.md) and [About Code Style](./docs/DEV_NOTATION.md).
 
 ## Related
 
