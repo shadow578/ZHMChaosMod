@@ -83,7 +83,7 @@
 <body>
   <div class="content-body">
     <h1 class="title">Entity Binding Code Generation Tool</h1>
-    <p class="tagline">Quickly generate entity binding from CPPT</p>
+    <p class="tagline">Quickly generate entity binding from Entity Template</p>
 
     <div class="card">
       <h2>Inputs</h2>
@@ -94,14 +94,14 @@
 
         <div class="vspace"></div>
 
-        <label for="hash_or_path">CPPT hash / res path</label>
+        <label for="hash_or_path">hash / res path</label>
         <input type="text" id="hash_or_path" name="hash_or_path" placeholder="[modules:/zentity.class].pc_entitytype" />
 
         <div class="vspace"></div>
 
-        <label for="cppt_json">CPPT JSON</label>
-        <textarea id="cppt_json" name="cppt_json" rows="10" cols="50" style="width: 70rem;"
-          placeholder="Paste CPPT JSON here"></textarea>
+        <label for="temp_json">Entity Template JSON</label>
+        <textarea id="temp_json" name="temp_json" rows="10" cols="50" style="width: 70rem;"
+          placeholder="Paste Entity Template (CPPT or TEMP) JSON here"></textarea>
 
         <div class="vspace"></div>
 
@@ -144,13 +144,12 @@
           return pinDefs.find(def => def.hash === hashOrPath || def.path === hashOrPath);
         }
 
-        function generateProperties(cpptJson) {
+        function parseEntityTemplateCppt(cppt) {
           const cppTypeOverrides = {
             "ZEntityReference": "ZEntityRef",
           };
 
-          const cppt = JSON.parse(cpptJson);
-          let output = [];
+          let props = [];
           for (const prop of cppt.propertyValues) {
             console.log(prop);
 
@@ -161,16 +160,75 @@
               type = cppTypeOverrides[type];
             }
 
-            output.push(`PROPERTY(${type}, ${name});`);
+            props.push({ name, type });
           }
 
+          return { properties: props, pins: [] };
+        }
+
+        function parseEntityTemplateBp(temp) {
+          let props = []; /* { name:str, type:str }[] */
+          let pins = [];  /* { pin:str, type:"input" | "output" }[] */
+
+          const rootEntity = temp.entities[temp.rootEntity];
+          for (const [name, property] of Object.entries(rootEntity.properties || {})) {
+            props.push({ name, type: property.type });
+          }
+
+          for (const [name, propAliases] of Object.entries(rootEntity.propertyAliases || {})) {
+            let type = undefined;
+
+            for (const propAlias of propAliases) {
+              const originalEntity = temp.entities[propAlias.originalEntity];
+              const originalProperty = originalEntity?.properties[propAlias.originalProperty];
+
+              if (originalProperty) {
+                type = originalProperty.type;
+                break;
+              }
+            }
+
+            props.push({ name, type });
+          }
+
+          for (const pin of Object.keys(rootEntity.inputCopying || {})) {
+            pins.push({ pin: pin, type: "input" });
+          }
+
+          for (const pin of Object.keys(rootEntity.outputCopying || {})) {
+            pins.push({ pin: pin, type: "output" });
+          }
+
+          return { properties: props, pins };
+        }
+
+        function parseEntityTemplate(json) /* { properties: { name: string, type?: string }[], pins: { pin: string, type: "input" | "output" }[] } */ {
+          const data = JSON.parse(json);
+
+          if ("propertyValues" in data) {
+            return parseEntityTemplateCppt(data);
+          }
+          else if ("entities" in data) {
+            return parseEntityTemplateBp(data);
+          }
+          else {
+            console.error("Invalid data format!");
+            return [];
+          }
+        }
+
+        function generateProperties(properties /* { name:str, type?:str }[] */) {
+          let output = [];
+          for (const prop of properties) {
+            output.push(`${prop.type ? "" : "//"}PROPERTY(${prop.type || "?"}, ${prop.name});`);
+          }
           return output;
         }
 
-        function generatePins(pins, type /* input | output */) {
+        function generatePins(pins /* { pin: string, type: "input" | "output", description?: string }[] */) {
           let output = [];
           for (const pin of pins) {
-            output.push(`${type.toUpperCase()}_PIN(${pin.pin});${pin.description ? ` // ${pin.description}` : ""}`);
+            output.push(`${pin.type.toUpperCase()}_PIN(${pin.pin});${pin.description ? ` // ${pin.description}` : ""}`);
           }
           return output;
         }
@@ -179,7 +237,7 @@
           inputs: {
             binding_name: document.getElementById("binding_name"),
             hash_or_path: document.getElementById("hash_or_path"),
-            cppt_json: document.getElementById("cppt_json"),
+            temp_json: document.getElementById("temp_json"),
             generate_button: document.getElementById("generate"),
           },
           outputs: {
@@ -203,11 +261,31 @@
         page.inputs.generate_button.onclick = () => {
           const bindingName = page.inputs.binding_name.value.trim() || "MyEntity";
           const hashOrPath = page.inputs.hash_or_path.value.trim();
-          const cpptJson = page.inputs.cppt_json.value.trim();
+          const tempJson = page.inputs.temp_json.value.trim();
 
-          if (cpptJson === "") {
+          if (tempJson === "") {
             alert("Please fill in all input fields.");
             return;
+          }
+
+          const { properties, pins } = parseEntityTemplate(tempJson);
+          console.log("temp:", properties, pins);
+
+          if (hashOrPath && hashOrPath !== "") {
+            const pinDef = findPinDef(pins, hashOrPath);
+            console.log(pinDef);
+
+            if (pinDef) {
+              console.log("pinDef:", pinDef.in, pinDef.out);
+
+              for (const pin of pinDef.in) {
+                pins.push({ pin: pin.pin, type: "input", description: pin.description });
+              }
+
+              for (const pin of pinDef.out) {
+                pins.push({ pin: pin.pin, type: "output", description: pin.description });
+              }
+            }
           }
 
           const structName = `S${bindingName} Binding`;
@@ -221,19 +299,20 @@
           output.push(`  BINDING_CONSTRUCTOR(${structName});`);
           output.push("");
 
-          output.push(...generateProperties(cpptJson).map(line => `  ${line}`));
+          output.push(...generateProperties(properties).map(line => `  ${line}`));
 
-          if (hashOrPath && hashOrPath !== "") {
-            const pinDef = findPinDef(pins, hashOrPath);
-            console.log(pinDef);
+          if (pins.length > 0) {
+            const inputPins = pins.filter(pin => pin.type === "input");
+            const outputPins = pins.filter(pin => pin.type === "output");
 
-            if (pinDef) {
-              console.log(pinDef.in, pinDef.out);
-
+            if (inputPins.length > 0) {
               output.push("");
-              output.push(...generatePins(pinDef.in, "input").map(line => `  ${line}`));
+              output.push(...generatePins(inputPins).map(line => `  ${line}`));
+            }
+
+            if (outputPins.length > 0) {
               output.push("");
-              output.push(...generatePins(pinDef.out, "output").map(line => `  ${line}`));
+              output.push(...generatePins(outputPins).map(line => `  ${line}`));
             }
           }
 
