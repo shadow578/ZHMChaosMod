@@ -5,12 +5,21 @@
 
 namespace BuildInfo
 {
+	extern const std::string c_sTargetSDKVersion;
+
+	extern const std::string c_sBuildTag;
+
 	extern const std::string c_sRemoteUrl;
 	extern const std::string c_sBranch;
 	extern const std::string c_sCommit;
 	extern const bool c_bIsDirty;
 
-	inline std::string GetVersion()
+	inline std::string GetDisplayVersion()
+	{
+		return c_sBuildTag;
+	}
+
+	inline std::string GetInternalVersion()
 	{
 		std::string version = c_sBranch + "@" + c_sCommit;
 		if (c_bIsDirty)

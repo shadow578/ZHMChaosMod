@@ -109,7 +109,7 @@ void ChaosMod::DrawMainUI(const bool p_bHasFocus)
         ImGui::SeparatorText("About");
         ImGui::TextWrapped(fmt::format(
             "ZHMChaosMod Version {}, developed by {}.",
-            BuildInfo::GetVersion(),
+            BuildInfo::GetDisplayVersion(),
             m_sAuthorNames
         ).c_str());
     }
@@ -293,8 +293,10 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
         }
 
         ImGui::TextUnformatted(fmt::format(
-            "ZHMChaosMod version {} (with ZHMModSDK {}); {} effects loaded, {} effects available",
-			BuildInfo::GetVersion(),
+            "ZHMChaosMod version {} ({}) (targeting ZHMModSDK {}, running on {}); {} effects loaded, {} effects available",
+			BuildInfo::GetDisplayVersion(),
+            BuildInfo::GetInternalVersion(),
+            BuildInfo::c_sTargetSDKVersion,
 			SDKVersion(),
             s_aEffects.size(),
             s_nAvailableEffects

@@ -55,6 +55,7 @@ add_custom_command(
     OUTPUT ${BUILD_INFO_HEADER}
     COMMAND ${CMAKE_COMMAND}
         -DOUTPUT_FILE=${BUILD_INFO_HEADER}
+        -DZHMMODSDK_VER=${ZHMMODSDK_VER}
         -P ${CMAKE_SOURCE_DIR}/cmake/gen-build-info.cmake
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     DEPENDS

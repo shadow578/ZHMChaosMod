@@ -43,9 +43,12 @@ ChaosMod::~ChaosMod()
 
 void ChaosMod::Init()
 {
-    Logger::Info(TAG " ChaosMod Version {} ({}) loaded.",
-        BuildInfo::GetVersion(),
-        BuildInfo::c_sRemoteUrl
+    Logger::Info(TAG " ChaosMod Version {} ({} on {}) loaded on ZHMModSDK {} (target {}).",
+        BuildInfo::GetDisplayVersion(),
+		BuildInfo::GetInternalVersion(),
+        BuildInfo::c_sRemoteUrl,
+        SDKVersion(),
+        BuildInfo::c_sTargetSDKVersion
     );
 
     Hooks::ZEntitySceneContext_LoadScene->AddDetour(this, &ChaosMod::OnLoadScene);
