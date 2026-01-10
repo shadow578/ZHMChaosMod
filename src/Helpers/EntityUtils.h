@@ -88,7 +88,7 @@ namespace Utils
         std::optional <std::string> m_sEntityType = std::nullopt;
         std::optional <ZRuntimeResourceID> m_ridBlueprint = std::nullopt;
 
-        bool Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprintFactoryBase* p_pFactory, int p_nSubIndex) const;
+        bool Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprintFactoryBase* p_pParentFactory, ZEntityBlueprintFactoryBase* p_pSubFactory, int p_nSubIndex) const;
     };
 
     /**

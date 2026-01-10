@@ -55,7 +55,7 @@ std::vector<ZEntityRef> Utils::ZEntityFinder::Find(const size_t p_nMaxResults) c
         for (int i = 0; i < s_SubEntityCount; ++i)
         {
             const ZEntityRef s_SubEntity = s_pCurrentFactory->GetSubEntity(s_CurrentRoot.m_pEntity, i);
-            const auto s_SubEntityFactory = s_pCurrentFactory->GetSubEntityBlueprint(i);
+            const auto s_pSubEntityFactory = s_pCurrentFactory->GetSubEntityBlueprint(i);
 
             if (!s_SubEntity.GetEntity() || !s_SubEntity->GetType())
             {
@@ -63,13 +63,13 @@ std::vector<ZEntityRef> Utils::ZEntityFinder::Find(const size_t p_nMaxResults) c
             }
 
             // if the sub-entity has a factory with more sub-entities, add it to the queue.
-            if (s_SubEntityFactory && s_SubEntityFactory->GetSubEntitiesCount() > 0)
+            if (s_pSubEntityFactory && s_pSubEntityFactory->GetSubEntitiesCount() > 0)
             {
-                s_qNodeQueue.emplace(s_SubEntityFactory, s_SubEntity);
+                s_qNodeQueue.emplace(s_pSubEntityFactory, s_SubEntity);
             }
 
             // add if matches
-            if (Evaluate(s_SubEntity, s_pCurrentFactory, i))
+            if (Evaluate(s_SubEntity, s_pCurrentFactory, s_pSubEntityFactory, i))
             {
                 s_aFoundEntities.push_back(s_SubEntity);
 
@@ -86,7 +86,7 @@ after_outer_loop:
     return s_aFoundEntities;
 }
 
-bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprintFactoryBase* p_pFactory, int p_nSubIndex) const
+bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprintFactoryBase* p_pParentFactory, ZEntityBlueprintFactoryBase* p_pSubFactory, int p_nSubIndex) const
 {
     // check entity id
     if (m_nEntityId.has_value())
@@ -100,7 +100,7 @@ bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprin
     // check entity name
     if (m_sEntityName.has_value())
     {
-        const auto s_sSubEntityName = GetEntityName(p_rEntity, p_pFactory, p_nSubIndex);
+        const auto s_sSubEntityName = GetEntityName(p_rEntity, p_pParentFactory, p_nSubIndex);
         if (s_sSubEntityName != m_sEntityName.value())
         {
             return false;
@@ -120,7 +120,7 @@ bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprin
     // check blueprint resource
     if (m_ridBlueprint.has_value())
     {
-        if (!p_pFactory || p_pFactory->m_ridResource != m_ridBlueprint.value())
+        if (!p_pSubFactory || p_pSubFactory->m_ridResource != m_ridBlueprint.value())
         {
             return false;
 		}

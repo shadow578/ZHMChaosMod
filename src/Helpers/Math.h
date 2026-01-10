@@ -51,6 +51,15 @@ namespace Math
     }
 
     /**
+	 * Get a random boolean with a given chance of being true.
+     */
+    static inline bool GetRandomBool(const float32 p_fTrueChance)
+    {
+        const auto s_RandomValue = GetRandomNumber<float32>(0.0f, 1.0f);
+        return s_RandomValue <= p_fTrueChance;
+	}
+
+    /**
      * Linear interpolate between A and B as per T.
      * @template T Number type.
      * @param p_A Interpolation start value.
