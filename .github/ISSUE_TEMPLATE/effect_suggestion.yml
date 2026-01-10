@@ -1,0 +1,54 @@
+---
+name: "Effect Suggestion"
+description: "Suggest a new effect for the mod"
+labels: "Effect"
+body:
+  - type: markdown
+    attributes:
+      value: Before you open a new issue, search through the existing issues to see if others have had the same idea.
+  - type: checkboxes
+    attributes:
+      label: Checklist
+      options:
+        - label: I have filled out the template to the best of my ability.
+          required: true
+        - label: This issue only contains 1 idea (if you have multiple issues, open one issue for each issue).
+          required: true
+        - label: This idea is not a duplicate of any previous ideas.
+          required: true
+  - type: textarea
+    attributes:
+      label: "Potential Effect Names"
+      description: "Potential name(s) for the effect (i'm not super creative, so feel you'll probably don't want me to choose)."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Describe your idea"
+      description: "A clear and concise description of what the effect should do. Please keep in mind that not all ideas may be feasible to implement."
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Duration
+      description: "How long should this effect last?"
+      multiple: false
+      options:
+        - One-Shot
+        - Short Duration
+        - Full Duration
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: "Prior Implementations"
+      description: "If this effect is similar to any existing mod (ZHMModSDK or SMF), please link it here."
+      render: text
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: "Additional Context"
+      description: "Any other context or screenshots you'd like to add."
+    validations:
+      required: false
