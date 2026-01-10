@@ -3,7 +3,7 @@
 
 #include <Glacier/ZSpatialEntity.h>
 
-#include "Helpers/EntityBinding.h"
+#include "Helpers/EntityBindings/SInteractionSubactionEntityBinding.h"
 
 #include <vector>
 
@@ -44,17 +44,6 @@ public:
 	}
 
 private:
-	struct SInteractionSubactionEntityBinding
-	{
-		BINDING_CONSTRUCTOR(SInteractionSubactionEntityBinding);
-
-		PROPERTY(TEntityRef<ZSpatialEntity>, m_rContextObjectSpatial); // Spatial where the prompt appears
-		PROPERTY(ZString, m_sPromptText); // main prompt text
-		PROPERTY(ZString, m_sPromptDescriptionText); // prompt subtext
-
-		INPUT_PIN(Execute); // Start the interaction
-	};
-
 	const std::string m_sNameSuffix;
 	const std::string m_sDisplayName;
 	const float32 m_fRadius;

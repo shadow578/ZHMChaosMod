@@ -6,8 +6,6 @@
 
 #define TAG "[ZRenderPostfilterEffectBase] "
 
-class IRenderPostfilterParametersEntity;
-
 void ZRenderPostfilterEffectBase::OnEnterScene()
 {
 	m_PostfilterLayer = {};
@@ -27,21 +25,22 @@ void ZRenderPostfilterEffectBase::OnEnterScene()
 		// there should only be one
 		.FindFirst();
 
-	if (!s_rPostfilterLayerEntity)
+	m_PostfilterLayer = SPostfilterLayerEntityBinding(s_rPostfilterLayerEntity);
+	if (!m_PostfilterLayer)
 	{
+		m_PostfilterLayer = {};
 		return;
 	}
 
 	// grab parameters entity from the layer
-	auto s_rParametersEntity = Utils::GetProperty<TEntityRef<IRenderPostfilterParametersEntity>>(s_rPostfilterLayerEntity, "m_parametersEntity");
-	if (!s_rParametersEntity)
+	m_PostfilterParameters = SRenderPostfilterParametersEntityBinding(m_PostfilterLayer.m_parametersEntity.value().m_ref);
+	if (!m_PostfilterParameters)
 	{
 		Logger::Warn(TAG "Failed to grab parameters entity from CustomPFController.");
+		m_PostfilterLayer = {};
+		m_PostfilterParameters = {};
 		return;
 	}
-
-	m_PostfilterLayer = SLayerEntityBinding(s_rPostfilterLayerEntity);
-	m_PostfilterParameters = SParametersEntityBinding(s_rParametersEntity.value().m_ref);
 }
 
 void ZRenderPostfilterEffectBase::OnClearScene()

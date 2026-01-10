@@ -63,7 +63,7 @@ private:
 	struct SActiveSpeakerEntry
 	{
 		ZEntityRef m_rActor;
-		SSpeakEntityBinding m_SpeakBinding;
+		SSpeakEntitySounddefBinding m_SpeakBinding;
 		float32 m_fTimeToNextRepetition;
 		int32 m_nRepetitions = 0;
 	};

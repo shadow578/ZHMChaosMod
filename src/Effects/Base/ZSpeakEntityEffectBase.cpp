@@ -528,7 +528,7 @@ void ZSpeakEntityEffectBase::DebugSpeakAtNearestActor()
 	}
 }
 
-ZSpeakEntityEffectBase::SSpeakEntityBinding ZSpeakEntityEffectBase::Speak(
+SSpeakEntitySounddefBinding ZSpeakEntityEffectBase::Speak(
 	const ZEntityRef& p_rActor,
 	const EActorSoundDefs p_eSoundDef,
 	const EGestureCategory p_eGesture,
@@ -550,7 +550,7 @@ ZSpeakEntityEffectBase::SSpeakEntityBinding ZSpeakEntityEffectBase::Speak(
 	return s_SpeakEntity;
 }
 
-ZSpeakEntityEffectBase::SSpeakEntityBinding ZSpeakEntityEffectBase::Spawn()
+SSpeakEntitySounddefBinding ZSpeakEntityEffectBase::Spawn()
 {
-	return SSpeakEntityBinding(m_pSpeakEntitySpawner->Spawn());
+	return SSpeakEntitySounddefBinding(m_pSpeakEntitySpawner->Spawn());
 }
