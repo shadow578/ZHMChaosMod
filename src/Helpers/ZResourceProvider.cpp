@@ -78,12 +78,26 @@ bool ZResourceProvider::LoadResource(ZResourcePtr& p_ResourcePtr) const
 		}
 	}
 
-	const auto& s_Info = p_ResourcePtr.GetResourceInfo();
+	auto& s_Info = p_ResourcePtr.GetResourceInfo();
 	Logger::Debug(TAG "Resource '{}' ({:016X}) loaded; status={}, refCount={}.",
 		m_sResourcePath,
 		m_ResourceID.GetID(),
 		ResourceStatusToString(s_Info.status),
 		s_Info.refCount
 	);
+
+	// FIXME sometimes, resources are valid but have negative refcounts?
+	// most noticeable when re-loading the scene multiple times.
+	if (s_Info.status == EResourceStatus::RESOURCE_STATUS_VALID && s_Info.refCount < 1)
+	{
+		Logger::Warn(TAG "Resource '{}' ({:016X}) is valid but has refCount < 1 (refCount={}). Fudging higher refcount to make valid!",
+			m_sResourcePath,
+			m_ResourceID.GetID(),
+			s_Info.refCount
+		);
+
+		s_Info.refCount = 1;
+	}
+
 	return !!p_ResourcePtr;
 }
