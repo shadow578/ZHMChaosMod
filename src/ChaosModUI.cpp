@@ -121,28 +121,9 @@ void ChaosMod::DrawMainUI(const bool p_bHasFocus)
 
 void ChaosMod::DrawConfigurationContents()
 {
-    if (ImGui::Checkbox("Enabled", &m_EffectTimer.m_bEnable))
+    if (ImGui::Checkbox("Enabled", &m_bUserEnabled))
     {
-        if (m_EffectTimer.m_bEnable)
-        {
-            // on enable, prepare first vote
-            m_aCurrentVote.clear();
-            OnEffectTimerTrigger();
-        }
-        else
-        {
-            // on disable, stop and clear active effects
-            for (auto& s_ActiveEffect : m_aActiveEffects)
-            {
-                if (s_ActiveEffect.m_pEffect && s_ActiveEffect.m_pEffect->Available())
-                {
-                    s_ActiveEffect.m_pEffect->Stop();
-                }
-			}
-
-			m_aActiveEffects.clear();
-			m_aCurrentVote.clear();
-        }
+        UpdateEffectTimerEnabled();
     }
 
     ImGui::TextUnformatted("Chaos Interval");
@@ -191,8 +172,8 @@ void ChaosMod::DrawUnlockersContents()
 #pragma region Overlay UI
 void ChaosMod::DrawOverlayUI(const bool p_bHasFocus)
 {
-    // show when menu shown or chaos active
-    if (!m_bMenuActive && !m_EffectTimer.m_bEnable)
+    // show when menu shown or chaos activated by user
+    if (!m_bMenuActive && !m_bUserEnabled)
     {
         return;
     }
@@ -300,6 +281,13 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 			SDKVersion(),
             s_aEffects.size(),
             s_nAvailableEffects
+        ).c_str());
+
+        ImGui::TextUnformatted(fmt::format(
+            "Enable States: MOD={}, USER={}, TIMER={}",
+			m_bModEnabled ? "True" : "False",
+            m_bUserEnabled ? "True" : "False",
+			m_EffectTimer.m_bEnable ? "True" : "False"
         ).c_str());
 
 		ImGui::Checkbox("Menu Always Visible", &m_bDebugMenuAlwaysVisible);

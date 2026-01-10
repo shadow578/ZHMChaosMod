@@ -141,11 +141,40 @@ void ChaosMod::OnLoadOrClearScene()
         }
     }
 
-	m_EffectTimer.m_bEnable = false;
+    m_bModEnabled = false;
+    UpdateEffectTimerEnabled();
     m_EffectTimer.Reset();
 
     m_aCurrentVote.clear();
     m_aActiveEffects.clear();
+}
+
+void ChaosMod::UpdateEffectTimerEnabled()
+{
+	const auto s_bEnable = m_bUserEnabled && m_bModEnabled;
+
+    if (s_bEnable)
+    {
+        // on enable, prepare first vote
+        m_aCurrentVote.clear();
+        OnEffectTimerTrigger();
+    }
+    else
+    {
+        // on disable, stop and clear active effects
+        for (auto& s_ActiveEffect : m_aActiveEffects)
+        {
+            if (s_ActiveEffect.m_pEffect && s_ActiveEffect.m_pEffect->Available())
+            {
+                s_ActiveEffect.m_pEffect->Stop();
+            }
+        }
+
+        m_aActiveEffects.clear();
+        m_aCurrentVote.clear();
+    }
+
+    m_EffectTimer.m_bEnable = s_bEnable;
 }
 
 DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnLoadScene, ZEntitySceneContext* th, SSceneInitParameters&)
@@ -194,6 +223,10 @@ DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th,
                 p_pEffect->OnEnterScene();
             }
         );
+
+        // enable chaos when starting to play
+		m_bModEnabled = true;
+		UpdateEffectTimerEnabled();
 	}
 
     return HookResult<void>(HookAction::Continue());

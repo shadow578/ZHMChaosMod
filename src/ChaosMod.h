@@ -65,6 +65,9 @@ private: // Selection & Countdown logic
         float32 m_fTimeRemaining;
     };
 
+    bool m_bUserEnabled = false; // user enabled chaos through UI?
+    bool m_bModEnabled = false;  // mod determined chaos may be enabled?
+
     ZTimer m_EffectTimer;
     float32 m_fFullEffectDuration;
     int m_nVoteOptions;
@@ -72,6 +75,7 @@ private: // Selection & Countdown logic
     std::vector <IChaosEffect*> m_aCurrentVote;
     std::vector<SActiveEffect> m_aActiveEffects;
 
+    void UpdateEffectTimerEnabled();
     void OnEffectTimerTrigger();
     void ActivateEffect(IChaosEffect* p_pEffect);
     void UpdateEffectExpiration(const float32 p_fDeltaTime);
