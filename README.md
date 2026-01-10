@@ -2,6 +2,8 @@
 
 This is **ChaosMod**, a mod for Hitman 3!
 
+![ChaosMod Thumbnail](./_assets/chaosmod_thumb.jpg)
+
 the chaos mod mod injects random effects into your gameplay to create unpredictable, entertaining and often very difficult to resolve scenarios.
 heavily inspired by the [GTA V chaos mod](https://github.com/gta-chaos-mod/ChaosModV).
 
@@ -11,6 +13,7 @@ heavily inspired by the [GTA V chaos mod](https://github.com/gta-chaos-mod/Chaos
 2. Download the recommended\* version of `ChaosMod` and copy it to the ZHMModSDK `mods` folder (e.g. `C:\Program Files (x86)\Steam\steamapps\common\Hitman 3\Retail\mods`).
 3. Download the recommended\* version of [Companion Mod](https://github.com/shadow578/ZHMChaosModCompanion) and install it using the [Simple Mod Framework](https://github.com/atampy25/simple-mod-framework) (optional, but recommended).
 4. Run the game and once in the main menu, press the `~` key (`^` on QWERTZ layouts) and enable `ChaosMod` from the menu at the top of the screen (you may need to restart your game afterwards).
+   * You may need to restart the game when enabling the mod for the first time. 
 5. Check the `Enable` option in the ChaosMod menu to start the chaos!
 6. Enjoy & good luck!
 
