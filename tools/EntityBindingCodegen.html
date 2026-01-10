@@ -256,7 +256,7 @@
         validatePageElements(page.inputs);
         validatePageElements(page.outputs);
 
-        const pins = await loadPinDefs();
+        const pinDefs = await loadPinDefs();
 
         page.inputs.generate_button.onclick = () => {
           const bindingName = page.inputs.binding_name.value.trim() || "MyEntity";
@@ -272,8 +272,8 @@
           console.log("temp:", properties, pins);
 
           if (hashOrPath && hashOrPath !== "") {
-            const pinDef = findPinDef(pins, hashOrPath);
-            console.log(pinDef);
+            const pinDef = findPinDef(pinDefs, hashOrPath);
+            console.log(hashOrPath, pinDef);
 
             if (pinDef) {
               console.log("pinDef:", pinDef.in, pinDef.out);
