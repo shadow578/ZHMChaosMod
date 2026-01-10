@@ -86,7 +86,13 @@
     <p class="tagline">Quickly generate entity binding from Entity Template</p>
 
     <div class="card">
-      <h2>Inputs</h2>
+      <div style="display: flex; flex-direction: row; align-items: center;">
+        <h2>Inputs</h2>
+
+        <div style="flex-grow: 1;"></div>
+
+        <button id="clear">Clear</button>
+      </div>
 
       <div style="display: flex; flex-direction: column;">
         <lable for="binding_name">Binding name</lable>
@@ -94,12 +100,17 @@
 
         <div class="vspace"></div>
 
-        <label for="hash_or_path">hash / res path</label>
-        <input type="text" id="hash_or_path" name="hash_or_path" placeholder="[modules:/zentity.class].pc_entitytype" />
+        <label for="hash_or_path">Template Hash or resource Path</label>
+        <input list="hash_or_path_suggestions" type="text" id="hash_or_path" name="hash_or_path"
+          placeholder="[modules:/zentity.class].pc_entitytype" />
+
+        <datalist id="hash_or_path_suggestions">
+        </datalist>
 
         <div class="vspace"></div>
 
         <label for="temp_json">Entity Template JSON</label>
+        <input type="file" id="temp_json_file" accept=".json">
         <textarea id="temp_json" name="temp_json" rows="10" cols="50" style="width: 70rem;"
           placeholder="Paste Entity Template (CPPT or TEMP) JSON here"></textarea>
 
@@ -199,10 +210,14 @@
             pins.push({ pin: pin, type: "output" });
           }
 
-          return { properties: props, pins };
+          return {
+            tempHash: temp.tempHash,
+            properties: props,
+            pins
+          };
         }
 
-        function parseEntityTemplate(json) /* { properties: { name: string, type?: string }[], pins: { pin: string, type: "input" | "output" }[] } */ {
+        function parseEntityTemplate(json) /* { tempHash?: str, properties: { name: string, type?: string }[], pins: { pin: string, type: "input" | "output" }[] } */ {
           const data = JSON.parse(json);
 
           if ("propertyValues" in data) {
@@ -237,8 +252,11 @@
           inputs: {
             binding_name: document.getElementById("binding_name"),
             hash_or_path: document.getElementById("hash_or_path"),
+            hash_or_path_suggestions: document.getElementById("hash_or_path_suggestions"),
             temp_json: document.getElementById("temp_json"),
+            temp_json_file: document.getElementById("temp_json_file"),
             generate_button: document.getElementById("generate"),
+            clear_button: document.getElementById("clear"),
           },
           outputs: {
             copy_button: document.getElementById("copy_button"),
@@ -258,9 +276,16 @@
 
         const pinDefs = await loadPinDefs();
 
+        page.inputs.hash_or_path_suggestions.innerHTML = "";
+        pinDefs.forEach(def => {
+          const option = document.createElement("option");
+          option.value = def.path;
+          page.inputs.hash_or_path_suggestions.appendChild(option);
+        });
+
         page.inputs.generate_button.onclick = () => {
           const bindingName = page.inputs.binding_name.value.trim() || "MyEntity";
-          const hashOrPath = page.inputs.hash_or_path.value.trim();
+          let hashOrPath = page.inputs.hash_or_path.value.trim();
           const tempJson = page.inputs.temp_json.value.trim();
 
           if (tempJson === "") {
@@ -268,8 +293,13 @@
             return;
           }
 
-          const { properties, pins } = parseEntityTemplate(tempJson);
-          console.log("temp:", properties, pins);
+          const { tempHash, properties, pins } = parseEntityTemplate(tempJson);
+          console.log("temp:", tempHash, properties, pins);
+
+          if (hashOrPath == "" && tempHash) {
+            hashOrPath = tempHash;
+            page.inputs.hash_or_path.value = tempHash;
+          }
 
           if (hashOrPath && hashOrPath !== "") {
             const pinDef = findPinDef(pinDefs, hashOrPath);
@@ -322,9 +352,28 @@
           page.outputs.copy_button.disabled = false;
         };
 
+        page.inputs.clear_button.onclick = () => {
+          page.inputs.binding_name.value = "";
+          page.inputs.hash_or_path.value = "";
+          page.inputs.temp_json.value = "";
+          page.inputs.temp_json_file.value = "";
+          page.outputs.output_area.value = "";
+        };
+
         page.outputs.copy_button.onclick = () => {
           const outputText = page.outputs.output_area.value;
           navigator.clipboard.writeText(outputText);
+        };
+
+        page.inputs.temp_json_file.onchange = (event) => {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              page.inputs.temp_json.value = e.target.result;
+            };
+            reader.readAsText(file);
+          }
         };
       })();
     </script>
