@@ -1,24 +1,17 @@
 #pragma once
-#include "IChaosEffect.h"
+#include "Base/ZSpawnRepositoryItemEffectBase.h"
 
-#include "Glacier/ZResource.h"
-
-#include <vector>
-
-// heavily based on Assets mod
-class ZSpawnRandomItemEffect : public IChaosEffect
+class ZSpawnRandomItemEffect : public ZSpawnRepositoryItemEffectBase
 {
 public:
-    ZSpawnRandomItemEffect(const std::string m_sDisplayName, const int p_nCount)
-        : m_sDisplayName(std::move(m_sDisplayName)),
+    ZSpawnRandomItemEffect(const std::string p_sDisplayName, const int p_nCount)
+        : ZSpawnRepositoryItemEffectBase(),
+        m_sDisplayName(p_sDisplayName),
         m_pCount(p_nCount)
     {
     }
 
-    void LoadResources() override;
     void Start() override;
-    void OnDrawDebugUI() override;
-    void OnClearScene() override;
 
     std::string GetName() const override
     {
@@ -38,9 +31,4 @@ public:
 private:
     std::string m_sDisplayName;
     int m_pCount;
-
-    bool SpawnRepositoryPropAt(const ZRepositoryID& p_RepositoryId, const SMatrix s_Transform);
-
-    bool LoadRepositoryProps();
-    std::string DynamicObjectToString(const ZDynamicObject& p_DynamicObject);
 };
