@@ -29,9 +29,9 @@ void ZSpawnRepositoryItemEffectBase::OnClearScene()
 bool ZSpawnRepositoryItemEffectBase::Available() const
 {
     return IChaosEffect::Available()
-		&& m_pItemSpawnerSpawner && m_pItemSpawnerSpawner->IsAvailable()
-		&& m_pRepositoryKeywordSpawner && m_pRepositoryKeywordSpawner->IsAvailable()
-		&& m_aRepositoryProps.size() > 0;
+        && m_pItemSpawnerSpawner && m_pItemSpawnerSpawner->IsAvailable()
+        && m_pRepositoryKeywordSpawner && m_pRepositoryKeywordSpawner->IsAvailable()
+        && m_aRepositoryProps.size() > 0;
 }
 
 void ZSpawnRepositoryItemEffectBase::OnDrawDebugUI()
@@ -45,16 +45,16 @@ bool ZSpawnRepositoryItemEffectBase::SpawnRepositoryPropAt(const SRepositoryProp
 {
     if (!p_RepositoryProp || !m_pItemSpawnerSpawner || !m_pRepositoryKeywordSpawner)
     {
-		Logger::Debug(TAG "invalid parameters or spawners not initialized");
+        Logger::Debug(TAG "invalid parameters or spawners not initialized");
         return false;
-	}
+    }
 
-	const auto s_rItemSpawner = m_pItemSpawnerSpawner->SpawnAs<ZItemSpawner>();
-	if (!s_rItemSpawner)
+    const auto s_rItemSpawner = m_pItemSpawnerSpawner->SpawnAs<ZItemSpawner>();
+    if (!s_rItemSpawner)
     {
         Logger::Debug(TAG "failed to spawn item spawner");
         return false;
-	}
+    }
 
     const auto s_rKeywordEntity = m_pRepositoryKeywordSpawner->SpawnAs<ZItemRepositoryKeyEntity>();
     if (!s_rKeywordEntity)
@@ -62,14 +62,14 @@ bool ZSpawnRepositoryItemEffectBase::SpawnRepositoryPropAt(const SRepositoryProp
         Logger::Debug(TAG "failed to spawn repository keyword entity");
         m_pItemSpawnerSpawner->Despawn(s_rItemSpawner.m_ref);
         return false;
-	}
+    }
 
     s_rItemSpawner.m_pInterfaceRef->m_ePhysicsMode = p_ePhysicsMode;
     s_rItemSpawner.m_pInterfaceRef->m_rMainItemKey = s_rKeywordEntity;
     s_rItemSpawner.m_pInterfaceRef->m_bUsePlacementAttach = false;
 
     SMatrix s_Transform = SMatrix();
-	s_Transform.Trans = s_vPosition;
+    s_Transform.Trans = s_vPosition;
     s_rItemSpawner.m_pInterfaceRef->SetWorldMatrix(s_Transform);
 
     s_rKeywordEntity.m_pInterfaceRef->m_RepositoryId = ZRepositoryID(p_RepositoryProp.m_sID);
@@ -77,10 +77,10 @@ bool ZSpawnRepositoryItemEffectBase::SpawnRepositoryPropAt(const SRepositoryProp
     //Functions::ZItemSpawner_RequestContentLoad->Call(s_rItemSpawner.m_pInterfaceRef);
     s_rItemSpawner.m_ref.SignalInputPin("SpawnItem");
 
-	Logger::Debug(TAG "spawned item '{}' [{}] ({}).", 
-        p_RepositoryProp.m_sDisplayName, 
+    Logger::Debug(TAG "spawned item '{}' [{}] ({}).",
+        p_RepositoryProp.m_sDisplayName,
         p_RepositoryProp.m_sID,
-        p_RepositoryProp.m_sCommonName 
+        p_RepositoryProp.m_sCommonName
     );
     return true;
 }
@@ -124,29 +124,29 @@ bool ZSpawnRepositoryItemEffectBase::LoadRepositoryProps()
                 s_sName = DynamicObjectToString(s_Entry.value);
             else if (s_sKey == "ItemType")
                 s_bIsItem = true;
-
-            if (s_sId.empty() || !s_bIsItem)
-            {
-                continue;
-            }
-
-            std::string s_sDisplayName;
-            if (!s_sTitle.empty())
-                s_sDisplayName = s_sTitle;
-            else if (!s_sCommonName.empty())
-                s_sDisplayName = s_sCommonName;
-            else if (!s_sName.empty())
-                s_sDisplayName = s_sName;
-            else
-                s_sDisplayName = "";
-
-            SRepositoryPropInfo s_Info{
-                .m_sID = s_sId,
-                .m_sCommonName = s_sCommonName,
-                .m_sDisplayName = s_sDisplayName
-            };
-			m_aRepositoryProps.push_back(s_Info);
         }
+
+        if (s_sId.empty() || !s_bIsItem)
+        {
+            continue;
+        }
+
+        std::string s_sDisplayName;
+        if (!s_sTitle.empty())
+            s_sDisplayName = s_sTitle;
+        else if (!s_sCommonName.empty())
+            s_sDisplayName = s_sCommonName;
+        else if (!s_sName.empty())
+            s_sDisplayName = s_sName;
+        else
+            s_sDisplayName = "";
+
+        SRepositoryPropInfo s_Info{
+            .m_sID = s_sId,
+            .m_sCommonName = s_sCommonName,
+            .m_sDisplayName = s_sDisplayName
+        };
+        m_aRepositoryProps.push_back(s_Info);
     }
 
     Logger::Debug(TAG "Loaded {} repository items.", m_aRepositoryProps.size());
