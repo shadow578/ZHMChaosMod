@@ -41,8 +41,15 @@ body:
       required: true
   - type: textarea
     attributes:
-      label: "Prior Implementations"
-      description: "If this effect is similar to any existing mod (ZHMModSDK or SMF), please link it here."
+      label: "Attribution"
+      description: "Effects provide a way to provide attribution to the author of the effect. Please provide your preferred name or alias here. Any people you wish to credit for helping with the idea can also be added here."
+      render: text
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: "Prior Work"
+      description: "If this effect is similar to any existing mod (ZHMModSDK or SMF), or you managed to get it somewhat working using the ZHMModSDK editor, please provide that info here. This can be anything from a link to the mod, a code snippet, a screenshot or instructions on how it may be achieved."
       render: text
     validations:
       required: false

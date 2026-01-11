@@ -36,6 +36,14 @@ they may be selected at any time by the player, even with other effects active.
 effects that require custom entities or assets need to use the companion mod.
 for usage of these assets, always use the `ZResourceProvider` / `ZTemplateEntitySpawner` classes from the companion mod, as they handle loading and unloading of resources properly.
 
+## Giving Attribution
+
+effects may implement the `GetAttribution` method to return a set of names that should be credited for the effect.
+these names are displayed in the chaos mod ui as developer credits.
+when `GetAttribution` is not provided, the effect is assumed to be created by the mod author (shadow578).
+if you are contributing an effect, please consider adding your name here!
+when enhancing an existing effect, consider adding your name alongside the original author(s).
+
 
 ## Minimal Example
 
@@ -51,6 +59,12 @@ public:
     std::string GetDisplayName(const bool p_bVoting) override
     {
       return "My Effect";
+    }
+
+    // optional but recommended:
+    std::set<std::string> GetAttribution() const override
+    {
+        return { "YourName", "SomeoneElse" };
     }
 };
 

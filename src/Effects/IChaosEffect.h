@@ -3,6 +3,7 @@
 #include "IPluginInterface.h"
 
 #include <string>
+#include <set>
 
 /**
  * Interface for all chaos effects.
@@ -146,7 +147,7 @@ public: // Metadata
     /**
      * Get the display name of the person who authored this effect.
      */
-    virtual std::string GetAuthor() const { return ""; }
+    virtual std::set<std::string> GetAttribution() const { return {}; }
 
 protected:
     bool m_bIsAvailable = true;

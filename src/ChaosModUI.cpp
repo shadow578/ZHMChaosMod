@@ -32,16 +32,19 @@ static std::string EffectDurationToString(const IChaosEffect::EDuration p_Durati
 void ChaosMod::InitAuthorNames()
 {
     std::set<std::string> s_AuthorNames;
+
+    // core authors
 	s_AuthorNames.insert("shadow578");
 
+    // gather effect authors
     for (const auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
     {
         if (s_Effect)
         {
-            const auto s_sAuthor = s_Effect->GetAuthor();
-            if (!s_sAuthor.empty())
+            const auto s_sAttribution = s_Effect->GetAttribution();
+            for (const auto& s_sName : s_sAttribution)
             {
-				s_AuthorNames.insert(s_sAuthor);
+				s_AuthorNames.insert(s_sName);
             }
         }
     }
@@ -349,9 +352,19 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 
 void ChaosMod::DrawEffectDebugPane()
 {
+    std::string s_sAttribution = "";
+    for (const auto& s_sName : m_pEffectForDebug->GetAttribution())
+    {
+        if (!s_sAttribution.empty())
+        {
+			s_sAttribution += ", ";
+        }
+		s_sAttribution += s_sName;
+	}
+
     ImGui::TextUnformatted(fmt::format("Name:         {}", m_pEffectForDebug->GetName()).c_str());
     ImGui::TextUnformatted(fmt::format("Display Name: {} / {}", m_pEffectForDebug->GetDisplayName(false), m_pEffectForDebug->GetDisplayName(true)).c_str());
-    ImGui::TextUnformatted(fmt::format("Author:       {}", m_pEffectForDebug->GetAuthor()).c_str());
+    ImGui::TextUnformatted(fmt::format("Attribution:  {}", s_sAttribution).c_str());
     ImGui::TextUnformatted(fmt::format("Duration:     {}", EffectDurationToString(m_pEffectForDebug->GetDuration())).c_str());
     ImGui::TextUnformatted(fmt::format("Available:    {}", m_pEffectForDebug->Available() ? "Yes" : "No").c_str());
 
