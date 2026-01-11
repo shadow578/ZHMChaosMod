@@ -6,10 +6,12 @@
 
 #include "Helpers/ZTimer.h"
 #include "IChaosEffect.h"
+#include "Twitch/TwitchIntegration.h"
 
 #include <vector>
 #include <queue>
 #include <functional>
+#include <memory>
 
 class ChaosMod : public IPluginInterface
 {
@@ -56,6 +58,11 @@ private: // UI & Debug
 
     void DrawDebugUI(const bool p_bHasFocus);
     void DrawEffectDebugPane();
+    void DrawTwitchContents();
+
+private: // Twitch Integration
+    std::unique_ptr<TwitchIntegration> m_pTwitchIntegration;
+    bool m_bTwitchVotingEnabled = false;  // Use Twitch chat for voting instead of random selection
 
 private: // Selection & Countdown logic
     struct SActiveEffect

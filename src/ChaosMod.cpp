@@ -19,7 +19,8 @@ ChaosMod::ChaosMod() :
     m_fFullEffectDuration(60.0f),
     m_nVoteOptions(4),
     m_EffectTimer(std::bind(&ChaosMod::OnEffectTimerTrigger, this), 30.0),
-    m_SlowUpdateTimer(std::bind(&ChaosMod::OnEffectSlowUpdate, this), 0.2, ZTimer::ETimeMode::RealTime, true) // ~5 FPS
+    m_SlowUpdateTimer(std::bind(&ChaosMod::OnEffectSlowUpdate, this), 0.2, ZTimer::ETimeMode::RealTime, true), // ~5 FPS
+    m_pTwitchIntegration(std::make_unique<TwitchIntegration>())
 {
 
 }
