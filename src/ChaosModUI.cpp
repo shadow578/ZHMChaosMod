@@ -35,6 +35,7 @@ void ChaosMod::InitAuthorNames()
 
     // core authors
 	s_AuthorNames.insert("shadow578");
+    s_AuthorNames.insert("OrfeasZ");
 
     // gather effect authors
     for (const auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
