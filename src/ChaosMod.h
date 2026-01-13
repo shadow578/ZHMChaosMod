@@ -6,7 +6,7 @@
 
 #include "Helpers/ZTimer.h"
 #include "IChaosEffect.h"
-#include "Twitch/TwitchIntegration.h"
+#include "IVotingIntegration.h"
 
 #include <vector>
 #include <queue>
@@ -58,11 +58,6 @@ private: // UI & Debug
 
     void DrawDebugUI(const bool p_bHasFocus);
     void DrawEffectDebugPane();
-    void DrawTwitchContents();
-
-private: // Twitch Integration
-    std::unique_ptr<TwitchIntegration> m_pTwitchIntegration;
-    bool m_bTwitchVotingEnabled = false;  // Use Twitch chat for voting instead of random selection
 
 private: // Selection & Countdown logic
     struct SActiveEffect
@@ -79,8 +74,11 @@ private: // Selection & Countdown logic
     float32 m_fFullEffectDuration;
     int m_nVoteOptions;
 
-    std::vector <IChaosEffect*> m_aCurrentVote;
+    IVotingIntegration* m_pVotingIntegration = nullptr;
     std::vector<SActiveEffect> m_aActiveEffects;
+
+    IVotingIntegration* GetCurrentVotingIntegration();
+    IVotingIntegration* GetDefaultVotingIntegration();
 
     void UpdateEffectTimerEnabled();
     void OnEffectTimerTrigger();

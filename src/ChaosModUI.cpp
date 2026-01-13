@@ -4,7 +4,6 @@
 
 #include <IconsMaterialDesign.h>
 #include <imgui.h>
-#include <numeric>
 
 #include "EffectRegistry.h"
 #include "Helpers/ImGuiExtras.h"
@@ -107,9 +106,6 @@ void ChaosMod::DrawMainUI(const bool p_bHasFocus)
         ImGui::SeparatorText("Settings");
         DrawConfigurationContents();
 
-        ImGui::SeparatorText("Twitch Integration");
-        DrawTwitchContents();
-
         ImGui::SeparatorText("Unlockers");
         DrawUnlockersContents();
 
@@ -149,6 +145,43 @@ void ChaosMod::DrawConfigurationContents()
         5.0,
         120.0
     );
+
+    ImGui::SeparatorText("Voting");
+	
+    auto* s_pVoting = GetCurrentVotingIntegration();
+
+    ImGui::TextUnformatted("Voting Mode");
+    ImGui::SameLine();
+    if (ImGui::BeginCombo("##Voting Mode", s_pVoting ? s_pVoting->GetDisplayName().c_str() : ""))
+    {
+        for (auto& s_pOption : EffectRegistry::GetInstance().GetVotingIntegrations())
+        {
+            if (ImGui::Selectable(
+                s_pOption->GetDisplayName().c_str(),
+                s_pVoting == s_pOption.get()
+            ))
+            {
+                if (s_pVoting)
+                {
+                    s_pVoting->Deactivate();
+                }
+
+                s_pVoting = s_pOption.get();
+
+                m_pVotingIntegration = s_pVoting;
+                m_pVotingIntegration->Activate();
+
+                Logger::Debug(TAG "Selected voting option {}", s_pVoting->GetName());
+            }
+        }
+
+        ImGui::EndCombo();
+    }
+
+    if (s_pVoting)
+    {
+        s_pVoting->DrawConfigUI();
+    }
 }
 
 void ChaosMod::DrawUnlockersContents()
@@ -172,62 +205,6 @@ void ChaosMod::DrawUnlockersContents()
         }
 
         ImGui::EndDisabled();
-    }
-}
-
-void ChaosMod::DrawTwitchContents()
-{
-    if (m_pTwitchIntegration)
-    {
-        // Show connection status
-        if (m_pTwitchIntegration->IsConnectedForVoting())
-        {
-            ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), ICON_MD_CHECK_CIRCLE " Connected to Twitch");
-
-            const auto s_sUsername = m_pTwitchIntegration->GetUsername();
-            if (!s_sUsername.empty())
-            {
-                ImGui::SameLine();
-                ImGui::TextDisabled("(%s)", s_sUsername.c_str());
-            }
-
-            // Toggle for Twitch voting
-            ImGui::Checkbox("Enable Chat Voting", &m_bTwitchVotingEnabled);
-            if (ImGui::IsItemHovered())
-            {
-                ImGui::SetTooltip("When enabled, Twitch chat can vote for effects by typing 1, 2, 3, or 4.");
-            }
-
-            if (m_bTwitchVotingEnabled)
-            {
-                ImGui::TextWrapped("Viewers can vote for effects by typing the option number (1-%d) in chat.", m_nVoteOptions);
-            }
-
-            // Disconnect button
-            if (ImGui::Button(ICON_MD_LINK_OFF " Disconnect"))
-            {
-                m_pTwitchIntegration->Disconnect();
-                m_bTwitchVotingEnabled = false;
-            }
-        }
-        else if (m_pTwitchIntegration->IsAuthenticated())
-        {
-            ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), ICON_MD_HOURGLASS_EMPTY " Connecting to chat...");
-        }
-        else
-        {
-            ImGui::TextWrapped("Connect to Twitch to enable chat voting for effects.");
-
-            if (ImGui::Button(ICON_MD_LINK " Connect to Twitch"))
-            {
-                m_pTwitchIntegration->StartAuthorization();
-            }
-
-            if (ImGui::IsItemHovered())
-            {
-                ImGui::SetTooltip("Opens your browser to authorize the mod with your Twitch account.");
-            }
-        }
     }
 }
 #pragma endregion
@@ -286,58 +263,9 @@ void ChaosMod::DrawOverlayContents()
         s_fRemainingToNext / m_EffectTimer.m_fIntervalSeconds,
         fmt::format("Next Effect in {:.0f} Seconds", s_fRemainingToNext).c_str()
     );
-
-    // Show Twitch voting status if enabled
-    const bool s_bTwitchVotingActive = m_bTwitchVotingEnabled && m_pTwitchIntegration &&
-                                        m_pTwitchIntegration->IsConnectedForVoting() &&
-                                        m_pTwitchIntegration->IsVotingActive();
-
-    if (s_bTwitchVotingActive)
-    {
-        ImGui::SeparatorText("Vote in Chat!");
-    }
-    else
-    {
-        ImGui::SeparatorText("Current Vote");
-    }
-
-    // Get vote counts if Twitch voting is active
-    std::vector<int> s_aVoteCounts;
-    int s_nTotalVotes = 0;
-    if (s_bTwitchVotingActive)
-    {
-        s_aVoteCounts = m_pTwitchIntegration->GetVoteCounts();
-        s_nTotalVotes = std::accumulate(s_aVoteCounts.begin(), s_aVoteCounts.end(), 0);
-
-        // Ensure that we have a vote count for each option
-        s_aVoteCounts.resize(m_aCurrentVote.size(), 0);
-    }
-
-    // Display vote options with counts
-    for (size_t i = 0; i < m_aCurrentVote.size(); i++)
-    {
-        const auto& s_Effect = m_aCurrentVote[i];
-
-        if (s_bTwitchVotingActive && i < s_aVoteCounts.size())
-        {
-            // Show vote count and percentage
-            const float s_fPercentage = s_nTotalVotes > 0 ? static_cast<float>(s_aVoteCounts[i]) / s_nTotalVotes : 0.0f;
-            const auto s_sText = fmt::format("{}: {} ({} votes)",
-                i + 1, s_Effect->GetDisplayName(true), s_aVoteCounts[i]);
-
-            ImGuiEx::ProgressBarTextFit(s_fPercentage, s_sText.c_str());
-        }
-        else
-        {
-            // Standard display without vote counts and option numbers.
-            ImGui::BulletText("%s", s_Effect->GetDisplayName(true).c_str());
-        }
-    }
-
-    if (s_bTwitchVotingActive && s_nTotalVotes > 0)
-    {
-        ImGui::TextDisabled("Total votes: %d", s_nTotalVotes);
-    }
+     
+    ImGui::SeparatorText("Current Vote");
+    GetCurrentVotingIntegration()->DrawOverlayUI();
 
     ImGui::SeparatorText("Active Effects");
     for (const auto& s_ActiveEffect : m_aActiveEffects)
@@ -397,6 +325,12 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 			m_bModEnabled ? "True" : "False",
             m_bUserEnabled ? "True" : "False",
 			m_EffectTimer.m_bEnable ? "True" : "False"
+        ).c_str());
+
+		auto* s_pVoting = GetCurrentVotingIntegration();
+        ImGui::TextUnformatted(fmt::format(
+            "Using Voting Integration: {}",
+			s_pVoting ? s_pVoting->GetName() : "<null>"
         ).c_str());
 
 		ImGui::Checkbox("Menu Always Visible", &m_bDebugMenuAlwaysVisible);

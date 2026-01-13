@@ -5,7 +5,9 @@
 
 #include "IChaosEffect.h"
 #include "IUnlocker.h"
-#include "Logging.h"
+#include "IVotingIntegration.h"
+
+#include <Logging.h>
 
 
 class EffectRegistry
@@ -14,6 +16,7 @@ private:
     EffectRegistry() = default;
     std::vector<std::unique_ptr<IChaosEffect>> m_aEffects;
     std::vector<std::unique_ptr<IUnlocker>> m_aUnlockers;
+	std::vector<std::unique_ptr<IVotingIntegration>> m_aVotingIntegrations;
 
 public:
     static EffectRegistry& GetInstance()
@@ -35,6 +38,12 @@ public:
         m_aUnlockers.push_back(std::move(p_Unlocker));
     }
 
+    void RegisterVotingIntegration(std::unique_ptr<IVotingIntegration> p_Integration)
+    {
+        Logger::Debug("[EffectRegistry] Registered voting integration '{}'", p_Integration->GetName());
+        m_aVotingIntegrations.push_back(std::move(p_Integration));
+	}
+
     const std::vector<std::unique_ptr<IChaosEffect>>& GetEffects() const
     {
         return m_aEffects;
@@ -44,6 +53,11 @@ public:
     {
         return m_aUnlockers;
     }
+
+    const std::vector<std::unique_ptr<IVotingIntegration>>& GetVotingIntegrations() const
+    {
+        return m_aVotingIntegrations;
+	}
 
     void Sort()
     {
@@ -64,6 +78,15 @@ public:
                 return a->GetName() < b->GetName();
             }
 		);
+
+        std::sort(
+            m_aVotingIntegrations.begin(),
+            m_aVotingIntegrations.end(),
+            [](const std::unique_ptr<IVotingIntegration>& a, const std::unique_ptr<IVotingIntegration>& b)
+            {
+                return a->GetName() < b->GetName();
+			}
+		);
     }
 };
 
@@ -80,6 +103,14 @@ struct UnlockerRegistrar
     explicit UnlockerRegistrar(std::unique_ptr<IUnlocker> p_Unlocker)
     {
         EffectRegistry::GetInstance().RegisterUnlocker(std::move(p_Unlocker));
+    }
+};
+
+struct VotingIntegrationRegistrar
+{
+    explicit VotingIntegrationRegistrar(std::unique_ptr<IVotingIntegration> p_Integration)
+    {
+        EffectRegistry::GetInstance().RegisterVotingIntegration(std::move(p_Integration));
     }
 };
 
@@ -107,4 +138,13 @@ struct UnlockerRegistrar
 #define REGISTER_CHAOS_UNLOCKER(UNLOCKER_CLASS)                    \
     static UnlockerRegistrar g_UnlockerRegistrar_##UNLOCKER_CLASS( \
         std::make_unique<UNLOCKER_CLASS>()                         \
+    );
+
+/**
+ * Register a voting integration class with the Registry.
+ * Voting integrations are registered similarly to effects, ... you get the idea.
+ */
+#define REGISTER_VOTING_INTEGRATION(INTEGRATION_CLASS)                                  \
+    static VotingIntegrationRegistrar g_VotingIntegrationRegistrar_##INTEGRATION_CLASS( \
+        std::make_unique<INTEGRATION_CLASS>()                                           \
     );

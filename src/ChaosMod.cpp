@@ -19,8 +19,7 @@ ChaosMod::ChaosMod() :
     m_fFullEffectDuration(60.0f),
     m_nVoteOptions(4),
     m_EffectTimer(std::bind(&ChaosMod::OnEffectTimerTrigger, this), 30.0),
-    m_SlowUpdateTimer(std::bind(&ChaosMod::OnEffectSlowUpdate, this), 0.2, ZTimer::ETimeMode::RealTime, true), // ~5 FPS
-    m_pTwitchIntegration(std::make_unique<TwitchIntegration>())
+    m_SlowUpdateTimer(std::bind(&ChaosMod::OnEffectSlowUpdate, this), 0.2, ZTimer::ETimeMode::RealTime, true) // ~5 FPS
 {
 
 }
@@ -67,6 +66,17 @@ void ChaosMod::Init()
             p_pEffect->OnModInitialized();
         }
     );
+
+    for (auto& s_pVotingIntegation : EffectRegistry::GetInstance().GetVotingIntegrations())
+    {
+        if (s_pVotingIntegation)
+        {
+			Logger::Debug(TAG "Initializing Voting Integration '{}'", s_pVotingIntegation->GetName());
+            s_pVotingIntegation->Initialize();
+        }
+    }
+
+    m_pVotingIntegration = GetDefaultVotingIntegration();
 }
 
 void ChaosMod::OnEngineInitialized()
@@ -146,8 +156,12 @@ void ChaosMod::OnLoadOrClearScene()
     UpdateEffectTimerEnabled();
     m_EffectTimer.Reset();
 
-    m_aCurrentVote.clear();
     m_aActiveEffects.clear();
+
+    if (auto* s_pVoting = GetCurrentVotingIntegration())
+    {
+        s_pVoting->EndVote();
+	}
 }
 
 void ChaosMod::UpdateEffectTimerEnabled()
@@ -157,7 +171,6 @@ void ChaosMod::UpdateEffectTimerEnabled()
     if (s_bEnable)
     {
         // on enable, prepare first vote
-        m_aCurrentVote.clear();
         OnEffectTimerTrigger();
     }
     else
@@ -172,10 +185,39 @@ void ChaosMod::UpdateEffectTimerEnabled()
         }
 
         m_aActiveEffects.clear();
-        m_aCurrentVote.clear();
+
+        if (auto* s_pVoting = GetCurrentVotingIntegration())
+        {
+            s_pVoting->EndVote();
+        }
     }
 
     m_EffectTimer.m_bEnable = s_bEnable;
+}
+
+IVotingIntegration* ChaosMod::GetCurrentVotingIntegration()
+{
+    if (!m_pVotingIntegration)
+    {
+        Logger::Warn(TAG "No voting integration selected, falling back to default.");
+        m_pVotingIntegration = GetDefaultVotingIntegration();
+    }
+
+    return m_pVotingIntegration;
+}
+
+IVotingIntegration* ChaosMod::GetDefaultVotingIntegration()
+{
+    for (const auto& s_pIntegration : EffectRegistry::GetInstance().GetVotingIntegrations())
+    {
+        if (s_pIntegration->GetName() == "ZOfflineVoting")
+        {
+            return s_pIntegration.get();
+        }
+    }
+
+    std::runtime_error("Failed to find default voting integration!");
+    return nullptr;
 }
 
 DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnLoadScene, ZEntitySceneContext* th, SSceneInitParameters&)

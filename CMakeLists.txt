@@ -28,6 +28,7 @@ target_include_directories(ChaosMod PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Effects
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Unlockers
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Voting
 )
 
 # Set UTF-8 flag.

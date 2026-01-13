@@ -12,56 +12,18 @@
 
 void ChaosMod::OnEffectTimerTrigger()
 {
-    // End any active Twitch voting
-    if (m_bTwitchVotingEnabled && m_pTwitchIntegration && m_pTwitchIntegration->IsVotingActive())
+    auto* s_pVotingIntegration = GetCurrentVotingIntegration();
+    if (!s_pVotingIntegration)
     {
-        m_pTwitchIntegration->GetVoting().EndVoting();
+        // something went very wrong...
+		Logger::Error(TAG "ChaosMod::OnEffectTimerTrigger called but no voting integration is set!");
+        return;
     }
 
-    // select from current vote
-    // if no vote, only prepare the next one
-    if (!m_aCurrentVote.empty())
+    // select random from current vote
+	// if no vote, skip and prepare next vote
+    if (auto s_pSelectedEffect = s_pVotingIntegration->EndVote())
     {
-        IChaosEffect* s_pSelectedEffect = nullptr;
-
-        // Check if Twitch voting is enabled and connected
-        if (m_bTwitchVotingEnabled && m_pTwitchIntegration && m_pTwitchIntegration->IsConnectedForVoting())
-        {
-            // Get the winning option from Twitch votes
-            auto s_aWinningOptions = m_pTwitchIntegration->GetVoting().GetWinningOptions();
-
-            if (!s_aWinningOptions.empty())
-            {
-                // If there's a tie, randomly select from the winners
-                int s_nWinner;
-                if (s_aWinningOptions.size() == 1)
-                {
-                    s_nWinner = s_aWinningOptions[0];
-                }
-                else
-                {
-                    s_nWinner = Math::SelectRandomElement(s_aWinningOptions);
-                }
-
-                if (s_nWinner >= 0 && s_nWinner < static_cast<int>(m_aCurrentVote.size()))
-                {
-                    s_pSelectedEffect = m_aCurrentVote[s_nWinner];
-                    Logger::Info(TAG "Twitch chat voted for option {} ('{}')",
-                        s_nWinner + 1, s_pSelectedEffect->GetDisplayName(false));
-                }
-            }
-            else
-            {
-                Logger::Info(TAG "No Twitch votes received, selecting randomly");
-            }
-        }
-
-        // Fallback to random selection if no Twitch vote or not connected
-        if (!s_pSelectedEffect)
-        {
-            s_pSelectedEffect = Math::SelectRandomElement(m_aCurrentVote);
-        }
-
         // fallback to randomly selected effect if selected is unavailable
         // no compatibility check here, as there should only be compatible effects in the vote
         // this should be fairly rare
@@ -76,19 +38,10 @@ void ChaosMod::OnEffectTimerTrigger()
         }
 
         ActivateEffect(s_pSelectedEffect);
-
-        m_aCurrentVote.clear();
     }
 
-    // prepare next vote
-    m_aCurrentVote = GetRandomEffectSelection(m_nVoteOptions);
-
-    // Start Twitch voting for the new options
-    if (m_bTwitchVotingEnabled && m_pTwitchIntegration && m_pTwitchIntegration->IsConnectedForVoting())
-    {
-        m_pTwitchIntegration->StartVoting(static_cast<int>(m_aCurrentVote.size()));
-        Logger::Debug(TAG "Started Twitch voting with {} options", m_aCurrentVote.size());
-    }
+    // start next vote
+    s_pVotingIntegration->StartVote(GetRandomEffectSelection(m_nVoteOptions));
 }
 
 void ChaosMod::ActivateEffect(IChaosEffect* p_pEffect)
