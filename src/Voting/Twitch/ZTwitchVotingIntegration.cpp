@@ -13,7 +13,7 @@
 #define TAG "[ZTwitchVotingIntegration] "
 
 ZTwitchVotingIntegration::ZTwitchVotingIntegration()
-	: m_pTwitch(std::make_unique<TwitchClient>("u6vwcqu2o637hq3z1edengct7xbm5q"))
+	: m_pTwitch(std::make_unique<TwitchClient>("fqi1yeta603v1u9uassxqvwuri48vh"))
 {
 }
 
