@@ -28,6 +28,7 @@ target_include_directories(ChaosMod PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Effects
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Unlockers
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Voting
 )
 
 # Set UTF-8 flag.
@@ -35,11 +36,16 @@ set_target_properties(ChaosMod PROPERTIES COMPILE_FLAGS "/utf-8")
 
 # Add SDK and DX headers dependencies.
 find_package(directx-headers CONFIG REQUIRED)
+find_package(ixwebsocket CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 
 target_link_libraries(ChaosMod
     ZHMModSDK
     Microsoft::DirectX-Guids
     Microsoft::DirectX-Headers
+    ixwebsocket::ixwebsocket
+    nlohmann_json::nlohmann_json
+    bcrypt
 )
 
 install(TARGETS ChaosMod

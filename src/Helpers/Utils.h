@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace Utils
 {
     /**
@@ -22,4 +24,10 @@ namespace Utils
     {
         return dynamic_cast<const Base*>(p_pObj) != nullptr;
     }
+
+    /**
+	 * Copy a string to the system clipboard.
+	 * @param p_sData Data to copy.
+     */
+    void CopyToClipboard(const std::string p_sData);
 };

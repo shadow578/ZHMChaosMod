@@ -6,10 +6,12 @@
 
 #include "Helpers/ZTimer.h"
 #include "IChaosEffect.h"
+#include "IVotingIntegration.h"
 
 #include <vector>
 #include <queue>
 #include <functional>
+#include <memory>
 
 class ChaosMod : public IPluginInterface
 {
@@ -72,8 +74,11 @@ private: // Selection & Countdown logic
     float32 m_fFullEffectDuration;
     int m_nVoteOptions;
 
-    std::vector <IChaosEffect*> m_aCurrentVote;
+    IVotingIntegration* m_pVotingIntegration = nullptr;
     std::vector<SActiveEffect> m_aActiveEffects;
+
+    IVotingIntegration* GetCurrentVotingIntegration();
+    IVotingIntegration* GetDefaultVotingIntegration();
 
     void UpdateEffectTimerEnabled();
     void OnEffectTimerTrigger();

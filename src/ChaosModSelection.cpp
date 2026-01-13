@@ -12,13 +12,18 @@
 
 void ChaosMod::OnEffectTimerTrigger()
 {
-    // select random from current vote
-    // if no vote, only prepare the next one
-    if (!m_aCurrentVote.empty())
+    auto* s_pVotingIntegration = GetCurrentVotingIntegration();
+    if (!s_pVotingIntegration)
     {
-        // TODO: if social voting was to be implemented, votes processing would go here
-        auto s_pSelectedEffect = Math::SelectRandomElement(m_aCurrentVote);
+        // something went very wrong...
+		Logger::Error(TAG "ChaosMod::OnEffectTimerTrigger called but no voting integration is set!");
+        return;
+    }
 
+    // select random from current vote
+	// if no vote, skip and prepare next vote
+    if (auto s_pSelectedEffect = s_pVotingIntegration->EndVote())
+    {
         // fallback to randomly selected effect if selected is unavailable
         // no compatibility check here, as there should only be compatible effects in the vote
         // this should be fairly rare
@@ -33,12 +38,10 @@ void ChaosMod::OnEffectTimerTrigger()
         }
 
         ActivateEffect(s_pSelectedEffect);
-
-        m_aCurrentVote.clear();
     }
 
-    // prepare next vote
-    m_aCurrentVote = GetRandomEffectSelection(m_nVoteOptions);
+    // start next vote
+    s_pVotingIntegration->StartVote(GetRandomEffectSelection(m_nVoteOptions));
 }
 
 void ChaosMod::ActivateEffect(IChaosEffect* p_pEffect)

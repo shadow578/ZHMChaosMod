@@ -35,6 +35,7 @@ void ChaosMod::InitAuthorNames()
 
     // core authors
 	s_AuthorNames.insert("shadow578");
+    s_AuthorNames.insert("OrfeasZ");
 
     // gather effect authors
     for (const auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
@@ -95,7 +96,7 @@ void ChaosMod::DrawMainUI(const bool p_bHasFocus)
 	}
 
     // start at a sensible size
-	ImGui::SetNextWindowSize({ 400.0f, 350.0f }, ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize({ 450.0f, 500.0f }, ImGuiCond_FirstUseEver);
 
     ImGui::PushFont(SDK()->GetImGuiBlackFont());
     const auto s_ConfigShowing = ImGui::Begin(ICON_MD_QUESTION_MARK "CHAOS MOD CONFIGURATION", &m_bMenuActive);
@@ -145,6 +146,43 @@ void ChaosMod::DrawConfigurationContents()
         5.0,
         120.0
     );
+
+    ImGui::SeparatorText("Voting");
+	
+    auto* s_pVoting = GetCurrentVotingIntegration();
+
+    ImGui::TextUnformatted("Voting Mode");
+    ImGui::SameLine();
+    if (ImGui::BeginCombo("##Voting Mode", s_pVoting ? s_pVoting->GetDisplayName().c_str() : ""))
+    {
+        for (auto& s_pOption : EffectRegistry::GetInstance().GetVotingIntegrations())
+        {
+            if (ImGui::Selectable(
+                s_pOption->GetDisplayName().c_str(),
+                s_pVoting == s_pOption.get()
+            ))
+            {
+                if (s_pVoting)
+                {
+                    s_pVoting->Deactivate();
+                }
+
+                s_pVoting = s_pOption.get();
+
+                m_pVotingIntegration = s_pVoting;
+                m_pVotingIntegration->Activate();
+
+                Logger::Debug(TAG "Selected voting option {}", s_pVoting->GetName());
+            }
+        }
+
+        ImGui::EndCombo();
+    }
+
+    if (s_pVoting)
+    {
+        s_pVoting->DrawConfigUI();
+    }
 }
 
 void ChaosMod::DrawUnlockersContents()
@@ -226,12 +264,9 @@ void ChaosMod::DrawOverlayContents()
         s_fRemainingToNext / m_EffectTimer.m_fIntervalSeconds,
         fmt::format("Next Effect in {:.0f} Seconds", s_fRemainingToNext).c_str()
     );
-
+     
     ImGui::SeparatorText("Current Vote");
-    for (const auto& s_Effect : m_aCurrentVote)
-    {
-        ImGui::BulletText(s_Effect->GetDisplayName(true).c_str());
-    }
+    GetCurrentVotingIntegration()->DrawOverlayUI();
 
     ImGui::SeparatorText("Active Effects");
     for (const auto& s_ActiveEffect : m_aActiveEffects)
@@ -291,6 +326,12 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 			m_bModEnabled ? "True" : "False",
             m_bUserEnabled ? "True" : "False",
 			m_EffectTimer.m_bEnable ? "True" : "False"
+        ).c_str());
+
+		auto* s_pVoting = GetCurrentVotingIntegration();
+        ImGui::TextUnformatted(fmt::format(
+            "Using Voting Integration: {}",
+			s_pVoting ? s_pVoting->GetName() : "<null>"
         ).c_str());
 
 		ImGui::Checkbox("Menu Always Visible", &m_bDebugMenuAlwaysVisible);

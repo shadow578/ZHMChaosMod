@@ -28,6 +28,7 @@ namespace ImGuiEx
 
     /**
      * Like ImGui::ProgressBar, but automatically resizes so text fits fully.
+     * Text is always left-aligned.
      * @param p_fFraction Progress fraction. 0.0 - 1.0.
      * @param p_sOverlayText Text to overlay in the progress bar.
      * @param p_fTextPadding Horizontal padding of the overlay text.
@@ -37,13 +38,23 @@ namespace ImGuiEx
         const char* p_sOverlayText,
         const float p_fTextPadding = 10.0f)
     {
-		const auto s_vTextSize = ImGui::CalcTextSize(p_sOverlayText);
+        const auto s_vTextSize = ImGui::CalcTextSize(p_sOverlayText);
         const auto s_fTextWidth = s_vTextSize.x + (p_fTextPadding * 2.0f);
         const auto s_fWindowWidth = ImGui::GetContentRegionAvail().x;
+        const auto s_fBarWidth = max(s_fWindowWidth, s_fTextWidth);
 
-        ImGui::ProgressBar(
-            p_fFraction,
-            ImVec2(max(s_fWindowWidth, s_fTextWidth), 0.0f),
+        // Draw progress bar without overlay text
+        ImGui::ProgressBar(p_fFraction, ImVec2(s_fBarWidth, 0.0f), "");
+
+        // Draw left-aligned text on top of the progress bar
+        const auto s_vBarMin = ImGui::GetItemRectMin();
+        const auto s_vBarMax = ImGui::GetItemRectMax();
+        const auto s_fTextX = s_vBarMin.x + p_fTextPadding;
+        const auto s_fTextY = s_vBarMin.y + (s_vBarMax.y - s_vBarMin.y - s_vTextSize.y) * 0.5f;
+
+        ImGui::GetWindowDrawList()->AddText(
+            ImVec2(s_fTextX, s_fTextY),
+            ImGui::GetColorU32(ImGuiCol_Text),
             p_sOverlayText
         );
     }
