@@ -7,12 +7,13 @@
 
 #include "EffectRegistry.h"
 #include "Helpers/Math.h"
+#include "Helpers/Utils.h"
 #include "Helpers/ImGuiExtras.h"
 
 #define TAG "[ZTwitchVotingIntegration] "
 
 ZTwitchVotingIntegration::ZTwitchVotingIntegration()
-	: m_pTwitch(std::make_unique<TwitchIntegration>())
+	: m_pTwitch(std::make_unique<TwitchClient>("u6vwcqu2o637hq3z1edengct7xbm5q"))
 {
 }
 
@@ -115,12 +116,25 @@ void ZTwitchVotingIntegration::DrawConfigUI()
 
 		if (ImGui::Button(ICON_MD_LINK " Connect to Twitch"))
 		{
-			m_pTwitch->StartAuthorization();
+			m_pTwitch->StartAuthorization(true);
 		}
 
 		if (ImGui::IsItemHovered())
 		{
 			ImGui::SetTooltip("Opens your browser to authorize the mod with your Twitch account.");
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button(ICON_MD_CONTENT_COPY))
+		{
+			m_pTwitch->StartAuthorization(false);
+			Utils::CopyToClipboard(m_pTwitch->GetAuthorizationUrl());
+		}
+
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Copy authorization URL to your clipboard.");
 		}
 	}
 }
@@ -138,8 +152,6 @@ void ZTwitchVotingIntegration::DrawOverlayUI()
 	{
 		return;
 	}
-
-	ImGui::TextWrapped("Vote by typing the option's number (1-%d) in chat!", m_aActiveVote.size());
 
 	// Get vote counts
 	std::vector<int> s_aVoteCounts = m_pTwitch->GetVoteCounts();
@@ -165,6 +177,7 @@ void ZTwitchVotingIntegration::DrawOverlayUI()
 		ImGuiEx::ProgressBarTextFit(s_fPercentage, s_sText.c_str());
 	}
 
+	ImGui::TextWrapped("Vote by typing the option's number (1-%d) in chat!", m_aActiveVote.size());
 	ImGui::TextDisabled("Total votes: %d", s_nTotalVotes);
 }
 

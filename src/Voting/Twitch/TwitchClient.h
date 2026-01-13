@@ -17,21 +17,28 @@ namespace ix { class HttpServer; }
  * Provides an HTTP server to capture OAuth tokens from the redirect.
  * Manages EventSub connection for chat voting.
  */
-class TwitchIntegration
+class TwitchClient
 {
 public:
-    TwitchIntegration();
-    ~TwitchIntegration();
+    TwitchClient(const std::string p_sClientId, const int p_nServerPort = 6969);
+    ~TwitchClient();
 
-    TwitchIntegration(const TwitchIntegration&) = delete;
-    TwitchIntegration& operator=(const TwitchIntegration&) = delete;
+    TwitchClient(const TwitchClient&) = delete;
+    TwitchClient& operator=(const TwitchClient&) = delete;
 
     /**
      * Start the OAuth authorization flow.
      * Opens the Twitch authorization URL in the user's browser and starts
      * a local HTTP server to capture the token.
+	 * @param p_bOpenBrowser Whether to open the browser automatically.
      */
-    void StartAuthorization();
+    void StartAuthorization(const bool p_bOpenBrowser);
+
+    /**
+     * Get the Twitch authorization URL to open in the browser.
+     * This does not start the server or open the browser.
+	 */
+	std::string GetAuthorizationUrl() const;
 
     /**
      * Stop the HTTP server if running.
@@ -78,8 +85,8 @@ public:
     bool IsVotingActive() const;
 
 private:
-    static constexpr const char* c_sClientId = "u6vwcqu2o637hq3z1edengct7xbm5q";
-    static constexpr int c_nServerPort = 6969;
+    const std::string m_sClientId;
+	const int m_nServerPort;
 
     mutable std::recursive_mutex m_Mutex;
     std::string m_sAccessToken;

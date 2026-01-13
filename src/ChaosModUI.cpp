@@ -95,7 +95,7 @@ void ChaosMod::DrawMainUI(const bool p_bHasFocus)
 	}
 
     // start at a sensible size
-	ImGui::SetNextWindowSize({ 400.0f, 350.0f }, ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize({ 450.0f, 500.0f }, ImGuiCond_FirstUseEver);
 
     ImGui::PushFont(SDK()->GetImGuiBlackFont());
     const auto s_ConfigShowing = ImGui::Begin(ICON_MD_QUESTION_MARK "CHAOS MOD CONFIGURATION", &m_bMenuActive);

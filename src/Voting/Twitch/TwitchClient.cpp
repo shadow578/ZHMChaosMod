@@ -1,4 +1,4 @@
-#include "TwitchIntegration.h"
+#include "TwitchClient.h"
 
 #include "Logging.h"
 
@@ -8,47 +8,57 @@
 #include <Windows.h>
 #include <shellapi.h>
 
-#define TAG "[TwitchIntegration] "
+#define TAG "[TwitchClient] "
 
 using json = nlohmann::json;
 
-TwitchIntegration::TwitchIntegration()
+TwitchClient::TwitchClient(const std::string p_sClientId, const int p_nServerPort)
+    : m_sClientId(p_sClientId), 
+    m_nServerPort(p_nServerPort)
 {
     m_EventSub.SetOnChatMessageCallback([this](const std::string& username, const std::string& message) {
         OnChatMessage(username, message);
     });
 }
 
-TwitchIntegration::~TwitchIntegration()
+TwitchClient::~TwitchClient()
 {
     Disconnect();
 }
 
-void TwitchIntegration::StartAuthorization()
+void TwitchClient::StartAuthorization(const bool p_bOpenBrowser)
 {
     // Stop any existing connections
     Disconnect();
 
     // Start the HTTP server in a background thread
-    m_ServerThread = std::thread(&TwitchIntegration::RunServer, this);
+    m_ServerThread = std::thread(&TwitchClient::RunServer, this);
 
+    // Open the URL in the default browser
+    if (p_bOpenBrowser)
+    {
+        std::string s_sAuthUrl = GetAuthorizationUrl();
+        Logger::Info(TAG "Opening Twitch authorization URL: {}", s_sAuthUrl);
+        ShellExecuteA(nullptr, "open", s_sAuthUrl.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+    }
+}
+
+std::string TwitchClient::GetAuthorizationUrl() const
+{
     // Build the authorization URL
     // We need user:read:chat scope for EventSub chat messages
     std::string s_sAuthUrl = "https://id.twitch.tv/oauth2/authorize";
     s_sAuthUrl += "?client_id=";
-    s_sAuthUrl += c_sClientId;
+    s_sAuthUrl += m_sClientId;
     s_sAuthUrl += "&redirect_uri=";
-    s_sAuthUrl += "http%3A%2F%2Flocalhost%3A6969";
+    s_sAuthUrl += "http%3A%2F%2Flocalhost%3A" + std::to_string(m_nServerPort);
     s_sAuthUrl += "&response_type=token";
     s_sAuthUrl += "&scope=user%3Aread%3Achat";
 
-    Logger::Info(TAG "Opening Twitch authorization URL: {}", s_sAuthUrl);
-
-    // Open the URL in the default browser
-    ShellExecuteA(nullptr, "open", s_sAuthUrl.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+    return s_sAuthUrl;
 }
 
-void TwitchIntegration::StopServer()
+void TwitchClient::StopServer()
 {
     {
         std::lock_guard s_Lock(m_ServerMutex);
@@ -66,7 +76,7 @@ void TwitchIntegration::StopServer()
     }
 }
 
-void TwitchIntegration::Disconnect()
+void TwitchClient::Disconnect()
 {
     StopServer();
     m_EventSub.Disconnect();
@@ -77,39 +87,39 @@ void TwitchIntegration::Disconnect()
     m_sUsername.clear();
 }
 
-bool TwitchIntegration::IsAuthenticated() const
+bool TwitchClient::IsAuthenticated() const
 {
     std::lock_guard s_Lock(m_Mutex);
     return !m_sAccessToken.empty() && !m_sUserId.empty();
 }
 
-bool TwitchIntegration::IsConnectedForVoting() const
+bool TwitchClient::IsConnectedForVoting() const
 {
     return IsAuthenticated() && m_EventSub.IsConnected();
 }
 
-std::string TwitchIntegration::GetUsername() const
+std::string TwitchClient::GetUsername() const
 {
     std::lock_guard s_Lock(m_Mutex);
     return m_sUsername;
 }
 
-void TwitchIntegration::StartVoting(int p_nOptionCount)
+void TwitchClient::StartVoting(int p_nOptionCount)
 {
     m_Voting.StartVoting(p_nOptionCount);
 }
 
-std::vector<int> TwitchIntegration::GetVoteCounts() const
+std::vector<int> TwitchClient::GetVoteCounts() const
 {
     return m_Voting.GetVoteCounts();
 }
 
-bool TwitchIntegration::IsVotingActive() const
+bool TwitchClient::IsVotingActive() const
 {
     return m_Voting.IsVotingActive();
 }
 
-void TwitchIntegration::OnChatMessage(const std::string& p_sUsername, const std::string& p_sMessage)
+void TwitchClient::OnChatMessage(const std::string& p_sUsername, const std::string& p_sMessage)
 {
     if (m_Voting.IsVotingActive())
     {
@@ -117,7 +127,7 @@ void TwitchIntegration::OnChatMessage(const std::string& p_sUsername, const std:
     }
 }
 
-void TwitchIntegration::RunServer()
+void TwitchClient::RunServer()
 {
     bool s_bTokenReceived = false;
 
@@ -127,7 +137,7 @@ void TwitchIntegration::RunServer()
         if (m_pServer)
             return;
 
-        m_pServer = std::make_unique<ix::HttpServer>(c_nServerPort, "127.0.0.1");
+        m_pServer = std::make_unique<ix::HttpServer>(m_nServerPort, "127.0.0.1");
 
         m_pServer->setOnConnectionCallback(
             [this, &s_bTokenReceived](ix::HttpRequestPtr p_Request, std::shared_ptr<ix::ConnectionState>) -> ix::HttpResponsePtr
@@ -212,7 +222,7 @@ void TwitchIntegration::RunServer()
                     GetSuccessPage());
             });
 
-        Logger::Debug(TAG "Starting HTTP server on port {}", c_nServerPort);
+        Logger::Debug(TAG "Starting HTTP server on port {}", m_nServerPort);
 
         const auto s_Res = m_pServer->listen();
         if (!s_Res.first)
@@ -249,7 +259,7 @@ void TwitchIntegration::RunServer()
     Logger::Debug(TAG "HTTP server stopped");
 }
 
-std::string TwitchIntegration::GetTokenCapturePage()
+std::string TwitchClient::GetTokenCapturePage()
 {
     return R"html(
 <!DOCTYPE html>
@@ -281,7 +291,7 @@ std::string TwitchIntegration::GetTokenCapturePage()
 )html";
 }
 
-std::string TwitchIntegration::GetSuccessPage()
+std::string TwitchClient::GetSuccessPage()
 {
     return R"html(
 <!DOCTYPE html>
@@ -303,7 +313,7 @@ std::string TwitchIntegration::GetSuccessPage()
 )html";
 }
 
-bool TwitchIntegration::ValidateTokenAndGetUserInfo()
+bool TwitchClient::ValidateTokenAndGetUserInfo()
 {
     std::string s_sAccessToken;
     {
@@ -316,7 +326,7 @@ bool TwitchIntegration::ValidateTokenAndGetUserInfo()
 
     // Set headers
     s_Args->extraHeaders["Authorization"] = "Bearer " + s_sAccessToken;
-    s_Args->extraHeaders["Client-Id"] = c_sClientId;
+    s_Args->extraHeaders["Client-Id"] = m_sClientId;
 
     const auto s_Response = s_Client.get("https://api.twitch.tv/helix/users", s_Args);
 
@@ -349,7 +359,7 @@ bool TwitchIntegration::ValidateTokenAndGetUserInfo()
     return false;
 }
 
-void TwitchIntegration::ConnectToEventSub()
+void TwitchClient::ConnectToEventSub()
 {
     std::string s_sAccessToken;
     std::string s_sUserId;
@@ -366,5 +376,5 @@ void TwitchIntegration::ConnectToEventSub()
         return;
     }
 
-    m_EventSub.Connect(s_sAccessToken, s_sUserId, c_sClientId);
+    m_EventSub.Connect(s_sAccessToken, s_sUserId, m_sClientId);
 }

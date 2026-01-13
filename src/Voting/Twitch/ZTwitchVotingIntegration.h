@@ -1,7 +1,7 @@
 #pragma once
 #include "IVotingIntegration.h"
 
-#include "TwitchIntegration.h"
+#include "TwitchClient.h"
 
 class ZTwitchVotingIntegration : public IVotingIntegration
 {
@@ -20,7 +20,7 @@ public:
 	}
 
 private:
-	std::unique_ptr<TwitchIntegration> m_pTwitch;
+	std::unique_ptr<TwitchClient> m_pTwitch;
 	std::vector<IChaosEffect*> m_aActiveVote;
 
 	IChaosEffect* EndVoteTwitch();
