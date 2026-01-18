@@ -25,6 +25,14 @@ void ZYoutubeVotingIntegration::DrawConfigUI()
 		m_pYoutube->Connect(false);
 		Utils::CopyToClipboard(m_pYoutube->GetAuthorizationUrl());
 	}
+
+
+	if (m_pYoutube->IsConnected())
+	{
+		ImGui::TextUnformatted(fmt::format("Connected to Stream {}",
+			m_pYoutube->GetBroadcastConnection()->GetBroadcastInfo().m_sTitle
+		).c_str());
+	}
 }
 
 void ZYoutubeVotingIntegration::DrawOverlayUI()

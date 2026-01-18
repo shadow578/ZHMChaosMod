@@ -1,5 +1,6 @@
 #include "ZYoutubeClient.h"
 #include "HttpPages.h"
+#include "ZYoutubeBroadcastConnection.h"
 
 #include <Logging.h>
 
@@ -61,12 +62,19 @@ void ZYoutubeClient::Connect(const bool p_bOpenBrowser)
 void ZYoutubeClient::Disconnect()
 {
 	StopTokenCaptureServer();
-	m_pApiConnection = nullptr;
+	m_pBroadcastConnection = nullptr;
 }
 
 bool ZYoutubeClient::IsConnected() const
 {
-	return m_pApiConnection && m_pApiConnection->IsConnected();
+	std::lock_guard s_Lock(m_BroadcastConnectionMutex);
+	return m_pBroadcastConnection && m_pBroadcastConnection->IsConnected();
+}
+
+ZYoutubeBroadcastConnection* ZYoutubeClient::GetBroadcastConnection()
+{
+	std::lock_guard s_Lock(m_BroadcastConnectionMutex);
+	return m_pBroadcastConnection ? m_pBroadcastConnection.get() : nullptr;
 }
 
 void ZYoutubeClient::StartTokenCaptureServer()
@@ -163,7 +171,7 @@ void ZYoutubeClient::RunTokenCaptureServer()
 					Logger::Debug(TAG "Received authorization code: {}", s_sCode);
 
 
-					SAuthToken s_Token;
+					YT::SAuthToken s_Token;
 					if (!GetAuthTokenFromCode(s_sCode, s_Token))
 					{
 						return std::make_shared<ix::HttpResponse>(
@@ -175,10 +183,21 @@ void ZYoutubeClient::RunTokenCaptureServer()
 					}
 
 					{
-						Logger::Debug(TAG "Obtained access token, init api connection");
+						Logger::Debug(TAG "Obtained access token, init connection");
 
-						std::lock_guard s_ApiLock(m_ApiConnectionMutex);
-						m_pApiConnection = std::make_unique<ZYoutubeApiConnection>(m_sClientId, s_Token);
+						std::lock_guard s_BroadcastLock(m_BroadcastConnectionMutex);
+						m_pBroadcastConnection = std::make_unique<ZYoutubeBroadcastConnection>(m_sClientId, s_Token);
+
+						if (!m_pBroadcastConnection->IsConnected())
+						{
+							m_pBroadcastConnection = nullptr;
+							return std::make_shared<ix::HttpResponse>(
+								500, "Internal Server Error",
+								ix::HttpErrorCode::Ok,
+								ix::WebSocketHttpHeaders{ {"Content-Type", "text/html"} },
+								GetTokenErrorPage("Failed to connect to the YouTube Live Broadcast.")
+							);
+						}
 					}
 
 					s_bTokenReceived = true;
@@ -237,7 +256,7 @@ void ZYoutubeClient::RunTokenCaptureServer()
 	}
 }
 
-bool ZYoutubeClient::GetAuthTokenFromCode(const std::string& p_sAuthCode, SAuthToken& p_Token)
+bool ZYoutubeClient::GetAuthTokenFromCode(const std::string& p_sAuthCode, YT::SAuthToken& p_Token)
 {
 	const json s_RequestJson = {
 		{"code", p_sAuthCode},
@@ -280,7 +299,7 @@ bool ZYoutubeClient::GetAuthTokenFromCode(const std::string& p_sAuthCode, SAuthT
 		return false;
 	}
 
-	const auto s_sScope = s_ResponseJson.value("scope", "");
+	p_Token.m_sScope = s_ResponseJson.value("scope", "");
 	p_Token.m_sAccessToken = s_ResponseJson.value("access_token", "");
 	p_Token.m_sRefreshToken = s_ResponseJson.value("refresh_token", "");
 	p_Token.m_nExpiresIn = s_ResponseJson.value("expires_in", 0);
@@ -290,6 +309,6 @@ bool ZYoutubeClient::GetAuthTokenFromCode(const std::string& p_sAuthCode, SAuthT
 		return false;
 	}
 
-	Logger::Debug(TAG "Got access token for scope {}. Expiration in {} seconds", s_sScope, p_Token.m_nExpiresIn);
+	Logger::Debug(TAG "Got access token for scope {}. Expiration in {} seconds", p_Token.m_sScope, p_Token.m_nExpiresIn);
 	return true;
 }

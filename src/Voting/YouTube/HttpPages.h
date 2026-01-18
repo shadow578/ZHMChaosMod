@@ -45,7 +45,7 @@ constexpr std::string GetTokenCapturePage()
     } else {
         document.body.innerHTML = '<h1>Sign-in Failed</h1><p>No access token received. Please try again.</p>';
     }
-    </script>
+</script>
 )html");
 }
 
