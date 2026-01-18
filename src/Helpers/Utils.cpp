@@ -1,8 +1,10 @@
 #include "Utils.h"
 
-#include <windows.h>
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#include <shellapi.h>
 
-void Utils::CopyToClipboard(const std::string p_sData)
+void Utils::CopyToClipboard(const std::string& p_sData)
 {
     if (!OpenClipboard(nullptr))
     {
@@ -31,4 +33,9 @@ void Utils::CopyToClipboard(const std::string p_sData)
 
     SetClipboardData(CF_TEXT, s_hMem);
     CloseClipboard();
+}
+
+void Utils::OpenBrowser(const std::string& p_sUrl)
+{
+    ShellExecuteA(nullptr, "open", p_sUrl.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 }
