@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 namespace YT
 {
@@ -26,5 +27,29 @@ namespace YT
 		{
 			return !m_sId.empty();
 		}
+	};
+
+	struct SLiveChatMessage
+	{
+		std::string s_sAuthorId;
+		std::string s_sAuthorName;
+		std::string s_sMessageText;
+
+		operator bool() const
+		{
+			return !s_sAuthorId.empty() && !s_sAuthorName.empty() && !s_sMessageText.empty();
+		}
+	};
+
+	struct SLivePollOption
+	{
+		std::string s_sOptionText;
+		int s_nVoteCount;
+	};
+
+	struct SLivePollDetails
+	{
+		std::string s_sQuestionText;
+		std::vector<SLivePollOption> s_aOptions;
 	};
 }

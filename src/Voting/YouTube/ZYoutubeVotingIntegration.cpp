@@ -33,6 +33,27 @@ void ZYoutubeVotingIntegration::DrawConfigUI()
 			m_pYoutube->GetBroadcastConnection()->GetBroadcastInfo().m_sTitle
 		).c_str());
 	}
+
+	if (ImGui::Button("install callbacks"))
+	{
+		m_pYoutube->GetBroadcastConnection()->SetOnChatMessageCallback(
+			[this](const YT::SLiveChatMessage& p_Message)
+			{
+				Logger::Info("Chat message from {}: {}", p_Message.s_sAuthorName, p_Message.s_sMessageText);
+			}
+		);
+
+		m_pYoutube->GetBroadcastConnection()->SetOnPollUpdateCallback(
+			[this](const YT::SLivePollDetails& p_Poll)
+			{
+				Logger::Info("Poll update: {}", p_Poll.s_sQuestionText);
+				for (const auto& s_Option : p_Poll.s_aOptions)
+				{
+					Logger::Info(" - {}: {} votes", s_Option.s_sOptionText, s_Option.s_nVoteCount);
+				}
+			}
+		);
+	}
 }
 
 void ZYoutubeVotingIntegration::DrawOverlayUI()
