@@ -39,17 +39,17 @@ void ZYoutubeVotingIntegration::DrawConfigUI()
 		m_pYoutube->GetBroadcastConnection()->SetOnChatMessageCallback(
 			[this](const YT::SLiveChatMessage& p_Message)
 			{
-				Logger::Info("Chat message from {}: {}", p_Message.s_sAuthorName, p_Message.s_sMessageText);
+				Logger::Info("Chat message from {}: {}", p_Message.m_sAuthorName, p_Message.m_sMessageText);
 			}
 		);
 
 		m_pYoutube->GetBroadcastConnection()->SetOnPollUpdateCallback(
 			[this](const YT::SLivePollDetails& p_Poll)
 			{
-				Logger::Info("Poll update: {}", p_Poll.s_sQuestionText);
-				for (const auto& s_Option : p_Poll.s_aOptions)
+				Logger::Info("Poll update: {}", p_Poll.m_sQuestionText);
+				for (const auto& s_Option : p_Poll.m_aOptions)
 				{
-					Logger::Info(" - {}: {} votes", s_Option.s_sOptionText, s_Option.s_nVoteCount);
+					Logger::Info(" - {}: {} votes", s_Option.m_sOptionText, s_Option.m_nVoteCount);
 				}
 			}
 		);

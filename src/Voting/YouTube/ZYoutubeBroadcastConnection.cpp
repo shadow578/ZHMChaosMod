@@ -67,7 +67,7 @@ YT::SLiveBroadcast ZYoutubeBroadcastConnection::GetActiveBroadcast()
 			{ "part", "id,status,snippet" },
 			{ "broadcastStatus", "active" },
 			{ "maxResults", "1" } // assume only one active broadcast
-		}),
+			}),
 		s_pRequest
 	);
 
@@ -80,28 +80,17 @@ YT::SLiveBroadcast ZYoutubeBroadcastConnection::GetActiveBroadcast()
 
 	for (auto& s_Item : s_Json.value("items", json::array()))
 	{
-		const auto s_Status = s_Item.value("status", json::object());
-		const auto s_Snippet = s_Item.value("snippet", json::object());
-
-		const auto s_sId = s_Item.value("id", "");
-		const auto s_sTitle = s_Snippet.value("title", "");
-		const auto s_sLiveChatId = s_Snippet.value("liveChatId", "");
-		const auto s_sBroadcastStatus = s_Status.value("lifeCycleStatus", "");
-
+		const auto s_Broadcast = YT::SLiveBroadcast::FromJson(s_Item);
 		Logger::Debug(TAG "Got active broadcast: id='{}', title='{}', liveChatId='{}', status='{}'",
-			s_sId,
-			s_sTitle,
-			s_sLiveChatId,
-			s_sBroadcastStatus
+			s_Broadcast.m_sId,
+			s_Broadcast.m_sTitle,
+			s_Broadcast.m_sLiveChatId,
+			s_Broadcast.m_sLifecycleStatus
 		);
 
-		if (s_sBroadcastStatus == "live")
+		if (s_Broadcast.m_sLifecycleStatus == "live")
 		{
-			return YT::SLiveBroadcast{
-				s_sId,
-				s_sTitle,
-				s_sLiveChatId
-			};
+			return s_Broadcast;
 		}
 	}
 
@@ -189,93 +178,35 @@ int ZYoutubeBroadcastConnection::GetLiveChatMessages(std::string& p_sPageToken)
 	const auto s_Json = json::parse(s_pResponse->body);
 
 	// extract live poll details and invoke callback
-	try
+	const auto s_ActivePollItem = s_Json.value("activePollItem", json::object());
+	const auto s_PollDetails = YT::SLivePollDetails::FromJson(s_ActivePollItem);
+
+	if (s_PollDetails)
 	{
-		const auto s_ActivePollItem = s_Json.value("activePollItem", json::object());
-		const auto s_Snippet = s_ActivePollItem.value("snippet", json::object());
-
-		if (s_Snippet.value("type", "") == "pollEvent")
+		std::lock_guard s_Lock(m_ChatPollingCallbacksMutex);
+		if (m_OnPollUpdateCallback)
 		{
-			const auto s_Metadata = s_Snippet.value("pollDetails", json::object())
-				.value("metadata", json::object());
-
-			const auto s_sQuestionText = s_Metadata.value("questionText", "");
-
-			std::vector<YT::SLivePollOption> s_aOptions;
-			for (const auto& s_Option : s_Metadata.value("options", json::array()))
-			{
-				const auto s_sOptionText = s_Option.value("optionText", "");
-				const auto s_sVoteCount = s_Option.value("tally", "0");
-
-				// note: youtube, in their infinite wisdom, returns vote counts as strings
-				const int s_nVoteCount = std::stoi(s_sVoteCount);
-
-				if (!s_sOptionText.empty())
-				{
-					s_aOptions.push_back(YT::SLivePollOption{
-						s_sOptionText,
-						s_nVoteCount
-					});
-				}
-			}
-
-			if (!s_aOptions.empty())
-			{
-				YT::SLivePollDetails s_PollDetails{
-					s_sQuestionText,
-					s_aOptions
-				};
-
-				std::lock_guard s_Lock(m_ChatPollingCallbackMutex);
-				if (m_OnPollUpdateCallback)
-				{
-					m_OnPollUpdateCallback(s_PollDetails);
-				}
-			}
+			m_OnPollUpdateCallback(s_PollDetails);
 		}
 	}
-	catch (const std::exception& e)
-	{
-		Logger::Error(TAG "Failed to parse live poll details: {}", e.what());
-	}
+
 
 	// extract chat messages and invoke callback
-	try
+	for (const auto& s_Item : s_Json.value("items", json::array()))
 	{
-		for (const auto& s_Item : s_Json.value("items", json::array()))
+		YT::SLiveChatMessage s_Message;
+
+		s_Message = YT::SLiveChatMessage::FromJson(s_Item);
+
+
+		if (s_Message)
 		{
-			const auto s_Snippet = s_Item.value("snippet", json::object());
-			
-			if (s_Snippet.value("type", "") != "textMessageEvent")
+			std::lock_guard s_Lock(m_ChatPollingCallbacksMutex);
+			if (m_OnChatMessageCallback)
 			{
-				continue;
-			}
-
-			const auto s_AuthorDetails = s_Item.value("authorDetails", json::object());
-			const auto s_sAuthorId = s_AuthorDetails.value("channelId", "");
-			const auto s_sAuthorName = s_AuthorDetails.value("displayName", "");
-
-			const auto s_sMessageText = s_Snippet.value("textMessageDetails", json::object())
-				.value("messageText", "");
-
-			YT::SLiveChatMessage s_Message{
-				s_sAuthorId,
-				s_sAuthorName,
-				s_sMessageText
-			};
-
-			{
-				std::lock_guard s_Lock(m_ChatPollingCallbackMutex);
-				if (m_OnChatMessageCallback)
-				{
-					m_OnChatMessageCallback(s_Message);
-				}
+				m_OnChatMessageCallback(s_Message);
 			}
 		}
-	}
-	catch (const std::exception& e)
-	{
-		Logger::Error(TAG "Failed to parse live chat messages: {}", e.what());
 	}
 
 	// update next page token and throttle

@@ -51,7 +51,7 @@ public:
 	 */
 	void SetOnChatMessageCallback(const std::function<void(const YT::SLiveChatMessage&)>& p_Callback)
 	{
-		std::lock_guard s_Lock(m_ChatPollingCallbackMutex);
+		std::lock_guard s_Lock(m_ChatPollingCallbacksMutex);
 		m_OnChatMessageCallback = p_Callback;
 	}
 
@@ -60,7 +60,7 @@ public:
 	 */
 	void SetOnPollUpdateCallback(const std::function<void(const YT::SLivePollDetails&)>& p_Callback)
 	{
-		std::lock_guard s_Lock(m_ChatPollingCallbackMutex);
+		std::lock_guard s_Lock(m_ChatPollingCallbacksMutex);
 		m_OnPollUpdateCallback = p_Callback;
 	}
 
@@ -90,7 +90,7 @@ private: // Setup and common
 	bool IsSuccessfulResponse(const ix::HttpResponsePtr p_pResponse, const std::string& p_sContext);
 
 private: // Live chat polling
-	mutable std::recursive_mutex m_ChatPollingCallbackMutex;
+	mutable std::recursive_mutex m_ChatPollingCallbacksMutex;
 	std::function<void(const YT::SLiveChatMessage&)> m_OnChatMessageCallback;
 	std::function<void(const YT::SLivePollDetails&)> m_OnPollUpdateCallback;
 	std::thread m_ChatPollingThread;

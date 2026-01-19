@@ -292,20 +292,10 @@ bool ZYoutubeClient::GetAuthTokenFromCode(const std::string& p_sAuthCode, YT::SA
 	const auto s_ResponseJson = json::parse(s_pResponse->body);
 
 	// only accept bearer token
-	const auto s_sTokenType = s_ResponseJson.value("token_type", "");
-	if (s_sTokenType != "Bearer")
+	p_Token = YT::SAuthToken::FromJson(s_ResponseJson);
+	if (!p_Token)
 	{
-		Logger::Error(TAG "OAuth token exchange yielded invalid token type ('{}')", s_sTokenType);
-		return false;
-	}
-
-	p_Token.m_sScope = s_ResponseJson.value("scope", "");
-	p_Token.m_sAccessToken = s_ResponseJson.value("access_token", "");
-	p_Token.m_sRefreshToken = s_ResponseJson.value("refresh_token", "");
-	p_Token.m_nExpiresIn = s_ResponseJson.value("expires_in", 0);
-
-	if (p_Token.m_sAccessToken.empty())
-	{
+		Logger::Error(TAG "Invalid OAuth token response: {}", s_pResponse->body);
 		return false;
 	}
 
