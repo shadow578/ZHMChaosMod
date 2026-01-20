@@ -40,16 +40,23 @@ namespace YT
 
 	struct SLiveChatMessage
 	{
+		std::string m_sId;			// .id
+		std::string m_sLiveChatId;	// .snippet.liveChatId
 		std::string m_sAuthorId;	// .authorDetails.channelId
 		std::string m_sAuthorName;  // .authorDetails.displayName
 		std::string m_sMessageText; // .snippet.textMessageDetails.messageText
 
 		operator bool() const
 		{
-			return !m_sAuthorId.empty() && !m_sAuthorName.empty() && !m_sMessageText.empty();
+			return !m_sId.empty() 
+				&& !m_sLiveChatId.empty()
+				&& !m_sAuthorId.empty() 
+				&& !m_sAuthorName.empty() 
+				&& !m_sMessageText.empty();
 		}
 
 		static SLiveChatMessage FromJson(const json& p_Json);
+		static json ToJson(const SLiveChatMessage& p_PollDetails);
 	};
 
 	struct SLivePollOption
@@ -63,18 +70,24 @@ namespace YT
 		}
 
 		static SLivePollOption FromJson(const json& p_Json);
+		static json ToJson(const SLivePollOption& p_Option);
 	};
 
 	struct SLivePollDetails
 	{
+		std::string m_sId;				         // .id
+		std::string m_sLiveChatId;		         // .snippet.liveChatId
 		std::string m_sQuestionText;			 // .snippet.pollDetails.metadata.questionText
 		std::vector<SLivePollOption> m_aOptions; // .snippet.pollDetails.metadata.options[]
 
 		operator bool() const
 		{
-			return !m_aOptions.empty();
+			return !m_sId.empty()
+				&& !m_sLiveChatId.empty()
+				&& !m_aOptions.empty();
 		}
 
 		static SLivePollDetails FromJson(const json& p_Json);
+		static json ToJson(const SLivePollDetails& p_PollDetails);
 	};
 }

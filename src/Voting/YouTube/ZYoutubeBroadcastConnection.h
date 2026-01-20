@@ -66,13 +66,22 @@ public:
 
 	/**
 	 * Create a new live poll in the active broadcast.
+	 * After the poll is created, p_PollDetails will be updated with the returned details (like id).
+	 * Only after this, EndLivePoll can be called to end it.
 	 */
-	bool CreateLivePoll(const YT::SLivePollDetails& p_PollDetails);
+	bool CreateLivePoll(YT::SLivePollDetails& p_PollDetails);
 
 	/**
-	 * End the currently active live poll, created by CreateLivePoll.
+	 * End the provided live poll, if it is active.
+	 * After ending, p_PollDetails will be updated with the final results.
 	 */
-	bool EndLivePoll();
+	bool EndLivePoll(YT::SLivePollDetails& p_PollDetails);
+
+	/**
+	 * Send a message to the live chat of the active broadcast.
+	 * After the message is created, p_Message will be updated with the returned details (like id).
+	 */
+	bool SendChatMessage(YT::SLiveChatMessage& p_Message);
 
 private: // Setup and common
 	const std::string m_sClientId;

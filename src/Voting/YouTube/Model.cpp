@@ -40,14 +40,28 @@ YT::SLiveChatMessage YT::SLiveChatMessage::FromJson(const json& p_Json)
 	}
 
 	YT::SLiveChatMessage s_Message;
-
+	s_Message.m_sId = p_Json.value("id", "");
 	s_Message.m_sAuthorId = s_AuthorDetails.value("channelId", "");
 	s_Message.m_sAuthorName = s_AuthorDetails.value("displayName", "");
 
 	s_Message.m_sMessageText = s_Snippet.value("textMessageDetails", json::object())
 		.value("messageText", "");
+	s_Message.m_sLiveChatId = s_Snippet.value("liveChatId", "");
 
 	return s_Message;
+}
+
+json YT::SLiveChatMessage::ToJson(const SLiveChatMessage& p_Message)
+{
+	return json{
+		{ "snippet", json{
+			{ "liveChatId",  p_Message.m_sLiveChatId },
+			{ "type", "textMessageEvent" },
+			{ "textMessageDetails", json{
+				{ "messageText", p_Message.m_sMessageText }
+			}}
+		}}
+	};
 }
 
 YT::SLivePollOption YT::SLivePollOption::FromJson(const json& p_Json)
@@ -63,6 +77,15 @@ YT::SLivePollOption YT::SLivePollOption::FromJson(const json& p_Json)
 	return s_Option;
 }
 
+json YT::SLivePollOption::ToJson(const SLivePollOption& p_Option)
+{
+	json s_Json = {
+		{ "optionText", p_Option.m_sOptionText }
+		//{ "tally", std::to_string(p_Option.m_nVoteCount) } // again, youtube uses strings for vote counts...
+	};
+	return s_Json;
+}
+
 YT::SLivePollDetails YT::SLivePollDetails::FromJson(const json& p_Json)
 {
 	const auto s_Snippet = p_Json.value("snippet", json::object());
@@ -75,6 +98,8 @@ YT::SLivePollDetails YT::SLivePollDetails::FromJson(const json& p_Json)
 	}
 
 	SLivePollDetails s_PollDetails;
+	s_PollDetails.m_sId = p_Json.value("id", "");
+	s_PollDetails.m_sLiveChatId = s_Snippet.value("liveChatId", "");
 	s_PollDetails.m_sQuestionText = s_Metadata.value("questionText", "");
 
 	for (const auto& s_OptionJson : s_Metadata.value("options", json::array()))
@@ -89,3 +114,24 @@ YT::SLivePollDetails YT::SLivePollDetails::FromJson(const json& p_Json)
 	return s_PollDetails;	
 }
 
+json YT::SLivePollDetails::ToJson(const SLivePollDetails& p_PollDetails)
+{
+	json s_Options = json::array();
+	for (const auto& s_Option : p_PollDetails.m_aOptions)
+	{
+		s_Options.push_back(SLivePollOption::ToJson(s_Option));
+	}
+
+	return json{
+		{ "snippet", json{
+			{ "type", "pollEvent" },
+			{ "liveChatId", p_PollDetails.m_sLiveChatId },
+			{ "pollDetails", json{
+				{ "metadata", json{
+					{ "questionText", p_PollDetails.m_sQuestionText },
+					{ "options", s_Options }
+				}}
+			}}
+		}}
+	};
+}

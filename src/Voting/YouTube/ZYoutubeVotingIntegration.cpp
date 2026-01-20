@@ -54,6 +54,38 @@ void ZYoutubeVotingIntegration::DrawConfigUI()
 			}
 		);
 	}
+
+	static YT::SLivePollDetails s_PollDetails;
+	if (ImGui::Button("create poll"))
+	{
+		s_PollDetails.m_sQuestionText = "Hello from CPP!";
+		s_PollDetails.m_aOptions = {
+			{ "Hello!", 0 },
+			{ "Hi There!", 0 },
+			{ "Howdy!", 0 },
+		};
+		m_pYoutube->GetBroadcastConnection()->CreateLivePoll(s_PollDetails);
+	}
+
+	if (ImGui::Button("end poll"))
+	{
+		m_pYoutube->GetBroadcastConnection()->EndLivePoll(s_PollDetails);
+
+		Logger::Info("Poll update: {}", s_PollDetails.m_sQuestionText);
+		for (const auto& s_Option : s_PollDetails.m_aOptions)
+		{
+			Logger::Info(" - {}: {} votes", s_Option.m_sOptionText, s_Option.m_nVoteCount);
+		}
+	}
+
+	if (ImGui::Button("send msg"))
+	{
+		YT::SLiveChatMessage s_Message{
+			.m_sMessageText = "Hello from CPP!"
+		};
+
+		m_pYoutube->GetBroadcastConnection()->SendChatMessage(s_Message);
+	}
 }
 
 void ZYoutubeVotingIntegration::DrawOverlayUI()

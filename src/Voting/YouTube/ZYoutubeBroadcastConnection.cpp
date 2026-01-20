@@ -48,12 +48,12 @@ bool ZYoutubeBroadcastConnection::Connect()
 
 void ZYoutubeBroadcastConnection::Disconnect()
 {
+	m_ActiveBroadcast = {};
+
 	if (m_ChatPollingThread.joinable())
 	{
 		m_ChatPollingThread.join();
 	}
-
-	m_ActiveBroadcast = {};
 }
 
 YT::SLiveBroadcast ZYoutubeBroadcastConnection::GetActiveBroadcast()
@@ -120,14 +120,143 @@ bool ZYoutubeBroadcastConnection::IsSuccessfulResponse(const ix::HttpResponsePtr
 	return true;
 }
 
-bool ZYoutubeBroadcastConnection::CreateLivePoll(const YT::SLivePollDetails& p_PollDetails)
+bool ZYoutubeBroadcastConnection::CreateLivePoll(YT::SLivePollDetails& p_PollDetails)
 {
-	return false;
+	if (m_bReadOnly)
+	{
+		Logger::Error(TAG "CreateLivePoll called on read-only connection!");
+		return false;
+	}
+
+	// set livechat id from active broadcast if not provided
+	if (p_PollDetails.m_sLiveChatId.empty())
+	{
+		p_PollDetails.m_sLiveChatId = m_ActiveBroadcast.m_sLiveChatId;
+	}
+
+	ix::HttpClient s_Client;
+	ix::HttpRequestArgsPtr s_pRequest = s_Client.createRequest();
+	AddCommonHeaders(s_pRequest);
+	s_pRequest->extraHeaders["Content-Type"] = "application/json";
+
+	const auto s_PollDetailsJson = YT::SLivePollDetails::ToJson(p_PollDetails);
+
+	const auto s_pResponse = s_Client.post(
+		UrlUtils::BuildQueryUrl("https://www.googleapis.com/youtube/v3/liveChat/messages", {
+			{ "part", "snippet" }
+		}),
+		s_PollDetailsJson.dump(),
+		s_pRequest
+	);
+
+	if (!IsSuccessfulResponse(s_pResponse, "CreateLivePoll"))
+	{
+		return false;
+	}
+
+	const auto s_Json = json::parse(s_pResponse->body);
+	const auto s_FinalPollDetails = YT::SLivePollDetails::FromJson(s_Json);
+	if (!s_FinalPollDetails)
+	{
+		return false;
+	}
+
+	p_PollDetails = s_FinalPollDetails;
+	return true;
 }
 
-bool ZYoutubeBroadcastConnection::EndLivePoll()
+bool ZYoutubeBroadcastConnection::EndLivePoll(YT::SLivePollDetails& p_PollDetails)
 {
-	return false;
+	if (m_bReadOnly)
+	{
+		Logger::Error(TAG "EndLivePoll called on read-only connection!");
+		return false;
+	}
+
+	if (!p_PollDetails)
+	{
+		return false;
+	}
+
+	ix::HttpClient s_Client;
+	ix::HttpRequestArgsPtr s_pRequest = s_Client.createRequest();
+	AddCommonHeaders(s_pRequest);
+	s_pRequest->extraHeaders["Content-Type"] = "application/json";
+
+	s_pRequest->verbose = true;
+	s_pRequest->logger = [](const std::string& msg)
+		{
+			Logger::Debug(TAG "{}", msg);
+		};
+
+	const auto s_pResponse = s_Client.post(
+		UrlUtils::BuildQueryUrl("https://www.googleapis.com/youtube/v3/liveChat/messages/transition", {
+			{ "id", p_PollDetails.m_sId },
+			{ "status", "closed" },
+			{ "part", "snippet" }
+		}),
+		"",
+		s_pRequest
+	);
+
+	if (!IsSuccessfulResponse(s_pResponse, "EndLivePoll")) // FIXME fails here
+	{
+		return false;
+	}
+
+	const auto s_Json = json::parse(s_pResponse->body);
+	const auto s_FinalPollDetails = YT::SLivePollDetails::FromJson(s_Json);
+	if (s_FinalPollDetails)
+	{
+		p_PollDetails = s_FinalPollDetails;
+	}
+
+	return true;
+}
+
+bool ZYoutubeBroadcastConnection::SendChatMessage(YT::SLiveChatMessage& p_Message)
+{
+	if (m_bReadOnly)
+	{
+		Logger::Error(TAG "CreateLivePoll called on read-only connection!");
+		return false;
+	}
+
+	// set livechat id from active broadcast if not provided
+	if (p_Message.m_sLiveChatId.empty())
+	{
+		p_Message.m_sLiveChatId = m_ActiveBroadcast.m_sLiveChatId;
+	}
+
+	ix::HttpClient s_Client;
+	ix::HttpRequestArgsPtr s_pRequest = s_Client.createRequest();
+	AddCommonHeaders(s_pRequest);
+	s_pRequest->extraHeaders["Content-Type"] = "application/json";
+
+	const auto s_MessageDetailsJson = YT::SLiveChatMessage::ToJson(p_Message);
+
+	const auto s_pResponse = s_Client.post(
+		UrlUtils::BuildQueryUrl("https://www.googleapis.com/youtube/v3/liveChat/messages", {
+			{ "part", "snippet" }
+		}),
+		s_MessageDetailsJson.dump(),
+		s_pRequest
+	);
+
+	if (!IsSuccessfulResponse(s_pResponse, "SendChatMessage"))
+	{
+		return false;
+	}
+
+	const auto s_Json = json::parse(s_pResponse->body);
+	const auto s_FinalMessage = YT::SLiveChatMessage::FromJson(s_Json);
+	if (!s_FinalMessage)
+	{
+		return false;
+	}
+
+	p_Message = s_FinalMessage;
+	return true;
 }
 
 void ZYoutubeBroadcastConnection::RunLiveChatPolling()
@@ -152,6 +281,15 @@ void ZYoutubeBroadcastConnection::RunLiveChatPolling()
 
 int ZYoutubeBroadcastConnection::GetLiveChatMessages(std::string& p_sPageToken)
 {
+	{
+		std::lock_guard s_Lock(m_ChatPollingCallbacksMutex);
+		if (!m_OnChatMessageCallback && !m_OnPollUpdateCallback)
+		{
+			// no callbacks, no need to query api
+			return 500;
+		}
+	}
+
 	ix::HttpClient s_Client;
 	ix::HttpRequestArgsPtr s_pRequest = s_Client.createRequest();
 	AddCommonHeaders(s_pRequest);
@@ -197,8 +335,6 @@ int ZYoutubeBroadcastConnection::GetLiveChatMessages(std::string& p_sPageToken)
 		YT::SLiveChatMessage s_Message;
 
 		s_Message = YT::SLiveChatMessage::FromJson(s_Item);
-
-
 		if (s_Message)
 		{
 			std::lock_guard s_Lock(m_ChatPollingCallbacksMutex);
