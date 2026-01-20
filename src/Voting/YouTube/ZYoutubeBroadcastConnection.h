@@ -6,13 +6,15 @@
 
 #include "Model.h"
 
+class ZAuthToken;
+
 /**
  * Handles connection to the YouTube API, including live chat polling.
  */
 class ZYoutubeBroadcastConnection
 {
 public:
-	ZYoutubeBroadcastConnection(const std::string p_sClientId, const YT::SAuthToken p_Token);
+	ZYoutubeBroadcastConnection(const std::shared_ptr<ZAuthToken> m_pToken);
 	~ZYoutubeBroadcastConnection();
 
 	ZYoutubeBroadcastConnection(const ZYoutubeBroadcastConnection&) = delete;
@@ -35,7 +37,9 @@ public:
 	 */
 	bool IsConnected() const
 	{
-		return m_Token && m_ActiveBroadcast;
+		return m_pToken != nullptr 
+			&& m_pToken
+			&& m_ActiveBroadcast;
 	}
 
 	/**
@@ -84,18 +88,12 @@ public:
 	bool SendChatMessage(YT::SLiveChatMessage& p_Message);
 
 private: // Setup and common
-	const std::string m_sClientId;
-	const YT::SAuthToken m_Token;
-	const bool m_bReadOnly;
+	const std::shared_ptr<ZAuthToken> m_pToken;
 
 	YT::SLiveBroadcast m_ActiveBroadcast;
 
-	/**
-	 * Get the currently active live broadcast for the authenticated user.
-	 */
 	YT::SLiveBroadcast GetActiveBroadcast();
 
-	void AddCommonHeaders(ix::HttpRequestArgsPtr p_pRequest);
 	bool IsSuccessfulResponse(const ix::HttpResponsePtr p_pResponse, const std::string& p_sContext);
 
 private: // Live chat polling

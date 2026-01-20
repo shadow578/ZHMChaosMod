@@ -1,7 +1,8 @@
 #pragma once
 #include "IVotingIntegration.h"
 
-#include "ZYoutubeClient.h"
+class ZYoutubeAuthHandler;
+class ZYoutubeBroadcastConnection;
 
 class ZYoutubeVotingIntegration : public IVotingIntegration
 {
@@ -17,5 +18,6 @@ public:
 private:
 	std::vector<IChaosEffect*> m_aActiveVote;
 
-	std::unique_ptr<ZYoutubeClient> m_pYoutube;
+	std::unique_ptr<ZYoutubeAuthHandler> m_pAuth;
+	std::shared_ptr<ZYoutubeBroadcastConnection> m_pBroadcast;
 };

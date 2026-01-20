@@ -1,54 +1,44 @@
-#include "ZYoutubeClient.h"
+#include "ZYoutubeAuthHandler.h"
+#include "ZAuthToken.h"
 #include "HttpPages.h"
-#include "ZYoutubeBroadcastConnection.h"
 
 #include <Logging.h>
 
 #include "Helpers/Net/UrlUtils.h"
 #include "Helpers/Utils.h"
 
-#include <nlohmann/json.hpp>
 #include <ixwebsocket/IXHttpServer.h>
-#include <ixwebsocket/IXHttpClient.h>
 
-#define TAG "[ZYoutubeClient] "
 
-using json = nlohmann::json;
+#define TAG "[ZYoutubeAuthHandler] "
 
-ZYoutubeClient::ZYoutubeClient(const std::string p_sClientId, const bool p_bReadOnly, const int p_nTokenCapturePort)
+ZYoutubeAuthHandler::ZYoutubeAuthHandler(const std::string p_sClientId, const bool p_bReadOnly, const int p_nTokenCapturePort)
 	: m_sClientId(p_sClientId),
-	m_nTokenCapturePort(p_nTokenCapturePort),
-	m_bReadOnlyScope(p_bReadOnly)
+	m_sApiScope(p_bReadOnly ? YT::c_sReadOnlyScope : YT::c_sReadWriteScope),
+	m_nTokenCapturePort(p_nTokenCapturePort)
 {
-
 }
 
-ZYoutubeClient::~ZYoutubeClient()
+ZYoutubeAuthHandler::~ZYoutubeAuthHandler()
 {
-	Disconnect();
+	StopTokenCaptureServer();
+	ClearAuthToken();
 }
 
-std::string ZYoutubeClient::GetAuthorizationUrl()
+std::string ZYoutubeAuthHandler::GetAuthorizationUrl()
 {
-	std::string s_sScope = "https://www.googleapis.com/auth/youtube";
-	if (m_bReadOnlyScope)
-	{
-		s_sScope += ".readonly";
-	}
-
 	return UrlUtils::BuildQueryUrl("https://accounts.google.com/o/oauth2/v2/auth", {
 		{ "client_id", m_sClientId },
 		{ "redirect_uri", ("http://localhost:" + std::to_string(m_nTokenCapturePort)) },
-		{ "scope", s_sScope },
+		{ "scope", m_sApiScope },
 		{ "response_type", "code" },
 		{ "access_type", "offline" },
 		{ "prompt", "consent" }
-	});
+		});
 }
 
-void ZYoutubeClient::Connect(const bool p_bOpenBrowser)
+void ZYoutubeAuthHandler::StartAuthorization(const bool p_bOpenBrowser)
 {
-	Disconnect();
 	StartTokenCaptureServer();
 
 	if (p_bOpenBrowser)
@@ -59,30 +49,28 @@ void ZYoutubeClient::Connect(const bool p_bOpenBrowser)
 	}
 }
 
-void ZYoutubeClient::Disconnect()
+void ZYoutubeAuthHandler::StopAuthorization()
 {
 	StopTokenCaptureServer();
-	m_pBroadcastConnection = nullptr;
 }
 
-bool ZYoutubeClient::IsConnected() const
+std::shared_ptr<ZAuthToken> ZYoutubeAuthHandler::GetAuthToken()
 {
-	std::lock_guard s_Lock(m_BroadcastConnectionMutex);
-	return m_pBroadcastConnection && m_pBroadcastConnection->IsConnected();
+	std::lock_guard s_Lock(m_AuthTokenMutex);
+	if (m_pAuthToken)
+	{
+		return m_pAuthToken;
+	}
+
+	return nullptr;
 }
 
-ZYoutubeBroadcastConnection* ZYoutubeClient::GetBroadcastConnection()
+void ZYoutubeAuthHandler::StartTokenCaptureServer()
 {
-	std::lock_guard s_Lock(m_BroadcastConnectionMutex);
-	return m_pBroadcastConnection ? m_pBroadcastConnection.get() : nullptr;
+	m_TokenCaptureServerThread = std::thread(&ZYoutubeAuthHandler::RunTokenCaptureServer, this);
 }
 
-void ZYoutubeClient::StartTokenCaptureServer()
-{
-	m_TokenCaptureServerThread = std::thread(&ZYoutubeClient::RunTokenCaptureServer, this);
-}
-
-void ZYoutubeClient::StopTokenCaptureServer()
+void ZYoutubeAuthHandler::StopTokenCaptureServer()
 {
 	{
 		std::lock_guard s_Lock(m_TokenCaptureServerMutex);
@@ -100,7 +88,7 @@ void ZYoutubeClient::StopTokenCaptureServer()
 	}
 }
 
-void ZYoutubeClient::RunTokenCaptureServer()
+void ZYoutubeAuthHandler::RunTokenCaptureServer()
 {
 	bool s_bTokenReceived = false;
 
@@ -170,9 +158,13 @@ void ZYoutubeClient::RunTokenCaptureServer()
 
 					Logger::Debug(TAG "Received authorization code: {}", s_sCode);
 
+					const auto s_pAuthToken = ZAuthToken::FromAuthCode(
+						m_sClientId, 
+						s_sCode,
+						("http://localhost:" + std::to_string(m_nTokenCapturePort))
+					);
 
-					YT::SAuthToken s_Token;
-					if (!GetAuthTokenFromCode(s_sCode, s_Token))
+					if (!s_pAuthToken)
 					{
 						return std::make_shared<ix::HttpResponse>(
 							500, "Internal Server Error",
@@ -182,23 +174,7 @@ void ZYoutubeClient::RunTokenCaptureServer()
 						);
 					}
 
-					{
-						Logger::Debug(TAG "Obtained access token, init connection");
-
-						std::lock_guard s_BroadcastLock(m_BroadcastConnectionMutex);
-						m_pBroadcastConnection = std::make_unique<ZYoutubeBroadcastConnection>(m_sClientId, s_Token);
-
-						if (!m_pBroadcastConnection->IsConnected())
-						{
-							m_pBroadcastConnection = nullptr;
-							return std::make_shared<ix::HttpResponse>(
-								500, "Internal Server Error",
-								ix::HttpErrorCode::Ok,
-								ix::WebSocketHttpHeaders{ {"Content-Type", "text/html"} },
-								GetTokenErrorPage("Failed to connect to the YouTube Live Broadcast.")
-							);
-						}
-					}
+					SetAuthToken(s_pAuthToken);
 
 					s_bTokenReceived = true;
 
@@ -256,49 +232,20 @@ void ZYoutubeClient::RunTokenCaptureServer()
 	}
 }
 
-bool ZYoutubeClient::GetAuthTokenFromCode(const std::string& p_sAuthCode, YT::SAuthToken& p_Token)
+void ZYoutubeAuthHandler::SetAuthToken(std::shared_ptr<ZAuthToken> p_pToken)
 {
-	const json s_RequestJson = {
-		{"code", p_sAuthCode},
-		{"client_id", m_sClientId},
-		{"redirect_uri", ("http://localhost:" + std::to_string(m_nTokenCapturePort))},
-		{"grant_type", "authorization_code"}
-	};
+	Logger::Debug(TAG "Obtained auth token!");
 
-	ix::HttpClient s_Client;
-	ix::HttpRequestArgsPtr s_pRequest = s_Client.createRequest();
-
-	s_pRequest->extraHeaders["Content-Type"] = "application/json";
-	s_pRequest->extraHeaders["Accept"] = "application/json";
-
-	const auto s_pResponse = s_Client.post(
-		"https://oauth2.googleapis.com/token",
-		s_RequestJson.dump(),
-		s_pRequest
-	);
-
-	if (!s_pResponse)
 	{
-		Logger::Error(TAG "OAuth token exchange request failed!");
-		return false;
+		std::lock_guard s_Lock(m_AuthTokenMutex);
+		m_pAuthToken = p_pToken;
 	}
 
-	if (s_pResponse->statusCode < 200 || s_pResponse->statusCode >= 300)
 	{
-		Logger::Error(TAG "OAuth token exchange failed: {} {}", s_pResponse->statusCode, s_pResponse->body);
-		return false;
+		std::lock_guard s_Lock(m_OnAuthTokenReceivedCallbackMutex);
+		if (m_OnAuthTokenReceivedCallback)
+		{
+			m_OnAuthTokenReceivedCallback(p_pToken);
+		}
 	}
-
-	const auto s_ResponseJson = json::parse(s_pResponse->body);
-
-	// only accept bearer token
-	p_Token = YT::SAuthToken::FromJson(s_ResponseJson);
-	if (!p_Token)
-	{
-		Logger::Error(TAG "Invalid OAuth token response: {}", s_pResponse->body);
-		return false;
-	}
-
-	Logger::Debug(TAG "Got access token for scope {}. Expiration in {} seconds", p_Token.m_sScope, p_Token.m_nExpiresIn);
-	return true;
 }

@@ -35,4 +35,10 @@ namespace Utils
      * Open a URL in the default browser 
      */
     void OpenBrowser(const std::string& p_sUrl);
+
+    /**
+     * Get a timestamp in seconds.
+	 * the timestamp is guranteed to be monotonic increasing, but may not represent wall-clock time.
+     */
+    uint64_t GetTimestamp();
 };

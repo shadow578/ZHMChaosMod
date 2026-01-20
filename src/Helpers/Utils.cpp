@@ -39,3 +39,8 @@ void Utils::OpenBrowser(const std::string& p_sUrl)
 {
     ShellExecuteA(nullptr, "open", p_sUrl.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 }
+
+uint64_t Utils::GetTimestamp()
+{
+	return GetTickCount64() / 1000; // ms to seconds
+}
