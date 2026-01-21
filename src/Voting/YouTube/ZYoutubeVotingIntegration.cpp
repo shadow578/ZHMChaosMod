@@ -169,7 +169,40 @@ void ZYoutubeVotingIntegration::DrawConfigUI()
 
 void ZYoutubeVotingIntegration::DrawOverlayUI()
 {
-	
+	if (!m_pChatVote->IsVotingActive())
+	{
+		ImGui::Text("No active vote.");
+		return;
+	}
+
+	const auto s_aVotes = m_pChatVote->GetVotes();
+	const auto s_nTotalVotes = m_pChatVote->GetTotalVotes();
+
+	int i = 1;
+	for (const auto& s_Vote : s_aVotes)
+	{
+		const auto s_pEffect = s_Vote.first;
+		const int s_nVoteCount = s_Vote.second;
+
+		const float s_fPercentage = (s_nTotalVotes > 0) 
+			? (static_cast<float>(s_nVoteCount) / s_nTotalVotes) 
+			: 0.0f;
+
+		const auto s_sText = fmt::format(
+			"[{}] {} ({} votes)",
+			i,
+			s_pEffect->GetDisplayName(true),
+			s_nVoteCount
+		);
+		ImGuiEx::ProgressBarTextFit(s_fPercentage, s_sText.c_str());
+
+		i++;
+	}
+
+	ImGui::TextWrapped(fmt::format("Vote by typing the option's number (1-{}) in chat!", 
+		m_aActiveVote.size()
+	).c_str());
+	ImGui::TextDisabled(fmt::format("Total votes: {}", s_nTotalVotes).c_str());
 }
 
 REGISTER_VOTING_INTEGRATION(ZYoutubeVotingIntegration);
