@@ -63,8 +63,11 @@ bool ZChatVoting::PushMessage(const std::string& p_sUserId, const std::string& p
         }
     }
 
-    m_aVoteCounts[s_nVote].m_nVoteCount++;
-    m_mUserVotes[p_sUserId] = s_nVote;
+    if (s_nPreviousVote != s_nVote)
+    {
+        m_aVoteCounts[s_nVote].m_nVoteCount++;
+        m_mUserVotes[p_sUserId] = s_nVote;
+    }
 
     Logger::Debug(TAG "{} voted for option {} (previously {})", 
         p_sUserId, 

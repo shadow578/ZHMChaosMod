@@ -8,6 +8,7 @@
 
 #include "EffectRegistry.h"
 #include "Helpers/Utils.h"
+#include "Helpers/ImGuiExtras.h"
 
 ZYoutubeVotingIntegration::ZYoutubeVotingIntegration()
 	: m_pAuth(std::make_unique<ZYoutubeAuthHandler>("623315752739-3dikb4pf1lkgnd3n6e59l6qrprsk4q43.apps.googleusercontent.com", false)), // TODO developer ID
@@ -91,6 +92,16 @@ void ZYoutubeVotingIntegration::DrawConfigUI()
 		{
 			m_pAuth->GetAuthToken()->Refresh(true);
 		}
+
+		if (ImGui::Button("Enable Auto-Refresh"))
+		{
+			m_pAuth->GetAuthToken()->StartAutoRefresh();
+		}
+
+		if (ImGui::Button("Disable Auto-Refresh"))
+		{
+			m_pAuth->GetAuthToken()->StopAutoRefresh();
+		}
 	}
 
 	if (m_pBroadcast && m_pBroadcast->IsConnected())
@@ -169,6 +180,7 @@ void ZYoutubeVotingIntegration::DrawConfigUI()
 
 void ZYoutubeVotingIntegration::DrawOverlayUI()
 {
+	/*
 	if (!m_pChatVote->IsVotingActive())
 	{
 		ImGui::Text("No active vote.");
@@ -181,8 +193,8 @@ void ZYoutubeVotingIntegration::DrawOverlayUI()
 	int i = 1;
 	for (const auto& s_Vote : s_aVotes)
 	{
-		const auto s_pEffect = s_Vote.first;
-		const int s_nVoteCount = s_Vote.second;
+		const auto s_pEffect = m_aActiveVote[i - 1];
+		const int s_nVoteCount = s_Vote.m_nVoteCount;
 
 		const float s_fPercentage = (s_nTotalVotes > 0) 
 			? (static_cast<float>(s_nVoteCount) / s_nTotalVotes) 
@@ -203,6 +215,7 @@ void ZYoutubeVotingIntegration::DrawOverlayUI()
 		m_aActiveVote.size()
 	).c_str());
 	ImGui::TextDisabled(fmt::format("Total votes: {}", s_nTotalVotes).c_str());
+	*/
 }
 
 REGISTER_VOTING_INTEGRATION(ZYoutubeVotingIntegration);

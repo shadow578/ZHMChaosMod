@@ -18,7 +18,7 @@ public:
 
         std::string m_sName;
         int m_nVoteCount = 0;
-    }
+    };
 
     ZChatVoting() = default;
     ~ZChatVoting() = default;
@@ -63,7 +63,7 @@ private:
 
     mutable std::recursive_mutex m_VotesMutex; // Lock for m_aVoteCounts and m_mUserVotes
     std::vector<SVoteOption> m_aVoteCounts;
-    std::unordered_map<std::string, SVoteOption> m_mUserVotes;
+    std::unordered_map<std::string, int> m_mUserVotes;
 
     /**
      * Parse the vote option from a chat message.

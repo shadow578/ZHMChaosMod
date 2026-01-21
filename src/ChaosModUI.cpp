@@ -10,7 +10,7 @@
 
 #include "BuildInfo.h"
 
-#include <set>
+#include <unordered_set>
 
 #define TAG "[ChaosModUI] "
 
@@ -31,7 +31,7 @@ static std::string EffectDurationToString(const IChaosEffect::EDuration p_Durati
 
 void ChaosMod::InitAuthorNames()
 {
-    std::set<std::string> s_AuthorNames;
+    std::unordered_set<std::string> s_AuthorNames;
 
     // core authors
 	s_AuthorNames.insert("shadow578");

@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include <mutex>
+#include <thread>
 
 #include <nlohmann/json.hpp>
 #include <ixwebsocket/IXHttpClient.h>
@@ -28,6 +29,11 @@ public:
 		: m_sClientId(p_sClientId)
 	{
 		SetToken(p_Token, false);
+	}
+
+	~ZAuthToken()
+	{
+		StopAutoRefresh();
 	}
 
 	/**
@@ -63,6 +69,16 @@ public:
 	 */
 	void Refresh(const bool p_bForce = false);
 
+	/**
+	 * Enable automatic token refreshing in a background thread.
+	 */
+	void StartAutoRefresh();
+
+	/**
+	 * Stop automatic token refreshing.
+	 */
+	void StopAutoRefresh();
+
 private:
 	const std::string m_sClientId;
 
@@ -72,4 +88,12 @@ private:
 
 	void SetToken(const YT::SAuthToken& p_Token, const bool p_bIsRefresh);
 	bool RefreshToken();
+
+private: // auto-refresh
+	mutable std::recursive_mutex m_AutoRefreshMutex;
+	std::thread m_AutoRefreshThread;
+	std::atomic<bool> m_bAutoRefreshRunning{ false };
+	std::condition_variable m_AutoRefreshCv;
+
+	void RunAutoRefresh();
 };

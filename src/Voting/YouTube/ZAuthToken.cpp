@@ -183,3 +183,75 @@ bool ZAuthToken::RefreshToken()
 	SetToken(s_Token, true);
 	return true;
 }
+
+
+void ZAuthToken::StartAutoRefresh()
+{
+	std::lock_guard s_Lock(m_AutoRefreshMutex);
+
+	if (m_bAutoRefreshRunning)
+	{
+		return;
+	}
+
+	m_bAutoRefreshRunning = true;
+	m_AutoRefreshThread = std::thread(&ZAuthToken::RunAutoRefresh, this);
+}
+
+void ZAuthToken::StopAutoRefresh()
+{
+	{
+		std::lock_guard s_Lock(m_AutoRefreshMutex);
+		if (!m_bAutoRefreshRunning)
+		{
+			return;
+		}
+		m_bAutoRefreshRunning = false;
+
+		// interrupt sleep
+		m_AutoRefreshCv.notify_all();
+	}
+
+	if (m_AutoRefreshThread.joinable())
+	{
+		m_AutoRefreshThread.join();
+	}
+}
+
+void ZAuthToken::RunAutoRefresh()
+{
+	std::mutex s_SleepMutex;
+
+	for(;;)
+	{
+		const auto s_nRemainingSeconds = GetRemainingValiditySeconds();
+
+		// sleep until 5 minutes before expiration
+		// sleep at least 60 seconds
+		auto s_nSleepSeconds = s_nRemainingSeconds - c_nTokenRefreshThresholdSeconds;
+		if (s_nSleepSeconds < 60)
+		{
+			s_nSleepSeconds = 60;
+		}
+
+		Logger::Debug(TAG "Next auto-refresh in {} seconds", s_nSleepSeconds);
+
+		{
+			std::unique_lock<std::mutex> s_SleepLock(s_SleepMutex);
+			m_AutoRefreshCv.wait_for(s_SleepLock, std::chrono::seconds(s_nSleepSeconds));
+		}
+
+		{
+			std::lock_guard s_Lock(m_AutoRefreshMutex);
+			if (!m_bAutoRefreshRunning)
+			{
+				break;
+			}
+		}
+
+		// force refresh
+		Refresh(true);
+	}
+
+	Logger::Debug(TAG "Auto-refresh thread exiting");
+}
