@@ -3,6 +3,7 @@
 
 class ZYoutubeAuthHandler;
 class ZYoutubeBroadcastConnection;
+class ZChatVoting;
 
 class ZYoutubeVotingIntegration : public IVotingIntegration
 {
@@ -20,4 +21,6 @@ private:
 
 	std::unique_ptr<ZYoutubeAuthHandler> m_pAuth;
 	std::shared_ptr<ZYoutubeBroadcastConnection> m_pBroadcast;
+
+	std::unique_ptr<ZChatVoting> m_pChatVote;
 };

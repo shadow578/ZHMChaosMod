@@ -4,12 +4,15 @@
 #include "ZYoutubeBroadcastConnection.h"
 #include "ZAuthToken.h"
 
+#include "ZChatVoting.h"
+
 #include "EffectRegistry.h"
 #include "Helpers/Utils.h"
 
 ZYoutubeVotingIntegration::ZYoutubeVotingIntegration()
 	: m_pAuth(std::make_unique<ZYoutubeAuthHandler>("623315752739-3dikb4pf1lkgnd3n6e59l6qrprsk4q43.apps.googleusercontent.com", false)), // TODO developer ID
-	m_pBroadcast(nullptr)
+	m_pBroadcast(nullptr),
+	m_pChatVote(std::make_unique<ZChatVoting>())
 {
 	m_pAuth->SetOnAuthTokenReceivedCallback(
 		[this](std::shared_ptr<ZAuthToken> p_pToken)
@@ -26,6 +29,11 @@ ZYoutubeVotingIntegration::ZYoutubeVotingIntegration()
 						[this](const YT::SLiveChatMessage& p_Message)
 						{
 							Logger::Info("Chat message from {}: {}", p_Message.m_sAuthorName, p_Message.m_sMessageText);
+
+							m_pChatVote->PushMessage(
+								p_Message.m_sAuthorId,
+								p_Message.m_sMessageText
+							);
 						}
 					);
 
@@ -124,6 +132,36 @@ void ZYoutubeVotingIntegration::DrawConfigUI()
 		};
 
 		m_pBroadcast->SendChatMessage(s_Message);
+	}
+
+	if (ImGui::Button("start chat vote"))
+	{
+		m_pChatVote->StartVoting({
+			{ "Option 1" },
+			{ "Option 2" },
+			{ "Option 3" },
+		});
+	}
+
+	if (ImGui::Button("end chat vote"))
+	{
+		m_pChatVote->EndVoting();
+	}
+
+	if (m_pChatVote->IsVotingActive())
+	{
+		const auto s_aVotes = m_pChatVote->GetVotes();
+		const auto s_nTotalVotes = m_pChatVote->GetTotalVotes();
+
+		for (const auto& s_Option : s_aVotes)
+		{
+			float s_fFraction = s_Option.m_nVoteCount / static_cast<float>(s_nTotalVotes > 0 ? s_nTotalVotes : 1);
+			ImGui::TextUnformatted(fmt::format("{}: {} votes ({:.1f}%)",
+				s_Option.m_sName,
+				s_Option.m_nVoteCount,
+				s_fFraction * 100.0f
+			).c_str());
+		}
 	}
 
 	ImGui::EndDisabled();
