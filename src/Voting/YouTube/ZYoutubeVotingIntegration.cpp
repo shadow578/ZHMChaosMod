@@ -78,6 +78,11 @@ void ZYoutubeVotingIntegration::DrawConfigUI()
 		ImGui::TextUnformatted(fmt::format("Authorized for the next {} s",
 			m_pAuth->GetAuthToken()->GetRemainingValiditySeconds()
 		).c_str());
+
+		if (ImGui::Button("Refresh Token"))
+		{
+			m_pAuth->GetAuthToken()->Refresh(true);
+		}
 	}
 
 	if (m_pBroadcast && m_pBroadcast->IsConnected())

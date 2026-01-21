@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include <mutex>
 
 #include <nlohmann/json.hpp>
 #include <ixwebsocket/IXHttpClient.h>
@@ -26,7 +27,7 @@ public:
 	ZAuthToken(const std::string& p_sClientId, const YT::SAuthToken& p_Token)
 		: m_sClientId(p_sClientId)
 	{
-		SetToken(p_Token);
+		SetToken(p_Token, false);
 	}
 
 	/**
@@ -34,6 +35,7 @@ public:
 	 */
 	operator bool() const
 	{
+		std::lock_guard s_Lock(m_TokenMutex);
 		return !m_sClientId.empty() && m_Token;
 	}
 
@@ -42,6 +44,7 @@ public:
 	 */
 	bool IsReadOnly() const
 	{
+		std::lock_guard s_Lock(m_TokenMutex);
 		return m_Token.m_sScope == YT::c_sReadOnlyScope;
 	}
 
@@ -55,10 +58,18 @@ public:
 	 */
 	uint64_t GetRemainingValiditySeconds() const;
 
+	/**
+	 * Refresh the token if it is expired or about to expire.
+	 */
+	void Refresh(const bool p_bForce = false);
+
 private:
 	const std::string m_sClientId;
+
+	mutable std::recursive_mutex m_TokenMutex;
 	YT::SAuthToken m_Token;
 	uint64_t m_nTokenObtainedAt;
 
-	void SetToken(const YT::SAuthToken& p_Token);
+	void SetToken(const YT::SAuthToken& p_Token, const bool p_bIsRefresh);
+	bool RefreshToken();
 };
