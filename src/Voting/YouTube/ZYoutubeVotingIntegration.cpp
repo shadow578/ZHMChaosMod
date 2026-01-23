@@ -1,14 +1,13 @@
 #include "ZYoutubeVotingIntegration.h"
 
-#include "ZYoutubeAuthHandler.h"
-#include "ZYoutubeBroadcastConnection.h"
-#include "ZAuthToken.h"
-
-#include "ZChatVoting.h"
+#include "Client/ZYoutubeAuthHandler.h"
+#include "Client/ZYoutubeBroadcastConnection.h"
+#include "Client/ZAuthToken.h"
 
 #include "EffectRegistry.h"
 #include "Helpers/Utils.h"
 #include "Helpers/ImGuiExtras.h"
+#include "Helpers/Voting/ZChatVoting.h"
 
 ZYoutubeVotingIntegration::ZYoutubeVotingIntegration()
 	: m_pAuth(std::make_unique<ZYoutubeAuthHandler>("623315752739-3dikb4pf1lkgnd3n6e59l6qrprsk4q43.apps.googleusercontent.com", false)), // TODO developer ID
