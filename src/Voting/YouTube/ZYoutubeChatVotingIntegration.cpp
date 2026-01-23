@@ -73,6 +73,16 @@ IChaosEffect* ZYoutubeChatVotingIntegration::EndVoteImpl()
 	m_pVoting->EndVoting();
 	const auto& s_aFinalTally = m_pVoting->GetVotes();
 
+	// vote options vs effects count mismatch?
+	if (m_aActiveVote.size() != s_aFinalTally.size())
+	{
+		Logger::Debug(TAG "Vote options count ({}) does not match effects count ({})",
+			s_aFinalTally.size(),
+			m_aActiveVote.size()
+		);
+		return nullptr;
+	}
+
 	// no votes?
 	if (m_pVoting->GetTotalVotes() <= 0)
 	{
@@ -120,12 +130,18 @@ void ZYoutubeChatVotingIntegration::DrawConfigUI()
 
 	if (ImGui::IsItemHovered())
 	{
-		ImGui::SetTooltip("Only allow channel members (sponsors), moderators, and the channel owner to vote.");
+		ImGui::SetTooltip("Only allow channel members to vote.");
 	}
 }
 
 void ZYoutubeChatVotingIntegration::DrawOverlayUI()
 {
+	if (!m_pCurrentBroadcast || !m_pCurrentBroadcast->IsConnected())
+	{
+		ImGui::Text("Not connected to a YouTube broadcast.");
+		return;
+	}
+
 	if (!m_pVoting->IsVotingActive())
 	{
 		ImGui::Text("No active vote.");

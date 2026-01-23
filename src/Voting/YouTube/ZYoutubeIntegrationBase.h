@@ -10,6 +10,8 @@ class ZYoutubeIntegrationBase : public IVotingIntegration
 public:
 	ZYoutubeIntegrationBase();
 
+	void Deactivate() override;
+
 	void StartVote(const std::vector<IChaosEffect*>& p_aOptions) override;
 	IChaosEffect* EndVote() override;
 	void DrawConfigUI() override;
@@ -27,4 +29,6 @@ protected:
 
 private:
 	void OnAuthTokenReceived(std::shared_ptr<ZAuthToken> p_pToken);
+
+	void Disconnect();
 };

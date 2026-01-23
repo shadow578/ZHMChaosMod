@@ -90,7 +90,20 @@ namespace YT
 				&& !m_aOptions.empty();
 		}
 
+
+		inline size_t GetTotalVotes() const
+		{
+			size_t s_nTotalVotes = 0;
+			for (const auto& s_Option : m_aOptions)
+			{
+				s_nTotalVotes += s_Option.m_nVoteCount;
+			}
+			return s_nTotalVotes;
+		}
+
 		static SLivePollDetails FromJson(const json& p_Json);
 		static json ToJson(const SLivePollDetails& p_PollDetails);
 	};
+
+	constexpr size_t c_nMaxLivePollOptions = 5;
 }

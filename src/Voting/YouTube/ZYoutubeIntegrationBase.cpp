@@ -44,6 +44,11 @@ void ZYoutubeIntegrationBase::OnAuthTokenReceived(std::shared_ptr<ZAuthToken> p_
 	}
 }
 
+void ZYoutubeIntegrationBase::Deactivate()
+{
+	Disconnect();
+}
+
 void ZYoutubeIntegrationBase::DrawConfigUI()
 {
 	if (!m_pYoutubeAuth)
@@ -69,13 +74,12 @@ void ZYoutubeIntegrationBase::DrawConfigUI()
 
 		if (ImGui::Button(ICON_MD_LINK_OFF " Disconnect"))
 		{
-			m_pYoutubeAuth->ClearAuthToken();
-			m_pCurrentBroadcast = nullptr;
+			Disconnect();
 		}
 	}
 	else
 	{
-		ImGui::TextWrapped("Connect to YouTube to enable chat voting for effects.");
+		ImGui::TextWrapped("Connect to YouTube to enable viewers voting for effects.");
 
 		if (ImGui::Button(ICON_MD_LINK " Connect to YouTube"))
 		{
@@ -126,4 +130,10 @@ IChaosEffect* ZYoutubeIntegrationBase::EndVote()
 	auto* s_pEffect = Math::SelectRandomElement(m_aActiveVote);
 	m_aActiveVote.clear();
 	return s_pEffect;
+}
+
+void ZYoutubeIntegrationBase::Disconnect()
+{
+	m_pYoutubeAuth->ClearAuthToken();
+	m_pCurrentBroadcast = nullptr;
 }

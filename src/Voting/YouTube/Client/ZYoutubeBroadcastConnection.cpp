@@ -179,12 +179,6 @@ bool ZYoutubeBroadcastConnection::EndLivePoll(YT::SLivePollDetails& p_PollDetail
 	s_pRequest->extraHeaders["Content-Type"] = "application/json";
 	s_pRequest->extraHeaders["Accept"] = "application/json";
 
-	s_pRequest->verbose = true;
-	s_pRequest->logger = [](const std::string& msg)
-		{
-			Logger::Debug(TAG "{}", msg);
-		};
-
 	const auto s_pResponse = s_Client.post(
 		UrlUtils::BuildQueryUrl("https://www.googleapis.com/youtube/v3/liveChat/messages/transition", {
 			{ "id", p_PollDetails.m_sId },
