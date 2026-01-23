@@ -44,6 +44,10 @@ YT::SLiveChatMessage YT::SLiveChatMessage::FromJson(const json& p_Json)
 	s_Message.m_sAuthorId = s_AuthorDetails.value("channelId", "");
 	s_Message.m_sAuthorName = s_AuthorDetails.value("displayName", "");
 
+	s_Message.m_bAuthorIsOwner = s_AuthorDetails.value("isChatOwner", false);
+	s_Message.m_bAuthorIsModerator = s_AuthorDetails.value("isChatModerator", false);
+	s_Message.m_bAuthorIsSponsor = s_AuthorDetails.value("isChatSponsor", false);
+
 	s_Message.m_sMessageText = s_Snippet.value("textMessageDetails", json::object())
 		.value("messageText", "");
 	s_Message.m_sLiveChatId = s_Snippet.value("liveChatId", "");

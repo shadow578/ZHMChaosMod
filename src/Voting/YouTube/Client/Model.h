@@ -44,6 +44,9 @@ namespace YT
 		std::string m_sLiveChatId;	// .snippet.liveChatId
 		std::string m_sAuthorId;	// .authorDetails.channelId
 		std::string m_sAuthorName;  // .authorDetails.displayName
+		bool m_bAuthorIsOwner;		// .authorDetails.isChatOwner
+		bool m_bAuthorIsModerator;	// .authorDetails.isChatModerator
+		bool m_bAuthorIsSponsor;	// .authorDetails.isChatSponsor
 		std::string m_sMessageText; // .snippet.textMessageDetails.messageText
 
 		operator bool() const
