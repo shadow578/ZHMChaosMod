@@ -8,7 +8,7 @@ class ZYoutubeBroadcastConnection;
 class ZYoutubeIntegrationBase : public IVotingIntegration
 {
 public:
-	ZYoutubeIntegrationBase();
+	ZYoutubeIntegrationBase(const bool p_bReadOnly);
 
 	void Deactivate() override;
 

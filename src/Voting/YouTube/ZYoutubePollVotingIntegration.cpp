@@ -11,7 +11,7 @@
 #define TAG "[ZYoutubePollVotingIntegration] "
 
 ZYoutubePollVotingIntegration::ZYoutubePollVotingIntegration()
-	: ZYoutubeIntegrationBase(),
+	: ZYoutubeIntegrationBase(/* read-only */ false), // need to insert polls
 	m_pWorker(std::make_unique<ZBackgroundWorker>())
 {
 }

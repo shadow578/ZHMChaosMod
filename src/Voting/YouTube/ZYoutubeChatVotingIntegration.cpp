@@ -11,7 +11,7 @@
 #define TAG "[ZYoutubeChatVotingIntegration] "
 
 ZYoutubeChatVotingIntegration::ZYoutubeChatVotingIntegration()
-	: ZYoutubeIntegrationBase(),
+	: ZYoutubeIntegrationBase(/* read-only */ true),
 	m_pVoting(std::make_unique<ZChatVoting>())
 {
 }

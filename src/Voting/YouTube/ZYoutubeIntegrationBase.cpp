@@ -12,8 +12,8 @@
 
 #define TAG "[ZYoutubeIntegrationBase] "
 
-ZYoutubeIntegrationBase::ZYoutubeIntegrationBase()
-	: m_pYoutubeAuth(std::make_unique<ZYoutubeAuthHandler>("623315752739-3dikb4pf1lkgnd3n6e59l6qrprsk4q43.apps.googleusercontent.com", false)), // TODO developer ID
+ZYoutubeIntegrationBase::ZYoutubeIntegrationBase(const bool p_bReadOnly)
+	: m_pYoutubeAuth(std::make_unique<ZYoutubeAuthHandler>("200073485619-fc2jvhk4rsqve7lfv93s888al922phbi.apps.googleusercontent.com", p_bReadOnly)),
 	m_pCurrentBroadcast(nullptr)
 {
 	m_pYoutubeAuth->SetOnAuthTokenReceivedCallback(
