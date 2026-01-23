@@ -67,6 +67,8 @@ std::shared_ptr<ZAuthToken> ZYoutubeAuthHandler::GetAuthToken()
 
 void ZYoutubeAuthHandler::StartTokenCaptureServer()
 {
+	StopTokenCaptureServer();
+
 	m_TokenCaptureServerThread = std::thread(&ZYoutubeAuthHandler::RunTokenCaptureServer, this);
 }
 
@@ -90,7 +92,7 @@ void ZYoutubeAuthHandler::StopTokenCaptureServer()
 
 void ZYoutubeAuthHandler::RunTokenCaptureServer()
 {
-	bool s_bTokenReceived = false;
+	m_bTokenReceived = false;
 
 	{
 		std::lock_guard s_Lock(m_TokenCaptureServerMutex);
@@ -102,7 +104,7 @@ void ZYoutubeAuthHandler::RunTokenCaptureServer()
 		m_pTokenCaptureServer = std::make_unique<ix::HttpServer>(m_nTokenCapturePort, "127.0.0.1");
 
 		m_pTokenCaptureServer->setOnConnectionCallback(
-			[this, &s_bTokenReceived](ix::HttpRequestPtr p_pRequest, std::shared_ptr<ix::ConnectionState>) -> ix::HttpResponsePtr
+			[this](ix::HttpRequestPtr p_pRequest, std::shared_ptr<ix::ConnectionState>) -> ix::HttpResponsePtr
 			{
 				const std::string s_sUri = p_pRequest->uri;
 
@@ -176,7 +178,7 @@ void ZYoutubeAuthHandler::RunTokenCaptureServer()
 
 					SetAuthToken(s_pAuthToken);
 
-					s_bTokenReceived = true;
+					m_bTokenReceived = true;
 
 					return std::make_shared<ix::HttpResponse>(
 						200, "OK",
@@ -209,7 +211,7 @@ void ZYoutubeAuthHandler::RunTokenCaptureServer()
 	}
 
 	// wait for token to be received
-	while (!s_bTokenReceived)
+	while (!m_bTokenReceived)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 

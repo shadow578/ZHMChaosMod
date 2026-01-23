@@ -86,6 +86,7 @@ private:
 	mutable std::recursive_mutex m_TokenCaptureServerMutex;
 	std::thread m_TokenCaptureServerThread;
 	std::unique_ptr<ix::HttpServer> m_pTokenCaptureServer;
+	std::atomic<bool> m_bTokenReceived{ false };
 
 	mutable std::recursive_mutex m_AuthTokenMutex;
 	std::shared_ptr<ZAuthToken> m_pAuthToken;
