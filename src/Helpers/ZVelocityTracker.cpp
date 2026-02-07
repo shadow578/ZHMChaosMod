@@ -2,7 +2,7 @@
 
 #include <Glacier/ZSpatialEntity.h>
 
-void ZVelocityTracker::Update(const SGameUpdateEvent& p_UpdateEvent, const ZEntityRef p_Entity)
+void ZVelocityTracker::Update(const SGameUpdateEvent &p_UpdateEvent, const ZEntityRef p_Entity)
 {
     if (!p_Entity)
     {
@@ -15,11 +15,11 @@ void ZVelocityTracker::Update(const SGameUpdateEvent& p_UpdateEvent, const ZEnti
         return;
     }
 
-    const auto s_CurrentPositionWM = s_SpatialEntity->GetWorldMatrix();
+    const auto s_CurrentPositionWM = s_SpatialEntity->GetObjectToWorldMatrix();
     Update(p_UpdateEvent, s_CurrentPositionWM.Trans);
 }
 
-void ZVelocityTracker::Update(const SGameUpdateEvent& p_UpdateEvent, const float4 p_Position)
+void ZVelocityTracker::Update(const SGameUpdateEvent &p_UpdateEvent, const float4 p_Position)
 {
     // first?
     if (!m_bLastPostionValid)
@@ -34,8 +34,7 @@ void ZVelocityTracker::Update(const SGameUpdateEvent& p_UpdateEvent, const float
 
     const STimeDistancePair s_NewPair{
         s_fDistance,
-        p_UpdateEvent.m_GameTimeDelta.ToSeconds()
-    };
+        p_UpdateEvent.m_GameTimeDelta.ToSeconds()};
     m_qSamples.push(s_NewPair);
 
     m_Sum.m_fDistance += s_NewPair.m_fDistance;
@@ -50,9 +49,7 @@ void ZVelocityTracker::Update(const SGameUpdateEvent& p_UpdateEvent, const float
         m_qSamples.pop();
     }
 
-    m_fVelocity = (m_Sum.m_fTimeDelta > 0.0f) ?
-        (m_Sum.m_fDistance / m_Sum.m_fTimeDelta) :
-        0.0f;
+    m_fVelocity = (m_Sum.m_fTimeDelta > 0.0f) ? (m_Sum.m_fDistance / m_Sum.m_fTimeDelta) : 0.0f;
 }
 
 void ZVelocityTracker::Reset()
@@ -63,7 +60,7 @@ void ZVelocityTracker::Reset()
     }
 
     m_bLastPostionValid = false;
-    m_Sum = { 0, 0 };
+    m_Sum = {0, 0};
     m_fVelocity = 0.0f;
     m_LastPosition = float4();
 }

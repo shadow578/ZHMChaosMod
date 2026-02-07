@@ -44,7 +44,7 @@ void ChaosMod::OnEffectTimerTrigger()
     s_pVotingIntegration->StartVote(GetRandomEffectSelection(m_nVoteOptions));
 }
 
-void ChaosMod::ActivateEffect(IChaosEffect* p_pEffect)
+void ChaosMod::ActivateEffect(IChaosEffect* p_pEffect, const float32 p_fForcedDuration)
 {
     if (!p_pEffect || !p_pEffect->Available())
     {
@@ -65,6 +65,11 @@ void ChaosMod::ActivateEffect(IChaosEffect* p_pEffect)
     default:
         s_fDuration = m_fFullEffectDuration;
         break;
+    }
+
+    if (p_fForcedDuration > 0.0f)
+    {
+		s_fDuration = p_fForcedDuration;
     }
 
     const SActiveEffect s_ActiveEffect{

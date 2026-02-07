@@ -37,7 +37,7 @@ void ZOverheadCameraEffect::OnDrawDebugUI()
     ZInterpolatingEffectBase::OnDrawDebugUI();
 }
 
-void ZOverheadCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)
+void ZOverheadCameraEffect::OnFrameUpdate(const SGameUpdateEvent &p_UpdateEvent, const float32 p_fEffectTimeRemaining)
 {
     ZInterpolatingEffectBase::OnFrameUpdate(p_UpdateEvent, p_fEffectTimeRemaining);
 
@@ -51,22 +51,21 @@ void ZOverheadCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent,
     auto s_CameraSpatialEntity = GetEffectCameraEntity().QueryInterface<ZSpatialEntity>();
 
     auto s_Player = SDK()->GetLocalPlayer();
-    auto s_PlayerSpatialEntity = s_Player.m_ref.QueryInterface<ZSpatialEntity>();
+    auto s_PlayerSpatialEntity = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
     if (!s_OriginalCameraSpatialEntity || !s_CameraSpatialEntity || !s_PlayerSpatialEntity)
     {
         Stop();
         return;
     }
 
-    const auto s_OriginalWM = s_OriginalCameraSpatialEntity->GetWorldMatrix();
-    auto s_TargetWM = s_PlayerSpatialEntity->GetWorldMatrix();
+    const auto s_OriginalWM = s_OriginalCameraSpatialEntity->GetObjectToWorldMatrix();
+    auto s_TargetWM = s_PlayerSpatialEntity->GetObjectToWorldMatrix();
 
     // raycast to ceiling, move camera up as far as possible
     s_TargetWM.Trans.z += c_fOverheadMinDistance;
     s_TargetWM.Trans.z = GetMaxOverheadZAt(
         s_TargetWM,
-        c_fOverheadMaxDistance
-    );
+        c_fOverheadMaxDistance);
 
     // rotate facing downwards
     s_TargetWM.XAxis = float4(0.0f, 1.0f, 0.0f, 0.0f);
@@ -76,10 +75,10 @@ void ZOverheadCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent,
     // interpolation
     s_TargetWM = Math::InterpolateAffine(s_OriginalWM, s_TargetWM, GetInterpolationPoint());
 
-    s_CameraSpatialEntity->SetWorldMatrix(s_TargetWM);
+    s_CameraSpatialEntity->SetObjectToWorldMatrixFromEditor(s_TargetWM);
 }
 
-float32 ZOverheadCameraEffect::GetMaxOverheadZAt(const SMatrix& p_Position, const float32 p_fMax)
+float32 ZOverheadCameraEffect::GetMaxOverheadZAt(const SMatrix &p_Position, const float32 p_fMax)
 {
     if (!*Globals::CollisionManager)
     {

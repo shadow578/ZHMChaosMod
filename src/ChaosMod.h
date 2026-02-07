@@ -26,7 +26,7 @@ public: // Plugin Interface
     void OnDrawUI(bool p_HasFocus) override;
 
 private: // Hooks
-    DECLARE_PLUGIN_DETOUR(ChaosMod, void, OnLoadScene, ZEntitySceneContext*, SSceneInitParameters&);
+    DECLARE_PLUGIN_DETOUR(ChaosMod, bool, OnLoadScene, ZEntitySceneContext*, SSceneInitParameters&);
     DECLARE_PLUGIN_DETOUR(ChaosMod, void, OnClearScene, ZEntitySceneContext* th, bool p_FullyUnloadScene);
     DECLARE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th, ESceneLoadingStage stage);
 
@@ -59,6 +59,14 @@ private: // UI & Debug
     void DrawDebugUI(const bool p_bHasFocus);
     void DrawEffectDebugPane();
 
+private: // Test Mode
+    bool m_bTestmodeEnabled = false;
+    size_t m_nTestmodeEffectIndex = 0;
+	float32 m_fTestmodeInterval = 10.0f;
+	float32 m_fTestmodeTimeToNextEffect = 0.0f;
+
+    void UpdateTestMode(const float32 p_fDeltaTime);
+
 private: // Selection & Countdown logic
     struct SActiveEffect
     {
@@ -82,7 +90,7 @@ private: // Selection & Countdown logic
 
     void UpdateEffectTimerEnabled();
     void OnEffectTimerTrigger();
-    void ActivateEffect(IChaosEffect* p_pEffect);
+    void ActivateEffect(IChaosEffect* p_pEffect, const float32 p_fForcedDuration = -1.0f);
     void UpdateEffectExpiration(const float32 p_fDeltaTime);
     std::vector<IChaosEffect*> GetRandomEffectSelection(const int p_nCount);
     bool IsCompatibleWithAllActive(const IChaosEffect* p_pEffect);

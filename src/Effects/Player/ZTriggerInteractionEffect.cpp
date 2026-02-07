@@ -10,11 +10,11 @@
 
 void ZTriggerInteractionEffect::OnEnterScene()
 {
-	const auto& s_aInteractions = Utils::ZEntityFinder()
-		.BlueprintResource<"[assembly:/_pro/design/gamecore/interactionbase.template?/interaction_subaction_noinvestigate.entitytemplate].pc_entityblueprint">()
-		.Find();
+	const auto &s_aInteractions = Utils::ZEntityFinder()
+																		.BlueprintResource<"[assembly:/_pro/design/gamecore/interactionbase.template?/interaction_subaction_noinvestigate.entitytemplate].pc_entityblueprint">()
+																		.Find();
 
-	for (auto& s_rEntity : s_aInteractions)
+	for (auto &s_rEntity : s_aInteractions)
 	{
 		SInteractionSubactionEntityBinding s_Binding(s_rEntity);
 		auto s_rContextObjectSpatial = s_Binding.m_rContextObjectSpatial;
@@ -36,8 +36,7 @@ void ZTriggerInteractionEffect::OnClearScene()
 
 bool ZTriggerInteractionEffect::Available() const
 {
-	return IChaosEffect::Available()
-		&& !m_aInteractionEntities.empty();
+	return IChaosEffect::Available() && !m_aInteractionEntities.empty();
 }
 
 void ZTriggerInteractionEffect::Start()
@@ -48,16 +47,16 @@ void ZTriggerInteractionEffect::Start()
 		return;
 	}
 
-	const auto s_pPlayerSpatial = s_rPlayer.m_ref.QueryInterface<ZSpatialEntity>();
+	const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>();
 	if (!s_pPlayerSpatial)
 	{
 		return;
 	}
 
-	const auto s_vPlayerPosition = s_pPlayerSpatial->GetWorldMatrix().Trans;
+	const auto s_vPlayerPosition = s_pPlayerSpatial->GetObjectToWorldMatrix().Trans;
 
 	std::vector<SInteractionSubactionEntityBinding> s_aNearbyInteractions;
-	for (auto& s_rBinding : m_aInteractionEntities)
+	for (auto &s_rBinding : m_aInteractionEntities)
 	{
 		const auto s_rContextObjectSpatial = s_rBinding.m_rContextObjectSpatial;
 		if (!s_rContextObjectSpatial || !s_rContextObjectSpatial.value())
@@ -65,7 +64,7 @@ void ZTriggerInteractionEffect::Start()
 			continue;
 		}
 
-		const auto s_vInteractionPosition = s_rContextObjectSpatial.value().m_pInterfaceRef->GetWorldMatrix().Trans;
+		const auto s_vInteractionPosition = s_rContextObjectSpatial.value().m_pInterfaceRef->GetObjectToWorldMatrix().Trans;
 
 		const auto s_fDistance = float4::Distance(s_vPlayerPosition, s_vInteractionPosition);
 
@@ -118,4 +117,4 @@ void ZTriggerInteractionEffect::Start()
 }
 
 REGISTER_CHAOS_EFFECT_PARAM(world, ZTriggerInteractionEffect, "world", "Trigger Random Interaction", 9999.0f);
-//REGISTER_CHAOS_EFFECT_PARAM(nearby, ZTriggerInteractionEffect, "nearby", "Trigger Nearby Interaction", 50.0f);
+// REGISTER_CHAOS_EFFECT_PARAM(nearby, ZTriggerInteractionEffect, "nearby", "Trigger Nearby Interaction", 50.0f);

@@ -7,7 +7,6 @@
 
 #define TAG "[ZExplodeNearbyActorsEffect] "
 
-
 constexpr float32 c_fRadius = 10.0f;
 
 void ZExplodeNearbyActorsEffect::Start()
@@ -19,17 +18,17 @@ void ZExplodeNearbyActorsEffect::Start()
         return;
     }
 
-    const auto s_PlayerSpatial = s_Player.m_ref.QueryInterface<ZSpatialEntity>();
+    const auto s_PlayerSpatial = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
     if (!s_PlayerSpatial)
     {
         return;
     }
 
-    const auto s_PlayerWM = s_PlayerSpatial->GetWorldMatrix();
+    const auto s_PlayerWM = s_PlayerSpatial->GetObjectToWorldMatrix();
 
     // spawn explosion at all nearby actors
     const auto s_aAllActors = Utils::GetActors(false, false);
-    for (auto* s_pActor : s_aAllActors)
+    for (auto *s_pActor : s_aAllActors)
     {
         ZEntityRef s_Ref;
         s_pActor->GetID(s_Ref);
@@ -38,13 +37,13 @@ void ZExplodeNearbyActorsEffect::Start()
             continue;
         }
 
-        const auto* s_pActorSpatial = s_Ref.QueryInterface<ZSpatialEntity>();
+        const auto *s_pActorSpatial = s_Ref.QueryInterface<ZSpatialEntity>();
         if (!s_pActorSpatial)
         {
             continue;
         }
 
-        auto s_ActorWM = s_pActorSpatial->GetWorldMatrix();
+        auto s_ActorWM = s_pActorSpatial->GetObjectToWorldMatrix();
         const auto s_fDistance = float4::Distance(s_PlayerWM.Trans, s_ActorWM.Trans);
         if (s_fDistance > c_fRadius)
         {

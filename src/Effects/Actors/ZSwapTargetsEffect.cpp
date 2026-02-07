@@ -15,12 +15,12 @@ void ZSwapTargetsEffect::OnEnterScene()
 {
 	m_aTargetSpatials.clear();
 
-	const auto& s_aMapTrackers = Utils::ZEntityFinder()
-		// probably ok...
-		.EntityName("LD_MapTracker_NPCActor")
-		.Find();
+	const auto &s_aMapTrackers = Utils::ZEntityFinder()
+																	 // probably ok...
+																	 .EntityName("LD_MapTracker_NPCActor")
+																	 .Find();
 
-	for (const auto& s_rMapTracker : s_aMapTrackers)
+	for (const auto &s_rMapTracker : s_aMapTrackers)
 	{
 		// check maker is on "targets" layer
 		const auto s_eLayer = Utils::GetProperty<UIMapLayer_EUIMapLayerID>(s_rMapTracker, "m_eLayer");
@@ -44,9 +44,9 @@ void ZSwapTargetsEffect::OnEnterScene()
 
 		// ensure not duplicates
 		bool s_bShouldAdd = true;
-		for (const auto& s_rExisting : m_aTargetSpatials)
+		for (const auto &s_rExisting : m_aTargetSpatials)
 		{
-			if (s_rExisting.m_ref == s_rSpatial.m_ref)
+			if (s_rExisting.m_entityRef == s_rSpatial.m_entityRef)
 			{
 				s_bShouldAdd = false;
 			}
@@ -66,20 +66,19 @@ void ZSwapTargetsEffect::OnClearScene()
 	m_aTargetSpatials.clear();
 }
 
-
 bool ZSwapTargetsEffect::Available() const
 {
-	return IChaosEffect::Available() && 
-		m_aTargetSpatials.size() >= 2;
+	return IChaosEffect::Available() &&
+				 m_aTargetSpatials.size() >= 2;
 }
 
 void ZSwapTargetsEffect::Start()
 {
 	// gather transforms
 	std::vector<SMatrix> s_aTransforms;
-	for (auto& s_rSpatial : m_aTargetSpatials)
+	for (auto &s_rSpatial : m_aTargetSpatials)
 	{
-		s_aTransforms.push_back(s_rSpatial.m_pInterfaceRef->GetWorldMatrix());
+		s_aTransforms.push_back(s_rSpatial.m_pInterfaceRef->GetObjectToWorldMatrix());
 	}
 
 	// shuffle
@@ -89,10 +88,10 @@ void ZSwapTargetsEffect::Start()
 
 	// reapply transforms in new order
 	size_t s_nIndex = 0;
-	for (auto& s_rSpatial : m_aTargetSpatials)
+	for (auto &s_rSpatial : m_aTargetSpatials)
 	{
-		const auto& s_mTransform = s_aTransforms[s_nIndex];
-		s_rSpatial.m_pInterfaceRef->SetWorldMatrix(s_mTransform);
+		const auto &s_mTransform = s_aTransforms[s_nIndex];
+		s_rSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_mTransform);
 
 		s_nIndex = (s_nIndex + 1) % s_aTransforms.size();
 	}
@@ -100,12 +99,12 @@ void ZSwapTargetsEffect::Start()
 
 void ZSwapTargetsEffect::OnDrawDebugUI()
 {
-	for (auto& s_rTarget : m_aTargetSpatials)
+	for (auto &s_rTarget : m_aTargetSpatials)
 	{
-		const auto* s_pActor = s_rTarget.m_ref.QueryInterface<ZActor>();
+		const auto *s_pActor = s_rTarget.m_entityRef.QueryInterface<ZActor>();
 		if (ImGui::Button(s_pActor->m_sActorName.c_str()))
 		{
-			Utils::TeleportPlayerTo(s_rTarget.m_pInterfaceRef->GetWorldMatrix());
+			Utils::TeleportPlayerTo(s_rTarget.m_pInterfaceRef->GetObjectToWorldMatrix());
 		}
 	}
 }

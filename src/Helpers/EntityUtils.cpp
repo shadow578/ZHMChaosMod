@@ -27,8 +27,8 @@ std::vector<ZEntityRef> Utils::ZEntityFinder::Find(const size_t p_nMaxResults) c
         return s_aFoundEntities;
     }
 
-    std::queue<std::pair<ZEntityBlueprintFactoryBase*, ZEntityRef>> s_qNodeQueue;
-    for (const auto& s_Brick : s_pSceneCtx->m_aLoadedBricks)
+    std::queue<std::pair<ZEntityBlueprintFactoryBase *, ZEntityRef>> s_qNodeQueue;
+    for (const auto &s_Brick : s_pSceneCtx->m_aLoadedBricks)
     {
         const auto s_Entity = s_Brick.m_EntityRef;
         if (!s_Entity)
@@ -54,7 +54,7 @@ std::vector<ZEntityRef> Utils::ZEntityFinder::Find(const size_t p_nMaxResults) c
         const auto s_SubEntityCount = s_pCurrentFactory->GetSubEntitiesCount();
         for (int i = 0; i < s_SubEntityCount; ++i)
         {
-            const ZEntityRef s_SubEntity = s_pCurrentFactory->GetSubEntity(s_CurrentRoot.m_pEntity, i);
+            const ZEntityRef s_SubEntity = s_pCurrentFactory->GetSubEntity(s_CurrentRoot.m_pObj, i);
             const auto s_pSubEntityFactory = s_pCurrentFactory->GetSubEntityBlueprint(i);
 
             if (!s_SubEntity.GetEntity() || !s_SubEntity->GetType())
@@ -76,8 +76,8 @@ std::vector<ZEntityRef> Utils::ZEntityFinder::Find(const size_t p_nMaxResults) c
                 // check max results limit
                 if (p_nMaxResults != 0 && s_aFoundEntities.size() >= p_nMaxResults)
                 {
-				    goto after_outer_loop;
-			    }
+                    goto after_outer_loop;
+                }
             }
         }
     }
@@ -86,12 +86,12 @@ after_outer_loop:
     return s_aFoundEntities;
 }
 
-bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprintFactoryBase* p_pParentFactory, ZEntityBlueprintFactoryBase* p_pSubFactory, int p_nSubIndex) const
+bool Utils::ZEntityFinder::Evaluate(const ZEntityRef &p_rEntity, ZEntityBlueprintFactoryBase *p_pParentFactory, ZEntityBlueprintFactoryBase *p_pSubFactory, int p_nSubIndex) const
 {
     // check entity id
-    if (m_nEntityId.has_value())
+    if (m_nEntityID.has_value())
     {
-        if (p_rEntity->GetType()->m_nEntityId != m_nEntityId.value())
+        if (p_rEntity->GetType()->m_nEntityID != m_nEntityID.value())
         {
             return false;
         }
@@ -123,13 +123,13 @@ bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprin
         if (!p_pSubFactory || p_pSubFactory->m_ridResource != m_ridBlueprint.value())
         {
             return false;
-		}
+        }
     }
 
     return true;
 }
 
-std::string Utils::GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFactoryBase* p_pFactory, int p_nSubIndex)
+std::string Utils::GetEntityName(const ZEntityRef &p_Entity, ZEntityBlueprintFactoryBase *p_pFactory, int p_nSubIndex)
 {
     if (!p_Entity)
     {
@@ -147,7 +147,7 @@ std::string Utils::GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFac
 
     if (p_nSubIndex < 0)
     {
-        p_nSubIndex = p_pFactory->GetSubEntityIndex(p_Entity->GetType()->m_nEntityId);
+        p_nSubIndex = p_pFactory->GetSubEntityIndex(p_Entity->GetType()->m_nEntityID);
         if (p_nSubIndex < 0)
         {
             return "";
@@ -156,7 +156,7 @@ std::string Utils::GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFac
 
     if (p_pFactory->IsTemplateEntityBlueprintFactory())
     {
-        const auto s_pTemplateBpFactory = reinterpret_cast<ZTemplateEntityBlueprintFactory*>(p_pFactory);
+        const auto s_pTemplateBpFactory = reinterpret_cast<ZTemplateEntityBlueprintFactory *>(p_pFactory);
         if (s_pTemplateBpFactory->m_pTemplateEntityBlueprint)
         {
             return s_pTemplateBpFactory->m_pTemplateEntityBlueprint->subEntities[p_nSubIndex].entityName.c_str();
@@ -165,12 +165,12 @@ std::string Utils::GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFac
 
     if (p_pFactory->IsAspectEntityBlueprintFactory())
     {
-        const auto s_pAspectBpFactory = reinterpret_cast<ZAspectEntityBlueprintFactory*>(p_pFactory);
+        const auto s_pAspectBpFactory = reinterpret_cast<ZAspectEntityBlueprintFactory *>(p_pFactory);
         const auto s_SubentityEntry = s_pAspectBpFactory->m_aSubEntitiesLookUp[p_nSubIndex];
         const auto s_nAspectIndex = s_SubentityEntry.m_nAspectIdx;
         const auto s_nSubentityIndex = s_SubentityEntry.m_nSubentityIdx;
 
-        const auto s_pTemplateBpFactory = reinterpret_cast<ZTemplateEntityBlueprintFactory*>(
+        const auto s_pTemplateBpFactory = reinterpret_cast<ZTemplateEntityBlueprintFactory *>(
             s_pAspectBpFactory->m_aBlueprintFactories[s_nAspectIndex]);
         if (s_pTemplateBpFactory->m_pTemplateEntityBlueprint)
         {
@@ -181,7 +181,7 @@ std::string Utils::GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFac
     return "";
 }
 
-std::string Utils::GetEntityTypeName(const ZEntityRef& p_Entity)
+std::string Utils::GetEntityTypeName(const ZEntityRef &p_Entity)
 {
     if (!p_Entity)
     {
@@ -191,13 +191,13 @@ std::string Utils::GetEntityTypeName(const ZEntityRef& p_Entity)
     // FIXME ugly unpacking
     if (const auto s_pEntity = p_Entity.GetEntity())
     {
-        if (const auto s_pType = s_pEntity->GetType(); s_pType->m_pInterfaces)
+        if (const auto s_pType = s_pEntity->GetType(); s_pType->m_pInterfaceData)
         {
-            if (const auto s_pTypeId = (*s_pType->m_pInterfaces)[0].m_pTypeId)
+            if (const auto s_pTypeId = (*s_pType->m_pInterfaceData)[0].m_Type)
             {
-                if (const auto s_pTypeInfo = s_pTypeId->typeInfo())
+                if (const auto s_pTypeInfo = s_pTypeId->GetTypeInfo())
                 {
-                    if (const auto s_pName = s_pTypeInfo->m_pTypeName)
+                    if (const auto s_pName = s_pTypeInfo->pszTypeName)
                     {
                         return s_pName;
                     }
@@ -209,31 +209,31 @@ std::string Utils::GetEntityTypeName(const ZEntityRef& p_Entity)
     return "";
 }
 
-ZEntityBlueprintFactoryBase* Utils::GetEntityBlueprintFactoryFor(ZEntityRef p_rEntity)
+ZEntityBlueprintFactoryBase *Utils::GetEntityBlueprintFactoryFor(ZEntityRef p_rEntity)
 {
     // has BP factory?
-    if (auto* s_pBpFactory = p_rEntity.GetBlueprintFactory())
+    if (auto *s_pBpFactory = p_rEntity.GetBlueprintFactory())
     {
         return s_pBpFactory;
     }
 
     // try get sub-blueprint from owner
-    if (auto* s_pParentBPFactory = GetEntityBlueprintFactoryFor(p_rEntity.GetOwningEntity()))
+    if (auto *s_pParentBPFactory = GetEntityBlueprintFactoryFor(p_rEntity.GetOwningEntity()))
     {
-        const auto s_nEntityId = p_rEntity.GetEntity()->GetType()->m_nEntityId;
+        const auto s_nEntityId = p_rEntity.GetEntity()->GetType()->m_nEntityID;
         if (const auto s_nSubIndex = s_pParentBPFactory->GetSubEntityIndex(s_nEntityId); s_nSubIndex != -1)
         {
-            auto* s_pBPFactory = s_pParentBPFactory->GetSubEntityBlueprint(s_nSubIndex);
+            auto *s_pBPFactory = s_pParentBPFactory->GetSubEntityBlueprint(s_nSubIndex);
 
             // if aspect, get template sub-blueprint
             // TODO untested, does this work?!
             if (s_pBPFactory->IsAspectEntityBlueprintFactory())
             {
-                const auto* s_pAspectBPFactory = reinterpret_cast<const ZAspectEntityBlueprintFactory*>(s_pBPFactory);
+                const auto *s_pAspectBPFactory = reinterpret_cast<const ZAspectEntityBlueprintFactory *>(s_pBPFactory);
 
                 const auto s_AspectSubIndex = s_pAspectBPFactory->m_aSubEntitiesLookUp[s_nSubIndex];
 
-                s_pBPFactory = reinterpret_cast<ZEntityBlueprintFactoryBase*>(s_pAspectBPFactory->m_aBlueprintFactories[s_AspectSubIndex.m_nSubentityIdx]);
+                s_pBPFactory = reinterpret_cast<ZEntityBlueprintFactoryBase *>(s_pAspectBPFactory->m_aBlueprintFactories[s_AspectSubIndex.m_nSubentityIdx]);
             }
 
             return s_pBPFactory;

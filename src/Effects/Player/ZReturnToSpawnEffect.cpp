@@ -17,32 +17,32 @@ void ZReturnToSpawnEffect::OnEnterScene()
     m_aSpawnPoints.clear();
 
     const auto s_aStartingLocations = Utils::ZEntityFinder()
-        .EntityType("ZHeroSpawn")
-        .Find();
+                                          .EntityType("ZHeroSpawn")
+                                          .Find();
     if (s_aStartingLocations.empty())
     {
         return;
     }
 
-    for (const auto& s_StartingLocation : s_aStartingLocations)
+    for (const auto &s_StartingLocation : s_aStartingLocations)
     {
         // attempt to get position property first
         auto s_rPosition = Utils::GetProperty<TEntityRef<ZSpatialEntity>>(s_StartingLocation, "m_rPosition").value_or({});
         if (!s_rPosition)
         {
             // if that fails, fall back to the spatial entity of the location itself
-			s_rPosition = TEntityRef<ZSpatialEntity>(s_StartingLocation);
+            s_rPosition = TEntityRef<ZSpatialEntity>(s_StartingLocation);
             if (!s_rPosition)
             {
                 // give up
                 continue;
-			}
+            }
         }
 
-        m_aSpawnPoints.push_back(s_rPosition.m_pInterfaceRef->GetWorldMatrix());
+        m_aSpawnPoints.push_back(s_rPosition.m_pInterfaceRef->GetObjectToWorldMatrix());
     }
 
-	Logger::Debug(TAG "Found {} spawn points.", m_aSpawnPoints.size());
+    Logger::Debug(TAG "Found {} spawn points.", m_aSpawnPoints.size());
 }
 
 void ZReturnToSpawnEffect::OnClearScene()
@@ -57,21 +57,21 @@ bool ZReturnToSpawnEffect::Available() const
 
 void ZReturnToSpawnEffect::Start()
 {
-	const auto s_SpawnPoint = Math::SelectRandomElement(m_aSpawnPoints);
-	Utils::TeleportPlayerTo(s_SpawnPoint);
+    const auto s_SpawnPoint = Math::SelectRandomElement(m_aSpawnPoints);
+    Utils::TeleportPlayerTo(s_SpawnPoint);
 }
 
 void ZReturnToSpawnEffect::OnDrawDebugUI()
 {
-	ImGui::TextUnformatted(fmt::format("# Spawn Points: {}", m_aSpawnPoints.size()).c_str());
+    ImGui::TextUnformatted(fmt::format("# Spawn Points: {}", m_aSpawnPoints.size()).c_str());
 
     int i = 0;
-    for (const auto& s_SpawnPoint : m_aSpawnPoints)
+    for (const auto &s_SpawnPoint : m_aSpawnPoints)
     {
         if (ImGui::Button(fmt::format("[{}]", i).c_str()))
         {
             Utils::TeleportPlayerTo(s_SpawnPoint);
-		}
+        }
 
         i++;
     }

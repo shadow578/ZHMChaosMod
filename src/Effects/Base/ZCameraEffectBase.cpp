@@ -120,7 +120,7 @@ bool ZCameraEffectBase::EnsureCameraEntity()
     auto s_CameraBpFactory = m_CameraHolderEntity.GetBlueprintFactory();
     if (const auto idx = s_CameraBpFactory->GetSubEntityIndex(0x151b9072f9d0dc77); idx != -1)
     {
-        if (const auto s_Ent = s_CameraBpFactory->GetSubEntity(m_CameraHolderEntity.m_pEntity, idx))
+        if (const auto s_Ent = s_CameraBpFactory->GetSubEntity(m_CameraHolderEntity.m_pObj, idx))
         {
             m_EffectCameraEntity = s_Ent;
         }

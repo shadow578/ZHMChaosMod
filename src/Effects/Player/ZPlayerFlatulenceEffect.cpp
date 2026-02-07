@@ -10,25 +10,25 @@
 
 constexpr auto c_ridSFXFallback = ResId<"[assembly:/sound/wwise/exportedwwisedata/events/props_events/play_sfx_inflatable_deflate_01.wwiseevent].pc_wwisebank">;
 
-void ZPlayerFlatulenceEffect::LoadResources() 
+void ZPlayerFlatulenceEffect::LoadResources()
 {
     ZPoisonAOEDamageEffectBase::LoadResources();
     ZSoundFXEffectBase::LoadResources();
 
-	m_pSFXResource = ZResourceProvider::Create<"[assembly:/sound/wwise/exportedwwisedata/events/chaosmod/play_sfx_flatulence.wwiseevent].pc_wwisebank">();
+    m_pSFXResource = ZResourceProvider::Create<"[assembly:/sound/wwise/exportedwwisedata/events/chaosmod/play_sfx_flatulence.wwiseevent].pc_wwisebank">();
 }
 
-void ZPlayerFlatulenceEffect::OnClearScene() 
+void ZPlayerFlatulenceEffect::OnClearScene()
 {
     ZPoisonAOEDamageEffectBase::OnClearScene();
     ZSoundFXEffectBase::OnClearScene();
 
-	m_pSFXResource = nullptr;
+    m_pSFXResource = nullptr;
 }
 
-void ZPlayerFlatulenceEffect::OnDrawDebugUI() 
+void ZPlayerFlatulenceEffect::OnDrawDebugUI()
 {
-	ImGui::TextUnformatted(fmt::format("SFX Resource: {}", m_pSFXResource->ToString()).c_str());
+    ImGui::TextUnformatted(fmt::format("SFX Resource: {}", m_pSFXResource->ToString()).c_str());
 
     ImGui::SeparatorText("ZPoisonAOEDamageEffectBase");
     ZPoisonAOEDamageEffectBase::OnDrawDebugUI();
@@ -47,7 +47,7 @@ void ZPlayerFlatulenceEffect::Start()
 {
     if (const auto s_Player = SDK()->GetLocalPlayer())
     {
-        if (auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_Player.m_ref))
+        if (auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_Player.m_entityRef))
         {
             // position roughly at ass level when relative to player
             auto s_WM = SMatrix();
@@ -60,19 +60,17 @@ void ZPlayerFlatulenceEffect::Start()
                 .m_Position = s_WM,
                 .m_eType = ZPoisonAOEDamageEffectBase::EPoisonType::SICK,
                 .m_AreaSize = SVector3(8.0f, 8.0f, 8.0f),
-                .m_ParticleColorRangeStart{.r = 25, .g = 240, .b = 0 },
-                .m_ParticleColorRangeEnd{.r = 25, .g = 200, .b = 0 }
-            };
+                .m_ParticleColorRangeStart{.r = 25, .g = 240, .b = 0},
+                .m_ParticleColorRangeEnd{.r = 25, .g = 200, .b = 0}};
             auto s_rPoisonEntity = ZPoisonAOEDamageEffectBase::Spawn(s_PoisonParams);
 
             // sound effect
-            auto s_rSFXEntity = ZSoundFXEffectBase::PlayAt(s_WM, 
-                m_pSFXResource->IsAvailable() ? m_pSFXResource->GetResourceID() : c_ridSFXFallback
-            );
+            auto s_rSFXEntity = ZSoundFXEffectBase::PlayAt(s_WM,
+                                                           m_pSFXResource->IsAvailable() ? m_pSFXResource->GetResourceID() : c_ridSFXFallback);
 
             // set player as parent of entities
-			Utils::SetProperty<TEntityRef<ZSpatialEntity>>(s_rPoisonEntity, "m_eidParent", s_rPlayerSpatial);
-			Utils::SetProperty<TEntityRef<ZSpatialEntity>>(s_rSFXEntity, "m_eidParent", s_rPlayerSpatial);
+            Utils::SetProperty<TEntityRef<ZSpatialEntity>>(s_rPoisonEntity, "m_eidParent", s_rPlayerSpatial);
+            Utils::SetProperty<TEntityRef<ZSpatialEntity>>(s_rSFXEntity, "m_eidParent", s_rPlayerSpatial);
         }
     }
 }

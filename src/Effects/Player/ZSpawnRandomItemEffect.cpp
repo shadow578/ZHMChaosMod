@@ -30,23 +30,20 @@ void ZSpawnRandomItemEffect::Start()
 {
     if (const auto s_Player = SDK()->GetLocalPlayer())
     {
-        if (const auto s_SpatialEntity = s_Player.m_ref.QueryInterface<ZSpatialEntity>())
+        if (const auto s_SpatialEntity = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>())
         {
-            auto s_WM = s_SpatialEntity->GetWorldMatrix();
+            auto s_WM = s_SpatialEntity->GetObjectToWorldMatrix();
 
             // spawn a bit above and in front of the player
             const auto s_Forward = (-s_WM.Backward).Normalized();
             const auto s_Right = s_WM.Right.Normalized();
             const auto s_Up = s_WM.Up.Normalized();
-            s_WM.Trans += s_Forward * 1.2f
-                + s_Up * 1.0f;
+            s_WM.Trans += s_Forward * 1.2f + s_Up * 1.0f;
 
             for (int i = 0; i < m_pCount; i++)
             {
                 // vary spawn position a bit
-                s_WM.Trans += s_Right * Math::GetRandomNumber(-0.2f, 0.2f)
-                    + s_Forward * Math::GetRandomNumber(-0.2f, 0.2f)
-                    + s_Up * Math::GetRandomNumber(-0.2f, 0.2f);
+                s_WM.Trans += s_Right * Math::GetRandomNumber(-0.2f, 0.2f) + s_Forward * Math::GetRandomNumber(-0.2f, 0.2f) + s_Up * Math::GetRandomNumber(-0.2f, 0.2f);
 
                 const auto s_Selection = Math::SelectRandomElement(g_aRepositoryProps);
 
@@ -62,10 +59,10 @@ void ZSpawnRandomItemEffect::Start()
 
 void ZSpawnRandomItemEffect::OnDrawDebugUI()
 {
-    ImGui::TextUnformatted(fmt::format("Repository Props Loaded:", g_aRepositoryProps.size()).c_str());
+    ImGui::TextUnformatted(fmt::format("Repository Props Loaded: {}", g_aRepositoryProps.size()).c_str());
 }
 
-bool ZSpawnRandomItemEffect::SpawnRepositoryPropAt(const ZRepositoryID& p_RepositoryId, const SMatrix s_Transform)
+bool ZSpawnRandomItemEffect::SpawnRepositoryPropAt(const ZRepositoryID &p_RepositoryId, const SMatrix s_Transform)
 {
     const auto s_pScene = Globals::Hitman5Module->m_pEntitySceneContext->m_pScene;
     if (!s_pScene)
@@ -93,19 +90,17 @@ bool ZSpawnRandomItemEffect::SpawnRepositoryPropAt(const ZRepositoryID& p_Reposi
         s_SpawnerEntity,
         "",
         s_SpawnerResource,
-        s_pScene.m_ref,
+        s_pScene.m_entityRef,
         s_DummyExternalRefs,
-        -1
-    );
+        -1);
     Functions::ZEntityManager_NewEntity->Call(
         Globals::EntityManager,
         s_KeyEntity,
         "",
         s_KeyEntityResource,
-        s_pScene.m_ref,
+        s_pScene.m_entityRef,
         s_DummyExternalRefs,
-        -1
-    );
+        -1);
 
     if (!s_SpawnerEntity || !s_KeyEntity)
     {
@@ -124,7 +119,7 @@ bool ZSpawnRandomItemEffect::SpawnRepositoryPropAt(const ZRepositoryID& p_Reposi
     s_pItemSpawner->m_ePhysicsMode = ZItemSpawner::EPhysicsMode::EPM_DYNAMIC; // fall down
     s_pItemSpawner->m_rMainItemKey = s_KeyEntityRef;
     s_pItemSpawner->m_bUsePlacementAttach = false;
-    s_pItemSpawner->SetWorldMatrix(s_Transform);
+    s_pItemSpawner->SetObjectToWorldMatrixFromEditor(s_Transform);
 
     s_KeyEntityRef.m_pInterfaceRef->m_RepositoryId = p_RepositoryId;
 
@@ -152,14 +147,14 @@ bool ZSpawnRandomItemEffect::LoadRepositoryProps()
         return false;
     }
 
-    const auto s_mRepositoryData = static_cast<THashMap<ZRepositoryID, ZDynamicObject, TDefaultHashMapPolicy<ZRepositoryID>>*>(s_RepositoryResource.GetResourceData());
-    for (const auto& [s_RepositoryId, s_Obj] : *s_mRepositoryData)
+    const auto s_mRepositoryData = static_cast<THashMap<ZRepositoryID, ZDynamicObject, TDefaultHashMapPolicy<ZRepositoryID>> *>(s_RepositoryResource.GetResourceData());
+    for (const auto &[s_RepositoryId, s_Obj] : *s_mRepositoryData)
     {
-        const auto* s_pEntries = s_Obj.As<TArray<SDynamicObjectKeyValuePair>>();
+        const auto *s_pEntries = s_Obj.As<TArray<SDynamicObjectKeyValuePair>>();
 
         std::string s_sId, s_sTitle, s_sCommonName, s_sName;
         bool s_bIsItem = false;
-        for (const auto& s_Entry : *s_pEntries)
+        for (const auto &s_Entry : *s_pEntries)
         {
             const std::string s_sKey = std::string(s_Entry.sKey.c_str(), s_Entry.sKey.size());
 
@@ -193,8 +188,7 @@ bool ZSpawnRandomItemEffect::LoadRepositoryProps()
 
             g_aRepositoryProps.push_back(std::make_pair(
                 ZRepositoryID(s_sId),
-                s_sFinalName
-            ));
+                s_sFinalName));
         }
     }
 
@@ -202,14 +196,14 @@ bool ZSpawnRandomItemEffect::LoadRepositoryProps()
     return g_aRepositoryProps.size() > 0;
 }
 
-std::string ZSpawnRandomItemEffect::DynamicObjectToString(const ZDynamicObject& p_DynamicObject)
+std::string ZSpawnRandomItemEffect::DynamicObjectToString(const ZDynamicObject &p_DynamicObject)
 {
-    const auto* s_pType = p_DynamicObject.GetTypeID()->typeInfo();
-    const auto s_sTypeName = std::string(s_pType->m_pTypeName);
+    const auto *s_pType = p_DynamicObject.GetTypeID()->GetTypeInfo();
+    const auto s_sTypeName = std::string(s_pType->pszTypeName);
 
     if (s_sTypeName == "ZString")
     {
-        const auto* s_pValue = p_DynamicObject.As<ZString>();
+        const auto *s_pValue = p_DynamicObject.As<ZString>();
         return s_pValue->c_str();
     }
 

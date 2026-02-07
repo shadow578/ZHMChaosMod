@@ -8,13 +8,15 @@
 
 void ZSlowTimeScaleEffect::Start()
 {
-    m_fPreviousTimeScale = Globals::GameTimeManager->m_fTimeMultiplier1;
-    Globals::GameTimeManager->m_fTimeMultiplier1 = m_fTargetTimeScale;
+    // use m_fDebugTimeMultiplier instead of m_fGameTimeMultiplier, since GameTimeMultiplier is used by the game
+    // for e.g. instinct, and that would interfere with the effect.
+    m_fPreviousTimeScale = Globals::GameTimeManager->m_fDebugTimeMultiplier;
+    Globals::GameTimeManager->m_fDebugTimeMultiplier = m_fTargetTimeScale;
 }
 
 void ZSlowTimeScaleEffect::Stop()
 {
-    Globals::GameTimeManager->m_fTimeMultiplier1 = m_fPreviousTimeScale;
+    Globals::GameTimeManager->m_fDebugTimeMultiplier = m_fPreviousTimeScale;
 }
 
 std::string ZSlowTimeScaleEffect::GetName() const

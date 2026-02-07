@@ -10,16 +10,16 @@
 
 void ZFixPlayerPositionUnlocker::Start()
 {
-    const auto& s_StartingLocation = Utils::ZEntityFinder()
-		.EntityType("ZHeroSpawn")
-		.FindFirst();
+    const auto &s_StartingLocation = Utils::ZEntityFinder()
+                                         .EntityType("ZHeroSpawn")
+                                         .FindFirst();
 
     if (!s_StartingLocation)
     {
         return;
-	}
+    }
 
-	const auto s_rPosition = Utils::GetProperty<TEntityRef<ZSpatialEntity>>(s_StartingLocation, "m_rPosition");
+    const auto s_rPosition = Utils::GetProperty<TEntityRef<ZSpatialEntity>>(s_StartingLocation, "m_rPosition");
     if (!s_rPosition)
     {
         return;
@@ -27,14 +27,13 @@ void ZFixPlayerPositionUnlocker::Start()
 
     if (const auto s_Player = SDK()->GetLocalPlayer())
     {
-        if (const auto s_SpatialEntity = s_Player.m_ref.QueryInterface<ZSpatialEntity>())
+        if (const auto s_SpatialEntity = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>())
         {
-            s_SpatialEntity->SetWorldMatrix(
-                s_rPosition.value().m_pInterfaceRef->GetWorldMatrix()
+            s_SpatialEntity->SetObjectToWorldMatrixFromEditor(
+                s_rPosition.value().m_pInterfaceRef->GetObjectToWorldMatrix()
             );
         }
     }
-
 
     /*
     auto s_Actor = Utils::GetRandomActor(true);
@@ -48,15 +47,15 @@ void ZFixPlayerPositionUnlocker::Start()
     s_Actor->GetID(s_ActorRef);
     auto s_ActorSpatialEntity = s_ActorRef.QueryInterface<ZSpatialEntity>();
 
-    auto s_PlayerSpatialEntity = s_Player.m_ref.QueryInterface<ZSpatialEntity>();
+    auto s_PlayerSpatialEntity = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
 
     if (!s_ActorSpatialEntity || !s_PlayerSpatialEntity)
     {
         return;
     }
 
-    auto s_ActorWM = s_ActorSpatialEntity->GetWorldMatrix();
-    s_PlayerSpatialEntity->SetWorldMatrix(s_ActorWM);
+    auto s_ActorWM = s_ActorSpatialEntity->GetObjectToWorldMatrix();
+    s_PlayerSpatialEntity->SetObjectToWorldMatrixFromEditor(s_ActorWM);
     */
 }
 

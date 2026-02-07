@@ -19,7 +19,7 @@ void ZFireworksEffect::OnClearScene()
 bool ZFireworksEffect::Available() const
 {
 	return IChaosEffect::Available() &&
-		m_pFireworksSpawner && m_pFireworksSpawner->IsAvailable();
+				 m_pFireworksSpawner && m_pFireworksSpawner->IsAvailable();
 }
 
 void ZFireworksEffect::OnDrawDebugUI()
@@ -37,14 +37,14 @@ void ZFireworksEffect::Start()
 
 	// aquire refs to sub-entities
 	ZEntityRef s_rFireworksFXEntity,
-		s_rSwirlMachine1, s_rSwirlMachine2,
-		s_rTimer0, s_rTimer1, s_rTimer2, s_rTimer3;
-	if (auto* s_pBlueprint = s_rFireworksBarge.GetBlueprintFactory())
+			s_rSwirlMachine1, s_rSwirlMachine2,
+			s_rTimer0, s_rTimer1, s_rTimer2, s_rTimer3;
+	if (auto *s_pBlueprint = s_rFireworksBarge.GetBlueprintFactory())
 	{
 		// Fireworks
 		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x3fa6ea87b6e7bfec); s_nIdx != -1)
 		{
-			if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pEntity, s_nIdx))
+			if (auto *s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
 			{
 				s_rFireworksFXEntity = ZEntityRef(s_pEntity);
 			}
@@ -53,7 +53,7 @@ void ZFireworksEffect::Start()
 		// firework_swirlmachine_a
 		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x0d26e9029d9cdb1a); s_nIdx != -1)
 		{
-			if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pEntity, s_nIdx))
+			if (auto *s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
 			{
 				s_rSwirlMachine1 = ZEntityRef(s_pEntity);
 			}
@@ -62,7 +62,7 @@ void ZFireworksEffect::Start()
 		// firework_swirlmachine_a01
 		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x03c72250d57f0356); s_nIdx != -1)
 		{
-			if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pEntity, s_nIdx))
+			if (auto *s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
 			{
 				s_rSwirlMachine2 = ZEntityRef(s_pEntity);
 			}
@@ -71,7 +71,7 @@ void ZFireworksEffect::Start()
 		// TimerSimple
 		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0xbc53160f645abffc); s_nIdx != -1)
 		{
-			if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pEntity, s_nIdx))
+			if (auto *s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
 			{
 				s_rTimer0 = ZEntityRef(s_pEntity);
 			}
@@ -80,7 +80,7 @@ void ZFireworksEffect::Start()
 		// TimerSimple01
 		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x36a50d14be2f2f88); s_nIdx != -1)
 		{
-			if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pEntity, s_nIdx))
+			if (auto *s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
 			{
 				s_rTimer1 = ZEntityRef(s_pEntity);
 			}
@@ -89,7 +89,7 @@ void ZFireworksEffect::Start()
 		// TimerSimple02
 		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0xdd9b974ddf3feda5); s_nIdx != -1)
 		{
-			if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pEntity, s_nIdx))
+			if (auto *s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
 			{
 				s_rTimer2 = ZEntityRef(s_pEntity);
 			}
@@ -98,7 +98,7 @@ void ZFireworksEffect::Start()
 		// TimerSimple03
 		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x3ac42cc89a95ba81); s_nIdx != -1)
 		{
-			if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pEntity, s_nIdx))
+			if (auto *s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
 			{
 				s_rTimer3 = ZEntityRef(s_pEntity);
 			}
@@ -113,11 +113,11 @@ void ZFireworksEffect::Start()
 	// detach FX entity from barge and move barge out of sight
 	Utils::SetProperty<ZEntityRef>(s_rFireworksFXEntity, "m_eidParent", ZEntityRef{});
 	Utils::SetProperty<bool>(s_rFireworksBarge, "m_bVisible", false);
-	if (auto* s_pBargeSpatial = s_rFireworksBarge.QueryInterface<ZSpatialEntity>())
+	if (auto *s_pBargeSpatial = s_rFireworksBarge.QueryInterface<ZSpatialEntity>())
 	{
 		SMatrix s_mWorldAway;
 		s_mWorldAway.Trans.z -= 1000;
-		s_pBargeSpatial->SetWorldMatrix(s_mWorldAway);
+		s_pBargeSpatial->SetObjectToWorldMatrixFromEditor(s_mWorldAway);
 	}
 
 	// hide swirlmachines (yes, IOI calls them that...)
@@ -149,9 +149,9 @@ void ZFireworksEffect::Start()
 	{
 		if (auto s_rPlayer = SDK()->GetLocalPlayer())
 		{
-			if (auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_rPlayer.m_ref))
+			if (auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_rPlayer.m_entityRef))
 			{
-				s_rFireworksFXSpatial.m_pInterfaceRef->SetWorldMatrix(s_rPlayerSpatial.m_pInterfaceRef->GetWorldMatrix());
+				s_rFireworksFXSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_rPlayerSpatial.m_pInterfaceRef->GetObjectToWorldMatrix());
 			}
 		}
 	}

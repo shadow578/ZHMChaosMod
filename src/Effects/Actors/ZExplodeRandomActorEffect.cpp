@@ -8,7 +8,6 @@
 
 #define TAG "[ZExplodeRandomActorEffect] "
 
-
 void ZExplodeRandomActorEffect::Start()
 {
     m_pLastTarget = Utils::GetRandomActor(true);
@@ -25,16 +24,15 @@ void ZExplodeRandomActorEffect::Start()
         return;
     }
 
-    const auto* s_pActorSpatial = s_EntityRef.QueryInterface<ZSpatialEntity>();
+    const auto *s_pActorSpatial = s_EntityRef.QueryInterface<ZSpatialEntity>();
     if (!s_pActorSpatial)
     {
         return;
     }
 
     // offset a bit upwards so it doesn't clip into the ground
-    m_LastTargetPos = s_pActorSpatial->GetWorldMatrix();
+    m_LastTargetPos = s_pActorSpatial->GetObjectToWorldMatrix();
     m_LastTargetPos.Trans.z += 0.25f;
-
 
     SExplosionParams s_ExplosionParams{
         .m_Position = m_LastTargetPos,
