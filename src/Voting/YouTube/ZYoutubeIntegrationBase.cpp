@@ -56,7 +56,10 @@ void ZYoutubeIntegrationBase::DrawConfigUI()
 		return;
 	}
 
-	ImGui::TextDisabled("YouTube Integration is experimental. Please report any issues you encounter.");
+	const auto& s_Style = ImGui::GetStyle();
+	ImGui::PushStyleColor(ImGuiCol_Text, s_Style.Colors[ImGuiCol_TextDisabled]);
+	ImGui::TextWrapped("YouTube Integration is experimental. Please report any issues you encounter.");
+	ImGui::PopStyleColor();
 
 	if (m_pYoutubeAuth->IsAuthorized())
 	{
