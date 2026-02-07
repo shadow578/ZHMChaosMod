@@ -462,6 +462,14 @@ void ChaosMod::DrawEffectDebugPane()
         60.0f
     );
 
+    if (ImGui::Button("Trigger Effect Activation"))
+    {
+        m_qDeferredFrameUpdateActions.push([this]()
+            {
+				ActivateEffect(m_pEffectForDebug);
+			});
+    }
+
     if (ImGui::Button("Print Compatibility"))
     {
         Logger::Info(TAG "Compatibility for A='{}':", m_pEffectForDebug->GetName());
