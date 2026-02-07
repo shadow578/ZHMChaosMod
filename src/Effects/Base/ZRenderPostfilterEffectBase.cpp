@@ -58,8 +58,8 @@ bool ZRenderPostfilterEffectBase::Available() const
 
 void ZRenderPostfilterEffectBase::OnDrawDebugUI()
 {
-	ImGui::TextUnformatted(fmt::format("Layer Entity ID: {:016X}", m_PostfilterLayer.m_rEntity.GetEntity()->GetType()->m_nEntityId).c_str());
-	ImGui::TextUnformatted(fmt::format("Parameters Entity ID: {:016X}", m_PostfilterParameters.m_rEntity.GetEntity()->GetType()->m_nEntityId).c_str());
+	ImGui::TextUnformatted(fmt::format("Layer Entity ID: {:016X}", m_PostfilterLayer.m_rEntity.GetEntity()->GetType()->m_nEntityID).c_str());
+	ImGui::TextUnformatted(fmt::format("Parameters Entity ID: {:016X}", m_PostfilterParameters.m_rEntity.GetEntity()->GetType()->m_nEntityID).c_str());
 }
 
 void ZRenderPostfilterEffectBase::BlendIn(const float32 p_fBlendInDuration)
