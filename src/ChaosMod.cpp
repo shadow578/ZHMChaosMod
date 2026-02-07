@@ -293,7 +293,6 @@ void ChaosMod::UpdateTestMode(const float32 p_fDeltaTime)
             return;
         }
 
-        m_nTestmodeEffectIndex = (m_nTestmodeEffectIndex + 1) % s_aEffects.size();
         const auto s_pEffect = s_aEffects[m_nTestmodeEffectIndex].get();
         if (s_pEffect)
         {
@@ -302,6 +301,7 @@ void ChaosMod::UpdateTestMode(const float32 p_fDeltaTime)
 			ActivateEffect(s_pEffect, m_fTestmodeInterval - 1.0f);
         }
 
+        m_nTestmodeEffectIndex = (m_nTestmodeEffectIndex + 1) % s_aEffects.size();
         m_fTestmodeTimeToNextEffect = m_fTestmodeInterval;
     }
 }

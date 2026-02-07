@@ -61,7 +61,7 @@ private: // UI & Debug
 
 private: // Test Mode
     bool m_bTestmodeEnabled = false;
-	size_t m_nTestmodeEffectIndex = -1; // so first increment brings it to 0
+    size_t m_nTestmodeEffectIndex = 0;
 	float32 m_fTestmodeInterval = 10.0f;
 	float32 m_fTestmodeTimeToNextEffect = 0.0f;
 

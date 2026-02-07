@@ -341,7 +341,7 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 
 		ImGui::Checkbox("Test Mode", &m_bTestmodeEnabled);
 		ImGui::SameLine();
-		ImGui::SliderFloat("##tm_interval", &m_fTestmodeInterval, 1.0f, 30.0f, "Interval: %.1f s");
+		ImGui::SliderFloat("##tm_interval", &m_fTestmodeInterval, 2.0f, 30.0f, "Interval: %.1f s");
         
         if (m_bTestmodeEnabled)
         {
