@@ -43,6 +43,9 @@ target_link_libraries(ChaosMod
     ZHMModSDK
     Microsoft::DirectX-Guids
     Microsoft::DirectX-Headers
+    implot
+
+    # Voting Integrations
     ixwebsocket::ixwebsocket
     nlohmann_json::nlohmann_json
     bcrypt
