@@ -220,10 +220,10 @@ IVotingIntegration* ChaosMod::GetDefaultVotingIntegration()
     return nullptr;
 }
 
-DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnLoadScene, ZEntitySceneContext* th, SSceneInitParameters&)
+DEFINE_PLUGIN_DETOUR(ChaosMod, bool, OnLoadScene, ZEntitySceneContext* th, SSceneInitParameters&)
 {
     OnLoadOrClearScene();
-    return HookResult<void>(HookAction::Continue());
+    return HookResult<bool>(HookAction::Continue());
 }
 
 DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnClearScene, ZEntitySceneContext* th, bool p_FullyUnloadScene)
