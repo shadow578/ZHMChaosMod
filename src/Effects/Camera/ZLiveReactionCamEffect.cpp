@@ -104,7 +104,7 @@ TEntityRef<ZSpatialEntity> ZLiveReactionCamEffect::GetRandomActorHeadAttachEntit
 	{
 		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(c_nHeadEntityId); s_nIdx != -1)
 		{
-			if (auto *s_pHead = s_pBlueprint->GetSubEntity(s_rActor.m_pEntity, s_nIdx); s_pHead != nullptr)
+			if (auto *s_pHead = s_pBlueprint->GetSubEntity(s_rActor.m_pObj, s_nIdx); s_pHead != nullptr)
 			{
 				return TEntityRef<ZSpatialEntity>(ZEntityRef(s_pHead));
 			}
@@ -128,7 +128,7 @@ TEntityRef<ZSpatialEntity> ZLiveReactionCamEffect::GetPlayerHeadAttachEntity()
 	{
 		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(c_nHeadEntityId); s_nIdx != -1)
 		{
-			if (auto *s_pHead = s_pBlueprint->GetSubEntity(s_rPlayer.m_entityRef.m_pEntity, s_nIdx); s_pHead != nullptr)
+			if (auto *s_pHead = s_pBlueprint->GetSubEntity(s_rPlayer.m_entityRef.m_pObj, s_nIdx); s_pHead != nullptr)
 			{
 				return TEntityRef<ZSpatialEntity>(ZEntityRef(s_pHead));
 			}
@@ -191,7 +191,7 @@ void ZLiveReactionCamEffect::SpawnLiveReactionCam(TEntityRef<ZSpatialEntity> p_r
 	{
 		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x2c2b10f742467d79); s_nIdx != -1)
 		{
-			if (auto *s_pLookAtTrigger = s_pBlueprint->GetSubEntity(m_rPIPCameraEntity.m_pEntity, s_nIdx); s_pLookAtTrigger != nullptr)
+			if (auto *s_pLookAtTrigger = s_pBlueprint->GetSubEntity(m_rPIPCameraEntity.m_pObj, s_nIdx); s_pLookAtTrigger != nullptr)
 			{
 				auto s_rLookAtTrigger = ZEntityRef(s_pLookAtTrigger);
 

@@ -126,7 +126,7 @@ bool ZPoisonAOEDamageEffectBase::GetPoisonKeywordEntity(const EPoisonType p_eTyp
 
     if (const auto idx = s_pPropRTBpFactory->GetSubEntityIndex(static_cast<int>(p_eType)); idx != -1)
     {
-        if (const auto s_Ent = s_pPropRTBpFactory->GetSubEntity(p_RootEntity.m_pEntity, idx))
+        if (const auto s_Ent = s_pPropRTBpFactory->GetSubEntity(p_RootEntity.m_pObj, idx))
         {
             p_KeywordEntity = s_Ent;
             return true;

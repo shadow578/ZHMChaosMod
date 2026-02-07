@@ -20,13 +20,13 @@ ZVelocityBasedTimeScaleEffect::ZVelocityBasedTimeScaleEffect()
 
 void ZVelocityBasedTimeScaleEffect::Start()
 {
-    m_fPreviousTimeScale = Globals::GameTimeManager->m_fTimeMultiplier1;
+    m_fPreviousTimeScale = Globals::GameTimeManager->m_fDebugTimeMultiplier;
     m_bActive = true;
 }
 
 void ZVelocityBasedTimeScaleEffect::Stop()
 {
-    Globals::GameTimeManager->m_fTimeMultiplier1 = m_fPreviousTimeScale;
+    Globals::GameTimeManager->m_fDebugTimeMultiplier = m_fPreviousTimeScale;
     m_bActive = false;
 }
 
@@ -47,7 +47,7 @@ void ZVelocityBasedTimeScaleEffect::OnFrameUpdate(const SGameUpdateEvent &p_Upda
 
     if (m_VelocityTracker.IsVelocityValid())
     {
-        Globals::GameTimeManager->m_fTimeMultiplier1 = std::clamp(
+        Globals::GameTimeManager->m_fDebugTimeMultiplier = std::clamp(
             m_VelocityTracker.GetVelocity() * m_fVelocityToTimeScaleFactor,
             0.05f, // not 0 since that would freeze the game completely
             1.0f);
@@ -57,7 +57,7 @@ void ZVelocityBasedTimeScaleEffect::OnFrameUpdate(const SGameUpdateEvent &p_Upda
 void ZVelocityBasedTimeScaleEffect::OnDrawDebugUI()
 {
     ImGui::TextUnformatted(fmt::format("Time Scale: {:.2f}",
-                                       Globals::GameTimeManager->m_fTimeMultiplier1)
+                                       Globals::GameTimeManager->m_fDebugTimeMultiplier)
                                .c_str());
 
     ImGui::TextUnformatted(fmt::format("Velocity: {:.2f}{}",

@@ -14,7 +14,7 @@ std::vector<ZActor *> Utils::GetActors(const bool p_bIncludeDead, const bool p_b
 
     for (uint16 i = 0; i < *Globals::NextActorId; i++)
     {
-        auto s_pActor = Globals::ActorManager->m_aActiveActors[i].m_pInterfaceRef;
+        auto s_pActor = Globals::ActorManager->m_aActors[i].m_pInterfaceRef;
         if (!s_pActor)
         {
             continue;

@@ -198,8 +198,8 @@ bool ZSpawnRandomItemEffect::LoadRepositoryProps()
 
 std::string ZSpawnRandomItemEffect::DynamicObjectToString(const ZDynamicObject &p_DynamicObject)
 {
-    const auto *s_pType = p_DynamicObject.GetTypeID()->typeInfo();
-    const auto s_sTypeName = std::string(s_pType->m_pTypeName);
+    const auto *s_pType = p_DynamicObject.GetTypeID()->GetTypeInfo();
+    const auto s_sTypeName = std::string(s_pType->pszTypeName);
 
     if (s_sTypeName == "ZString")
     {

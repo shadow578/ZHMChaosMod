@@ -54,7 +54,7 @@ std::vector<ZEntityRef> Utils::ZEntityFinder::Find(const size_t p_nMaxResults) c
         const auto s_SubEntityCount = s_pCurrentFactory->GetSubEntitiesCount();
         for (int i = 0; i < s_SubEntityCount; ++i)
         {
-            const ZEntityRef s_SubEntity = s_pCurrentFactory->GetSubEntity(s_CurrentRoot.m_pEntity, i);
+            const ZEntityRef s_SubEntity = s_pCurrentFactory->GetSubEntity(s_CurrentRoot.m_pObj, i);
             const auto s_pSubEntityFactory = s_pCurrentFactory->GetSubEntityBlueprint(i);
 
             if (!s_SubEntity.GetEntity() || !s_SubEntity->GetType())
@@ -191,13 +191,13 @@ std::string Utils::GetEntityTypeName(const ZEntityRef &p_Entity)
     // FIXME ugly unpacking
     if (const auto s_pEntity = p_Entity.GetEntity())
     {
-        if (const auto s_pType = s_pEntity->GetType(); s_pType->m_pInterfaces)
+        if (const auto s_pType = s_pEntity->GetType(); s_pType->m_pInterfaceData)
         {
-            if (const auto s_pTypeId = (*s_pType->m_pInterfaces)[0].m_pTypeId)
+            if (const auto s_pTypeId = (*s_pType->m_pInterfaceData)[0].m_Type)
             {
-                if (const auto s_pTypeInfo = s_pTypeId->typeInfo())
+                if (const auto s_pTypeInfo = s_pTypeId->GetTypeInfo())
                 {
-                    if (const auto s_pName = s_pTypeInfo->m_pTypeName)
+                    if (const auto s_pName = s_pTypeInfo->pszTypeName)
                     {
                         return s_pName;
                     }
