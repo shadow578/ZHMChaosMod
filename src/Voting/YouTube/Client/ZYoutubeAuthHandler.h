@@ -83,6 +83,8 @@ private:
 	const std::string m_sApiScope;
 	const int m_nTokenCapturePort;
 
+	std::string m_sCurrentOAuthState;
+
 	mutable std::recursive_mutex m_TokenCaptureServerMutex;
 	std::thread m_TokenCaptureServerThread;
 	std::unique_ptr<ix::HttpServer> m_pTokenCaptureServer;

@@ -40,10 +40,11 @@ constexpr std::string GetTokenCapturePage()
 <script>
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
-    if (code) {
-        window.location.href = '/auth?code=' + code; // invalid, but expected by server
+    const state = params.get('state');
+    if (code && state) {
+        window.location.href = '/auth?code=' + code + '&state=' + state; // invalid, but expected by server
     } else {
-        document.body.innerHTML = '<h1>Sign-in Failed</h1><p>No access token received. Please try again.</p>';
+        document.body.innerHTML = '<h1>Sign-in Failed</h1><p>No access token or state received. Please try again.</p>';
     }
 </script>
 )html");

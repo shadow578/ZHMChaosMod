@@ -6,6 +6,7 @@
 
 #include "Helpers/Net/UrlUtils.h"
 #include "Helpers/Utils.h"
+#include "Helpers/Math.h"
 
 #include <ixwebsocket/IXHttpServer.h>
 
@@ -27,13 +28,16 @@ ZYoutubeAuthHandler::~ZYoutubeAuthHandler()
 
 std::string ZYoutubeAuthHandler::GetAuthorizationUrl()
 {
+	m_sCurrentOAuthState = std::to_string(Math::GetRandomNumber(100000, 9999999));
+
 	return UrlUtils::BuildQueryUrl("https://accounts.google.com/o/oauth2/v2/auth", {
 		{ "client_id", m_sClientId },
 		{ "redirect_uri", ("http://localhost:" + std::to_string(m_nTokenCapturePort)) },
 		{ "scope", m_sApiScope },
 		{ "response_type", "code" },
 		{ "access_type", "offline" },
-		{ "prompt", "consent" }
+		{ "prompt", "consent" },
+		{ "state", m_sCurrentOAuthState }
 		});
 }
 
@@ -130,9 +134,9 @@ void ZYoutubeAuthHandler::RunTokenCaptureServer()
 					);
 				}
 
-				if (s_sUriPath == "/auth") // /auth?code=<code>
+				if (s_sUriPath == "/auth") // /auth?code=<code>&state=<state>
 				{
-					std::string s_sCode;
+					std::string s_sCode, s_sState;
 
 					auto s_nStartPos = s_sUri.find("code=");
 					if (s_nStartPos != std::string::npos)
@@ -158,10 +162,46 @@ void ZYoutubeAuthHandler::RunTokenCaptureServer()
 						);
 					}
 
-					Logger::Debug(TAG "Received authorization code: {}", s_sCode);
+					s_nStartPos = s_sUri.find("state=");
+					if (s_nStartPos != std::string::npos)
+					{
+						s_nStartPos += 6; // len("state=")
+
+						auto s_nEndPos = s_sUri.find('&', s_nStartPos);
+						if (s_nEndPos == std::string::npos)
+						{
+							s_nEndPos = s_sUri.length();
+						}
+
+						s_sState = s_sUri.substr(s_nStartPos, s_nEndPos - s_nStartPos);
+					}
+
+					if (s_sState.empty())
+					{
+						return std::make_shared<ix::HttpResponse>(
+							400, "Bad Request",
+							ix::HttpErrorCode::Ok,
+							ix::WebSocketHttpHeaders{ {"Content-Type", "text/html"} },
+							GetTokenErrorPage("No state received.")
+						);
+					}
+
+					Logger::Debug(TAG "Received authorization code '{}' for state '{}'", s_sCode, s_sState);
+
+					// ensure state matches expected
+					if (s_sState != m_sCurrentOAuthState)
+					{
+						Logger::Error("Received OAuth state '{}' does not match expected value '{}'!", s_sState, m_sCurrentOAuthState);
+						return std::make_shared<ix::HttpResponse>(
+							400, "Bad Request",
+							ix::HttpErrorCode::Ok,
+							ix::WebSocketHttpHeaders{ {"Content-Type", "text/html"} },
+							GetTokenErrorPage("Invalid state received.")
+						);
+					}
 
 					const auto s_pAuthToken = ZAuthToken::FromAuthCode(
-						m_sClientId, 
+						m_sClientId,
 						s_sCode,
 						("http://localhost:" + std::to_string(m_nTokenCapturePort))
 					);
