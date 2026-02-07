@@ -29,8 +29,8 @@ void ZFixPlayerPositionUnlocker::Start()
     {
         if (const auto s_SpatialEntity = s_Player.m_ref.QueryInterface<ZSpatialEntity>())
         {
-            s_SpatialEntity->SetWorldMatrix(
-                s_rPosition.value().m_pInterfaceRef->GetWorldMatrix()
+            s_SpatialEntity->SetObjectToWorldMatrixFromEditor(
+                s_rPosition.value().m_pInterfaceRef->GetObjectToWorldMatrix()
             );
         }
     }
@@ -55,8 +55,8 @@ void ZFixPlayerPositionUnlocker::Start()
         return;
     }
 
-    auto s_ActorWM = s_ActorSpatialEntity->GetWorldMatrix();
-    s_PlayerSpatialEntity->SetWorldMatrix(s_ActorWM);
+    auto s_ActorWM = s_ActorSpatialEntity->GetObjectToWorldMatrix();
+    s_PlayerSpatialEntity->SetObjectToWorldMatrixFromEditor(s_ActorWM);
     */
 }
 

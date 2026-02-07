@@ -39,7 +39,7 @@ void ZCameraFOVEffectBase::OnDrawDebugUI()
     ZInterpolatingEffectBase::OnDrawDebugUI();
 }
 
-void ZCameraFOVEffectBase::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)
+void ZCameraFOVEffectBase::OnFrameUpdate(const SGameUpdateEvent &p_UpdateEvent, const float32 p_fEffectTimeRemaining)
 {
     ZInterpolatingEffectBase::OnFrameUpdate(p_UpdateEvent, p_fEffectTimeRemaining);
 
@@ -58,13 +58,13 @@ void ZCameraFOVEffectBase::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, 
     }
 
     // copy stock player camera
-    const auto s_OriginalWM = s_OriginalCameraSpatialEntity->GetWorldMatrix();
-    s_CameraSpatialEntity->SetWorldMatrix(s_OriginalWM);
+    const auto s_OriginalWM = s_OriginalCameraSpatialEntity->GetObjectToWorldMatrix();
+    s_CameraSpatialEntity->SetObjectToWorldMatrixFromEditor(s_OriginalWM);
 
     // get original FOV once for interpolation
     if (m_fOriginalFOV <= 0.0f)
     {
-		m_fOriginalFOV = Utils::GetProperty<float32>(GetOriginalCameraEntity(), c_CameraFOVPropertyName).value_or(80.0f);
+        m_fOriginalFOV = Utils::GetProperty<float32>(GetOriginalCameraEntity(), c_CameraFOVPropertyName).value_or(80.0f);
     }
 
     auto s_fTargetFOV = m_fTargetFOV;

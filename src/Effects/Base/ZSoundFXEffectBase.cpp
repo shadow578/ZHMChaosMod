@@ -11,7 +11,7 @@
 
 void ZSoundFXEffectBase::LoadResources()
 {
-	m_pSoundPlayerSpawner = ZTemplateEntitySpawner::Create<"[assembly:/_pro/chaosmod/sfxplayer.entitytemplate].pc_entitytype">();
+    m_pSoundPlayerSpawner = ZTemplateEntitySpawner::Create<"[assembly:/_pro/chaosmod/sfxplayer.entitytemplate].pc_entitytype">();
 }
 
 void ZSoundFXEffectBase::OnClearScene()
@@ -22,8 +22,8 @@ void ZSoundFXEffectBase::OnClearScene()
 bool ZSoundFXEffectBase::Available() const
 {
     return IChaosEffect::Available() &&
-        m_pSoundPlayerSpawner &&
-        m_pSoundPlayerSpawner->IsAvailable();
+           m_pSoundPlayerSpawner &&
+           m_pSoundPlayerSpawner->IsAvailable();
 }
 
 void ZSoundFXEffectBase::OnDrawDebugUI()
@@ -38,7 +38,7 @@ void ZSoundFXEffectBase::OnDrawDebugUI()
         {
             if (const auto s_PlayerSpatial = s_Player.m_ref.QueryInterface<ZSpatialEntity>())
             {
-                auto s_WM = s_PlayerSpatial->GetWorldMatrix();
+                auto s_WM = s_PlayerSpatial->GetObjectToWorldMatrix();
 
                 const auto s_Forward = (-s_WM.Backward).Normalized();
                 s_WM.Trans += s_Forward * 5.0f;
@@ -52,24 +52,24 @@ void ZSoundFXEffectBase::OnDrawDebugUI()
     ImGui::EndDisabled();
 }
 
-ZEntityRef ZSoundFXEffectBase::PlayAt(const SMatrix& p_Position, const ZRuntimeResourceID& p_SoundResource)
+ZEntityRef ZSoundFXEffectBase::PlayAt(const SMatrix &p_Position, const ZRuntimeResourceID &p_SoundResource)
 {
     if (!m_pSoundPlayerSpawner)
     {
         return {};
     }
 
-	auto s_RootEntity = m_pSoundPlayerSpawner->SpawnAs<ZSpatialEntity>();
+    auto s_RootEntity = m_pSoundPlayerSpawner->SpawnAs<ZSpatialEntity>();
     if (!s_RootEntity)
     {
         Logger::Debug(TAG "Failed to spawn SFX player entity.");
         return {};
     }
 
-    s_RootEntity.m_pInterfaceRef->SetWorldMatrix(p_Position);
-	Utils::SetProperty<ZRuntimeResourceID>(s_RootEntity.m_ref, "m_pMainEvent", p_SoundResource);
+    s_RootEntity.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(p_Position);
+    Utils::SetProperty<ZRuntimeResourceID>(s_RootEntity.m_entityRef, "m_pMainEvent", p_SoundResource);
 
     s_RootEntity.m_ref.SignalInputPin("Start");
 
-	return s_RootEntity.m_ref;
+    return s_RootEntity.m_ref;
 }

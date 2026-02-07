@@ -21,11 +21,11 @@ bool Utils::TeleportPlayerTo(const SMatrix p_Position)
         return false;
     }
 
-    s_PlayerSpatialEntity->SetWorldMatrix(p_Position);
+    s_PlayerSpatialEntity->SetObjectToWorldMatrixFromEditor(p_Position);
     return true;
 }
 
-bool Utils::SetPlayerOutfit(const std::string& p_sCommonName, TEntityRef<ZGlobalOutfitKit>& p_OutfitOut)
+bool Utils::SetPlayerOutfit(const std::string &p_sCommonName, TEntityRef<ZGlobalOutfitKit> &p_OutfitOut)
 {
     const auto s_Player = SDK()->GetLocalPlayer();
     if (!s_Player)
@@ -33,15 +33,15 @@ bool Utils::SetPlayerOutfit(const std::string& p_sCommonName, TEntityRef<ZGlobal
         return false;
     }
 
-    const auto* s_pContentKitManager = Globals::ContentKitManager;
+    const auto *s_pContentKitManager = Globals::ContentKitManager;
     if (!s_pContentKitManager)
     {
         return false;
     }
 
-    for (const auto& s_KV : s_pContentKitManager->m_repositoryGlobalOutfitKits)
+    for (const auto &s_KV : s_pContentKitManager->m_repositoryGlobalOutfitKits)
     {
-        const auto& s_OutfitKit = s_KV.second;
+        const auto &s_OutfitKit = s_KV.second;
         if (!s_OutfitKit || !s_OutfitKit.m_pInterfaceRef)
         {
             continue;
@@ -61,15 +61,13 @@ bool Utils::SetPlayerOutfit(const std::string& p_sCommonName, TEntityRef<ZGlobal
         return false;
     }
 
-
     Functions::ZHitman5_SetOutfit->Call(
         s_Player.m_pInterfaceRef,
         p_OutfitOut,
         0,
         0,
         false,
-        false
-    );
+        false);
 
     return true;
 }

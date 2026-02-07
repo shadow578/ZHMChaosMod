@@ -29,12 +29,12 @@ void ZExplodeActorsOnTouchEffect::OnSlowUpdate(const float32 p_fDeltaTime, const
         return;
     }
 
-    const auto s_PlayerWM = s_PlayerSpatial->GetWorldMatrix();
+    const auto s_PlayerWM = s_PlayerSpatial->GetObjectToWorldMatrix();
 
     // spawn explosion at all nearby actors
     m_fNearestActorDistance = 9999.0f;
     const auto s_aAllActors = Utils::GetActors(true, true);
-    for (auto* s_pActor : s_aAllActors)
+    for (auto *s_pActor : s_aAllActors)
     {
         ZEntityRef s_Ref;
         s_pActor->GetID(s_Ref);
@@ -43,13 +43,13 @@ void ZExplodeActorsOnTouchEffect::OnSlowUpdate(const float32 p_fDeltaTime, const
             continue;
         }
 
-        const auto* s_pActorSpatial = s_Ref.QueryInterface<ZSpatialEntity>();
+        const auto *s_pActorSpatial = s_Ref.QueryInterface<ZSpatialEntity>();
         if (!s_pActorSpatial)
         {
             continue;
         }
 
-        auto s_ActorWM = s_pActorSpatial->GetWorldMatrix();
+        auto s_ActorWM = s_pActorSpatial->GetObjectToWorldMatrix();
         const auto s_fDistance = float4::Distance(s_PlayerWM.Trans, s_ActorWM.Trans);
 
         m_fNearestActorDistance = s_fDistance < m_fNearestActorDistance ? s_fDistance : m_fNearestActorDistance;

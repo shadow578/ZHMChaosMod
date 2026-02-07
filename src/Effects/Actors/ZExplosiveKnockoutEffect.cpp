@@ -11,7 +11,7 @@
 constexpr float32 c_fDeathExplosionStrength = 500.0f;
 constexpr float32 c_fPacifyExplosionStrength = 50.0f;
 
-void ZExplosiveKnockoutEffect::OnActorWellbeingChanged(ZActor* p_pActor, const SActorState& p_OldState, const SActorState& p_NewState)
+void ZExplosiveKnockoutEffect::OnActorWellbeingChanged(ZActor *p_pActor, const SActorState &p_OldState, const SActorState &p_NewState)
 {
     if (!p_OldState.m_bDead && p_NewState.m_bDead)
     {
@@ -28,7 +28,7 @@ void ZExplosiveKnockoutEffect::OnActorWellbeingChanged(ZActor* p_pActor, const S
     }
 }
 
-void ZExplosiveKnockoutEffect::SpawnExplosionAtActor(ZActor* p_pActor, const float32 p_fStrength)
+void ZExplosiveKnockoutEffect::SpawnExplosionAtActor(ZActor *p_pActor, const float32 p_fStrength)
 {
     ZEntityRef s_Ref;
     p_pActor->GetID(s_Ref);
@@ -37,14 +37,14 @@ void ZExplosiveKnockoutEffect::SpawnExplosionAtActor(ZActor* p_pActor, const flo
         return;
     }
 
-    const auto* s_pActorSpatial = s_Ref.QueryInterface<ZSpatialEntity>();
+    const auto *s_pActorSpatial = s_Ref.QueryInterface<ZSpatialEntity>();
     if (!s_pActorSpatial)
     {
         return;
     }
 
     // offset explosion a bit upwards so it doesn't clip into the ground
-    auto s_ActorWM = s_pActorSpatial->GetWorldMatrix();
+    auto s_ActorWM = s_pActorSpatial->GetObjectToWorldMatrix();
     s_ActorWM.Trans.z += 0.25f;
 
     const SExplosionParams s_Params{

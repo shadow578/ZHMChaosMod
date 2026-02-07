@@ -28,11 +28,11 @@ void ZSwapPlayerWithActorEffect::Start()
         return;
     }
 
-    auto s_ActorWM = s_ActorSpatialEntity->GetWorldMatrix();
-    auto s_PlayerWM = s_PlayerSpatialEntity->GetWorldMatrix();
+    auto s_ActorWM = s_ActorSpatialEntity->GetObjectToWorldMatrix();
+    auto s_PlayerWM = s_PlayerSpatialEntity->GetObjectToWorldMatrix();
 
-    s_ActorSpatialEntity->SetWorldMatrix(s_PlayerWM);
-    s_PlayerSpatialEntity->SetWorldMatrix(s_ActorWM);
+    s_ActorSpatialEntity->SetObjectToWorldMatrixFromEditor(s_PlayerWM);
+    s_PlayerSpatialEntity->SetObjectToWorldMatrixFromEditor(s_ActorWM);
 
     Logger::Info(TAG "Swapped player with actor '{}'", s_Actor->m_sActorName);
 

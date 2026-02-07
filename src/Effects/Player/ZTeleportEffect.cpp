@@ -8,8 +8,7 @@
 void ZTeleportEffect::Start()
 {
     const ETeleportDirection s_eDirection = static_cast<ETeleportDirection>(
-        Math::GetRandomNumber<int>(0, static_cast<int>(ETeleportDirection::NUMBER_OF_DIRECTIONS) - 1)
-        );
+        Math::GetRandomNumber<int>(0, static_cast<int>(ETeleportDirection::NUMBER_OF_DIRECTIONS) - 1));
 
     DoTeleport(s_eDirection);
 }
@@ -41,7 +40,7 @@ void ZTeleportEffect::DoTeleport(const ETeleportDirection p_eDirection)
         return;
     }
 
-    auto s_WM = s_PlayerSpatialEntity->GetWorldMatrix();
+    auto s_WM = s_PlayerSpatialEntity->GetObjectToWorldMatrix();
 
     switch (p_eDirection)
     {
@@ -60,7 +59,7 @@ void ZTeleportEffect::DoTeleport(const ETeleportDirection p_eDirection)
         break;
     }
 
-    s_PlayerSpatialEntity->SetWorldMatrix(s_WM);
+    s_PlayerSpatialEntity->SetObjectToWorldMatrixFromEditor(s_WM);
 }
 
 REGISTER_CHAOS_EFFECT(ZTeleportEffect)

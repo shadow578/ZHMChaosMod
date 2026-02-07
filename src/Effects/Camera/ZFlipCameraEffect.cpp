@@ -33,7 +33,7 @@ void ZFlipCameraEffect::OnDrawDebugUI()
     ZInterpolatingEffectBase::OnDrawDebugUI();
 }
 
-void ZFlipCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)
+void ZFlipCameraEffect::OnFrameUpdate(const SGameUpdateEvent &p_UpdateEvent, const float32 p_fEffectTimeRemaining)
 {
     ZInterpolatingEffectBase::OnFrameUpdate(p_UpdateEvent, p_fEffectTimeRemaining);
 
@@ -52,7 +52,7 @@ void ZFlipCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, con
     }
 
     // copy stock player camera
-    const auto s_OriginalWM = s_OriginalCameraSpatialEntity->GetWorldMatrix();
+    const auto s_OriginalWM = s_OriginalCameraSpatialEntity->GetObjectToWorldMatrix();
     auto s_TargetWM = s_OriginalWM;
 
     // rotate around forward axis by 180 degrees to flip the screen
@@ -65,7 +65,7 @@ void ZFlipCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, con
     // interpolation
     s_TargetWM = Math::InterpolateAffine(s_OriginalWM, s_TargetWM, GetInterpolationPoint());
 
-    s_CameraSpatialEntity->SetWorldMatrix(s_TargetWM);
+    s_CameraSpatialEntity->SetObjectToWorldMatrixFromEditor(s_TargetWM);
 }
 
 REGISTER_CHAOS_EFFECT(ZFlipCameraEffect)
