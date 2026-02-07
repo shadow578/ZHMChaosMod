@@ -10,12 +10,12 @@
 bool Utils::TeleportPlayerTo(const SMatrix p_Position)
 {
     auto s_Player = SDK()->GetLocalPlayer();
-    if (!s_Player.m_ref)
+    if (!s_Player.m_entityRef)
     {
         return false;
     }
 
-    auto s_PlayerSpatialEntity = s_Player.m_ref.QueryInterface<ZSpatialEntity>();
+    auto s_PlayerSpatialEntity = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
     if (!s_PlayerSpatialEntity)
     {
         return false;

@@ -30,8 +30,8 @@ void ZLiveReactionCamEffect::OnClearScene()
 bool ZLiveReactionCamEffect::Available() const
 {
 	return IChaosEffect::Available() &&
-		m_pPIPCameraSpawner && m_pPIPCameraSpawner->IsAvailable() &&
-		m_pHudMessageResource && m_pHudMessageResource->IsAvailable();
+				 m_pPIPCameraSpawner && m_pPIPCameraSpawner->IsAvailable() &&
+				 m_pHudMessageResource && m_pHudMessageResource->IsAvailable();
 }
 
 void ZLiveReactionCamEffect::OnDrawDebugUI()
@@ -40,10 +40,9 @@ void ZLiveReactionCamEffect::OnDrawDebugUI()
 	ImGui::TextUnformatted(fmt::format("Sweetline: {}", m_pHudMessageResource->ToString()).c_str());
 }
 
-bool ZLiveReactionCamEffect:: IsCompatibleWith(const IChaosEffect* p_pOther) const
+bool ZLiveReactionCamEffect::IsCompatibleWith(const IChaosEffect *p_pOther) const
 {
-	return IChaosEffect::IsCompatibleWith(p_pOther)
-		&& !Utils::IsInstanceOf<ZLiveReactionCamEffect>(p_pOther);
+	return IChaosEffect::IsCompatibleWith(p_pOther) && !Utils::IsInstanceOf<ZLiveReactionCamEffect>(p_pOther);
 }
 
 void ZLiveReactionCamEffect::Start()
@@ -101,11 +100,11 @@ TEntityRef<ZSpatialEntity> ZLiveReactionCamEffect::GetRandomActorHeadAttachEntit
 		return {};
 	}
 
-	if (auto* s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(s_rActor))
+	if (auto *s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(s_rActor))
 	{
 		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(c_nHeadEntityId); s_nIdx != -1)
 		{
-			if (auto* s_pHead = s_pBlueprint->GetSubEntity(s_rActor.m_pEntity, s_nIdx); s_pHead != nullptr)
+			if (auto *s_pHead = s_pBlueprint->GetSubEntity(s_rActor.m_pEntity, s_nIdx); s_pHead != nullptr)
 			{
 				return TEntityRef<ZSpatialEntity>(ZEntityRef(s_pHead));
 			}
@@ -125,11 +124,11 @@ TEntityRef<ZSpatialEntity> ZLiveReactionCamEffect::GetPlayerHeadAttachEntity()
 		return {};
 	}
 
-	if (auto* s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(s_rPlayer.m_ref))
+	if (auto *s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(s_rPlayer.m_entityRef))
 	{
 		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(c_nHeadEntityId); s_nIdx != -1)
 		{
-			if (auto* s_pHead = s_pBlueprint->GetSubEntity(s_rPlayer.m_ref.m_pEntity, s_nIdx); s_pHead != nullptr)
+			if (auto *s_pHead = s_pBlueprint->GetSubEntity(s_rPlayer.m_entityRef.m_pEntity, s_nIdx); s_pHead != nullptr)
 			{
 				return TEntityRef<ZSpatialEntity>(ZEntityRef(s_pHead));
 			}
@@ -163,10 +162,10 @@ void ZLiveReactionCamEffect::SpawnLiveReactionCam(TEntityRef<ZSpatialEntity> p_r
 	Utils::SetProperty<TEntityRef<ZSpatialEntity>>(m_rPIPCameraEntity, "m_eidParent", p_rTargetHead);
 
 	SMatrix43 s_mLocalTransform;
-	s_mLocalTransform.XAxis = { 0.000f, -0.000f,  1.000f };
-	s_mLocalTransform.YAxis = { 1.000f,  0.000f, -0.000f };
-	s_mLocalTransform.ZAxis = { -0.000f, 1.000f,  0.000f };
-	s_mLocalTransform.Trans = { 0.055f,  0.700f,  0.000 };
+	s_mLocalTransform.XAxis = {0.000f, -0.000f, 1.000f};
+	s_mLocalTransform.YAxis = {1.000f, 0.000f, -0.000f};
+	s_mLocalTransform.ZAxis = {-0.000f, 1.000f, 0.000f};
+	s_mLocalTransform.Trans = {0.055f, 0.700f, 0.000};
 	Utils::SetProperty<SMatrix43>(m_rPIPCameraEntity, "m_mTransform", s_mLocalTransform);
 
 	// prevent PIP view from automatically closing after timer (we do it manually)
@@ -176,9 +175,9 @@ void ZLiveReactionCamEffect::SpawnLiveReactionCam(TEntityRef<ZSpatialEntity> p_r
 	Utils::SetProperty<int32>(m_rPIPCameraEntity, "m_nValuePiPPriority", 9999);
 
 	// mess with the camera properties to do a funny
-	Utils::SetProperty<bool>(m_rPIPCameraEntity, "m_bAutoAspect", false); // manual aspect
+	Utils::SetProperty<bool>(m_rPIPCameraEntity, "m_bAutoAspect", false);		// manual aspect
 	Utils::SetProperty<float32>(m_rPIPCameraEntity, "m_fAspectWByH", 0.8f); // stretch horizontally
-	Utils::SetProperty<float32>(m_rPIPCameraEntity, "m_fFovYDeg", 20.0f); // really zoom in on the face
+	Utils::SetProperty<float32>(m_rPIPCameraEntity, "m_fFovYDeg", 20.0f);		// really zoom in on the face
 
 	// the PIP view needs a HUD message, otherwise only the camera feed shows
 	Utils::SetProperty<ZRuntimeResourceID>(m_rPIPCameraEntity, "m_rHUDMessagepip", p_HudMessageId);
@@ -188,11 +187,11 @@ void ZLiveReactionCamEffect::SpawnLiveReactionCam(TEntityRef<ZSpatialEntity> p_r
 
 	// by default, the PIP is automatically closed when looking at it (via look-at trigger)
 	// there's no direct way to disable this, but we can manipulate the look-at trigger to effectively never trigger
-	if (auto* s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(m_rPIPCameraEntity))
+	if (auto *s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(m_rPIPCameraEntity))
 	{
 		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x2c2b10f742467d79); s_nIdx != -1)
 		{
-			if (auto* s_pLookAtTrigger = s_pBlueprint->GetSubEntity(m_rPIPCameraEntity.m_pEntity, s_nIdx); s_pLookAtTrigger != nullptr)
+			if (auto *s_pLookAtTrigger = s_pBlueprint->GetSubEntity(m_rPIPCameraEntity.m_pEntity, s_nIdx); s_pLookAtTrigger != nullptr)
 			{
 				auto s_rLookAtTrigger = ZEntityRef(s_pLookAtTrigger);
 

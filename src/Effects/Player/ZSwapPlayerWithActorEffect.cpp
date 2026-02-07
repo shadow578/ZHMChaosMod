@@ -12,7 +12,7 @@ void ZSwapPlayerWithActorEffect::Start()
 {
     auto s_Actor = Utils::GetRandomActor(false);
     auto s_Player = SDK()->GetLocalPlayer();
-    if (!s_Actor || !s_Player.m_ref)
+    if (!s_Actor || !s_Player.m_entityRef)
     {
         return;
     }
@@ -21,7 +21,7 @@ void ZSwapPlayerWithActorEffect::Start()
     s_Actor->GetID(s_ActorRef);
     auto s_ActorSpatialEntity = s_ActorRef.QueryInterface<ZSpatialEntity>();
 
-    auto s_PlayerSpatialEntity = s_Player.m_ref.QueryInterface<ZSpatialEntity>();
+    auto s_PlayerSpatialEntity = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
 
     if (!s_ActorSpatialEntity || !s_PlayerSpatialEntity)
     {

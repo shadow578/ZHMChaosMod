@@ -60,7 +60,7 @@ void ZPoisonAOEDamageEffectBase::OnDrawDebugUI()
     {
         if (const auto s_Player = SDK()->GetLocalPlayer())
         {
-            if (const auto s_PlayerSpatial = s_Player.m_ref.QueryInterface<ZSpatialEntity>())
+            if (const auto s_PlayerSpatial = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>())
             {
                 auto s_WM = s_PlayerSpatial->GetObjectToWorldMatrix();
 
@@ -96,23 +96,23 @@ ZEntityRef ZPoisonAOEDamageEffectBase::Spawn(const SParams &p_Params)
 
     // set poison type
     ZEntityRef s_KeywordEntity;
-    if (!GetPoisonKeywordEntity(p_Params.m_eType, s_RootEntity.m_ref, s_KeywordEntity))
+    if (!GetPoisonKeywordEntity(p_Params.m_eType, s_RootEntity.m_entityRef, s_KeywordEntity))
     {
         Logger::Debug(TAG "Could not find poison keyword entity for type {}", static_cast<int>(p_Params.m_eType));
         return {};
     }
 
-    Utils::SetProperty<ZEntityRef>(s_RootEntity.m_ref, "m_rTarget", s_KeywordEntity);
+    Utils::SetProperty<ZEntityRef>(s_RootEntity.m_entityRef, "m_rTarget", s_KeywordEntity);
 
     // misc. properties
-    Utils::SetProperty<SVector3>(s_RootEntity.m_ref, "m_vGlobalSize", p_Params.m_AreaSize);
-    Utils::SetProperty<SColorRGB>(s_RootEntity.m_ref, "m_ParticleColorRangeStart", p_Params.m_ParticleColorRangeStart);
-    Utils::SetProperty<SColorRGB>(s_RootEntity.m_ref, "m_ParticleColorRangeEnd", p_Params.m_ParticleColorRangeEnd);
+    Utils::SetProperty<SVector3>(s_RootEntity.m_entityRef, "m_vGlobalSize", p_Params.m_AreaSize);
+    Utils::SetProperty<SColorRGB>(s_RootEntity.m_entityRef, "m_ParticleColorRangeStart", p_Params.m_ParticleColorRangeStart);
+    Utils::SetProperty<SColorRGB>(s_RootEntity.m_entityRef, "m_ParticleColorRangeEnd", p_Params.m_ParticleColorRangeEnd);
 
     // trigger
-    s_RootEntity.m_ref.SignalInputPin("Start");
+    s_RootEntity.m_entityRef.SignalInputPin("Start");
 
-    return s_RootEntity.m_ref;
+    return s_RootEntity.m_entityRef;
 }
 
 bool ZPoisonAOEDamageEffectBase::GetPoisonKeywordEntity(const EPoisonType p_eType, ZEntityRef p_RootEntity, ZEntityRef &p_KeywordEntity)

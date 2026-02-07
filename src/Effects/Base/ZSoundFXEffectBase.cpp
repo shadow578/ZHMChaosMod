@@ -36,7 +36,7 @@ void ZSoundFXEffectBase::OnDrawDebugUI()
     {
         if (const auto s_Player = SDK()->GetLocalPlayer())
         {
-            if (const auto s_PlayerSpatial = s_Player.m_ref.QueryInterface<ZSpatialEntity>())
+            if (const auto s_PlayerSpatial = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>())
             {
                 auto s_WM = s_PlayerSpatial->GetObjectToWorldMatrix();
 
@@ -69,7 +69,7 @@ ZEntityRef ZSoundFXEffectBase::PlayAt(const SMatrix &p_Position, const ZRuntimeR
     s_RootEntity.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(p_Position);
     Utils::SetProperty<ZRuntimeResourceID>(s_RootEntity.m_entityRef, "m_pMainEvent", p_SoundResource);
 
-    s_RootEntity.m_ref.SignalInputPin("Start");
+    s_RootEntity.m_entityRef.SignalInputPin("Start");
 
-    return s_RootEntity.m_ref;
+    return s_RootEntity.m_entityRef;
 }

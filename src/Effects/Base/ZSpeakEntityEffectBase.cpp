@@ -511,7 +511,7 @@ void ZSpeakEntityEffectBase::DebugSpeakAtNearestActor()
 {
 	if (const auto s_rPlayer = SDK()->GetLocalPlayer())
 	{
-		if (const auto s_pPlayerSpatial = s_rPlayer.m_ref.QueryInterface<ZSpatialEntity>())
+		if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
 		{
 			const auto s_vPlayerPos = s_pPlayerSpatial->GetObjectToWorldMatrix().Trans;
 

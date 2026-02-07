@@ -30,7 +30,7 @@ void ZSpawnRandomItemEffect::Start()
 {
     if (const auto s_Player = SDK()->GetLocalPlayer())
     {
-        if (const auto s_SpatialEntity = s_Player.m_ref.QueryInterface<ZSpatialEntity>())
+        if (const auto s_SpatialEntity = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>())
         {
             auto s_WM = s_SpatialEntity->GetObjectToWorldMatrix();
 
@@ -90,7 +90,7 @@ bool ZSpawnRandomItemEffect::SpawnRepositoryPropAt(const ZRepositoryID &p_Reposi
         s_SpawnerEntity,
         "",
         s_SpawnerResource,
-        s_pScene.m_ref,
+        s_pScene.m_entityRef,
         s_DummyExternalRefs,
         -1);
     Functions::ZEntityManager_NewEntity->Call(
@@ -98,7 +98,7 @@ bool ZSpawnRandomItemEffect::SpawnRepositoryPropAt(const ZRepositoryID &p_Reposi
         s_KeyEntity,
         "",
         s_KeyEntityResource,
-        s_pScene.m_ref,
+        s_pScene.m_entityRef,
         s_DummyExternalRefs,
         -1);
 

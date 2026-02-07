@@ -46,7 +46,7 @@ void ZSwapTargetsEffect::OnEnterScene()
 		bool s_bShouldAdd = true;
 		for (const auto &s_rExisting : m_aTargetSpatials)
 		{
-			if (s_rExisting.m_ref == s_rSpatial.m_ref)
+			if (s_rExisting.m_entityRef == s_rSpatial.m_entityRef)
 			{
 				s_bShouldAdd = false;
 			}
@@ -101,7 +101,7 @@ void ZSwapTargetsEffect::OnDrawDebugUI()
 {
 	for (auto &s_rTarget : m_aTargetSpatials)
 	{
-		const auto *s_pActor = s_rTarget.m_ref.QueryInterface<ZActor>();
+		const auto *s_pActor = s_rTarget.m_entityRef.QueryInterface<ZActor>();
 		if (ImGui::Button(s_pActor->m_sActorName.c_str()))
 		{
 			Utils::TeleportPlayerTo(s_rTarget.m_pInterfaceRef->GetObjectToWorldMatrix());

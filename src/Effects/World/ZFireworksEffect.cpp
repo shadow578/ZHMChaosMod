@@ -149,7 +149,7 @@ void ZFireworksEffect::Start()
 	{
 		if (auto s_rPlayer = SDK()->GetLocalPlayer())
 		{
-			if (auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_rPlayer.m_ref))
+			if (auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_rPlayer.m_entityRef))
 			{
 				s_rFireworksFXSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_rPlayerSpatial.m_pInterfaceRef->GetObjectToWorldMatrix());
 			}

@@ -23,7 +23,7 @@ void ZExplodeActorsOnTouchEffect::OnSlowUpdate(const float32 p_fDeltaTime, const
         return;
     }
 
-    const auto s_PlayerSpatial = s_Player.m_ref.QueryInterface<ZSpatialEntity>();
+    const auto s_PlayerSpatial = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
     if (!s_PlayerSpatial)
     {
         return;

@@ -47,7 +47,7 @@ void ZTriggerInteractionEffect::Start()
 		return;
 	}
 
-	const auto s_pPlayerSpatial = s_rPlayer.m_ref.QueryInterface<ZSpatialEntity>();
+	const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>();
 	if (!s_pPlayerSpatial)
 	{
 		return;

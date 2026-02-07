@@ -51,7 +51,7 @@ void ZOverheadCameraEffect::OnFrameUpdate(const SGameUpdateEvent &p_UpdateEvent,
     auto s_CameraSpatialEntity = GetEffectCameraEntity().QueryInterface<ZSpatialEntity>();
 
     auto s_Player = SDK()->GetLocalPlayer();
-    auto s_PlayerSpatialEntity = s_Player.m_ref.QueryInterface<ZSpatialEntity>();
+    auto s_PlayerSpatialEntity = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
     if (!s_OriginalCameraSpatialEntity || !s_CameraSpatialEntity || !s_PlayerSpatialEntity)
     {
         Stop();

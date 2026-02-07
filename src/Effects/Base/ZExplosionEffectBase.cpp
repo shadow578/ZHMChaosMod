@@ -35,7 +35,7 @@ void ZExplosionEffectBase::OnDrawDebugUI()
     {
         if (const auto s_Player = SDK()->GetLocalPlayer())
         {
-            if (const auto s_PlayerSpatial = s_Player.m_ref.QueryInterface<ZSpatialEntity>())
+            if (const auto s_PlayerSpatial = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>())
             {
                 auto s_WM = s_PlayerSpatial->GetObjectToWorldMatrix();
 
@@ -65,15 +65,15 @@ ZEntityRef ZExplosionEffectBase::SpawnExplosion(const SExplosionParams &p_Params
     {
         s_RootEntity.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(p_Params.m_Position);
 
-        Utils::SetProperty<float32>(s_RootEntity.m_ref, "m_fTimeMin", p_Params.m_fFuseTimeMin);
-        Utils::SetProperty<float32>(s_RootEntity.m_ref, "m_fTimeMax", p_Params.m_fFuseTimeMax);
-        Utils::SetProperty<float32>(s_RootEntity.m_ref, "m_fTargetStrength", p_Params.m_fTargetStrength);
-        Utils::SetProperty<EDeathContext>(s_RootEntity.m_ref, "m_eDeathContext", p_Params.m_eDeathContext);
-        Utils::SetProperty<EDeathType>(s_RootEntity.m_ref, "m_eDeathType", p_Params.m_eDeathType);
+        Utils::SetProperty<float32>(s_RootEntity.m_entityRef, "m_fTimeMin", p_Params.m_fFuseTimeMin);
+        Utils::SetProperty<float32>(s_RootEntity.m_entityRef, "m_fTimeMax", p_Params.m_fFuseTimeMax);
+        Utils::SetProperty<float32>(s_RootEntity.m_entityRef, "m_fTargetStrength", p_Params.m_fTargetStrength);
+        Utils::SetProperty<EDeathContext>(s_RootEntity.m_entityRef, "m_eDeathContext", p_Params.m_eDeathContext);
+        Utils::SetProperty<EDeathType>(s_RootEntity.m_entityRef, "m_eDeathType", p_Params.m_eDeathType);
 
-        s_RootEntity.m_ref.SignalInputPin("Start");
+        s_RootEntity.m_entityRef.SignalInputPin("Start");
 
-        return s_RootEntity.m_ref;
+        return s_RootEntity.m_entityRef;
     }
 
     return {};

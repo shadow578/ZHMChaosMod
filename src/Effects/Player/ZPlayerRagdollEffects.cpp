@@ -17,7 +17,7 @@ void ZPlayerRagdollWithImpulseEffect::Start()
 
     ZPlayerRagdollEffectBase::Start();
 
-    const auto s_HitmanSpatial = s_Player.m_ref.QueryInterface<ZSpatialEntity>();
+    const auto s_HitmanSpatial = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
     auto s_WM = s_HitmanSpatial->GetObjectToWorldMatrix();
 
     Functions::ZRagdollHandler_ApplyImpulseOnRagdoll->Call(
@@ -52,7 +52,7 @@ void ZPlayerRagdollWithImpulseEffect::OnFrameUpdate(const SGameUpdateEvent &p_Up
         return;
     }
 
-    m_VelocityTracker.Update(p_UpdateEvent, s_Player.m_ref);
+    m_VelocityTracker.Update(p_UpdateEvent, s_Player.m_entityRef);
 
     if (m_VelocityTracker.IsVelocityValid() && m_VelocityTracker.GetVelocity() <= 0.5f)
     {
