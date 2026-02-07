@@ -59,7 +59,7 @@ void ZSpawnRandomItemEffect::Start()
 
 void ZSpawnRandomItemEffect::OnDrawDebugUI()
 {
-    ImGui::TextUnformatted(fmt::format("Repository Props Loaded:", g_aRepositoryProps.size()).c_str());
+    ImGui::TextUnformatted(fmt::format("Repository Props Loaded: {}", g_aRepositoryProps.size()).c_str());
 }
 
 bool ZSpawnRandomItemEffect::SpawnRepositoryPropAt(const ZRepositoryID &p_RepositoryId, const SMatrix s_Transform)
