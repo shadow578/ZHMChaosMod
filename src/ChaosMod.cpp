@@ -112,6 +112,8 @@ void ChaosMod::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent)
 
         m_qDeferredFrameUpdateActions.pop();
     }
+
+	UpdateTestMode(p_UpdateEvent.m_GameTimeDelta.ToSeconds());
 }
 
 void ChaosMod::ForeachEffect(const bool p_bIsLifecycleCall, std::function<void(IChaosEffect* p_pEffect)> p_Callback)
@@ -273,6 +275,35 @@ DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th,
 	}
 
     return HookResult<void>(HookAction::Continue());
+}
+
+void ChaosMod::UpdateTestMode(const float32 p_fDeltaTime)
+{
+    if (!m_bTestmodeEnabled)
+    {
+        return;
+    }
+
+    m_fTestmodeTimeToNextEffect -= p_fDeltaTime;
+    if (m_fTestmodeTimeToNextEffect <= 0.0f)
+    {
+        const auto& s_aEffects = EffectRegistry::GetInstance().GetEffects();
+        if (s_aEffects.empty())
+        {
+            return;
+        }
+
+        m_nTestmodeEffectIndex = (m_nTestmodeEffectIndex + 1) % s_aEffects.size();
+        const auto s_pEffect = s_aEffects[m_nTestmodeEffectIndex].get();
+        if (s_pEffect)
+        {
+            Logger::Info(TAG "[TM] Activating effect '{}'", s_pEffect->GetName());
+			m_pEffectForDebug = s_pEffect;
+			ActivateEffect(s_pEffect, m_fTestmodeInterval - 1.0f);
+        }
+
+        m_fTestmodeTimeToNextEffect = m_fTestmodeInterval;
+    }
 }
 
 DEFINE_ZHM_PLUGIN(ChaosMod);

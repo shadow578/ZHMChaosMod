@@ -336,6 +336,25 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 
 		ImGui::Checkbox("Menu Always Visible", &m_bDebugMenuAlwaysVisible);
 
+#if defined(_DEBUG)
+        ImGui::Separator();
+
+		ImGui::Checkbox("Test Mode", &m_bTestmodeEnabled);
+		ImGui::SameLine();
+		ImGui::SliderFloat("##tm_interval", &m_fTestmodeInterval, 1.0f, 30.0f, "Interval: %.1f s");
+        
+        if (m_bTestmodeEnabled)
+        {
+            ImGui::TextUnformatted(fmt::format(
+                "Next Effect in {:.1f} seconds. Last effect: '{}' (#{})",
+                m_fTestmodeTimeToNextEffect,
+                m_pEffectForDebug ? m_pEffectForDebug->GetName() : "<none>",
+				m_nTestmodeEffectIndex
+			).c_str());
+        }
+
+#endif // _DEBUG
+
         ImGui::Separator();
 
         ImGui::BeginChild("##effect_list_pane", ImVec2(300, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
