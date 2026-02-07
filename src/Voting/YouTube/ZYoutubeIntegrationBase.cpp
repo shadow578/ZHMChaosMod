@@ -19,29 +19,9 @@ ZYoutubeIntegrationBase::ZYoutubeIntegrationBase(const bool p_bReadOnly)
 	m_pYoutubeAuth->SetOnAuthTokenReceivedCallback(
 		[this](std::shared_ptr<ZAuthToken> p_pToken)
 		{
-			this->OnAuthTokenReceived(p_pToken);
+			this->ConnectCurrentBroadcast();
 		}
 	);
-}
-
-void ZYoutubeIntegrationBase::OnAuthTokenReceived(std::shared_ptr<ZAuthToken> p_pToken)
-{
-	if (!p_pToken)
-	{
-		m_pCurrentBroadcast = nullptr;
-		return;
-	}
-
-	m_pCurrentBroadcast = std::make_shared<ZYoutubeBroadcastConnection>(p_pToken);
-	if (m_pCurrentBroadcast && m_pCurrentBroadcast->IsConnected())
-	{
-		Logger::Debug(TAG "Connected to broadcast {}", m_pCurrentBroadcast->GetBroadcastInfo().m_sTitle);
-		OnBroadcastConnected();
-	}
-	else 
-	{
-		Logger::Warn(TAG "Failed to connect to active broadcast. Is there a currently active live stream?");
-	}
 }
 
 void ZYoutubeIntegrationBase::Deactivate()
@@ -75,9 +55,26 @@ void ZYoutubeIntegrationBase::DrawConfigUI()
 			ImGui::TextDisabled("(No active broadcast)");
 		}
 
+		ImGui::SameLine();
+
+		if (ImGui::Button(ICON_MD_REFRESH))
+		{
+			ConnectCurrentBroadcast();
+		}
+
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Reconnect to broadcast.");
+		}
+
 		if (ImGui::Button(ICON_MD_LINK_OFF " Disconnect"))
 		{
 			Disconnect();
+		}
+
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Disconnect from YouTube");
 		}
 	}
 	else
@@ -133,6 +130,27 @@ IChaosEffect* ZYoutubeIntegrationBase::EndVote()
 	auto* s_pEffect = Math::SelectRandomElement(m_aActiveVote);
 	m_aActiveVote.clear();
 	return s_pEffect;
+}
+
+void ZYoutubeIntegrationBase::ConnectCurrentBroadcast()
+{
+	const auto s_pAuthToken = m_pYoutubeAuth->GetAuthToken();
+	if (!s_pAuthToken)
+	{
+		m_pCurrentBroadcast = nullptr;
+		return;
+	}
+
+	m_pCurrentBroadcast = std::make_shared<ZYoutubeBroadcastConnection>(s_pAuthToken);
+	if (m_pCurrentBroadcast && m_pCurrentBroadcast->IsConnected())
+	{
+		Logger::Debug(TAG "Connected to broadcast {}", m_pCurrentBroadcast->GetBroadcastInfo().m_sTitle);
+		OnBroadcastConnected();
+	}
+	else
+	{
+		Logger::Warn(TAG "Failed to connect to active broadcast. Is there a currently active live stream?");
+	}
 }
 
 void ZYoutubeIntegrationBase::Disconnect()

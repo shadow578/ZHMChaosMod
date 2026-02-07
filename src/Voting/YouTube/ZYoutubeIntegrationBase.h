@@ -28,7 +28,6 @@ protected:
 	virtual IChaosEffect* EndVoteImpl() = 0;
 
 private:
-	void OnAuthTokenReceived(std::shared_ptr<ZAuthToken> p_pToken);
-
+	void ConnectCurrentBroadcast();
 	void Disconnect();
 };
