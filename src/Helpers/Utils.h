@@ -29,5 +29,16 @@ namespace Utils
 	 * Copy a string to the system clipboard.
 	 * @param p_sData Data to copy.
      */
-    void CopyToClipboard(const std::string p_sData);
+    void CopyToClipboard(const std::string& p_sData);
+
+    /**
+     * Open a URL in the default browser 
+     */
+    void OpenBrowser(const std::string& p_sUrl);
+
+    /**
+     * Get a timestamp in seconds.
+	 * the timestamp is guranteed to be monotonic increasing, but may not represent wall-clock time.
+     */
+    uint64_t GetTimestamp();
 };
