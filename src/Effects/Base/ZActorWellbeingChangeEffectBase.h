@@ -20,7 +20,15 @@ public:
 protected:
     struct SActorState
     {
+        /**
+         * Is the Actor fully dead (not just pacified)? 
+         * Note that this does NOT correspond to the IsDead() method of ZActor.
+         */
         bool m_bDead;
+
+        /**
+         * Is the Actor pacified? 
+         */
         bool m_bPacified;
 
         bool operator==(const SActorState& p_Other) const
@@ -30,6 +38,8 @@ protected:
         }
     };
 
+    static SActorState GetActorState(ZActor* p_pActor);
+    
     virtual void OnActorWellbeingChanged(ZActor* p_pActor, const SActorState& p_OldState, const SActorState& p_NewState) = 0;
 
 private:
