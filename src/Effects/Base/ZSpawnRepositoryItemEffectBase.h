@@ -23,7 +23,7 @@ public:
     bool Available() const override;
     void OnDrawDebugUI() override;
 
-private:
+protected:
     struct SRepositoryPropInfo
     {
         /**
@@ -47,6 +47,7 @@ private:
 		}
 	};
 
+private:
 	static std::vector<SRepositoryPropInfo> m_aRepositoryProps; // static to share between instances
 
     static bool LoadRepositoryProps();
