@@ -60,7 +60,7 @@ bool ZSpawnRepositoryItemEffectBase::SpawnRepositoryPropAt(const SRepositoryProp
     if (!s_rKeywordEntity)
     {
         Logger::Debug(TAG "failed to spawn repository keyword entity");
-        m_pItemSpawnerSpawner->Despawn(s_rItemSpawner.m_ref);
+        m_pItemSpawnerSpawner->Despawn(s_rItemSpawner.m_entityRef);
         return false;
     }
 
@@ -70,12 +70,12 @@ bool ZSpawnRepositoryItemEffectBase::SpawnRepositoryPropAt(const SRepositoryProp
 
     SMatrix s_Transform = SMatrix();
     s_Transform.Trans = s_vPosition;
-    s_rItemSpawner.m_pInterfaceRef->SetWorldMatrix(s_Transform);
+    s_rItemSpawner.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_Transform);
 
     s_rKeywordEntity.m_pInterfaceRef->m_RepositoryId = ZRepositoryID(p_RepositoryProp.m_sID);
 
     //Functions::ZItemSpawner_RequestContentLoad->Call(s_rItemSpawner.m_pInterfaceRef);
-    s_rItemSpawner.m_ref.SignalInputPin("SpawnItem");
+    s_rItemSpawner.m_entityRef.SignalInputPin("SpawnItem");
 
     Logger::Debug(TAG "spawned item '{}' [{}] ({}).",
         p_RepositoryProp.m_sDisplayName,
@@ -155,8 +155,8 @@ bool ZSpawnRepositoryItemEffectBase::LoadRepositoryProps()
 
 std::string ZSpawnRepositoryItemEffectBase::DynamicObjectToString(const ZDynamicObject& p_DynamicObject)
 {
-    const auto* s_pType = p_DynamicObject.GetTypeID()->typeInfo();
-    const auto s_sTypeName = std::string(s_pType->m_pTypeName);
+    const auto* s_pType = p_DynamicObject.GetTypeID()->GetTypeInfo();
+    const auto s_sTypeName = std::string(s_pType->pszTypeName);
 
     if (s_sTypeName == "ZString")
     {
