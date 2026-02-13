@@ -24,10 +24,7 @@ void ZActorWellbeingChangeEffectBase::OnSlowUpdate(const float32 p_fDeltaTime, c
 
     for (auto* s_pActor : Utils::GetActors(true, true))
     {
-        const SActorState s_CurrentState{
-            .m_bDead = s_pActor->IsDead(),
-            .m_bPacified = s_pActor->IsPacified()
-        };
+		const auto s_CurrentState = GetActorState(s_pActor);
 
         auto s_it = m_mLastActorStates.find(s_pActor);
         if (s_it == m_mLastActorStates.end())
@@ -46,4 +43,23 @@ void ZActorWellbeingChangeEffectBase::OnSlowUpdate(const float32 p_fDeltaTime, c
 
         OnActorWellbeingChanged(s_pActor, s_LastState, s_CurrentState);
     }
+}
+
+ZActorWellbeingChangeEffectBase::SActorState ZActorWellbeingChangeEffectBase::GetActorState(ZActor* p_pActor)
+{
+    // ZActor's methods for detecting the state of actors are quite unintuitive:
+    // - when Pacified: IsDead() = true, IsAlive = false, IsPacified() = true, m_bAlive = false
+    // - when Killed:   IsDead() = true, IsAlive = false, IsPacified() = false, m_bAlive = false
+    //
+    // i gues for IOI, a pacified actor is considered "dead" in the sense that they cannot do anything...
+    // for our purposes, we'd want a clear distinction between dead and pacified actors.
+	// thus, this method does some additional checks to determine the actual state of the actor, which is then used for comparison in the effect logic.
+
+	const auto s_bIsPacified = p_pActor->IsPacified();
+    const auto s_bIsDead = p_pActor->IsDead();
+
+    return {
+        .m_bDead = s_bIsDead && !s_bIsPacified, // only consider dead when not pacified
+        .m_bPacified = s_bIsPacified
+    };
 }
