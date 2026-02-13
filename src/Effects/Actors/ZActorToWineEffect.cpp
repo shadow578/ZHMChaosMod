@@ -98,7 +98,9 @@ void ZActorToWineEffect::OnActorPerished(ZActor* p_pActor)
         }
 
         // setting the body invisible does NOT prevent interactions, so teleport out of the way
-		s_mActorTransform.Trans = float4(0.f, 0.f, -999.f, 0.f);
+        s_mActorTransform.Pos.x = 0.f;
+		s_mActorTransform.Pos.y = 0.f;
+		s_mActorTransform.Pos.z = -999.f;
         s_pActorSpatial->SetObjectToWorldMatrixFromEditor(s_mActorTransform);
     }
 }
