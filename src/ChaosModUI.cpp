@@ -7,6 +7,7 @@
 
 #include "EffectRegistry.h"
 #include "Helpers/ImGuiExtras.h"
+#include "Helpers/CompanionMod.h"
 
 #include "BuildInfo.h"
 
@@ -104,6 +105,12 @@ void ChaosMod::DrawMainUI(const bool p_bHasFocus)
 
     if (s_ConfigShowing)
     {
+        const auto& s_CompanionMeta = CompanionModUtil::LoadCompanionModInfo(false);
+        if (!s_CompanionMeta.m_bPresent)
+        {
+            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Companion Mod not detected! Consider installing it to unlock more effects.");
+        }
+
         ImGui::SeparatorText("Settings");
         DrawConfigurationContents();
 
@@ -320,6 +327,22 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
             s_aEffects.size(),
             s_nAvailableEffects
         ).c_str());
+
+        const auto& s_CompanionMeta = CompanionModUtil::LoadCompanionModInfo(false);
+        if (s_CompanionMeta.m_bPresent)
+        {
+            ImGui::TextUnformatted(fmt::format(
+                "Companion Mod version {} ({}.{}.{}) detected!",
+                s_CompanionMeta.m_sVersion,
+                s_CompanionMeta.m_Version.m_nMajor,
+                s_CompanionMeta.m_Version.m_nMinor,
+                s_CompanionMeta.m_Version.m_nPatch
+            ).c_str());
+        }
+        else
+        {
+            ImGui::TextUnformatted("Companion Mod not detected");
+        }
 
         ImGui::TextUnformatted(fmt::format(
             "Enable States: MOD={}, USER={}, TIMER={}",

@@ -5,13 +5,14 @@
 #include <Glacier/ZResourceID.h>
 
 #include "Helpers/ZTemplateEntitySpawner.h"
+#include "Effects/Base/ZCompanionModDepedentEffectBase.h"
 
 /**
  * Reusable base for spawning sound effect players in the world.
  * Automatically handles resource loading, unloading and spawning.
  * Spawn sound effect players using the PlayAt() method.
  */
-class ZSoundFXEffectBase : public virtual IChaosEffect
+class ZSoundFXEffectBase : public virtual IChaosEffect, ZCompanionModDepedentEffectBase
 {
 public:
     void LoadResources() override;
