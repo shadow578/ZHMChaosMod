@@ -59,6 +59,5 @@ public:
 	}
 
 private:
-
 	TArray<SDynamicObjectKeyValuePair>* m_pEntries;
 };

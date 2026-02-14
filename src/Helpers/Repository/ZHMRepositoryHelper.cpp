@@ -110,6 +110,16 @@ std::unique_ptr<ZRepositoryEntryHelper> ZHMRepositoryHelper::Get(const ZReposito
 	return ZRepositoryEntryHelper::FromEntry(GetObj(p_RepoId));
 }
 
+std::unique_ptr<ZRepositoryEntryPatcher> ZHMRepositoryHelper::Patch(const std::string& p_sId) const
+{
+	return std::make_unique<ZRepositoryEntryPatcher>(Get(p_sId));
+}
+
+std::unique_ptr<ZRepositoryEntryPatcher> ZHMRepositoryHelper::Patch(const ZRepositoryID& p_RepoId) const
+{
+	return std::make_unique<ZRepositoryEntryPatcher>(Get(p_RepoId));
+}
+
 std::string ZHMRepositoryHelper::GetIDFromEntry(const ZDynamicObject& p_Entry)
 {
 	const auto s_pEntry = ZRepositoryEntryHelper::FromEntry(p_Entry);
