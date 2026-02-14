@@ -6,9 +6,9 @@ namespace CompanionModUtil
 {
 	struct SVersion
 	{
-		int m_nMajor;
-		int m_nMinor;
-		int m_nPatch;
+		int m_nMajor = 0;
+		int m_nMinor = 0;
+		int m_nPatch = 0;
 
 		bool operator>=(const SVersion& other) const
 		{

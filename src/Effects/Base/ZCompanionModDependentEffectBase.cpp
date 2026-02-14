@@ -1,6 +1,6 @@
-#include "ZCompanionModDepedentEffectBase.h"
+#include "ZCompanionModDependentEffectBase.h"
 
-bool ZCompanionModDepedentEffectBase::Available() const
+bool ZCompanionModDependentEffectBase::Available() const
 {
 	const auto s_Metadata = CompanionModUtil::LoadCompanionModInfo(false);
 

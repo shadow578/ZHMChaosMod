@@ -88,6 +88,13 @@ ZDynamicObject& ZHMRepositoryHelper::GetObj(const std::string& p_sId) const
 
 ZDynamicObject& ZHMRepositoryHelper::GetObj(const ZRepositoryID& p_RepoId) const
 {
+	static ZDynamicObject s_EmptyObj;
+
+	if (!IsLoaded())
+	{
+		return s_EmptyObj;
+	}
+
 	const auto s_pmRepositoryData = m_RepositoryResource.GetResource();
 
 	const auto s_It = s_pmRepositoryData->find(p_RepoId);
@@ -96,7 +103,6 @@ ZDynamicObject& ZHMRepositoryHelper::GetObj(const ZRepositoryID& p_RepoId) const
 		return s_It->second;
 	}
 
-	static ZDynamicObject s_EmptyObj;
 	return s_EmptyObj;
 }
 

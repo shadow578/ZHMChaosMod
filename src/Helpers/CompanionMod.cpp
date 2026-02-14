@@ -35,6 +35,13 @@ CompanionModUtil::SCompanionModMetadata CompanionModUtil::LoadCompanionModInfo(c
 	auto& s_Repo = ZHMRepositoryHelper::GetInstance();
 	s_Repo.Initialize();
 
+	if (!s_Repo.IsLoaded())
+	{
+		Logger::Debug(TAG "Repository not loaded, deferring companion mod metadata load.");
+		g_bMetadataLoaded = false; // allow retry later
+		return g_Metadata;
+	}
+
 	const auto s_pMetadataObj = s_Repo.Get(c_sMetadataRepoId);
 	if (!s_pMetadataObj)
 	{

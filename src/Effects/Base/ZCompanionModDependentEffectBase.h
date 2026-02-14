@@ -2,10 +2,10 @@
 #include "IChaosEffect.h"
 #include "Helpers/CompanionMod.h"
 
-class ZCompanionModDepedentEffectBase : public virtual IChaosEffect
+class ZCompanionModDependentEffectBase : public virtual IChaosEffect
 {
 public:
-	ZCompanionModDepedentEffectBase(const CompanionModUtil::SVersion p_MinimumVersion = CompanionModUtil::SVersion(0, 0, 0))
+	ZCompanionModDependentEffectBase(const CompanionModUtil::SVersion p_MinimumVersion = CompanionModUtil::SVersion(0, 0, 0))
 		: m_MinimumVersion(p_MinimumVersion)
 	{
 	}
