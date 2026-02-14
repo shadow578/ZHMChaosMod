@@ -3,6 +3,9 @@
 
 #include "Helpers/Repository/ZRepositoryEntryPatcher.h"
 
+#include <vector>
+#include <memory>
+
 /**
  * Base class that allows patching the game repository.
  * Patches created by this effect will be automatically restored when the effect ends or the scene unloads.

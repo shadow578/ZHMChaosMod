@@ -78,7 +78,7 @@ ZDynamicObject& ZHMRepositoryHelper::GetObj(const std::string& p_sId) const
 	const ZRepositoryID s_RepoId(p_sId);
 	if (s_RepoId == ZRepositoryID())
 	{
-		Logger::Debug(TAG "Invalid repository ID string: %s", p_sId.c_str());
+		Logger::Debug(TAG "Invalid repository ID string: {}", p_sId.c_str());
 		static ZDynamicObject s_EmptyObj;
 		return s_EmptyObj;
 	}
@@ -112,17 +112,32 @@ std::unique_ptr<ZRepositoryEntryAccessor> ZHMRepositoryHelper::Get(const ZReposi
 
 std::unique_ptr<ZRepositoryEntryPatcher> ZHMRepositoryHelper::Patch(const std::string& p_sId) const
 {
-	return std::make_unique<ZRepositoryEntryPatcher>(Get(p_sId));
+	if (auto s_pAccessor = Get(p_sId))
+	{
+		return std::make_unique<ZRepositoryEntryPatcher>(std::move(s_pAccessor));
+	}
+
+	return nullptr;
 }
 
 std::unique_ptr<ZRepositoryEntryPatcher> ZHMRepositoryHelper::Patch(const ZRepositoryID& p_RepoId) const
 {
-	return std::make_unique<ZRepositoryEntryPatcher>(Get(p_RepoId));
+	if (auto s_pAccessor = Get(p_RepoId))
+	{
+		return std::make_unique<ZRepositoryEntryPatcher>(std::move(s_pAccessor));
+	}
+
+	return nullptr;
 }
 
 std::string ZHMRepositoryHelper::GetIDFromEntry(const ZDynamicObject& p_Entry)
 {
 	const auto s_pEntry = ZRepositoryEntryAccessor::FromEntry(p_Entry);
+	if (!s_pEntry)
+	{
+		return "";
+	}
+
 	const auto s_sIdOpt = s_pEntry->Get<ZString>("ID_");
 
 	if (!s_sIdOpt.has_value())
@@ -136,6 +151,10 @@ std::string ZHMRepositoryHelper::GetIDFromEntry(const ZDynamicObject& p_Entry)
 ZHMRepositoryHelper::EEntryType ZHMRepositoryHelper::GetTypeFromEntry(const ZDynamicObject& p_Entry)
 {
 	const auto s_pEntry = ZRepositoryEntryAccessor::FromEntry(p_Entry);
+	if (!s_pEntry)
+	{
+		return EEntryType::Unknown;
+	}
 
 	// detection based on GlacierKit
 	// https://github.com/atampy25/glacierkit/blob/4a503547299b7f3b3395324380d836674d651b49/src-tauri/src/event_handling/repository_patch.rs#L24

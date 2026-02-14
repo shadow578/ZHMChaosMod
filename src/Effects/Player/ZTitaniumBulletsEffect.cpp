@@ -12,6 +12,11 @@ void ZTitaniumBulletsEffect::Start()
 	for (const ZRepositoryID& s_RepoId : ZHMRepositoryHelper::GetInstance().GetEntryIdsByType(ZHMRepositoryHelper::EEntryType::MagazineConfig))
 	{
 		auto s_pPatcher = Patch(s_RepoId);
+		if (!s_pPatcher)
+		{
+			continue;
+		}
+
 		Logger::Debug(TAG "Patching MagazineConfig entry {}",s_RepoId.ToString().c_str());
 
 		const auto s_sOriginalAmmoConfigOpt = s_pPatcher->Get<ZString>("AmmoConfig");

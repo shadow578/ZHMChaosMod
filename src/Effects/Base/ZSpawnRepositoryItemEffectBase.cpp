@@ -37,11 +37,15 @@ void ZSpawnRepositoryItemEffectBase::LoadResources()
 void ZSpawnRepositoryItemEffectBase::PushRepositoryProp(const ZRepositoryID& p_RepositoryId)
 {
     const auto s_Obj = ZHMRepositoryHelper::GetInstance().Get(p_RepositoryId);
+    if (!s_Obj)
+    {
+        return;
+    }
 
     std::string s_sDisplayName, s_sCommonName;
     if (const auto s_sDisplayNameOpt = s_Obj->Get<ZString>("Title"); s_sDisplayNameOpt.has_value())
     {
-        s_sCommonName = s_sDisplayNameOpt.value()->c_str();
+        s_sDisplayName = s_sDisplayNameOpt.value()->c_str();
     }
 
     if (const auto s_sCommonNameOpt = s_Obj->Get<ZString>("CommonName"); s_sCommonNameOpt.has_value())
