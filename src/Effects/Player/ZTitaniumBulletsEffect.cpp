@@ -28,4 +28,10 @@ void ZTitaniumBulletsEffect::Start()
 	}
 }
 
-REGISTER_CHAOS_EFFECT(ZTitaniumBulletsEffect);
+// FIXME: ZRepositoryPatchEffectBase patches don't consistently activate.
+// values from the repository (e.g. AmmoConfig) seems to only be loaded when the first weapon that uses them
+// is initialized, and then never again.
+// this causes the effect to not work for the weapon the player currently has equipped when the effect starts...
+// TitaniumBullets in the ZHMModSDK suffers from the same issue...
+
+//REGISTER_CHAOS_EFFECT(ZTitaniumBulletsEffect);
