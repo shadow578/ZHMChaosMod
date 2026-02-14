@@ -100,14 +100,14 @@ ZDynamicObject& ZHMRepositoryHelper::GetObj(const ZRepositoryID& p_RepoId) const
 	return s_EmptyObj;
 }
 
-std::unique_ptr<ZRepositoryEntryHelper> ZHMRepositoryHelper::Get(const std::string& p_sId) const
+std::unique_ptr<ZRepositoryEntryAccessor> ZHMRepositoryHelper::Get(const std::string& p_sId) const
 {
-	return ZRepositoryEntryHelper::FromEntry(GetObj(p_sId));
+	return ZRepositoryEntryAccessor::FromEntry(GetObj(p_sId));
 }
 
-std::unique_ptr<ZRepositoryEntryHelper> ZHMRepositoryHelper::Get(const ZRepositoryID& p_RepoId) const
+std::unique_ptr<ZRepositoryEntryAccessor> ZHMRepositoryHelper::Get(const ZRepositoryID& p_RepoId) const
 {
-	return ZRepositoryEntryHelper::FromEntry(GetObj(p_RepoId));
+	return ZRepositoryEntryAccessor::FromEntry(GetObj(p_RepoId));
 }
 
 std::unique_ptr<ZRepositoryEntryPatcher> ZHMRepositoryHelper::Patch(const std::string& p_sId) const
@@ -122,7 +122,7 @@ std::unique_ptr<ZRepositoryEntryPatcher> ZHMRepositoryHelper::Patch(const ZRepos
 
 std::string ZHMRepositoryHelper::GetIDFromEntry(const ZDynamicObject& p_Entry)
 {
-	const auto s_pEntry = ZRepositoryEntryHelper::FromEntry(p_Entry);
+	const auto s_pEntry = ZRepositoryEntryAccessor::FromEntry(p_Entry);
 	const auto s_sIdOpt = s_pEntry->Get<ZString>("ID_");
 
 	if (!s_sIdOpt.has_value())
@@ -135,7 +135,7 @@ std::string ZHMRepositoryHelper::GetIDFromEntry(const ZDynamicObject& p_Entry)
 
 ZHMRepositoryHelper::EEntryType ZHMRepositoryHelper::GetTypeFromEntry(const ZDynamicObject& p_Entry)
 {
-	const auto s_pEntry = ZRepositoryEntryHelper::FromEntry(p_Entry);
+	const auto s_pEntry = ZRepositoryEntryAccessor::FromEntry(p_Entry);
 
 	// detection based on GlacierKit
 	// https://github.com/atampy25/glacierkit/blob/4a503547299b7f3b3395324380d836674d651b49/src-tauri/src/event_handling/repository_patch.rs#L24

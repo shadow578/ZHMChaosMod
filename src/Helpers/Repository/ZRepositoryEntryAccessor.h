@@ -7,11 +7,11 @@
 #include <string>
 #include <memory>
 
-class ZRepositoryEntryHelper
+class ZRepositoryEntryAccessor
 {
 public:
-	static std::unique_ptr<ZRepositoryEntryHelper> FromEntry(const ZDynamicObject& p_Obj);
-	ZRepositoryEntryHelper(TArray<SDynamicObjectKeyValuePair>* p_pEntries) : m_pEntries(p_pEntries) {}
+	static std::unique_ptr<ZRepositoryEntryAccessor> FromEntry(const ZDynamicObject& p_Obj);
+	ZRepositoryEntryAccessor(TArray<SDynamicObjectKeyValuePair>* p_pEntries) : m_pEntries(p_pEntries) {}
 
 	SDynamicObjectKeyValuePair* GetPair(const std::string& p_sKey) const;
 

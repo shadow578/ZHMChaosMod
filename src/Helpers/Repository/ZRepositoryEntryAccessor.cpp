@@ -1,6 +1,6 @@
-#include "ZRepositoryEntryHelper.h"
+#include "ZRepositoryEntryAccessor.h"
 
-std::unique_ptr<ZRepositoryEntryHelper> ZRepositoryEntryHelper::FromEntry(const ZDynamicObject& p_Obj)
+std::unique_ptr<ZRepositoryEntryAccessor> ZRepositoryEntryAccessor::FromEntry(const ZDynamicObject& p_Obj)
 {
 	auto* s_pEntries = p_Obj.As<TArray<SDynamicObjectKeyValuePair>>();
 	if (!s_pEntries)
@@ -8,10 +8,10 @@ std::unique_ptr<ZRepositoryEntryHelper> ZRepositoryEntryHelper::FromEntry(const 
 		return nullptr;
 	}
 
-	return std::make_unique<ZRepositoryEntryHelper>(s_pEntries);
+	return std::make_unique<ZRepositoryEntryAccessor>(s_pEntries);
 }
 
-SDynamicObjectKeyValuePair* ZRepositoryEntryHelper::GetPair(const std::string& p_sKey) const
+SDynamicObjectKeyValuePair* ZRepositoryEntryAccessor::GetPair(const std::string& p_sKey) const
 {
 	for (auto& s_Pair : *m_pEntries)
 	{

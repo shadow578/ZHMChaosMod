@@ -1,12 +1,14 @@
 #pragma once
-#include "ZRepositoryEntryHelper.h"
+#include "ZRepositoryEntryAccessor.h"
+
+#include <Logging.h>
 
 #include <stack>
 
 class ZRepositoryEntryPatcher 
 {
 public:
-	ZRepositoryEntryPatcher(std::unique_ptr<ZRepositoryEntryHelper> p_pEntry) : m_pEntry(std::move(p_pEntry)) {}
+	ZRepositoryEntryPatcher(std::unique_ptr<ZRepositoryEntryAccessor> p_pEntry) : m_pEntry(std::move(p_pEntry)) {}
 	~ZRepositoryEntryPatcher() 
 	{
 		if (m_bAutoRestore)
@@ -53,7 +55,10 @@ public:
 		while (!m_sUndoStack.empty())
 		{
 			const auto& s_Pair = m_sUndoStack.top();
-			m_pEntry->Set(s_Pair.sKey.c_str(), s_Pair.value, true);
+			if (!m_pEntry->Set(s_Pair.sKey.c_str(), s_Pair.value, true))
+			{
+				Logger::Debug("[ZRepositoryEntryPatcher] Failed to restore original value for key = {}", s_Pair.sKey.c_str());
+			}
 			m_sUndoStack.pop();
 		}
 	}
@@ -64,7 +69,7 @@ public:
 	}
 
 private:
-	std::unique_ptr<ZRepositoryEntryHelper> m_pEntry;
+	std::unique_ptr<ZRepositoryEntryAccessor> m_pEntry;
 	bool m_bAutoRestore = true;
 
 	std::stack<SDynamicObjectKeyValuePair> m_sUndoStack;

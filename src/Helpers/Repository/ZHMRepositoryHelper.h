@@ -9,7 +9,7 @@
 #include <optional>
 #include <ranges>
 
-#include "ZRepositoryEntryHelper.h"
+#include "ZRepositoryEntryAccessor.h"
 #include "ZRepositoryEntryPatcher.h"
 
 typedef THashMap<ZRepositoryID, ZDynamicObject, TDefaultHashMapPolicy<ZRepositoryID>> ZHMRepositoryData;
@@ -71,8 +71,8 @@ public:
 	ZDynamicObject& GetObj(const std::string& p_sId) const;
 	ZDynamicObject& GetObj(const ZRepositoryID& p_RepoId) const;
 
-	std::unique_ptr<ZRepositoryEntryHelper> Get(const std::string& p_sId) const;
-	std::unique_ptr<ZRepositoryEntryHelper> Get(const ZRepositoryID& p_RepoId) const;
+	std::unique_ptr<ZRepositoryEntryAccessor> Get(const std::string& p_sId) const;
+	std::unique_ptr<ZRepositoryEntryAccessor> Get(const ZRepositoryID& p_RepoId) const;
 
 	std::unique_ptr<ZRepositoryEntryPatcher> Patch(const std::string& p_sId) const;
 	std::unique_ptr<ZRepositoryEntryPatcher> Patch(const ZRepositoryID& p_RepoId) const;
