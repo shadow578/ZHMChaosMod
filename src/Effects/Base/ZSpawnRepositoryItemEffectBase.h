@@ -29,7 +29,7 @@ protected:
         /**
 		 * repository id.
          */
-        std::string m_sID;
+        ZRepositoryID m_RepositoryID;
 
         /**
 		 * common name, stable for searching across game versions.
@@ -43,15 +43,14 @@ protected:
 
         operator bool() const
         {
-            return !m_sID.empty();
+            return !m_RepositoryID.IsEmpty();
 		}
 	};
 
 private:
 	static std::vector<SRepositoryPropInfo> m_aRepositoryProps; // static to share between instances
 
-    static bool LoadRepositoryProps();
-    static std::string DynamicObjectToString(const ZDynamicObject& p_DynamicObject);
+    static void PushRepositoryProp(const ZRepositoryID& p_RepositoryId);
 
     std::unique_ptr<ZTemplateEntitySpawner> m_pItemSpawnerSpawner;
 	std::unique_ptr<ZTemplateEntitySpawner> m_pRepositoryKeywordSpawner;
