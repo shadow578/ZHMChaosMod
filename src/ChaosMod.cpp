@@ -9,6 +9,7 @@
 
 #include "Helpers/ZTimer.h"
 #include "Helpers/Utils.h"
+#include "Helpers/CompanionMod.h"
 
 #include "EffectRegistry.h"
 #include "BuildInfo.h"
@@ -252,6 +253,10 @@ DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th,
         || s_sSceneResource == "assembly:/_PRO/Scenes/Frontend/MainMenu.entity";
     if (!s_bIsMenu && stage == ESceneLoadingStage::eLoading_AssetsLoaded)
     {
+        // on LoadResources, query companion mod version
+        CompanionModUtil::LoadCompanionModInfo();
+
+        // forward to effects
         ForeachEffect(true, [](IChaosEffect* p_pEffect)
             {
                 Logger::Debug(TAG "Loading Resources for '{}'", p_pEffect->GetName());

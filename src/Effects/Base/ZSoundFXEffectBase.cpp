@@ -21,7 +21,7 @@ void ZSoundFXEffectBase::OnClearScene()
 
 bool ZSoundFXEffectBase::Available() const
 {
-    return IChaosEffect::Available() &&
+    return ZCompanionModDependentEffectBase::Available() &&
            m_pSoundPlayerSpawner &&
            m_pSoundPlayerSpawner->IsAvailable();
 }

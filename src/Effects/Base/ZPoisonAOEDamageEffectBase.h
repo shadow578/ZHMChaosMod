@@ -5,13 +5,14 @@
 #include <Glacier/SColorRGB.h>
 
 #include "Helpers/ZTemplateEntitySpawner.h"
+#include "Effects/Base/ZCompanionModDependentEffectBase.h"
 
 /**
  * Reusable base for spawning Poison Area-of-Effect Damage Clouds.
  * Handles resource loading, unloading and spawning.
  * Spawn a AOE Cloud using Spawn().
  */
-class ZPoisonAOEDamageEffectBase : public virtual IChaosEffect
+class ZPoisonAOEDamageEffectBase : public virtual IChaosEffect, public virtual ZCompanionModDependentEffectBase
 {
 public:
     void LoadResources() override;

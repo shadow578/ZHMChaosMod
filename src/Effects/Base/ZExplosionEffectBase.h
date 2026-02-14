@@ -3,12 +3,14 @@
 
 #include "Helpers/ZTemplateEntitySpawner.h"
 
+#include "Effects/Base/ZCompanionModDependentEffectBase.h"
+
 /**
  * Reusable base for spawning explosions in the game world.
  * Handles Resource loading and cleanup, as well as spawning.
  * Spawn explosions using the SpawnExplosion() method.
  */
-class ZExplosionEffectBase : public virtual IChaosEffect
+class ZExplosionEffectBase : public virtual IChaosEffect, public virtual ZCompanionModDependentEffectBase
 {
 public:
     void LoadResources() override;

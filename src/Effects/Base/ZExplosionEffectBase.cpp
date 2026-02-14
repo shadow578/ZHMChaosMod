@@ -20,7 +20,7 @@ void ZExplosionEffectBase::OnClearScene()
 
 bool ZExplosionEffectBase::Available() const
 {
-    return IChaosEffect::Available() &&
+    return ZCompanionModDependentEffectBase::Available() &&
            m_pExplosionSpawner &&
            m_pExplosionSpawner->IsAvailable();
 }
