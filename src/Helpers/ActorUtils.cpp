@@ -3,47 +3,46 @@
 
 #include <Glacier/ZSpatialEntity.h>
 
-std::vector<ZActor *> Utils::GetActors(const bool p_bIncludeDead, const bool p_bIncludePacified)
+std::vector<TEntityRef<ZActor>> Utils::GetActors(const bool p_bIncludeDead, const bool p_bIncludePacified)
 {
-    std::vector<ZActor *> s_aActors;
+    std::vector<TEntityRef<ZActor>> s_aActors;
 
-    if (!Globals::NextActorId || *Globals::NextActorId <= 0)
+    if (!Globals::ActorManager)
     {
         return s_aActors;
     }
 
-    for (uint16 i = 0; i < *Globals::NextActorId; i++)
+    for (auto& s_rActor : Globals::ActorManager->m_activatedActors)
     {
-        auto s_pActor = Globals::ActorManager->m_aActors[i].m_pInterfaceRef;
-        if (!s_pActor)
+        if (!s_rActor)
         {
             continue;
         }
 
-        if ((!p_bIncludeDead && s_pActor->IsDead()) ||
-            (!p_bIncludePacified && s_pActor->IsPacified()))
+        if ((!p_bIncludeDead && s_rActor.m_pInterfaceRef->IsDead()) ||
+            (!p_bIncludePacified && s_rActor.m_pInterfaceRef->IsPacified()))
         {
             continue;
         }
 
-        s_aActors.push_back(s_pActor);
+        s_aActors.push_back(s_rActor);
     }
 
     return s_aActors;
 }
 
-ZActor *Utils::GetRandomActor(const bool p_bRequireAlive)
+TEntityRef<ZActor> Utils::GetRandomActor(const bool p_bRequireAlive)
 {
     auto s_aActors = GetActors(!p_bRequireAlive, !p_bRequireAlive);
     if (s_aActors.empty())
     {
-        return nullptr;
+        return {};
     }
 
     return Math::SelectRandomElement(s_aActors);
 }
 
-std::vector<std::pair<ZEntityRef, float32>> Utils::GetNearbyActors(
+std::vector<std::pair<TEntityRef<ZActor>, float32>> Utils::GetNearbyActors(
     const float4 &p_vPosition,
     const int p_nMaxCount,
     const float32 p_fRadius,
@@ -55,19 +54,12 @@ std::vector<std::pair<ZEntityRef, float32>> Utils::GetNearbyActors(
         return {};
     }
 
-    ZEntityRef s_rClosestActor = {};
+    TEntityRef<ZActor> s_rClosestActor = {};
     float32 s_fClosestDistance = FLT_MAX;
-    std::vector<std::pair<ZEntityRef, float32>> s_aNearbyActors;
-    for (auto *s_pActor : Utils::GetActors(p_bIncludeDead, p_bIncludePacified))
+    std::vector<std::pair<TEntityRef<ZActor>, float32>> s_aNearbyActors;
+    for (auto& s_rActor : Utils::GetActors(p_bIncludeDead, p_bIncludePacified))
     {
-        ZEntityRef s_rActor;
-        s_pActor->GetID(s_rActor);
-        if (!s_rActor)
-        {
-            continue;
-        }
-
-        const auto *s_pActorSpatial = s_rActor.QueryInterface<ZSpatialEntity>();
+        const auto *s_pActorSpatial = s_rActor.m_entityRef.QueryInterface<ZSpatialEntity>();
         if (!s_pActorSpatial)
         {
             continue;

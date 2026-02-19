@@ -19,6 +19,6 @@ public:
     }
 
 private:
-    ZActor* m_pLastTarget = nullptr;
+    TEntityRef<ZActor> m_rLastTarget = {};
     SMatrix m_LastTargetPos;
 };

@@ -15,16 +15,11 @@ void ZActorsFollowPlayerEffect::Stop()
 
 void ZActorsFollowPlayerEffect::SignalAllActors(const std::string& p_sSignalName)
 {
-	for (const auto s_pActor : Utils::GetActors(false, false))
+	for (const auto &s_rActor : Utils::GetActors(false, false))
 	{
-		if (!s_pActor) continue;
-
-		ZEntityRef s_rActor;
-		s_pActor->GetID(s_rActor);
-
 		if (!s_rActor) continue;
 
-		s_rActor.SignalInputPin(p_sSignalName);
+		s_rActor.m_entityRef.SignalInputPin(p_sSignalName);
 	}
 }
 

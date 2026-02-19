@@ -12,13 +12,13 @@ namespace Utils
      * @param p_bIncludeDead Include dead actors?
      * @param p_bIncludePacified Include pacified actors?
      */
-    std::vector<ZActor*> GetActors(const bool p_bIncludeDead, const bool p_bIncludePacified);
+    std::vector<TEntityRef<ZActor>> GetActors(const bool p_bIncludeDead, const bool p_bIncludePacified);
 
     /**
      * Get a random active actor in the current scene.
      * @param p_bRequireAlive Does the actor need to be not dead and not pacified?
      */
-    ZActor* GetRandomActor(const bool p_bRequireAlive);
+    TEntityRef<ZActor> GetRandomActor(const bool p_bRequireAlive);
 
     /**
      * Get nearby actors given a center point. 
@@ -29,7 +29,7 @@ namespace Utils
      * @param p_bIncludeDead Include dead actors?
      * @param p_bIncludePacified Include pacified actors?
      */
-    std::vector<std::pair<ZEntityRef, float32>> GetNearbyActors(
+    std::vector<std::pair<TEntityRef<ZActor>, float32>> GetNearbyActors(
         const float4& p_vPosition,
         const int p_nMaxCount = INT_MAX,
         const float32 p_fRadius = FLT_MAX,

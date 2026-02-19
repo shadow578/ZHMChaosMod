@@ -518,7 +518,7 @@ void ZSpeakEntityEffectBase::DebugSpeakAtNearestActor()
 			if (const auto s_aNearby = Utils::GetNearbyActors(s_vPlayerPos, 1); !s_aNearby.empty())
 			{
 				const auto s_rActor = s_aNearby.front().first;
-				Speak(s_rActor, m_eDebugSoundDef, m_eDebugGestureCategory, m_bDebugAllowInterrupt);
+				Speak(s_rActor.m_entityRef, m_eDebugSoundDef, m_eDebugGestureCategory, m_bDebugAllowInterrupt);
 			}
 		}
 	}

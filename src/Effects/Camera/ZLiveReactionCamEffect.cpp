@@ -87,24 +87,17 @@ TEntityRef<ZSpatialEntity> ZLiveReactionCamEffect::GetRandomActorHeadAttachEntit
 {
 	constexpr uint64_t c_nHeadEntityId = 0x5f46597848b36b38; // "HEAD"
 
-	const auto s_pActor = Utils::GetRandomActor(true);
-	if (!s_pActor)
-	{
-		return {};
-	}
-
-	ZEntityRef s_rActor;
-	s_pActor->GetID(s_rActor);
+	const auto s_rActor = Utils::GetRandomActor(true);
 	if (!s_rActor)
 	{
 		return {};
 	}
 
-	if (auto *s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(s_rActor))
+	if (auto *s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(s_rActor.m_entityRef))
 	{
 		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(c_nHeadEntityId); s_nIdx != -1)
 		{
-			if (auto *s_pHead = s_pBlueprint->GetSubEntity(s_rActor.m_pObj, s_nIdx); s_pHead != nullptr)
+			if (auto *s_pHead = s_pBlueprint->GetSubEntity(s_rActor.m_entityRef.m_pObj, s_nIdx); s_pHead != nullptr)
 			{
 				return TEntityRef<ZSpatialEntity>(ZEntityRef(s_pHead));
 			}
