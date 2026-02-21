@@ -1,6 +1,6 @@
 #pragma once
-#include "Effects/Base/ZPoisonAOEDamageEffectBase.h"
-#include "Effects/Base/ZSoundFXEffectBase.h"
+#include "Effects/Base/Companion/ZPoisonAOEDamageEffectBase.h"
+#include "Effects/Base/Companion/ZSoundFXEffectBase.h"
 
 #include "Helpers/ZResourceProvider.h"
 

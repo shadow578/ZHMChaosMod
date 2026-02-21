@@ -1,5 +1,5 @@
 #pragma once
-#include "Effects/Base/ZCompanionModDependentEffectBase.h"
+#include "Effects/Base/Companion/ZCompanionModDependentEffectBase.h"
 
 #include "Helpers/EntityBindings/SFollowPlayerHelperBinding.h"
 

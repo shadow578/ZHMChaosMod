@@ -5,7 +5,7 @@
 #include <Glacier/ZResourceID.h>
 
 #include "Helpers/ZTemplateEntitySpawner.h"
-#include "Effects/Base/ZCompanionModDependentEffectBase.h"
+#include "Effects/Base/Companion/ZCompanionModDependentEffectBase.h"
 
 /**
  * Reusable base for spawning sound effect players in the world.

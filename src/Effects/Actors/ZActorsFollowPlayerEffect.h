@@ -1,5 +1,5 @@
 #pragma once
-#include "Effects/Base/ZActorFollowPlayerHelperEffectBase.h"
+#include "Effects/Base/Companion/ZActorFollowPlayerHelperEffectBase.h"
 
 class ZActorsFollowPlayerEffect : public ZActorFollowPlayerHelperEffectBase
 {

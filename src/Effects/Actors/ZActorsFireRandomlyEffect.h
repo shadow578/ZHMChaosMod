@@ -1,5 +1,5 @@
 #pragma once
-#include "Effects/Base/ZActorWeaponCustomControlEffectBase.h"
+#include "Effects/Base/Companion/ZActorWeaponCustomControlEffectBase.h"
 
 class ZActorsFireRandomlyEffect : public ZActorWeaponCustomControlEffectBase
 {
