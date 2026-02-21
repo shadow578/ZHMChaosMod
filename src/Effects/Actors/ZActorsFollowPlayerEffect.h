@@ -1,14 +1,9 @@
 #pragma once
-#include "Effects/Base/ZCompanionModDependentEffectBase.h"
+#include "Effects/Base/ZActorFollowPlayerHelperEffectBase.h"
 
-class ZActorsFollowPlayerEffect : public ZCompanionModDependentEffectBase
+class ZActorsFollowPlayerEffect : public ZActorFollowPlayerHelperEffectBase
 {
 public:
-	ZActorsFollowPlayerEffect()
-		: ZCompanionModDependentEffectBase(CompanionModUtil::SVersion(1, 3, 0)) // follow player helper on NPCActor
-	{
-	}
-
 	void Start() override;
 	void Stop() override;
 
@@ -18,5 +13,5 @@ public:
 	}
 
 private:
-	void SignalAllActors(const std::string& p_sSignalName);
+	void SetActorsFollowPlayer(const bool p_bFollow);
 };
