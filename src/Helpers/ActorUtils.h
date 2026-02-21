@@ -5,6 +5,8 @@
 #include <Glacier/ZActor.h>
 #include <Glacier/ZMath.h>
 
+class ZSpatialEntity;
+
 namespace Utils
 {
     /**
@@ -35,4 +37,11 @@ namespace Utils
         const float32 p_fRadius = FLT_MAX,
         const bool p_bIncludeDead = false, 
         const bool p_bIncludePacified = false);
+
+    /**
+     * Get the head attachment point entity for a actor.
+	 * @param p_rActor Actor to get head attach for.
+	 * @return Entity ref of head attach, or empty if not found.
+     */
+    TEntityRef<ZSpatialEntity> GetActorHeadAttachEntity(const TEntityRef<ZActor> p_rActor);
 };

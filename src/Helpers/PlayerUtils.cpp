@@ -7,6 +7,8 @@
 
 #include <Logging.h>
 
+#include "Helpers/EntityUtils.h"
+
 bool Utils::TeleportPlayerTo(const SMatrix p_Position)
 {
     auto s_Player = SDK()->GetLocalPlayer();
@@ -70,4 +72,20 @@ bool Utils::SetPlayerOutfit(const std::string &p_sCommonName, TEntityRef<ZGlobal
         false);
 
     return true;
+}
+
+TEntityRef<ZSpatialEntity> Utils::GetPlayerHeadAttachEntity(const TEntityRef<ZHitman5> p_rPlayer)
+{
+    if (auto* s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(p_rPlayer.m_entityRef))
+    {
+        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x0ff5798a35665af2 /* "HEAD" */); s_nIdx != -1)
+        {
+            if (auto* s_pHead = s_pBlueprint->GetSubEntity(p_rPlayer.m_entityRef.m_pObj, s_nIdx); s_pHead != nullptr)
+            {
+                return TEntityRef<ZSpatialEntity>(ZEntityRef(s_pHead));
+            }
+        }
+    }
+
+    return {};
 }

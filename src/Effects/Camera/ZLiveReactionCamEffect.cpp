@@ -5,6 +5,7 @@
 
 #include "EffectRegistry.h"
 #include "Helpers/ActorUtils.h"
+#include "Helpers/PlayerUtils.h"
 #include "Helpers/EntityUtils.h"
 
 void ZLiveReactionCamEffect::LoadResources()
@@ -85,50 +86,24 @@ void ZLiveReactionCamEffect::Stop()
 
 TEntityRef<ZSpatialEntity> ZLiveReactionCamEffect::GetRandomActorHeadAttachEntity()
 {
-	constexpr uint64_t c_nHeadEntityId = 0x5f46597848b36b38; // "HEAD"
-
 	const auto s_rActor = Utils::GetRandomActor(true);
 	if (!s_rActor)
 	{
 		return {};
 	}
 
-	if (auto *s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(s_rActor.m_entityRef))
-	{
-		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(c_nHeadEntityId); s_nIdx != -1)
-		{
-			if (auto *s_pHead = s_pBlueprint->GetSubEntity(s_rActor.m_entityRef.m_pObj, s_nIdx); s_pHead != nullptr)
-			{
-				return TEntityRef<ZSpatialEntity>(ZEntityRef(s_pHead));
-			}
-		}
-	}
-
-	return {};
+	return Utils::GetActorHeadAttachEntity(s_rActor);
 }
 
 TEntityRef<ZSpatialEntity> ZLiveReactionCamEffect::GetPlayerHeadAttachEntity()
 {
-	constexpr uint64_t c_nHeadEntityId = 0x0ff5798a35665af2; // "HEAD"
-
 	const auto s_rPlayer = SDK()->GetLocalPlayer();
 	if (!s_rPlayer)
 	{
 		return {};
 	}
 
-	if (auto *s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(s_rPlayer.m_entityRef))
-	{
-		if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(c_nHeadEntityId); s_nIdx != -1)
-		{
-			if (auto *s_pHead = s_pBlueprint->GetSubEntity(s_rPlayer.m_entityRef.m_pObj, s_nIdx); s_pHead != nullptr)
-			{
-				return TEntityRef<ZSpatialEntity>(ZEntityRef(s_pHead));
-			}
-		}
-	}
-
-	return {};
+	return Utils::GetPlayerHeadAttachEntity(s_rPlayer);
 }
 
 void ZLiveReactionCamEffect::SpawnLiveReactionCam(TEntityRef<ZSpatialEntity> p_rTargetHead, const ZRuntimeResourceID p_HudMessageId, const ZPIPMessageEntity_EIcon p_eIcon)
