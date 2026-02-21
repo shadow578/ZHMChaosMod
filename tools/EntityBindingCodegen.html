@@ -217,14 +217,46 @@
           };
         }
 
+        function parseSingleEntityTemplate(entityTemp) {
+          let props = []; /* { name:str, type:str }[] */
+          let pins = [];  /* { pin:str, type:"input" | "output" }[] */
+
+          for (const [name, property] of Object.entries(entityTemp.properties || {})) {
+            props.push({ name, type: property.type });
+          }
+
+          for (const [name, propAliases] of Object.entries(entityTemp.propertyAliases || {})) {
+            props.push({ name, type: undefined });
+          }
+
+          for (const pin of Object.keys(entityTemp.inputCopying || {})) {
+            pins.push({ pin: pin, type: "input" });
+          }
+
+          for (const pin of Object.keys(entityTemp.outputCopying || {})) {
+            pins.push({ pin: pin, type: "output" });
+          }
+
+          return {
+            properties: props,
+            pins
+          };
+        }
+
         function parseEntityTemplate(json) /* { tempHash?: str, properties: { name: string, type?: string }[], pins: { pin: string, type: "input" | "output" }[] } */ {
           const data = JSON.parse(json);
 
           if ("propertyValues" in data) {
+            // CPPT entities, e.g. [modules:/zaimodifierrole.class].pc_entitytype
             return parseEntityTemplateCppt(data);
           }
           else if ("entities" in data) {
+            // full entity templates exported from GlacierKit
             return parseEntityTemplateBp(data);
+          }
+          else if ("parent" in data && "factory" in data) {
+            // single entity nodes, copied from GlacierKit's Entity Template editor
+            return parseSingleEntityTemplate(data);
           }
           else {
             console.error("Invalid data format!");
