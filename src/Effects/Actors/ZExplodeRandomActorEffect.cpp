@@ -10,21 +10,14 @@
 
 void ZExplodeRandomActorEffect::Start()
 {
-    m_pLastTarget = Utils::GetRandomActor(true);
-    if (!m_pLastTarget)
+    m_rLastTarget = Utils::GetRandomActor(true);
+    if (!m_rLastTarget)
     {
         Logger::Warn(TAG "No actor found to explode!");
         return;
     }
 
-    ZEntityRef s_EntityRef;
-    m_pLastTarget->GetID(s_EntityRef);
-    if (!s_EntityRef)
-    {
-        return;
-    }
-
-    const auto *s_pActorSpatial = s_EntityRef.QueryInterface<ZSpatialEntity>();
+    const auto *s_pActorSpatial = m_rLastTarget.m_entityRef.QueryInterface<ZSpatialEntity>();
     if (!s_pActorSpatial)
     {
         return;
@@ -43,9 +36,9 @@ void ZExplodeRandomActorEffect::Start()
 void ZExplodeRandomActorEffect::OnDrawDebugUI()
 {
     std::string s_LastTargetName = "<null>";
-    if (m_pLastTarget)
+    if (m_rLastTarget)
     {
-        s_LastTargetName = m_pLastTarget->m_sActorName;
+        s_LastTargetName = m_rLastTarget.m_pInterfaceRef->m_sActorName;
     }
 
     ImGui::TextUnformatted(fmt::format("Last Target: {}", s_LastTargetName).c_str());

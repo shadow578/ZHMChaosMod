@@ -27,17 +27,9 @@ void ZExplodeNearbyActorsEffect::Start()
     const auto s_PlayerWM = s_PlayerSpatial->GetObjectToWorldMatrix();
 
     // spawn explosion at all nearby actors
-    const auto s_aAllActors = Utils::GetActors(false, false);
-    for (auto *s_pActor : s_aAllActors)
+    for (const auto &s_rActor : Utils::GetActors(false, false))
     {
-        ZEntityRef s_Ref;
-        s_pActor->GetID(s_Ref);
-        if (!s_Ref)
-        {
-            continue;
-        }
-
-        const auto *s_pActorSpatial = s_Ref.QueryInterface<ZSpatialEntity>();
+        const auto *s_pActorSpatial = s_rActor.m_entityRef.QueryInterface<ZSpatialEntity>();
         if (!s_pActorSpatial)
         {
             continue;

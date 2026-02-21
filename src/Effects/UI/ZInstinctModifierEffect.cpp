@@ -12,14 +12,14 @@ void ZInstinctModifierEffectBase::Start()
 {
     m_mOriginalGlowTypes.clear();
 
-    for (auto *s_pActor : Utils::GetActors(true, true))
+    for (auto& s_rActor : Utils::GetActors(true, true))
     {
-        if (!s_pActor)
+        if (!s_rActor)
         {
             continue;
         }
 
-        auto s_rCharacter = s_pActor->m_rCharacter;
+        auto s_rCharacter = s_rActor.m_pInterfaceRef->m_rCharacter;
         if (!s_rCharacter)
         {
             continue;
@@ -28,7 +28,7 @@ void ZInstinctModifierEffectBase::Start()
         auto s_eOriginalGlowType = Utils::GetProperty<ERenderGlowTypes>(s_rCharacter.m_entityRef, c_GlowTypePropertyName).value_or(ERenderGlowTypes::ERENDERGLOWTYPE_CIVILIAN);
         Utils::SetProperty<ERenderGlowTypes>(s_rCharacter.m_entityRef, c_GlowTypePropertyName, m_eGlowType);
 
-        m_mOriginalGlowTypes[s_pActor] = s_eOriginalGlowType;
+        m_mOriginalGlowTypes[s_rActor.m_pInterfaceRef] = s_eOriginalGlowType;
     }
 }
 

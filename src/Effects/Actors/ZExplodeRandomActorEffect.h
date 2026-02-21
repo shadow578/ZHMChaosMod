@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Effects/Base/ZExplosionEffectBase.h"
+#include "Effects/Base/Companion/ZExplosionEffectBase.h"
 
 class ZExplodeRandomActorEffect : public ZExplosionEffectBase
 {
@@ -19,6 +19,6 @@ public:
     }
 
 private:
-    ZActor* m_pLastTarget = nullptr;
+    TEntityRef<ZActor> m_rLastTarget = {};
     SMatrix m_LastTargetPos;
 };

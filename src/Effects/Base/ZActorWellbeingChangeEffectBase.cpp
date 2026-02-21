@@ -22,14 +22,14 @@ void ZActorWellbeingChangeEffectBase::OnSlowUpdate(const float32 p_fDeltaTime, c
         return;
     }
 
-    for (auto* s_pActor : Utils::GetActors(true, true))
+    for (auto& s_rActor : Utils::GetActors(true, true))
     {
-		const auto s_CurrentState = GetActorState(s_pActor);
+		const auto s_CurrentState = GetActorState(s_rActor.m_pInterfaceRef);
 
-        auto s_it = m_mLastActorStates.find(s_pActor);
+        auto s_it = m_mLastActorStates.find(s_rActor.m_pInterfaceRef);
         if (s_it == m_mLastActorStates.end())
         {
-            m_mLastActorStates[s_pActor] = s_CurrentState;
+            m_mLastActorStates[s_rActor.m_pInterfaceRef] = s_CurrentState;
             continue;
         }
 
@@ -39,9 +39,9 @@ void ZActorWellbeingChangeEffectBase::OnSlowUpdate(const float32 p_fDeltaTime, c
             continue;
         }
 
-        m_mLastActorStates[s_pActor] = s_CurrentState;
+        m_mLastActorStates[s_rActor.m_pInterfaceRef] = s_CurrentState;
 
-        OnActorWellbeingChanged(s_pActor, s_LastState, s_CurrentState);
+        OnActorWellbeingChanged(s_rActor.m_pInterfaceRef, s_LastState, s_CurrentState);
     }
 }
 

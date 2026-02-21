@@ -18,17 +18,14 @@ void ZInvisibleActorsEffect::Stop()
 
 void ZInvisibleActorsEffect::SetAllActorsVisibility(const bool p_bVisible)
 {
-    for (auto* s_pActor : Utils::GetActors(true, true))
+    for (auto& s_rActor : Utils::GetActors(true, true))
     {
-        if (!s_pActor)
+        if (!s_rActor)
         {
             continue;
         }
 
-        ZEntityRef s_ActorRef;
-        s_pActor->GetID(s_ActorRef);
-
-        Utils::SetProperty<bool>(s_ActorRef, "m_bVisible", p_bVisible);
+        Utils::SetProperty<bool>(s_rActor.m_entityRef, "m_bVisible", p_bVisible);
     }
 }
 

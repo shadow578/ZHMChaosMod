@@ -1,6 +1,6 @@
 #pragma once
 #include "Effects/Base/ZActorWellbeingChangeEffectBase.h"
-#include "Effects/Base/ZExplosionEffectBase.h"
+#include "Effects/Base/Companion/ZExplosionEffectBase.h"
 
 class ZExplosiveKnockoutEffect : public ZActorWellbeingChangeEffectBase, public ZExplosionEffectBase
 {

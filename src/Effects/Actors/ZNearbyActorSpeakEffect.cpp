@@ -118,7 +118,7 @@ void ZNearbyActorSpeakEffect::FindAndRemoveSpeakersNearby()
 
 		// start speaking
 		const auto s_SpeakerWrapper = Speak(
-				s_rActor,
+				s_rActor.m_entityRef,
 				GetRandomSoundDef(),
 				EGestureCategory::EGC_None,
 				true,
@@ -126,7 +126,7 @@ void ZNearbyActorSpeakEffect::FindAndRemoveSpeakersNearby()
 		);
 
 		const SActiveSpeakerEntry s_NewEntry{
-				.m_rActor = s_rActor,
+				.m_rActor = s_rActor.m_entityRef,
 				.m_SpeakBinding = s_SpeakerWrapper,
 				.m_fTimeToNextRepetition = GetRepetitionDelay()};
 		m_aActiveSpeakers.push_back(s_NewEntry);

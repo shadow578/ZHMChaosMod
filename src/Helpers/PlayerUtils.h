@@ -4,6 +4,9 @@
 #include <Glacier/ZOutfit.h>
 #include <Glacier/ZMath.h>
 
+class ZSpatialEntity;
+class ZHitman5;
+
 namespace Utils
 {
     /**
@@ -19,4 +22,11 @@ namespace Utils
      * @param p_OutfitOut Set set to the OutfitKit that was applied to the player, assuming the function returned true.
      */
     bool SetPlayerOutfit(const std::string& p_sCommonName, TEntityRef<ZGlobalOutfitKit>& p_OutfitOut);
+
+    /**
+     * Get the head attachment point entity for the player.
+     * @param p_rPlayer Player to get head attach for.
+     * @return Entity ref of head attach, or empty if not found.
+     */
+    TEntityRef<ZSpatialEntity> GetPlayerHeadAttachEntity(const TEntityRef<ZHitman5> p_rPlayer);
 };

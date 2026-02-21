@@ -10,16 +10,14 @@
 
 void ZSwapPlayerWithActorEffect::Start()
 {
-    auto s_Actor = Utils::GetRandomActor(false);
+    auto s_rActor = Utils::GetRandomActor(false);
     auto s_Player = SDK()->GetLocalPlayer();
-    if (!s_Actor || !s_Player.m_entityRef)
+    if (!s_rActor || !s_Player.m_entityRef)
     {
         return;
     }
 
-    ZEntityRef s_ActorRef;
-    s_Actor->GetID(s_ActorRef);
-    auto s_ActorSpatialEntity = s_ActorRef.QueryInterface<ZSpatialEntity>();
+    auto s_ActorSpatialEntity = s_rActor.m_entityRef.QueryInterface<ZSpatialEntity>();
 
     auto s_PlayerSpatialEntity = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
 
@@ -34,7 +32,7 @@ void ZSwapPlayerWithActorEffect::Start()
     s_ActorSpatialEntity->SetObjectToWorldMatrixFromEditor(s_PlayerWM);
     s_PlayerSpatialEntity->SetObjectToWorldMatrixFromEditor(s_ActorWM);
 
-    Logger::Info(TAG "Swapped player with actor '{}'", s_Actor->m_sActorName);
+    Logger::Info(TAG "Swapped player with actor '{}'", s_rActor.m_pInterfaceRef->m_sActorName);
 
     m_PreviousPlayerPosition = s_PlayerWM;
 }

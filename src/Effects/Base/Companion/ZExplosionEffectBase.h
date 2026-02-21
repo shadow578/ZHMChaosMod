@@ -3,7 +3,7 @@
 
 #include "Helpers/ZTemplateEntitySpawner.h"
 
-#include "Effects/Base/ZCompanionModDependentEffectBase.h"
+#include "Effects/Base/Companion/ZCompanionModDependentEffectBase.h"
 
 /**
  * Reusable base for spawning explosions in the game world.

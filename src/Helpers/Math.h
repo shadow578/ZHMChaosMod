@@ -52,6 +52,7 @@ namespace Math
 
     /**
 	 * Get a random boolean with a given chance of being true.
+	 * @param p_fTrueChance Chance of returning true, between 0.0 and 1.0.
      */
     static inline bool GetRandomBool(const float32 p_fTrueChance)
     {
