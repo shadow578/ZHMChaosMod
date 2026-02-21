@@ -6,8 +6,12 @@
 class ZLaggyCameraEffect : public ZCameraEffectBase 
 {
 public:
-    ZLaggyCameraEffect() :
-        ZCameraEffectBase()
+    ZLaggyCameraEffect(const std::string p_sNameSuffix, const std::string p_sDisplayName, const int p_nDelayFrames, const float32 m_fApplyPercent) :
+        ZCameraEffectBase(),
+        m_sNameSuffix(p_sNameSuffix),
+		m_sDisplayName(p_sDisplayName),
+		m_nDelayFrames(p_nDelayFrames),
+		m_fTransformApplyPercent(m_fApplyPercent)
     {
     }
 
@@ -17,9 +21,14 @@ public:
 
     void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining) override;
 
+    std::string GetName() const override
+    {
+        return ZCameraEffectBase::GetName() + "_" + m_sNameSuffix;
+	}
+
     std::string GetDisplayName(const bool p_bVoting) const override
     {
-        return "Laggy Camera";
+        return m_sDisplayName;
     }
 
     EDuration GetDuration() const override
@@ -28,8 +37,11 @@ public:
     }
 
 private:
+	const std::string m_sNameSuffix;
+	const std::string m_sDisplayName;
+
     std::queue<SMatrix> m_qTransformHistory;
 
-    int m_nDelayFrames = 15;
-	float32 m_fTransformApplyPercent = 0.25f;
+    int m_nDelayFrames;
+	float32 m_fTransformApplyPercent;
 };

@@ -66,4 +66,6 @@ void ZLaggyCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, co
     }
 }
 
-REGISTER_CHAOS_EFFECT(ZLaggyCameraEffect)
+REGISTER_CHAOS_EFFECT_PARAM(laggy_normal, ZLaggyCameraEffect, "lag_normal", "Laggy Camera", 10, 0.5f);
+REGISTER_CHAOS_EFFECT_PARAM(laggy_extreme, ZLaggyCameraEffect, "lag_extreme", "Extreme Laggy Camera", 10, 0.15f);
+REGISTER_CHAOS_EFFECT_PARAM(delayed, ZLaggyCameraEffect, "delayed_normal", "Lazy Camera", 60, 1.0f);
