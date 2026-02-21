@@ -28,8 +28,20 @@
 
 #define BINDING_CONSTRUCTOR(NAME)											\
 	ZEntityRef m_rEntity;													\
-	NAME##(ZEntityRef p_rEntity = {}) : m_rEntity(p_rEntity) {}             \
+	NAME(ZEntityRef p_rEntity = {}) : m_rEntity(p_rEntity) {}               \
 	operator bool() const {	return !!m_rEntity; }
+
+// intellisense struggles with the PROPERTY macros, so simplify them
+// for intellisense pass.
+#ifdef __INTELLISENSE__
+
+#define PROPERTY(TYPE, NAME)		\
+	std::optional<TYPE> NAME;
+
+#define PROPERTY_RO(TYPE, NAME)		\
+	const std::optional<TYPE> NAME;
+
+#else // !__INTELLISENSE__
 
 #define PROPERTY(TYPE, NAME)    																		      \
      inline std::optional<TYPE> __##NAME##_Get() const { return Utils::GetProperty<TYPE>(m_rEntity, #NAME); } \
@@ -39,6 +51,8 @@
 #define PROPERTY_RO(TYPE, NAME)    																		      \
      inline std::optional<TYPE> __##NAME##_Get() const { return Utils::GetProperty<TYPE>(m_rEntity, #NAME); } \
 	 __declspec(property(get = __##NAME##_Get)) std::optional<TYPE> NAME;
+
+#endif // __INTELLISENSE__
 
 #define INPUT_PIN(NAME) \
 	inline void NAME() { m_rEntity.SignalInputPin(#NAME); }
