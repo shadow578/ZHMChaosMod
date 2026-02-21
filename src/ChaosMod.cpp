@@ -10,6 +10,7 @@
 #include "Helpers/ZTimer.h"
 #include "Helpers/Utils.h"
 #include "Helpers/CompanionMod.h"
+#include "Helpers/Repository/ZHMRepositoryHelper.h"
 
 #include "EffectRegistry.h"
 #include "BuildInfo.h"
@@ -240,6 +241,8 @@ DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnClearScene, ZEntitySceneContext* th, bool
         }
     );
 
+    ZHMRepositoryHelper::GetInstance().Reset();
+
     return HookResult<void>(HookAction::Continue());
 }
 
@@ -249,23 +252,31 @@ DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th,
     // loading to early (in OnEngineInit or menu screens) can cause some issues with resource loading,
     // leading to crashes.
     const std::string s_sSceneResource = th->GetSceneInitParameters().m_SceneResource.c_str();
-    const bool s_bIsMenu = s_sSceneResource == "assembly:/_PRO/Scenes/Frontend/Boot.entity"
-        || s_sSceneResource == "assembly:/_PRO/Scenes/Frontend/MainMenu.entity";
-    if (!s_bIsMenu && stage == ESceneLoadingStage::eLoading_AssetsLoaded)
+	const bool s_bIsBoot = s_sSceneResource == "assembly:/_PRO/Scenes/Frontend/Boot.entity";
+	const bool s_bIsMainMenu = s_sSceneResource == "assembly:/_PRO/Scenes/Frontend/MainMenu.entity";
+
+    if (!s_bIsBoot && stage == ESceneLoadingStage::eLoading_AssetsLoaded)
     {
-        // on LoadResources, query companion mod version
+        ZHMRepositoryHelper::GetInstance().Initialize();
+
+        // companion mod info is stored in the repository, which should be available at the main menu.
+		// we need to load asap so the UI can display correct info, even when accessing from the main menu.
         CompanionModUtil::LoadCompanionModInfo();
 
-        // forward to effects
-        ForeachEffect(true, [](IChaosEffect* p_pEffect)
-            {
-                Logger::Debug(TAG "Loading Resources for '{}'", p_pEffect->GetName());
-                p_pEffect->LoadResources();
-            }
-        );
+        // resource loading of effects is defined such that it should only be done for gameplay scenes, not main menu.
+        // thus, we need the extra check here.
+        if (!s_bIsMainMenu)
+        {
+            ForeachEffect(true, [](IChaosEffect* p_pEffect)
+                {
+                    Logger::Debug(TAG "Loading Resources for '{}'", p_pEffect->GetName());
+                    p_pEffect->LoadResources();
+                }
+            );
+        }
     }
 
-    if (!s_bIsMenu && stage == ESceneLoadingStage::eLoading_ScenePlaying)
+    if (!s_bIsBoot && !s_bIsMainMenu && stage == ESceneLoadingStage::eLoading_ScenePlaying)
     {
         ForeachEffect(true, [](IChaosEffect* p_pEffect)
             {
