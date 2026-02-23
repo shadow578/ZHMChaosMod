@@ -7,8 +7,8 @@
 
 #include "EffectRegistry.h"
 #include "Helpers/EntityUtils.h"
-#include "Helpers/Math.h"
 #include "Helpers/PlayerUtils.h"
+#include "Helpers/Math.h"
 
 #define TAG "[ZReturnToSpawnEffect] "
 
@@ -16,17 +16,18 @@ void ZReturnToSpawnEffect::OnEnterScene()
 {
     m_aSpawnPoints.clear();
 
-    const auto s_aStartingLocations = Utils::ZEntityFinder().EntityType("ZHeroSpawn").Find();
+    const auto s_aStartingLocations = Utils::ZEntityFinder()
+                                          .EntityType("ZHeroSpawn")
+                                          .Find();
     if (s_aStartingLocations.empty())
     {
         return;
     }
 
-    for (const auto& s_StartingLocation : s_aStartingLocations)
+    for (const auto &s_StartingLocation : s_aStartingLocations)
     {
         // attempt to get position property first
-        auto s_rPosition =
-            Utils::GetProperty<TEntityRef<ZSpatialEntity>>(s_StartingLocation, "m_rPosition").value_or({});
+        auto s_rPosition = Utils::GetProperty<TEntityRef<ZSpatialEntity>>(s_StartingLocation, "m_rPosition").value_or({});
         if (!s_rPosition)
         {
             // if that fails, fall back to the spatial entity of the location itself
@@ -65,7 +66,7 @@ void ZReturnToSpawnEffect::OnDrawDebugUI()
     ImGui::TextUnformatted(fmt::format("# Spawn Points: {}", m_aSpawnPoints.size()).c_str());
 
     int i = 0;
-    for (const auto& s_SpawnPoint : m_aSpawnPoints)
+    for (const auto &s_SpawnPoint : m_aSpawnPoints)
     {
         if (ImGui::Button(fmt::format("[{}]", i).c_str()))
         {

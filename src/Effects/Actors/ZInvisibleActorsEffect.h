@@ -5,7 +5,7 @@
 // we don't want actors showing on the minimap if they're invisible.
 class ZInvisibleActorsEffect : public ZMinimapNoActorsEffect
 {
-  public:
+public:
     void Start() override;
     void Stop() override;
 
@@ -14,6 +14,6 @@ class ZInvisibleActorsEffect : public ZMinimapNoActorsEffect
         return "Ghost Town";
     }
 
-  private:
+private:
     void SetAllActorsVisibility(const bool p_bVisible);
 };

@@ -8,7 +8,7 @@
  */
 class ZPlayerRagdollEffectBase : public virtual IChaosEffect
 {
-  public:
+public:
     ZPlayerRagdollEffectBase(const bool p_bPowered) : m_bPowered(p_bPowered) {}
 
     void Start() override;
@@ -17,6 +17,6 @@ class ZPlayerRagdollEffectBase : public virtual IChaosEffect
     bool Available() const override;
     bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
 
-  private:
+private:
     const bool m_bPowered;
 };

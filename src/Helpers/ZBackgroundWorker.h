@@ -1,25 +1,25 @@
 #pragma once
-#include <functional>
-#include <mutex>
-#include <queue>
 #include <thread>
+#include <mutex>
+#include <functional>
+#include <queue>
 
 class ZBackgroundWorker
 {
-  public:
-    ZBackgroundWorker();
-    ~ZBackgroundWorker();
+public:
+	ZBackgroundWorker();
+	~ZBackgroundWorker();
 
-    void Enqueue(const std::function<void()>& s_Task);
+	void Enqueue(const std::function<void()>& s_Task);
 
-  private:
-    std::atomic<bool> m_bRunning{true};
-    std::thread m_WorkerThread;
+private:
+	std::atomic<bool> m_bRunning{ true };
+	std::thread m_WorkerThread;
 
-    std::mutex m_QueueMutex;
-    std::queue<std::function<void()>> m_qTaskQueue;
+	std::mutex m_QueueMutex;
+	std::queue<std::function<void()>> m_qTaskQueue;
 
-    std::condition_variable m_NewTaskCondition;
+	std::condition_variable m_NewTaskCondition;
 
-    void RunWorker();
+	void RunWorker();
 };

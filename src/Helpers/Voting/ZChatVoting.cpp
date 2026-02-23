@@ -43,7 +43,7 @@ bool ZChatVoting::PushMessage(const std::string& p_sUserId, const std::string& p
     std::lock_guard s_Lock(m_VotesMutex);
 
     const auto s_nVote = ParseVoteOption(p_sMessage);
-    if (s_nVote < 0                         // invalid?
+    if (s_nVote < 0 // invalid? 
         || s_nVote >= m_aVoteCounts.size()) // out of range?
     {
         return false;
@@ -69,7 +69,11 @@ bool ZChatVoting::PushMessage(const std::string& p_sUserId, const std::string& p
         m_mUserVotes[p_sUserId] = s_nVote;
     }
 
-    Logger::Debug(TAG "{} voted for option {} (previously {})", p_sUserId, s_nVote, s_nPreviousVote);
+    Logger::Debug(TAG "{} voted for option {} (previously {})", 
+        p_sUserId, 
+        s_nVote, 
+        s_nPreviousVote
+    );
     return true;
 }
 
@@ -82,9 +86,15 @@ std::vector<ZChatVoting::SVoteOption> ZChatVoting::GetVotes() const
 int ZChatVoting::GetTotalVotes() const
 {
     std::lock_guard s_Lock(m_VotesMutex);
-    return std::accumulate(m_aVoteCounts.begin(), m_aVoteCounts.end(), 0, [](int p_nAcc, const SVoteOption& p_Option) {
-        return p_nAcc + p_Option.m_nVoteCount;
-    });
+    return std::accumulate(
+        m_aVoteCounts.begin(),
+        m_aVoteCounts.end(),
+        0,
+        [](int p_nAcc, const SVoteOption& p_Option)
+        {
+            return p_nAcc + p_Option.m_nVoteCount;
+        }
+    );
 }
 
 int ZChatVoting::GetExistingVote(const std::string& p_sUserId) const
@@ -121,7 +131,7 @@ int ZChatVoting::ParseVoteOption(const std::string& p_sMessage)
     {
         s_cVote = s_sTrimmed[1];
     }
-
+    
     if (!std::isdigit(s_cVote))
     {
         return -1;

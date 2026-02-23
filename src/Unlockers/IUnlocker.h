@@ -9,13 +9,10 @@
  */
 class IUnlocker
 {
-  public:
+public:
     virtual void Start() = 0;
-    virtual bool Available() const
-    {
-        return true;
-    }
-
+    virtual bool Available() const { return true; }
+    
     virtual std::string GetName() const;
     virtual std::string GetDisplayName() const = 0;
     virtual std::string GetDescription() const = 0;

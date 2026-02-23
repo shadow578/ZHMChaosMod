@@ -1,10 +1,10 @@
 #pragma once
 
+#include <string>
 #include <atomic>
 #include <functional>
-#include <memory>
 #include <mutex>
-#include <string>
+#include <memory>
 
 #include <ixwebsocket/IXWebSocket.h>
 
@@ -14,7 +14,7 @@
  */
 class TwitchEventSub
 {
-  public:
+public:
     TwitchEventSub() = default;
     ~TwitchEventSub();
 
@@ -50,7 +50,7 @@ class TwitchEventSub
      */
     void SetOnConnectionStateChangedCallback(std::function<void(bool)> p_Callback);
 
-  private:
+private:
     static constexpr const char* c_sEventSubUrl = "wss://eventsub.wss.twitch.tv/ws";
     static constexpr const char* c_sTwitchApiUrl = "https://api.twitch.tv/helix";
 
@@ -95,10 +95,7 @@ class TwitchEventSub
     /**
      * Make an HTTP request to the Twitch API.
      */
-    bool MakeApiRequest(
-        const std::string& p_sEndpoint,
-        const std::string& p_sMethod,
-        const std::string& p_sBody,
-        std::string& p_sResponse
-    ) const;
+    bool MakeApiRequest(const std::string& p_sEndpoint, const std::string& p_sMethod, 
+                        const std::string& p_sBody, std::string& p_sResponse) const;
 };
+

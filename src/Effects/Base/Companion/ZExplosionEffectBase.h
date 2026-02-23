@@ -12,13 +12,13 @@
  */
 class ZExplosionEffectBase : public virtual IChaosEffect, public virtual ZCompanionModDependentEffectBase
 {
-  public:
+public:
     void LoadResources() override;
     void OnClearScene() override;
     void OnDrawDebugUI() override;
     bool Available() const override;
 
-  protected:
+protected:
     struct SExplosionParams
     {
         /**
@@ -54,6 +54,6 @@ class ZExplosionEffectBase : public virtual IChaosEffect, public virtual ZCompan
 
     ZEntityRef SpawnExplosion(const SExplosionParams& p_Params);
 
-  private:
+private:
     std::unique_ptr<ZTemplateEntitySpawner> m_pExplosionSpawner;
 };

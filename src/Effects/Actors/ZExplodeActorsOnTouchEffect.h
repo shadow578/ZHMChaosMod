@@ -1,22 +1,16 @@
 #pragma once
 #include "Effects/Base/Companion/ZExplosionEffectBase.h"
 
-#include <Glacier/ZActor.h>
 #include <Glacier/ZMath.h>
+#include <Glacier/ZActor.h>
 
 #include <vector>
 
 class ZExplodeActorsOnTouchEffect : public ZExplosionEffectBase
 {
-  public:
-    void Start() override
-    {
-        m_bEnable = true;
-    }
-    void Stop() override
-    {
-        m_bEnable = false;
-    }
+public:
+    void Start() override { m_bEnable = true; }
+    void Stop() override { m_bEnable = false; }
     void OnSlowUpdate(const float32 p_fDeltaTime, const float32 p_fEffectTimeRemaining) override;
     void OnDrawDebugUI() override;
 
@@ -25,7 +19,7 @@ class ZExplodeActorsOnTouchEffect : public ZExplosionEffectBase
         return "Explody Actors";
     }
 
-  private:
+private:
     bool m_bEnable = false;
 
     bool m_bSpawnExplosions = true;

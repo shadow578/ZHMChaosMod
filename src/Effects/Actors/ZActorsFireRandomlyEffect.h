@@ -3,15 +3,15 @@
 
 class ZActorsFireRandomlyEffect : public ZActorWeaponCustomControlEffectBase
 {
-  public:
-    void Start() override;
-    void Stop() override;
+public:
+	void Start() override;
+	void Stop() override;
 
-    std::string GetDisplayName(const bool p_bVoting) const override
-    {
-        return "This Is America";
-    }
+	std::string GetDisplayName(const bool p_bVoting) const override
+	{
+		return "This Is America";
+	}
 
-  private:
-    void SetAllActorsShootingContinuous(const bool p_bShooting);
+private:
+	void SetAllActorsShootingContinuous(const bool p_bShooting);
 };

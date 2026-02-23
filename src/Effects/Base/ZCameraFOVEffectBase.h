@@ -10,8 +10,10 @@
  */
 class ZCameraFOVEffectBase : public ZCameraEffectBase, public ZInterpolatingEffectBase
 {
-  public:
-    ZCameraFOVEffectBase(const float32 p_fTargetFOV) : ZInterpolatingEffectBase(1.0f), m_fTargetFOV(p_fTargetFOV) {}
+public:
+    ZCameraFOVEffectBase(const float32 p_fTargetFOV) : ZInterpolatingEffectBase(1.0f), m_fTargetFOV(p_fTargetFOV)
+    {
+    }
 
     void Start() override;
     void Stop() override;
@@ -20,7 +22,7 @@ class ZCameraFOVEffectBase : public ZCameraEffectBase, public ZInterpolatingEffe
 
     void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining) override;
 
-  private:
+private:
     float32 m_fTargetFOV;
     float32 m_fOriginalFOV = -1.0f;
 };

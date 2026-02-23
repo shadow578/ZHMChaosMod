@@ -3,19 +3,21 @@
 
 class ZWobblyVisionEffect : public ZRenderPostfilterEffectBase
 {
-  public:
-    ZWobblyVisionEffect() {}
+public:
+	ZWobblyVisionEffect()
+	{
+	}
 
-    void Start() override;
-    void Stop() override;
+	void Start() override;
+	void Stop() override;
 
-    std::string GetDisplayName(const bool p_bVoting) const override
-    {
-        return "Wobbly Vision";
-    }
+	std::string GetDisplayName(const bool p_bVoting) const override
+	{
+		return "Wobbly Vision";
+	}
 
-    EDuration GetDuration() const override
-    {
-        return EDuration::Short; // painful if too long
-    }
+	EDuration GetDuration() const override
+	{
+		return EDuration::Short; // painful if too long
+	}
 };

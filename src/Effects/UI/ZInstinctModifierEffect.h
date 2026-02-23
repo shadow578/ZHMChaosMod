@@ -7,13 +7,16 @@
 
 class ZInstinctModifierEffectBase : public IChaosEffect
 {
-  public:
-    ZInstinctModifierEffectBase(const ERenderGlowTypes p_eGlowType) : m_eGlowType(p_eGlowType) {}
+public:
+    ZInstinctModifierEffectBase(const ERenderGlowTypes p_eGlowType) 
+        : m_eGlowType(p_eGlowType) 
+    {
+    }
 
     void Start() override;
     void Stop() override;
 
-  private:
+private:
     const ERenderGlowTypes m_eGlowType;
 
     std::unordered_map<ZActor*, ERenderGlowTypes> m_mOriginalGlowTypes;
@@ -21,8 +24,9 @@ class ZInstinctModifierEffectBase : public IChaosEffect
 
 class ZInstinctAllActorsTargetsEffect : public ZInstinctModifierEffectBase
 {
-  public:
-    ZInstinctAllActorsTargetsEffect() : ZInstinctModifierEffectBase(ERenderGlowTypes::ERENDERGLOWTYPE_CONTRACT_TARGET)
+public:
+    ZInstinctAllActorsTargetsEffect()
+        : ZInstinctModifierEffectBase(ERenderGlowTypes::ERENDERGLOWTYPE_CONTRACT_TARGET)
     {
     }
 
@@ -34,8 +38,11 @@ class ZInstinctAllActorsTargetsEffect : public ZInstinctModifierEffectBase
 
 class ZInstinctAllActorsCrowdEffect : public ZInstinctModifierEffectBase
 {
-  public:
-    ZInstinctAllActorsCrowdEffect() : ZInstinctModifierEffectBase(ERenderGlowTypes::ERENDERGLOWTYPE_NONE) {}
+public:
+    ZInstinctAllActorsCrowdEffect()
+        : ZInstinctModifierEffectBase(ERenderGlowTypes::ERENDERGLOWTYPE_NONE)
+    {
+    }
 
     std::string GetDisplayName(const bool p_bVoting) const override
     {

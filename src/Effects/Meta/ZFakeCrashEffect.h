@@ -16,6 +16,7 @@ class ZFakeCrashEffect : public IChaosEffect
         return EDuration::OneShot;
     }
 
-  private:
+private:
+
     void SuspendAllThreads();
 };

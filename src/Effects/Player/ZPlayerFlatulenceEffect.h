@@ -6,7 +6,7 @@
 
 class ZPlayerFlatulenceEffect : public ZPoisonAOEDamageEffectBase, public ZSoundFXEffectBase
 {
-  public:
+public:
     void LoadResources() override;
     void OnClearScene() override;
     void OnDrawDebugUI() override;
@@ -23,6 +23,6 @@ class ZPlayerFlatulenceEffect : public ZPoisonAOEDamageEffectBase, public ZSound
         return EDuration::OneShot;
     }
 
-  private:
+private:
     std::unique_ptr<ZResourceProvider> m_pSFXResource;
 };

@@ -1,9 +1,9 @@
 #pragma once
-#include <atomic>
-#include <mutex>
 #include <string>
-#include <unordered_map>
 #include <vector>
+#include <unordered_map>
+#include <mutex>
+#include <atomic>
 
 /**
  * Handles vote tallying for YouTube chat voting.
@@ -11,7 +11,7 @@
  */
 class ZChatVoting
 {
-  public:
+public:
     struct SVoteOption
     {
         SVoteOption(const std::string& p_sName) : m_sName(p_sName) {}
@@ -58,7 +58,7 @@ class ZChatVoting
      */
     int GetTotalVotes() const;
 
-  private:
+private:
     std::atomic<bool> m_bVotingActive{false};
 
     mutable std::recursive_mutex m_VotesMutex; // Lock for m_aVoteCounts and m_mUserVotes

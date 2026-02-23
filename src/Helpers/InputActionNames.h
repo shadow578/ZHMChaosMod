@@ -36,7 +36,7 @@ namespace InputActionNames
 
         // Keyboard Controls, Right Mouse Button (Aim) (Digital)
         static inline const std::string c_sMouseRight = "KBMMouseRight";
-    }; // namespace Keyboard
+    };
 
     namespace Controller
     {
@@ -60,5 +60,5 @@ namespace InputActionNames
 
         // Controller, Pause Button ("Options" on DS4) (Digital)
         static inline const std::string c_sStart = "ButtonStart";
-    }; // namespace Controller
-}; // namespace InputActionNames
+    };
+};

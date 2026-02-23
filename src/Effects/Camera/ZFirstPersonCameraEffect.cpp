@@ -4,20 +4,20 @@
 #include <Glacier/ZSpatialEntity.h>
 
 #include "EffectRegistry.h"
-#include "Helpers/EntityUtils.h"
 #include "Helpers/Math.h"
 #include "Helpers/PlayerUtils.h"
+#include "Helpers/EntityUtils.h"
 
 void ZFirstPersonCameraEffect::Start()
 {
     const auto s_rPlayer = SDK()->GetLocalPlayer();
-    if (!s_rPlayer)
+	if (!s_rPlayer)
     {
         return;
     }
 
     m_rPlayerHeadAttachEntity = Utils::GetPlayerHeadAttachEntity(s_rPlayer);
-    if (!m_rPlayerHeadAttachEntity)
+	if (!m_rPlayerHeadAttachEntity)
     {
         return;
     }
@@ -57,10 +57,7 @@ void ZFirstPersonCameraEffect::OnDrawDebugUI()
     ZInterpolatingEffectBase::OnDrawDebugUI();
 }
 
-void ZFirstPersonCameraEffect::OnFrameUpdate(
-    const SGameUpdateEvent& p_UpdateEvent,
-    const float32 p_fEffectTimeRemaining
-)
+void ZFirstPersonCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)
 {
     ZInterpolatingEffectBase::OnFrameUpdate(p_UpdateEvent, p_fEffectTimeRemaining);
 
@@ -83,7 +80,7 @@ void ZFirstPersonCameraEffect::OnFrameUpdate(
     auto s_TargetWM = s_OriginalWM;
 
     // move camera to player head position
-    s_TargetWM.Pos = m_rPlayerHeadAttachEntity.m_pInterfaceRef->GetObjectToWorldMatrix().Pos;
+	s_TargetWM.Pos = m_rPlayerHeadAttachEntity.m_pInterfaceRef->GetObjectToWorldMatrix().Pos;
 
     // interpolation
     s_TargetWM = Math::InterpolateAffine(s_OriginalWM, s_TargetWM, GetInterpolationPoint());

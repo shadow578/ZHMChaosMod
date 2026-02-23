@@ -3,12 +3,12 @@
 
 #include <Glacier/ZOutfit.h>
 
-#include <string>
 #include <vector>
+#include <string>
 
 class ZAuthoritativeFigureEffect : public IChaosEffect
 {
-  public:
+public:
     ZAuthoritativeFigureEffect();
 
     void Start() override;
@@ -20,7 +20,7 @@ class ZAuthoritativeFigureEffect : public IChaosEffect
         return "Authoritative Figure";
     }
 
-  private:
+private:
     std::vector<std::string> m_aOutfitCommonNames;
 
     TEntityRef<ZGlobalOutfitKit> m_SelectedOutfit;

@@ -3,7 +3,7 @@
 
 class ZForceForwardMovementEffect : public IChaosEffect
 {
-  public:
+public:
     void OnModInitialized() override;
     void OnModUnload() override;
     bool Available() const override;
@@ -22,7 +22,7 @@ class ZForceForwardMovementEffect : public IChaosEffect
         return EDuration::Full; // idk, maybe too long ?
     }
 
-  private:
+private:
     bool m_bEnable = false;
 
     DECLARE_PLUGIN_DETOUR(ZForceForwardMovementEffect, double, OnInputActionAnalog, ZInputAction* th, int a2);

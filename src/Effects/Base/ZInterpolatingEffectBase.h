@@ -9,15 +9,17 @@
  */
 class ZInterpolatingEffectBase : public virtual IChaosEffect
 {
-  public:
+public:
     void Start() override;
     void Stop() override;
     void OnClearScene() override;
     void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining) override;
     void OnDrawDebugUI() override;
 
-  protected:
-    ZInterpolatingEffectBase(const float32 p_fInterpolationTime) : m_fInterpolationTime(p_fInterpolationTime) {}
+protected:
+    ZInterpolatingEffectBase(const float32 p_fInterpolationTime) : m_fInterpolationTime(p_fInterpolationTime)
+    {
+    }
 
     /**
      * Interpolation point (0.0 - 1.0).
@@ -27,7 +29,7 @@ class ZInterpolatingEffectBase : public virtual IChaosEffect
         return m_fInterpolationPoint;
     }
 
-  private:
+private:
     enum class EState
     {
         Idle,

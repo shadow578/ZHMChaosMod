@@ -1,8 +1,8 @@
 #pragma once
 #include <Glacier/Enums.h>
 #include <Glacier/ZEntity.h>
-#include <Glacier/ZMath.h>
 #include <Glacier/ZOutfit.h>
+#include <Glacier/ZMath.h>
 
 class ZSpatialEntity;
 class ZHitman5;
@@ -17,7 +17,7 @@ namespace Utils
 
     /**
      * Set player outfit by common name.
-     * @param p_sCommonName Outfit common name (e.g. "CHAR_Reward_Chlorine_Hero_M_Flamingo_Suit_PRO167217").
+     * @param p_sCommonName Outfit common name (e.g. "CHAR_Reward_Chlorine_Hero_M_Flamingo_Suit_PRO167217"). 
      *                      Only Outfits with CharacterType "HeroA" are supported.
      * @param p_OutfitOut Set set to the OutfitKit that was applied to the player, assuming the function returned true.
      */
@@ -29,4 +29,4 @@ namespace Utils
      * @return Entity ref of head attach, or empty if not found.
      */
     TEntityRef<ZSpatialEntity> GetPlayerHeadAttachEntity(const TEntityRef<ZHitman5> p_rPlayer);
-}; // namespace Utils
+};

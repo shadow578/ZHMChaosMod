@@ -3,17 +3,15 @@
 
 #include <queue>
 
-class ZLaggyCameraEffect : public ZCameraEffectBase
+class ZLaggyCameraEffect : public ZCameraEffectBase 
 {
-  public:
-    ZLaggyCameraEffect(
-        const std::string p_sNameSuffix,
-        const std::string p_sDisplayName,
-        const int p_nDelayFrames,
-        const float32 p_fApplyPercent
-    )
-        : ZCameraEffectBase(), m_sNameSuffix(p_sNameSuffix), m_sDisplayName(p_sDisplayName),
-          m_nDelayFrames(p_nDelayFrames), m_fTransformApplyPercent(p_fApplyPercent)
+public:
+    ZLaggyCameraEffect(const std::string p_sNameSuffix, const std::string p_sDisplayName, const int p_nDelayFrames, const float32 p_fApplyPercent) :
+        ZCameraEffectBase(),
+        m_sNameSuffix(p_sNameSuffix),
+		m_sDisplayName(p_sDisplayName),
+		m_nDelayFrames(p_nDelayFrames),
+		m_fTransformApplyPercent(p_fApplyPercent)
     {
     }
 
@@ -26,7 +24,7 @@ class ZLaggyCameraEffect : public ZCameraEffectBase
     std::string GetName() const override
     {
         return ZCameraEffectBase::GetName() + "_" + m_sNameSuffix;
-    }
+	}
 
     std::string GetDisplayName(const bool p_bVoting) const override
     {
@@ -38,12 +36,12 @@ class ZLaggyCameraEffect : public ZCameraEffectBase
         return EDuration::Short;
     }
 
-  private:
-    const std::string m_sNameSuffix;
-    const std::string m_sDisplayName;
+private:
+	const std::string m_sNameSuffix;
+	const std::string m_sDisplayName;
 
     int m_nDelayFrames;
-    float32 m_fTransformApplyPercent;
+	float32 m_fTransformApplyPercent;
 
     std::queue<SMatrix> m_qTransformHistory;
 };

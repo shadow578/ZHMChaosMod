@@ -21,7 +21,7 @@ constexpr std::string GetPageBase(const std::string p_sBody)
 <body>
 )html";
 
-    s_sHtml += p_sBody;
+	s_sHtml += p_sBody;
 
     s_sHtml += R"html(
 </body>
@@ -62,15 +62,14 @@ constexpr std::string GetTokenSuccessPage()
 
 constexpr std::string GetTokenErrorPage(const std::string s_sError = "")
 {
-    return GetPageBase(
-        R"html(
+    return GetPageBase(R"html(
 <div class="failure">&#x2718;</div>
 <h1>Sign-in Failed!</h1>
 <p>You may want to retry.</p>
 <p class="notice"> 
-)html" + s_sError +
-        R"html(
-</p>
 )html"
-    );
++ s_sError +
+R"html(
+</p>
+)html");
 }

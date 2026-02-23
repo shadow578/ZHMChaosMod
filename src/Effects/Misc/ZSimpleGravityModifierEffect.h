@@ -3,10 +3,12 @@
 
 class ZSimpleGravityModifierEffect : public ZGravityModifierEffectBase
 {
-  public:
+public:
     ZSimpleGravityModifierEffect(const std::string p_sNameSuffix, const std::string p_sDisplayName, SVector3 p_vGravity)
-        : ZGravityModifierEffectBase(), m_sNameSuffix(std::move(p_sNameSuffix)),
-          m_sDisplayName(std::move(p_sDisplayName)), m_vGravity(p_vGravity)
+        : ZGravityModifierEffectBase(),
+        m_sNameSuffix(std::move(p_sNameSuffix)),
+        m_sDisplayName(std::move(p_sDisplayName)),
+        m_vGravity(p_vGravity)
     {
     }
 
@@ -23,7 +25,7 @@ class ZSimpleGravityModifierEffect : public ZGravityModifierEffectBase
         return m_sDisplayName;
     }
 
-  private:
+private:
     const std::string m_sNameSuffix;
     const std::string m_sDisplayName;
     const SVector3 m_vGravity;

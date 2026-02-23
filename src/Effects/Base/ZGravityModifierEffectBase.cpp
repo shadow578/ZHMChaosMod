@@ -3,16 +3,15 @@
 #include "IPluginInterface.h"
 #include "Logging.h"
 
-#include "Helpers/EntityUtils.h"
 #include "Helpers/Utils.h"
+#include "Helpers/EntityUtils.h"
 
 #define TAG "[ZGravityModifierEffectBase] "
 
 /**
  * Static Entity ID for PhysicsWorld entity.
  * There should only ever be one of these, so we can just lookup by ID.
- * [assembly:/_pro/effects/templates/logic/fx_logic_physicsworld.template?/fx_logic_physicsworld.entitytemplate].pc_entitytype,
- * PhysicsWorld
+ * [assembly:/_pro/effects/templates/logic/fx_logic_physicsworld.template?/fx_logic_physicsworld.entitytemplate].pc_entitytype, PhysicsWorld
  */
 constexpr uint64_t c_nPhysicsWorldId = 0x859611037148f21b;
 
@@ -23,20 +22,22 @@ const std::string c_sGravityPropertyName = "m_vGravity";
 
 const SVector3 c_fDefaultGravity = SVector3(0.f, 0.f, -9.81f);
 
-void ZGravityModifierEffectBase::RestoreDefaultGravity()
+void ZGravityModifierEffectBase::RestoreDefaultGravity() 
 {
     SetGravity(c_fDefaultGravity);
 }
 
 void ZGravityModifierEffectBase::SetGravity(const SVector3 p_vGravity)
 {
-    auto s_rPhysicsEntity = Utils::ZEntityFinder().EntityID(c_nPhysicsWorldId).FindFirst();
+    auto s_rPhysicsEntity = Utils::ZEntityFinder()
+        .EntityID(c_nPhysicsWorldId)
+		.FindFirst();
 
     if (!s_rPhysicsEntity)
     {
         Logger::Debug(TAG "Failed to find PhysicsWorld entity.");
         return;
-    }
+	}
 
     if (!Utils::SetProperty<SVector3>(s_rPhysicsEntity, c_sGravityPropertyName, p_vGravity))
     {
@@ -47,6 +48,6 @@ void ZGravityModifierEffectBase::SetGravity(const SVector3 p_vGravity)
 bool ZGravityModifierEffectBase::IsCompatibleWith(const IChaosEffect* p_pOther) const
 {
     return IChaosEffect::IsCompatibleWith(p_pOther)
-           // all gravity modifiers are incompatible with each other
-           && !Utils::IsInstanceOf<ZGravityModifierEffectBase>(p_pOther);
+        // all gravity modifiers are incompatible with each other
+        && !Utils::IsInstanceOf<ZGravityModifierEffectBase>(p_pOther);
 }

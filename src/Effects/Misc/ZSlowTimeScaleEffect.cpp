@@ -21,7 +21,7 @@ void ZSlowTimeScaleEffect::Stop()
 
 std::string ZSlowTimeScaleEffect::GetName() const
 {
-    return IChaosEffect::GetName() + "_" + std::to_string(static_cast<int>(m_fTargetTimeScale * 100));
+    return IChaosEffect::GetName() + "_" + std::to_string(static_cast<int>(m_fTargetTimeScale*100));
 }
 
 std::string ZSlowTimeScaleEffect::GetDisplayName(const bool p_bVoting) const
@@ -37,3 +37,4 @@ IChaosEffect::EDuration ZSlowTimeScaleEffect::GetDuration() const
 
 REGISTER_CHAOS_EFFECT_PARAM(SP02x, ZSlowTimeScaleEffect, 0.2f);
 REGISTER_CHAOS_EFFECT_PARAM(SP5x, ZSlowTimeScaleEffect, 5.0f);
+

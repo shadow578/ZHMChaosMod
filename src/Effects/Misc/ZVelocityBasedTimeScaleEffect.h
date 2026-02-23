@@ -6,7 +6,7 @@
 
 class ZVelocityBasedTimeScaleEffect : public IChaosEffect
 {
-  public:
+public:
     ZVelocityBasedTimeScaleEffect();
 
     void Start() override;
@@ -21,7 +21,7 @@ class ZVelocityBasedTimeScaleEffect : public IChaosEffect
         return "SUPERHOT";
     }
 
-  private:
+private:
     bool m_bActive = false;
     ZVelocityTracker m_VelocityTracker;
     float32 m_fVelocityToTimeScaleFactor;

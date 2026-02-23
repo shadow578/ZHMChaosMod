@@ -23,7 +23,7 @@ namespace Utils
     TEntityRef<ZActor> GetRandomActor(const bool p_bRequireAlive);
 
     /**
-     * Get nearby actors given a center point.
+     * Get nearby actors given a center point. 
      * List is sorted by ascending distance to center point.
      * @param p_vPosition Center position.
      * @param p_nMaxCount Maximum number of actors.
@@ -35,14 +35,13 @@ namespace Utils
         const float4& p_vPosition,
         const int p_nMaxCount = INT_MAX,
         const float32 p_fRadius = FLT_MAX,
-        const bool p_bIncludeDead = false,
-        const bool p_bIncludePacified = false
-    );
+        const bool p_bIncludeDead = false, 
+        const bool p_bIncludePacified = false);
 
     /**
      * Get the head attachment point entity for a actor.
-     * @param p_rActor Actor to get head attach for.
-     * @return Entity ref of head attach, or empty if not found.
+	 * @param p_rActor Actor to get head attach for.
+	 * @return Entity ref of head attach, or empty if not found.
      */
     TEntityRef<ZSpatialEntity> GetActorHeadAttachEntity(const TEntityRef<ZActor> p_rActor);
-}; // namespace Utils
+};

@@ -1,12 +1,14 @@
 #include "ZFixCameraUnlocker.h"
 
 #include "EffectRegistry.h"
-#include "Helpers/CameraUtils.h"
 #include "Helpers/EntityUtils.h"
+#include "Helpers/CameraUtils.h"
 
 void ZFixCameraUnlocker::Start()
 {
-    auto s_aCameras = Utils::ZEntityFinder().EntityType("ZHM5MainCamera").Find();
+    auto s_aCameras = Utils::ZEntityFinder()
+        .EntityType("ZHM5MainCamera")
+        .Find();
     if (s_aCameras.empty())
     {
         return;

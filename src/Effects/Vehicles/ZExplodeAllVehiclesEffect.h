@@ -5,23 +5,23 @@
 
 class ZExplodeAllVehiclesEffect : public ZSingleTimeEffectBase
 {
-  public:
-    void OnEnterScene() override;
-    void OnClearScene() override;
-    bool Available() const override;
+public:
+	void OnEnterScene() override;
+	void OnClearScene() override;
+	bool Available() const override;
 
-    void Start() override;
+	void Start() override;
 
-    std::string GetDisplayName(const bool p_bVoting) const override
-    {
-        return "Detroit Simulator";
-    }
+	std::string GetDisplayName(const bool p_bVoting) const override
+	{
+		return "Detroit Simulator";
+	}
 
-    EDuration GetDuration() const override
-    {
-        return EDuration::OneShot;
-    }
+	EDuration GetDuration() const override
+	{
+		return EDuration::OneShot;
+	}
 
-  private:
-    std::vector<ZEntityRef> m_aFuelTanks;
+private:
+	std::vector<ZEntityRef> m_aFuelTanks;
 };

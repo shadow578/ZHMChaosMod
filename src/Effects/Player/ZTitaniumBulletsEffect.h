@@ -3,11 +3,11 @@
 
 class ZTitaniumBulletsEffect : public ZRepositoryPatchEffectBase
 {
-  public:
-    void Start() override;
+public:
+	void Start() override;
 
-    std::string GetDisplayName(const bool p_bVoting) const override
-    {
-        return "Titanium Bullets";
-    }
+	std::string GetDisplayName(const bool p_bVoting) const override
+	{
+		return "Titanium Bullets"; 
+	}
 };

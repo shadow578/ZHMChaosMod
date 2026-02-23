@@ -4,7 +4,7 @@
 namespace ImGuiEx
 {
     /**
-     * Drop-in replacement of ImGui::SliderFloat with ImGui::DragScalar, for floats.
+     * Drop-in replacement of ImGui::SliderFloat with ImGui::DragScalar, for floats. 
      */
     inline bool DragFloat(
         const char* p_sLabel,
@@ -12,10 +12,18 @@ namespace ImGuiEx
         const float p_fMin,
         const float p_fMax,
         const char* p_sFormat = "%.3f",
-        ImGuiSliderFlags p_nFlags = 0
-    )
+        ImGuiSliderFlags p_nFlags = 0)
     {
-        return ImGui::DragScalar(p_sLabel, ImGuiDataType_Float, p_fValue, 0.1f, &p_fMin, &p_fMax, p_sFormat, p_nFlags);
+        return ImGui::DragScalar(
+            p_sLabel,
+            ImGuiDataType_Float,
+            p_fValue,
+            0.1f,
+            &p_fMin,
+            &p_fMax,
+            p_sFormat,
+            p_nFlags
+        );
     }
 
     /**
@@ -28,8 +36,7 @@ namespace ImGuiEx
     inline void ProgressBarTextFit(
         const float p_fFraction,
         const char* p_sOverlayText,
-        const float p_fTextPadding = 10.0f
-    )
+        const float p_fTextPadding = 10.0f)
     {
         const auto s_vTextSize = ImGui::CalcTextSize(p_sOverlayText);
         const auto s_fTextWidth = s_vTextSize.x + (p_fTextPadding * 2.0f);
@@ -45,7 +52,10 @@ namespace ImGuiEx
         const auto s_fTextX = s_vBarMin.x + p_fTextPadding;
         const auto s_fTextY = s_vBarMin.y + (s_vBarMax.y - s_vBarMin.y - s_vTextSize.y) * 0.5f;
 
-        ImGui::GetWindowDrawList()
-            ->AddText(ImVec2(s_fTextX, s_fTextY), ImGui::GetColorU32(ImGuiCol_Text), p_sOverlayText);
+        ImGui::GetWindowDrawList()->AddText(
+            ImVec2(s_fTextX, s_fTextY),
+            ImGui::GetColorU32(ImGuiCol_Text),
+            p_sOverlayText
+        );
     }
-}; // namespace ImGuiEx
+};

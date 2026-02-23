@@ -33,9 +33,9 @@ void ZExplodeActorsOnTouchEffect::OnSlowUpdate(const float32 p_fDeltaTime, const
 
     // spawn explosion at all nearby actors
     m_fNearestActorDistance = 9999.0f;
-    for (const auto& s_rActor : Utils::GetActors(true, true))
+    for (const auto &s_rActor : Utils::GetActors(true, true))
     {
-        const auto* s_pActorSpatial = s_rActor.m_entityRef.QueryInterface<ZSpatialEntity>();
+        const auto *s_pActorSpatial = s_rActor.m_entityRef.QueryInterface<ZSpatialEntity>();
         if (!s_pActorSpatial)
         {
             continue;

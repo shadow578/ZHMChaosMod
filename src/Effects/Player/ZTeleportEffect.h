@@ -19,7 +19,7 @@ class ZTeleportEffect : public IChaosEffect
         return EDuration::OneShot;
     }
 
-  private:
+private:
     enum class ETeleportDirection
     {
         Up,

@@ -2,10 +2,10 @@
 
 #include "Logging.h"
 
-#include <Windows.h>
-#include <ixwebsocket/IXHttpClient.h>
 #include <ixwebsocket/IXHttpServer.h>
+#include <ixwebsocket/IXHttpClient.h>
 #include <nlohmann/json.hpp>
+#include <Windows.h>
 #include <shellapi.h>
 
 #define TAG "[TwitchClient] "
@@ -13,7 +13,8 @@
 using json = nlohmann::json;
 
 TwitchClient::TwitchClient(const std::string p_sClientId, const int p_nServerPort)
-    : m_sClientId(p_sClientId), m_nServerPort(p_nServerPort)
+    : m_sClientId(p_sClientId), 
+    m_nServerPort(p_nServerPort)
 {
     m_EventSub.SetOnChatMessageCallback([this](const std::string& username, const std::string& message) {
         OnChatMessage(username, message);
@@ -139,8 +140,8 @@ void TwitchClient::RunServer()
         m_pServer = std::make_unique<ix::HttpServer>(m_nServerPort, "127.0.0.1");
 
         m_pServer->setOnConnectionCallback(
-            [this, &s_bTokenReceived](ix::HttpRequestPtr p_Request, std::shared_ptr<ix::ConnectionState>)
-                -> ix::HttpResponsePtr {
+            [this, &s_bTokenReceived](ix::HttpRequestPtr p_Request, std::shared_ptr<ix::ConnectionState>) -> ix::HttpResponsePtr
+            {
                 Logger::Debug(TAG "HTTP request: {} {}", p_Request->method, p_Request->uri);
 
                 // Serve the token capture page at the root
@@ -148,8 +149,7 @@ void TwitchClient::RunServer()
                 {
                     Logger::Debug(TAG "Serving token capture page");
                     return std::make_shared<ix::HttpResponse>(
-                        200,
-                        "OK",
+                        200, "OK",
                         ix::HttpErrorCode::Ok,
                         ix::WebSocketHttpHeaders{{"Content-Type", "text/html"}},
                         GetTokenCapturePage()
@@ -160,8 +160,7 @@ void TwitchClient::RunServer()
                 if (p_Request->uri.rfind("/token", 0) != 0)
                 {
                     return std::make_shared<ix::HttpResponse>(
-                        404,
-                        "Not Found",
+                        404, "Not Found",
                         ix::HttpErrorCode::Ok,
                         ix::WebSocketHttpHeaders{{"Content-Type", "text/plain"}},
                         "Not Found"
@@ -185,8 +184,7 @@ void TwitchClient::RunServer()
                 if (s_sToken.empty())
                 {
                     return std::make_shared<ix::HttpResponse>(
-                        400,
-                        "Bad Request",
+                        400, "Bad Request",
                         ix::HttpErrorCode::Ok,
                         ix::WebSocketHttpHeaders{{"Content-Type", "text/plain"}},
                         "Missing access_token parameter"
@@ -204,8 +202,7 @@ void TwitchClient::RunServer()
                 if (!ValidateTokenAndGetUserInfo())
                 {
                     return std::make_shared<ix::HttpResponse>(
-                        200,
-                        "OK",
+                        200, "OK",
                         ix::HttpErrorCode::Ok,
                         ix::WebSocketHttpHeaders{{"Content-Type", "text/html"}},
                         "<html><body><h1>Failed to validate token</h1></body></html>"
@@ -219,14 +216,11 @@ void TwitchClient::RunServer()
                 s_bTokenReceived = true;
 
                 return std::make_shared<ix::HttpResponse>(
-                    200,
-                    "OK",
+                    200, "OK",
                     ix::HttpErrorCode::Ok,
                     ix::WebSocketHttpHeaders{{"Content-Type", "text/html"}},
-                    GetSuccessPage()
-                );
-            }
-        );
+                    GetSuccessPage());
+            });
 
         Logger::Debug(TAG "Starting HTTP server on port {}", m_nServerPort);
 

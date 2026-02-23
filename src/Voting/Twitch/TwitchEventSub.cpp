@@ -2,8 +2,8 @@
 
 #include "Logging.h"
 
-#include <ixwebsocket/IXHttpClient.h>
 #include <nlohmann/json.hpp>
+#include <ixwebsocket/IXHttpClient.h>
 
 #define TAG "[TwitchEventSub] "
 
@@ -14,11 +14,7 @@ TwitchEventSub::~TwitchEventSub()
     Disconnect();
 }
 
-void TwitchEventSub::Connect(
-    const std::string& p_sAccessToken,
-    const std::string& p_sUserId,
-    const std::string& p_sClientId
-)
+void TwitchEventSub::Connect(const std::string& p_sAccessToken, const std::string& p_sUserId, const std::string& p_sClientId)
 {
     std::lock_guard s_Lock(m_Mutex);
 
@@ -34,7 +30,9 @@ void TwitchEventSub::Connect(
     m_pWebSocket = std::make_unique<ix::WebSocket>();
     m_pWebSocket->setUrl(c_sEventSubUrl);
 
-    m_pWebSocket->setOnMessageCallback([this](const ix::WebSocketMessagePtr& msg) { OnMessage(msg); });
+    m_pWebSocket->setOnMessageCallback([this](const ix::WebSocketMessagePtr& msg) {
+        OnMessage(msg);
+    });
 
     Logger::Debug(TAG "Connecting to Twitch EventSub...");
     m_pWebSocket->start();
@@ -99,40 +97,41 @@ void TwitchEventSub::OnMessage(const ix::WebSocketMessagePtr& p_Msg)
         Logger::Error(TAG "WebSocket error: {}", p_Msg->errorInfo.reason);
         break;
 
-    case ix::WebSocketMessageType::Message: {
-        try
+    case ix::WebSocketMessageType::Message:
         {
-            const auto s_Json = json::parse(p_Msg->str);
-            const auto s_sMessageType = s_Json["metadata"]["message_type"].get<std::string>();
+            try
+            {
+                const auto s_Json = json::parse(p_Msg->str);
+                const auto s_sMessageType = s_Json["metadata"]["message_type"].get<std::string>();
 
-            if (s_sMessageType == "session_welcome")
-            {
-                HandleWelcomeMessage(p_Msg->str);
+                if (s_sMessageType == "session_welcome")
+                {
+                    HandleWelcomeMessage(p_Msg->str);
+                }
+                else if (s_sMessageType == "session_keepalive")
+                {
+                    Logger::Debug(TAG "Received keepalive");
+                }
+                else if (s_sMessageType == "notification")
+                {
+                    HandleNotificationMessage(p_Msg->str);
+                }
+                else if (s_sMessageType == "session_reconnect")
+                {
+                    HandleReconnectMessage(p_Msg->str);
+                }
+                else if (s_sMessageType == "revocation")
+                {
+                    Logger::Warn(TAG "Subscription revoked");
+                    // What do we even do here? Ask user to re-auth?
+                }
             }
-            else if (s_sMessageType == "session_keepalive")
+            catch (const json::exception& e)
             {
-                Logger::Debug(TAG "Received keepalive");
-            }
-            else if (s_sMessageType == "notification")
-            {
-                HandleNotificationMessage(p_Msg->str);
-            }
-            else if (s_sMessageType == "session_reconnect")
-            {
-                HandleReconnectMessage(p_Msg->str);
-            }
-            else if (s_sMessageType == "revocation")
-            {
-                Logger::Warn(TAG "Subscription revoked");
-                // What do we even do here? Ask user to re-auth?
+                Logger::Error(TAG "Failed to parse message: {}", e.what());
             }
         }
-        catch (const json::exception& e)
-        {
-            Logger::Error(TAG "Failed to parse message: {}", e.what());
-        }
-    }
-    break;
+        break;
 
     default:
         break;
@@ -197,7 +196,9 @@ void TwitchEventSub::HandleReconnectMessage(const std::string& p_sPayload)
         // Create new WebSocket connection to the reconnect URL
         auto s_pNewWebSocket = std::make_unique<ix::WebSocket>();
         s_pNewWebSocket->setUrl(s_sReconnectUrl);
-        s_pNewWebSocket->setOnMessageCallback([this](const ix::WebSocketMessagePtr& msg) { OnMessage(msg); });
+        s_pNewWebSocket->setOnMessageCallback([this](const ix::WebSocketMessagePtr& msg) {
+            OnMessage(msg);
+        });
 
         // Acquire lock before modifying shared state
         // Stop old socket, swap in new one, then start new one
@@ -227,8 +228,14 @@ void TwitchEventSub::SubscribeToChatMessages()
     json s_SubBody = {
         {"type", "channel.chat.message"},
         {"version", "1"},
-        {"condition", {{"broadcaster_user_id", m_sUserId}, {"user_id", m_sUserId}}},
-        {"transport", {{"method", "websocket"}, {"session_id", m_sSessionId}}}
+        {"condition", {
+            {"broadcaster_user_id", m_sUserId},
+            {"user_id", m_sUserId}
+        }},
+        {"transport", {
+            {"method", "websocket"},
+            {"session_id", m_sSessionId}
+        }}
     };
 
     std::string s_sResponse;
@@ -248,13 +255,8 @@ void TwitchEventSub::SubscribeToChatMessages()
     }
 }
 
-bool TwitchEventSub::MakeApiRequest(
-    const std::string& p_sEndpoint,
-    const std::string& p_sMethod,
-    const std::string& p_sBody,
-    std::string& p_sResponse
-) const
-{
+bool TwitchEventSub::MakeApiRequest(const std::string& p_sEndpoint, const std::string& p_sMethod,
+                                     const std::string& p_sBody, std::string& p_sResponse) const {
     ix::HttpClient s_Client;
     ix::HttpRequestArgsPtr s_Args = s_Client.createRequest();
 
@@ -297,3 +299,4 @@ bool TwitchEventSub::MakeApiRequest(
     Logger::Error(TAG "API request failed with status {}: {}", s_Response->statusCode, s_Response->body);
     return false;
 }
+

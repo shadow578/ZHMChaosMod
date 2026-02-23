@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Glacier/SGameUpdateEvent.h>
 #include <Glacier/ZEntity.h>
+#include <Glacier/SGameUpdateEvent.h>
 #include <Glacier/ZMath.h>
 
 #include <queue>
@@ -11,8 +11,9 @@
  */
 class ZVelocityTracker
 {
-  public:
-    ZVelocityTracker(int p_nSampleCount = 10) : m_nSampleCount(p_nSampleCount)
+public:
+    ZVelocityTracker(int p_nSampleCount = 10) :
+        m_nSampleCount(p_nSampleCount)
     {
         Reset();
     }
@@ -53,7 +54,7 @@ class ZVelocityTracker
         return m_bLastPostionValid && m_qSamples.size() == m_nSampleCount;
     }
 
-  private:
+private:
     struct STimeDistancePair
     {
         float32 m_fDistance;
@@ -62,7 +63,7 @@ class ZVelocityTracker
 
     const int m_nSampleCount;
     std::queue<STimeDistancePair> m_qSamples;
-    STimeDistancePair m_Sum{0, 0};
+    STimeDistancePair m_Sum{ 0, 0 };
     float32 m_fVelocity = 0.0f;
 
     bool m_bLastPostionValid = false;

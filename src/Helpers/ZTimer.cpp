@@ -1,7 +1,7 @@
 #include "ZTimer.h"
 
-#include "Glacier/ZGameLoopManager.h"
 #include "Globals.h"
+#include "Glacier/ZGameLoopManager.h"
 
 void ZTimer::Initialize()
 {
@@ -29,7 +29,7 @@ void ZTimer::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent)
     else
     {
         m_fElapsedSeconds += p_UpdateEvent.m_GameTimeDelta.ToSeconds();
-    }
+	}
 
     if (m_fElapsedSeconds >= m_fIntervalSeconds)
     {
@@ -37,3 +37,4 @@ void ZTimer::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent)
         Reset();
     }
 }
+

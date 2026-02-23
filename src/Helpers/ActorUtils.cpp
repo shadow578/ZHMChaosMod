@@ -45,12 +45,11 @@ TEntityRef<ZActor> Utils::GetRandomActor(const bool p_bRequireAlive)
 }
 
 std::vector<std::pair<TEntityRef<ZActor>, float32>> Utils::GetNearbyActors(
-    const float4& p_vPosition,
+    const float4 &p_vPosition,
     const int p_nMaxCount,
     const float32 p_fRadius,
     const bool p_bIncludeDead,
-    const bool p_bIncludePacified
-)
+    const bool p_bIncludePacified)
 {
     if (p_nMaxCount == 0)
     {
@@ -62,7 +61,7 @@ std::vector<std::pair<TEntityRef<ZActor>, float32>> Utils::GetNearbyActors(
     std::vector<std::pair<TEntityRef<ZActor>, float32>> s_aNearbyActors;
     for (auto& s_rActor : Utils::GetActors(p_bIncludeDead, p_bIncludePacified))
     {
-        const auto* s_pActorSpatial = s_rActor.m_entityRef.QueryInterface<ZSpatialEntity>();
+        const auto *s_pActorSpatial = s_rActor.m_entityRef.QueryInterface<ZSpatialEntity>();
         if (!s_pActorSpatial)
         {
             continue;
@@ -99,9 +98,13 @@ std::vector<std::pair<TEntityRef<ZActor>, float32>> Utils::GetNearbyActors(
     }
 
     // for n > 1, sort by distance and return the closest n
-    std::sort(s_aNearbyActors.begin(), s_aNearbyActors.end(), [](const auto& a, const auto& b) {
-        return a.second < b.second;
-    });
+    std::sort(
+        s_aNearbyActors.begin(),
+        s_aNearbyActors.end(),
+        [](const auto &a, const auto &b)
+        {
+            return a.second < b.second;
+        });
 
     if (s_aNearbyActors.size() > p_nMaxCount)
     {
@@ -124,5 +127,5 @@ TEntityRef<ZSpatialEntity> Utils::GetActorHeadAttachEntity(const TEntityRef<ZAct
         }
     }
 
-    return {};
+	return {};
 }

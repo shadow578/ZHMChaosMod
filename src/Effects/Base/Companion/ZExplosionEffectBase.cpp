@@ -10,8 +10,7 @@
 
 void ZExplosionEffectBase::LoadResources()
 {
-    m_pExplosionSpawner =
-        ZTemplateEntitySpawner::Create<"[assembly:/_pro/chaosmod/explosioneffect.entitytemplate].pc_entitytype">();
+    m_pExplosionSpawner = ZTemplateEntitySpawner::Create<"[assembly:/_pro/chaosmod/explosioneffect.entitytemplate].pc_entitytype">();
 }
 
 void ZExplosionEffectBase::OnClearScene()
@@ -21,7 +20,9 @@ void ZExplosionEffectBase::OnClearScene()
 
 bool ZExplosionEffectBase::Available() const
 {
-    return ZCompanionModDependentEffectBase::Available() && m_pExplosionSpawner && m_pExplosionSpawner->IsAvailable();
+    return ZCompanionModDependentEffectBase::Available() &&
+           m_pExplosionSpawner &&
+           m_pExplosionSpawner->IsAvailable();
 }
 
 void ZExplosionEffectBase::OnDrawDebugUI()
@@ -53,7 +54,7 @@ void ZExplosionEffectBase::OnDrawDebugUI()
     ImGui::EndDisabled();
 }
 
-ZEntityRef ZExplosionEffectBase::SpawnExplosion(const SExplosionParams& p_Params)
+ZEntityRef ZExplosionEffectBase::SpawnExplosion(const SExplosionParams &p_Params)
 {
     if (!m_pExplosionSpawner)
     {

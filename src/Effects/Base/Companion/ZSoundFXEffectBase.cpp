@@ -11,8 +11,7 @@
 
 void ZSoundFXEffectBase::LoadResources()
 {
-    m_pSoundPlayerSpawner =
-        ZTemplateEntitySpawner::Create<"[assembly:/_pro/chaosmod/sfxplayer.entitytemplate].pc_entitytype">();
+    m_pSoundPlayerSpawner = ZTemplateEntitySpawner::Create<"[assembly:/_pro/chaosmod/sfxplayer.entitytemplate].pc_entitytype">();
 }
 
 void ZSoundFXEffectBase::OnClearScene()
@@ -22,7 +21,8 @@ void ZSoundFXEffectBase::OnClearScene()
 
 bool ZSoundFXEffectBase::Available() const
 {
-    return ZCompanionModDependentEffectBase::Available() && m_pSoundPlayerSpawner &&
+    return ZCompanionModDependentEffectBase::Available() &&
+           m_pSoundPlayerSpawner &&
            m_pSoundPlayerSpawner->IsAvailable();
 }
 
@@ -43,9 +43,7 @@ void ZSoundFXEffectBase::OnDrawDebugUI()
                 const auto s_Forward = (-s_WM.Backward).Normalized();
                 s_WM.Trans += s_Forward * 5.0f;
 
-                const auto s_RuntimeResourceId =
-                    ResId<"[assembly:/sound/wwise/exportedwwisedata/events/item_events/sfx_explosives/"
-                          "proximityexplosive_rubberduck/play_duckarmed.wwiseevent].pc_wwisebank">;
+                const auto s_RuntimeResourceId = ResId<"[assembly:/sound/wwise/exportedwwisedata/events/item_events/sfx_explosives/proximityexplosive_rubberduck/play_duckarmed.wwiseevent].pc_wwisebank">;
                 PlayAt(s_WM, s_RuntimeResourceId);
             }
         }
@@ -54,7 +52,7 @@ void ZSoundFXEffectBase::OnDrawDebugUI()
     ImGui::EndDisabled();
 }
 
-ZEntityRef ZSoundFXEffectBase::PlayAt(const SMatrix& p_Position, const ZRuntimeResourceID& p_SoundResource)
+ZEntityRef ZSoundFXEffectBase::PlayAt(const SMatrix &p_Position, const ZRuntimeResourceID &p_SoundResource)
 {
     if (!m_pSoundPlayerSpawner)
     {

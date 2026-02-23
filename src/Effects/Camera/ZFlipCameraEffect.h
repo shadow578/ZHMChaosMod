@@ -5,8 +5,10 @@
 
 class ZFlipCameraEffect : public ZCameraEffectBase, public ZInterpolatingEffectBase
 {
-  public:
-    ZFlipCameraEffect() : ZInterpolatingEffectBase(1.0f) {}
+public:
+    ZFlipCameraEffect() : ZInterpolatingEffectBase(1.0f)
+    {
+    }
 
     void Start() override;
     void Stop() override;

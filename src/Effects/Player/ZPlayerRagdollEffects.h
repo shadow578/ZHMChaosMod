@@ -5,7 +5,7 @@
 
 class ZPlayerSimpleRagdollEffect : public ZPlayerRagdollEffectBase
 {
-  public:
+public:
     ZPlayerSimpleRagdollEffect() : ZPlayerRagdollEffectBase(false) {}
 
     std::string GetDisplayName(const bool p_bVoting) const override
@@ -21,7 +21,7 @@ class ZPlayerSimpleRagdollEffect : public ZPlayerRagdollEffectBase
 
 class ZPlayerPoweredRagdollEffect : public ZPlayerRagdollEffectBase
 {
-  public:
+public:
     ZPlayerPoweredRagdollEffect() : ZPlayerRagdollEffectBase(true) {}
 
     std::string GetDisplayName(const bool p_bVoting) const override
@@ -32,7 +32,7 @@ class ZPlayerPoweredRagdollEffect : public ZPlayerRagdollEffectBase
 
 class ZPlayerRagdollWithImpulseEffect : public ZPlayerRagdollEffectBase
 {
-  public:
+public:
     ZPlayerRagdollWithImpulseEffect() : ZPlayerRagdollEffectBase(false) {}
 
     void Start() override;
@@ -51,7 +51,7 @@ class ZPlayerRagdollWithImpulseEffect : public ZPlayerRagdollEffectBase
         return EDuration::OneShot;
     }
 
-  private:
+private:
     bool m_bActive = false;
     ZVelocityTracker m_VelocityTracker;
 };

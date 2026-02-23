@@ -13,99 +13,100 @@
 
 void ZSwapTargetsEffect::OnEnterScene()
 {
-    m_aTargetSpatials.clear();
+	m_aTargetSpatials.clear();
 
-    const auto& s_aMapTrackers = Utils::ZEntityFinder()
-                                     // probably ok...
-                                     .EntityName("LD_MapTracker_NPCActor")
-                                     .Find();
+	const auto &s_aMapTrackers = Utils::ZEntityFinder()
+																	 // probably ok...
+																	 .EntityName("LD_MapTracker_NPCActor")
+																	 .Find();
 
-    for (const auto& s_rMapTracker : s_aMapTrackers)
-    {
-        // check maker is on "targets" layer
-        const auto s_eLayer = Utils::GetProperty<UIMapLayer_EUIMapLayerID>(s_rMapTracker, "m_eLayer");
-        if (s_eLayer != UIMapLayer_EUIMapLayerID::eUIMLI_TARGET)
-        {
-            continue;
-        }
+	for (const auto &s_rMapTracker : s_aMapTrackers)
+	{
+		// check maker is on "targets" layer
+		const auto s_eLayer = Utils::GetProperty<UIMapLayer_EUIMapLayerID>(s_rMapTracker, "m_eLayer");
+		if (s_eLayer != UIMapLayer_EUIMapLayerID::eUIMLI_TARGET)
+		{
+			continue;
+		}
 
-        // actor is logical parent
-        auto s_rActor = s_rMapTracker.GetLogicalParent();
-        if (!s_rActor)
-        {
-            continue;
-        }
+		// actor is logical parent
+		auto s_rActor = s_rMapTracker.GetLogicalParent();
+		if (!s_rActor)
+		{
+			continue;
+		}
 
-        auto s_rSpatial = TEntityRef<ZSpatialEntity>(s_rActor);
-        if (!s_rSpatial)
-        {
-            continue;
-        }
+		auto s_rSpatial = TEntityRef<ZSpatialEntity>(s_rActor);
+		if (!s_rSpatial)
+		{
+			continue;
+		}
 
-        // ensure not duplicates
-        bool s_bShouldAdd = true;
-        for (const auto& s_rExisting : m_aTargetSpatials)
-        {
-            if (s_rExisting.m_entityRef == s_rSpatial.m_entityRef)
-            {
-                s_bShouldAdd = false;
-            }
-        }
+		// ensure not duplicates
+		bool s_bShouldAdd = true;
+		for (const auto &s_rExisting : m_aTargetSpatials)
+		{
+			if (s_rExisting.m_entityRef == s_rSpatial.m_entityRef)
+			{
+				s_bShouldAdd = false;
+			}
+		}
 
-        if (s_bShouldAdd)
-        {
-            m_aTargetSpatials.push_back(s_rSpatial);
-        }
-    }
+		if (s_bShouldAdd)
+		{
+			m_aTargetSpatials.push_back(s_rSpatial);
+		}
+	}
 
-    Logger::Debug(TAG "located {} targets", m_aTargetSpatials.size());
+	Logger::Debug(TAG "located {} targets", m_aTargetSpatials.size());
 }
 
 void ZSwapTargetsEffect::OnClearScene()
 {
-    m_aTargetSpatials.clear();
+	m_aTargetSpatials.clear();
 }
 
 bool ZSwapTargetsEffect::Available() const
 {
-    return IChaosEffect::Available() && m_aTargetSpatials.size() >= 2;
+	return IChaosEffect::Available() &&
+				 m_aTargetSpatials.size() >= 2;
 }
 
 void ZSwapTargetsEffect::Start()
 {
-    // gather transforms
-    std::vector<SMatrix> s_aTransforms;
-    for (auto& s_rSpatial : m_aTargetSpatials)
-    {
-        s_aTransforms.push_back(s_rSpatial.m_pInterfaceRef->GetObjectToWorldMatrix());
-    }
+	// gather transforms
+	std::vector<SMatrix> s_aTransforms;
+	for (auto &s_rSpatial : m_aTargetSpatials)
+	{
+		s_aTransforms.push_back(s_rSpatial.m_pInterfaceRef->GetObjectToWorldMatrix());
+	}
 
-    // shuffle
-    static std::random_device rd;
-    static std::mt19937 rng(rd());
-    std::shuffle(s_aTransforms.begin(), s_aTransforms.end(), rng);
+	// shuffle
+	static std::random_device rd;
+	static std::mt19937 rng(rd());
+	std::shuffle(s_aTransforms.begin(), s_aTransforms.end(), rng);
 
-    // reapply transforms in new order
-    size_t s_nIndex = 0;
-    for (auto& s_rSpatial : m_aTargetSpatials)
-    {
-        const auto& s_mTransform = s_aTransforms[s_nIndex];
-        s_rSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_mTransform);
+	// reapply transforms in new order
+	size_t s_nIndex = 0;
+	for (auto &s_rSpatial : m_aTargetSpatials)
+	{
+		const auto &s_mTransform = s_aTransforms[s_nIndex];
+		s_rSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_mTransform);
 
-        s_nIndex = (s_nIndex + 1) % s_aTransforms.size();
-    }
+		s_nIndex = (s_nIndex + 1) % s_aTransforms.size();
+	}
 }
 
 void ZSwapTargetsEffect::OnDrawDebugUI()
 {
-    for (auto& s_rTarget : m_aTargetSpatials)
-    {
-        const auto* s_pActor = s_rTarget.m_entityRef.QueryInterface<ZActor>();
-        if (ImGui::Button(s_pActor->m_sActorName.c_str()))
-        {
-            Utils::TeleportPlayerTo(s_rTarget.m_pInterfaceRef->GetObjectToWorldMatrix());
-        }
-    }
+	for (auto &s_rTarget : m_aTargetSpatials)
+	{
+		const auto *s_pActor = s_rTarget.m_entityRef.QueryInterface<ZActor>();
+		if (ImGui::Button(s_pActor->m_sActorName.c_str()))
+		{
+			Utils::TeleportPlayerTo(s_rTarget.m_pInterfaceRef->GetObjectToWorldMatrix());
+		}
+	}
 }
 
 REGISTER_CHAOS_EFFECT(ZSwapTargetsEffect)

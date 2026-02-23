@@ -5,16 +5,16 @@
 
 class ZFireworksEffect : public IChaosEffect
 {
-  public:
-    void LoadResources() override;
-    void OnClearScene() override;
-    bool Available() const override;
-    void OnDrawDebugUI() override;
+public:
+	void LoadResources() override;
+	void OnClearScene() override;
+	bool Available() const override;
+	void OnDrawDebugUI() override;
 
-    void Start() override;
-    void Stop() override;
+	void Start() override;
+	void Stop() override;
 
-  private:
-    std::unique_ptr<ZTemplateEntitySpawner> m_pFireworksSpawner;
-    ZEntityRef m_rFireworksEntity;
+private:
+	std::unique_ptr<ZTemplateEntitySpawner> m_pFireworksSpawner;
+	ZEntityRef m_rFireworksEntity;
 };

@@ -1,11 +1,11 @@
 #include "IChaosEffect.h"
 
-#include <Glacier/ZEntity.h>
 #include <Glacier/ZMath.h>
+#include <Glacier/ZEntity.h>
 #include <Glacier/ZResourceID.h>
 
-#include "Effects/Base/Companion/ZCompanionModDependentEffectBase.h"
 #include "Helpers/ZTemplateEntitySpawner.h"
+#include "Effects/Base/Companion/ZCompanionModDependentEffectBase.h"
 
 /**
  * Reusable base for spawning sound effect players in the world.
@@ -14,14 +14,14 @@
  */
 class ZSoundFXEffectBase : public virtual IChaosEffect, public virtual ZCompanionModDependentEffectBase
 {
-  public:
+public:
     void LoadResources() override;
     void OnClearScene() override;
     void OnDrawDebugUI() override;
 
     bool Available() const override;
 
-  protected:
+protected:
     /**
      * Play a sound effect at the given position
      * @param p_Position position to play from
@@ -29,6 +29,6 @@ class ZSoundFXEffectBase : public virtual IChaosEffect, public virtual ZCompanio
      */
     ZEntityRef PlayAt(const SMatrix& p_Position, const ZRuntimeResourceID& p_SoundResource);
 
-  private:
+private:
     std::unique_ptr<ZTemplateEntitySpawner> m_pSoundPlayerSpawner;
 };

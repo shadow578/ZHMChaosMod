@@ -8,44 +8,43 @@
 
 class ZLiveReactionCamEffect : public IChaosEffect
 {
-  public:
-    ZLiveReactionCamEffect(const bool p_bTargetPlayer) : m_bTargetPlayer(p_bTargetPlayer) {}
+public:
+	ZLiveReactionCamEffect(const bool p_bTargetPlayer) :
+		m_bTargetPlayer(p_bTargetPlayer)
+	{
+	}
 
-    void LoadResources() override;
-    void OnClearScene() override;
-    void OnDrawDebugUI() override;
+	void LoadResources() override;
+	void OnClearScene() override;
+	void OnDrawDebugUI() override;
 
-    bool Available() const override;
+	bool Available() const override;
 
-    void Start() override;
-    void Stop() override;
+	void Start() override;
+	void Stop() override;
 
-    bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
+	bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
 
-    std::string GetName() const override
-    {
-        return IChaosEffect::GetName() + (m_bTargetPlayer ? "_player" : "_actor");
-    }
+	std::string GetName() const override
+	{
+		return IChaosEffect::GetName() + (m_bTargetPlayer ? "_player" : "_actor");
+	}
 
-    std::string GetDisplayName(const bool p_bVoting) const override
-    {
-        return m_bTargetPlayer ? "Live Agent 47 Reaction" : "Live Victim Reaction";
-    }
+	std::string GetDisplayName(const bool p_bVoting) const override
+	{
+		return m_bTargetPlayer ? "Live Agent 47 Reaction" : "Live Victim Reaction";
+	}
 
-  private:
-    const bool m_bTargetPlayer;
+private:
+	const bool m_bTargetPlayer;
 
-    std::unique_ptr<ZTemplateEntitySpawner> m_pPIPCameraSpawner;
-    std::unique_ptr<ZResourceProvider> m_pHudMessageResource;
+	std::unique_ptr<ZTemplateEntitySpawner> m_pPIPCameraSpawner;
+	std::unique_ptr<ZResourceProvider> m_pHudMessageResource;
 
-    ZEntityRef m_rPIPCameraEntity;
+	ZEntityRef m_rPIPCameraEntity;
 
-    TEntityRef<ZSpatialEntity> GetRandomActorHeadAttachEntity();
-    TEntityRef<ZSpatialEntity> GetPlayerHeadAttachEntity();
+	TEntityRef<ZSpatialEntity> GetRandomActorHeadAttachEntity();
+	TEntityRef<ZSpatialEntity> GetPlayerHeadAttachEntity();
 
-    void SpawnLiveReactionCam(
-        TEntityRef<ZSpatialEntity> p_rTargetHead,
-        const ZRuntimeResourceID p_HudMessageId,
-        const ZPIPMessageEntity_EIcon p_eIcon
-    );
+	void SpawnLiveReactionCam(TEntityRef<ZSpatialEntity> p_rTargetHead, const ZRuntimeResourceID p_HudMessageId, const ZPIPMessageEntity_EIcon p_eIcon);
 };
