@@ -4,7 +4,7 @@
 
 class ZLagEffect : public IChaosEffect
 {
-public:
+  public:
     ZLagEffect(const float32 p_fTargetFPS)
         : m_fTargetFPS(p_fTargetFPS)
     {
@@ -25,7 +25,7 @@ public:
         return EDuration::Short; // painful!
     }
 
-private:
+  private:
     float32 m_fTargetFPS;
     bool m_bEnabled = false;
 };

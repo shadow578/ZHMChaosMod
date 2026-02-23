@@ -13,16 +13,16 @@
 
 void ZActorToWineEffect::LoadResources()
 {
-	ZActorWellbeingChangeEffectBase::LoadResources();
-	ZSpawnRepositoryItemEffectBase::LoadResources();
+    ZActorWellbeingChangeEffectBase::LoadResources();
+    ZSpawnRepositoryItemEffectBase::LoadResources();
 
-	// pre-load wine bottle repository prop for later use
+    // pre-load wine bottle repository prop for later use
     // Melee_Llama_WineBottle_WhiteLabel_Vintage / "1945 Grand Paladin"
     m_WineBottleProp = GetRepositoryPropByID("2d960bf0-217c-400d-a1ee-f721e18f2926");
-	if (!m_WineBottleProp)
+    if (!m_WineBottleProp)
     {
         Logger::Error(TAG "Failed to load wine bottle repository prop");
-		m_bIsAvailable = false;
+        m_bIsAvailable = false;
     }
 }
 
@@ -43,8 +43,8 @@ void ZActorToWineEffect::OnActorWellbeingChanged(ZActor* p_pActor, const SActorS
 
 void ZActorToWineEffect::OnActorPerished(ZActor* p_pActor)
 {
-	ZEntityRef s_rActor;
-	p_pActor->GetID(s_rActor);
+    ZEntityRef s_rActor;
+    p_pActor->GetID(s_rActor);
     if (!s_rActor)
     {
         return;
@@ -99,8 +99,8 @@ void ZActorToWineEffect::OnActorPerished(ZActor* p_pActor)
 
         // setting the body invisible does NOT prevent interactions, so teleport out of the way
         s_mActorTransform.Pos.x = 0.f;
-		s_mActorTransform.Pos.y = 0.f;
-		s_mActorTransform.Pos.z = -999.f;
+        s_mActorTransform.Pos.y = 0.f;
+        s_mActorTransform.Pos.z = -999.f;
         s_pActorSpatial->SetObjectToWorldMatrixFromEditor(s_mActorTransform);
     }
 }

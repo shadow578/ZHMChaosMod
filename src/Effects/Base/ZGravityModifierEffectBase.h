@@ -5,15 +5,15 @@
 
 /**
  * Reusable base for modifying physics gravity.
- * Use SetGravity() to set a custom gravity, and 
+ * Use SetGravity() to set a custom gravity, and
  * RestoreDefaultGravity() to restore default.
  */
 class ZGravityModifierEffectBase : public virtual IChaosEffect
 {
-public:
+  public:
     bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
 
-protected:
+  protected:
     void RestoreDefaultGravity();
     void SetGravity(const SVector3 p_vGravity);
 };

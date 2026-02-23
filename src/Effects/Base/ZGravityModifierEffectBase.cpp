@@ -22,7 +22,7 @@ const std::string c_sGravityPropertyName = "m_vGravity";
 
 const SVector3 c_fDefaultGravity = SVector3(0.f, 0.f, -9.81f);
 
-void ZGravityModifierEffectBase::RestoreDefaultGravity() 
+void ZGravityModifierEffectBase::RestoreDefaultGravity()
 {
     SetGravity(c_fDefaultGravity);
 }
@@ -30,14 +30,14 @@ void ZGravityModifierEffectBase::RestoreDefaultGravity()
 void ZGravityModifierEffectBase::SetGravity(const SVector3 p_vGravity)
 {
     auto s_rPhysicsEntity = Utils::ZEntityFinder()
-        .EntityID(c_nPhysicsWorldId)
-		.FindFirst();
+                                .EntityID(c_nPhysicsWorldId)
+                                .FindFirst();
 
     if (!s_rPhysicsEntity)
     {
         Logger::Debug(TAG "Failed to find PhysicsWorld entity.");
         return;
-	}
+    }
 
     if (!Utils::SetProperty<SVector3>(s_rPhysicsEntity, c_sGravityPropertyName, p_vGravity))
     {
@@ -48,6 +48,6 @@ void ZGravityModifierEffectBase::SetGravity(const SVector3 p_vGravity)
 bool ZGravityModifierEffectBase::IsCompatibleWith(const IChaosEffect* p_pOther) const
 {
     return IChaosEffect::IsCompatibleWith(p_pOther)
-        // all gravity modifiers are incompatible with each other
-        && !Utils::IsInstanceOf<ZGravityModifierEffectBase>(p_pOther);
+           // all gravity modifiers are incompatible with each other
+           && !Utils::IsInstanceOf<ZGravityModifierEffectBase>(p_pOther);
 }

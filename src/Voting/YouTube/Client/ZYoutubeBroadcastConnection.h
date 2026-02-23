@@ -13,95 +13,95 @@ class ZAuthToken;
  */
 class ZYoutubeBroadcastConnection
 {
-public:
-	ZYoutubeBroadcastConnection(const std::shared_ptr<ZAuthToken> m_pToken);
-	~ZYoutubeBroadcastConnection();
+  public:
+    ZYoutubeBroadcastConnection(const std::shared_ptr<ZAuthToken> m_pToken);
+    ~ZYoutubeBroadcastConnection();
 
-	ZYoutubeBroadcastConnection(const ZYoutubeBroadcastConnection&) = delete;
-	ZYoutubeBroadcastConnection& operator=(const ZYoutubeBroadcastConnection&) = delete;
+    ZYoutubeBroadcastConnection(const ZYoutubeBroadcastConnection&) = delete;
+    ZYoutubeBroadcastConnection& operator=(const ZYoutubeBroadcastConnection&) = delete;
 
-	/**
-	 * Query the currently active live broadcast for the authenticated user, then start chat polling.
-	 * Automatically called on construction.
-	 */
-	bool Connect();
+    /**
+     * Query the currently active live broadcast for the authenticated user, then start chat polling.
+     * Automatically called on construction.
+     */
+    bool Connect();
 
-	/**
-	 * Disconnect from the YouTube API, stop chat polling.
-	 * Automatically called on destruction.
-	 */
-	void Disconnect();
+    /**
+     * Disconnect from the YouTube API, stop chat polling.
+     * Automatically called on destruction.
+     */
+    void Disconnect();
 
-	/**
-	 * Is the connection active?
-	 */
-	bool IsConnected() const
-	{
-		return m_pToken != nullptr 
-			&& m_pToken
-			&& m_ActiveBroadcast;
-	}
+    /**
+     * Is the connection active?
+     */
+    bool IsConnected() const
+    {
+        return m_pToken != nullptr
+               && m_pToken
+               && m_ActiveBroadcast;
+    }
 
-	/**
-	 * Get information about the currently active live broadcast.
-	 */
-	YT::SLiveBroadcast GetBroadcastInfo() const
-	{
-		return m_ActiveBroadcast;
-	}
+    /**
+     * Get information about the currently active live broadcast.
+     */
+    YT::SLiveBroadcast GetBroadcastInfo() const
+    {
+        return m_ActiveBroadcast;
+    }
 
-	/**
-	 * Set callback for new chat messages.
-	 */
-	void SetOnChatMessageCallback(const std::function<void(const YT::SLiveChatMessage&)>& p_Callback)
-	{
-		std::lock_guard s_Lock(m_ChatPollingCallbacksMutex);
-		m_OnChatMessageCallback = p_Callback;
-	}
+    /**
+     * Set callback for new chat messages.
+     */
+    void SetOnChatMessageCallback(const std::function<void(const YT::SLiveChatMessage&)>& p_Callback)
+    {
+        std::lock_guard s_Lock(m_ChatPollingCallbacksMutex);
+        m_OnChatMessageCallback = p_Callback;
+    }
 
-	/**
-	 * Set callback for live poll updates.
-	 */
-	void SetOnPollUpdateCallback(const std::function<void(const YT::SLivePollDetails&)>& p_Callback)
-	{
-		std::lock_guard s_Lock(m_ChatPollingCallbacksMutex);
-		m_OnPollUpdateCallback = p_Callback;
-	}
+    /**
+     * Set callback for live poll updates.
+     */
+    void SetOnPollUpdateCallback(const std::function<void(const YT::SLivePollDetails&)>& p_Callback)
+    {
+        std::lock_guard s_Lock(m_ChatPollingCallbacksMutex);
+        m_OnPollUpdateCallback = p_Callback;
+    }
 
-	/**
-	 * Create a new live poll in the active broadcast.
-	 * After the poll is created, p_PollDetails will be updated with the returned details (like id).
-	 * Only after this, EndLivePoll can be called to end it.
-	 */
-	bool CreateLivePoll(YT::SLivePollDetails& p_PollDetails);
+    /**
+     * Create a new live poll in the active broadcast.
+     * After the poll is created, p_PollDetails will be updated with the returned details (like id).
+     * Only after this, EndLivePoll can be called to end it.
+     */
+    bool CreateLivePoll(YT::SLivePollDetails& p_PollDetails);
 
-	/**
-	 * End the provided live poll, if it is active.
-	 * After ending, p_PollDetails will be updated with the final results.
-	 */
-	bool EndLivePoll(YT::SLivePollDetails& p_PollDetails);
+    /**
+     * End the provided live poll, if it is active.
+     * After ending, p_PollDetails will be updated with the final results.
+     */
+    bool EndLivePoll(YT::SLivePollDetails& p_PollDetails);
 
-	/**
-	 * Send a message to the live chat of the active broadcast.
-	 * After the message is created, p_Message will be updated with the returned details (like id).
-	 */
-	bool SendChatMessage(YT::SLiveChatMessage& p_Message);
+    /**
+     * Send a message to the live chat of the active broadcast.
+     * After the message is created, p_Message will be updated with the returned details (like id).
+     */
+    bool SendChatMessage(YT::SLiveChatMessage& p_Message);
 
-private: // Setup and common
-	const std::shared_ptr<ZAuthToken> m_pToken;
+  private: // Setup and common
+    const std::shared_ptr<ZAuthToken> m_pToken;
 
-	YT::SLiveBroadcast m_ActiveBroadcast;
+    YT::SLiveBroadcast m_ActiveBroadcast;
 
-	YT::SLiveBroadcast GetActiveBroadcast();
+    YT::SLiveBroadcast GetActiveBroadcast();
 
-	bool IsSuccessfulResponse(const ix::HttpResponsePtr p_pResponse, const std::string& p_sContext);
+    bool IsSuccessfulResponse(const ix::HttpResponsePtr p_pResponse, const std::string& p_sContext);
 
-private: // Live chat polling
-	mutable std::recursive_mutex m_ChatPollingCallbacksMutex;
-	std::function<void(const YT::SLiveChatMessage&)> m_OnChatMessageCallback;
-	std::function<void(const YT::SLivePollDetails&)> m_OnPollUpdateCallback;
-	std::thread m_ChatPollingThread;
+  private: // Live chat polling
+    mutable std::recursive_mutex m_ChatPollingCallbacksMutex;
+    std::function<void(const YT::SLiveChatMessage&)> m_OnChatMessageCallback;
+    std::function<void(const YT::SLivePollDetails&)> m_OnPollUpdateCallback;
+    std::thread m_ChatPollingThread;
 
-	void RunLiveChatPolling();
-	int GetLiveChatMessages(std::string& p_sPageToken);
+    void RunLiveChatPolling();
+    int GetLiveChatMessages(std::string& p_sPageToken);
 };

@@ -2,7 +2,7 @@
 
 #include <Glacier/ZSpatialEntity.h>
 
-void ZVelocityTracker::Update(const SGameUpdateEvent &p_UpdateEvent, const ZEntityRef p_Entity)
+void ZVelocityTracker::Update(const SGameUpdateEvent& p_UpdateEvent, const ZEntityRef p_Entity)
 {
     if (!p_Entity)
     {
@@ -19,7 +19,7 @@ void ZVelocityTracker::Update(const SGameUpdateEvent &p_UpdateEvent, const ZEnti
     Update(p_UpdateEvent, s_CurrentPositionWM.Trans);
 }
 
-void ZVelocityTracker::Update(const SGameUpdateEvent &p_UpdateEvent, const float4 p_Position)
+void ZVelocityTracker::Update(const SGameUpdateEvent& p_UpdateEvent, const float4 p_Position)
 {
     // first?
     if (!m_bLastPostionValid)
@@ -34,7 +34,8 @@ void ZVelocityTracker::Update(const SGameUpdateEvent &p_UpdateEvent, const float
 
     const STimeDistancePair s_NewPair{
         s_fDistance,
-        p_UpdateEvent.m_GameTimeDelta.ToSeconds()};
+        p_UpdateEvent.m_GameTimeDelta.ToSeconds()
+    };
     m_qSamples.push(s_NewPair);
 
     m_Sum.m_fDistance += s_NewPair.m_fDistance;

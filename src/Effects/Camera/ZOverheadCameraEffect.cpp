@@ -37,7 +37,7 @@ void ZOverheadCameraEffect::OnDrawDebugUI()
     ZInterpolatingEffectBase::OnDrawDebugUI();
 }
 
-void ZOverheadCameraEffect::OnFrameUpdate(const SGameUpdateEvent &p_UpdateEvent, const float32 p_fEffectTimeRemaining)
+void ZOverheadCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)
 {
     ZInterpolatingEffectBase::OnFrameUpdate(p_UpdateEvent, p_fEffectTimeRemaining);
 
@@ -65,7 +65,8 @@ void ZOverheadCameraEffect::OnFrameUpdate(const SGameUpdateEvent &p_UpdateEvent,
     s_TargetWM.Trans.z += c_fOverheadMinDistance;
     s_TargetWM.Trans.z = GetMaxOverheadZAt(
         s_TargetWM,
-        c_fOverheadMaxDistance);
+        c_fOverheadMaxDistance
+    );
 
     // rotate facing downwards
     s_TargetWM.XAxis = float4(0.0f, 1.0f, 0.0f, 0.0f);
@@ -78,7 +79,7 @@ void ZOverheadCameraEffect::OnFrameUpdate(const SGameUpdateEvent &p_UpdateEvent,
     s_CameraSpatialEntity->SetObjectToWorldMatrixFromEditor(s_TargetWM);
 }
 
-float32 ZOverheadCameraEffect::GetMaxOverheadZAt(const SMatrix &p_Position, const float32 p_fMax)
+float32 ZOverheadCameraEffect::GetMaxOverheadZAt(const SMatrix& p_Position, const float32 p_fMax)
 {
     if (!*Globals::CollisionManager)
     {

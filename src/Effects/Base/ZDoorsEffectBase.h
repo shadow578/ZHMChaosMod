@@ -11,22 +11,25 @@
  */
 class ZDoorsEffectBase : public virtual IChaosEffect
 {
-public:
-	ZDoorsEffectBase(size_t p_nMinDoors = 50)
-		: m_nMinDoors(p_nMinDoors)
-	{
-	}
+  public:
+    ZDoorsEffectBase(size_t p_nMinDoors = 50)
+        : m_nMinDoors(p_nMinDoors)
+    {
+    }
 
-	void OnEnterScene() override;
-	void OnClearScene() override;
-	bool Available() const override;
+    void OnEnterScene() override;
+    void OnClearScene() override;
+    bool Available() const override;
 
-	void OnDrawDebugUI() override;
+    void OnDrawDebugUI() override;
 
-protected:
-	std::vector<SHM5SingleDoor2Binding>& GetDoors() { return m_aDoors; }
+  protected:
+    std::vector<SHM5SingleDoor2Binding>& GetDoors()
+    {
+        return m_aDoors;
+    }
 
-private:
-	const size_t m_nMinDoors;
-	std::vector<SHM5SingleDoor2Binding> m_aDoors;
+  private:
+    const size_t m_nMinDoors;
+    std::vector<SHM5SingleDoor2Binding> m_aDoors;
 };

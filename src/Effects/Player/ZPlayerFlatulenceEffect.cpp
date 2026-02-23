@@ -39,8 +39,7 @@ void ZPlayerFlatulenceEffect::OnDrawDebugUI()
 
 bool ZPlayerFlatulenceEffect::Available() const
 {
-    return ZPoisonAOEDamageEffectBase::Available() &&
-           ZSoundFXEffectBase::Available();
+    return ZPoisonAOEDamageEffectBase::Available() && ZSoundFXEffectBase::Available();
 }
 
 void ZPlayerFlatulenceEffect::Start()
@@ -61,12 +60,12 @@ void ZPlayerFlatulenceEffect::Start()
                 .m_eType = ZPoisonAOEDamageEffectBase::EPoisonType::SICK,
                 .m_AreaSize = SVector3(8.0f, 8.0f, 8.0f),
                 .m_ParticleColorRangeStart{.r = 25, .g = 240, .b = 0},
-                .m_ParticleColorRangeEnd{.r = 25, .g = 200, .b = 0}};
+                .m_ParticleColorRangeEnd{.r = 25, .g = 200, .b = 0}
+            };
             auto s_rPoisonEntity = ZPoisonAOEDamageEffectBase::Spawn(s_PoisonParams);
 
             // sound effect
-            auto s_rSFXEntity = ZSoundFXEffectBase::PlayAt(s_WM,
-                                                           m_pSFXResource->IsAvailable() ? m_pSFXResource->GetResourceID() : c_ridSFXFallback);
+            auto s_rSFXEntity = ZSoundFXEffectBase::PlayAt(s_WM, m_pSFXResource->IsAvailable() ? m_pSFXResource->GetResourceID() : c_ridSFXFallback);
 
             // set player as parent of entities
             Utils::SetProperty<TEntityRef<ZSpatialEntity>>(s_rPoisonEntity, "m_eidParent", s_rPlayerSpatial);

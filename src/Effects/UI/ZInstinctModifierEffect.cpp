@@ -34,7 +34,7 @@ void ZInstinctModifierEffectBase::Start()
 
 void ZInstinctModifierEffectBase::Stop()
 {
-    for (auto &[s_pActor, s_eOriginalGlowType] : m_mOriginalGlowTypes)
+    for (auto& [s_pActor, s_eOriginalGlowType] : m_mOriginalGlowTypes)
     {
         if (!s_pActor)
         {

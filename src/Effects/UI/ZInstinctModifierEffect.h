@@ -7,16 +7,16 @@
 
 class ZInstinctModifierEffectBase : public IChaosEffect
 {
-public:
-    ZInstinctModifierEffectBase(const ERenderGlowTypes p_eGlowType) 
-        : m_eGlowType(p_eGlowType) 
+  public:
+    ZInstinctModifierEffectBase(const ERenderGlowTypes p_eGlowType)
+        : m_eGlowType(p_eGlowType)
     {
     }
 
     void Start() override;
     void Stop() override;
 
-private:
+  private:
     const ERenderGlowTypes m_eGlowType;
 
     std::unordered_map<ZActor*, ERenderGlowTypes> m_mOriginalGlowTypes;
@@ -24,7 +24,7 @@ private:
 
 class ZInstinctAllActorsTargetsEffect : public ZInstinctModifierEffectBase
 {
-public:
+  public:
     ZInstinctAllActorsTargetsEffect()
         : ZInstinctModifierEffectBase(ERenderGlowTypes::ERENDERGLOWTYPE_CONTRACT_TARGET)
     {
@@ -38,7 +38,7 @@ public:
 
 class ZInstinctAllActorsCrowdEffect : public ZInstinctModifierEffectBase
 {
-public:
+  public:
     ZInstinctAllActorsCrowdEffect()
         : ZInstinctModifierEffectBase(ERenderGlowTypes::ERENDERGLOWTYPE_NONE)
     {

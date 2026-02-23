@@ -7,8 +7,8 @@
 void ZFixCameraUnlocker::Start()
 {
     auto s_aCameras = Utils::ZEntityFinder()
-        .EntityType("ZHM5MainCamera")
-        .Find();
+                          .EntityType("ZHM5MainCamera")
+                          .Find();
     if (s_aCameras.empty())
     {
         return;

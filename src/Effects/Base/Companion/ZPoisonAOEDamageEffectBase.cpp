@@ -21,9 +21,7 @@ void ZPoisonAOEDamageEffectBase::OnClearScene()
 
 bool ZPoisonAOEDamageEffectBase::Available() const
 {
-    return ZCompanionModDependentEffectBase::Available() &&
-           m_pEffectCloudSpawner &&
-           m_pEffectCloudSpawner->IsAvailable();
+    return ZCompanionModDependentEffectBase::Available() && m_pEffectCloudSpawner && m_pEffectCloudSpawner->IsAvailable();
 }
 
 void ZPoisonAOEDamageEffectBase::OnDrawDebugUI()
@@ -47,7 +45,8 @@ void ZPoisonAOEDamageEffectBase::OnDrawDebugUI()
         {
             if (ImGui::Selectable(
                     s_sName.c_str(),
-                    s_eType == m_eDebugPoisonType))
+                    s_eType == m_eDebugPoisonType
+                ))
             {
                 m_eDebugPoisonType = s_eType;
             }
@@ -70,7 +69,8 @@ void ZPoisonAOEDamageEffectBase::OnDrawDebugUI()
 
                 SParams s_Params{
                     .m_Position = s_WM,
-                    .m_eType = m_eDebugPoisonType};
+                    .m_eType = m_eDebugPoisonType
+                };
                 Spawn(s_Params);
             }
         }
@@ -79,7 +79,7 @@ void ZPoisonAOEDamageEffectBase::OnDrawDebugUI()
     ImGui::EndDisabled();
 }
 
-ZEntityRef ZPoisonAOEDamageEffectBase::Spawn(const SParams &p_Params)
+ZEntityRef ZPoisonAOEDamageEffectBase::Spawn(const SParams& p_Params)
 {
     if (!m_pEffectCloudSpawner)
     {
@@ -115,9 +115,9 @@ ZEntityRef ZPoisonAOEDamageEffectBase::Spawn(const SParams &p_Params)
     return s_RootEntity.m_entityRef;
 }
 
-bool ZPoisonAOEDamageEffectBase::GetPoisonKeywordEntity(const EPoisonType p_eType, ZEntityRef p_RootEntity, ZEntityRef &p_KeywordEntity)
+bool ZPoisonAOEDamageEffectBase::GetPoisonKeywordEntity(const EPoisonType p_eType, ZEntityRef p_RootEntity, ZEntityRef& p_KeywordEntity)
 {
-    auto *s_pPropRTBpFactory = p_RootEntity.GetBlueprintFactory();
+    auto* s_pPropRTBpFactory = p_RootEntity.GetBlueprintFactory();
     if (!s_pPropRTBpFactory)
     {
         Logger::Debug(TAG "Could not get blueprint factory.");

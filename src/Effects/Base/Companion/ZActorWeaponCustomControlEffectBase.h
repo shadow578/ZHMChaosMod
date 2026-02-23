@@ -9,15 +9,15 @@
  */
 class ZActorWeaponCustomControlEffectBase : public virtual ZCompanionModDependentEffectBase
 {
-public:
-	ZActorWeaponCustomControlEffectBase()
-		: ZCompanionModDependentEffectBase(CompanionModUtil::SVersion(1, 3, 0)) // NPCActor custom weapon control helper
-	{
-	}
+  public:
+    ZActorWeaponCustomControlEffectBase()
+        : ZCompanionModDependentEffectBase(CompanionModUtil::SVersion(1, 3, 0)) // NPCActor custom weapon control helper
+    {
+    }
 
-protected:
-	/**
-	 * Gets the shoot helper binding for a specific actor. 
-	 */
-	SShootAtHelperBinding GetShootAtHelperFor(const TEntityRef<ZActor> p_rActor) const;
+  protected:
+    /**
+     * Gets the shoot helper binding for a specific actor.
+     */
+    SShootAtHelperBinding GetShootAtHelperFor(const TEntityRef<ZActor> p_rActor) const;
 };

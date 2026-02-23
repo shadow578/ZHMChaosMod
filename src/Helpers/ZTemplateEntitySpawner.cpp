@@ -31,7 +31,7 @@ ZEntityRef ZTemplateEntitySpawner::Spawn()
         return {};
     }
 
-    auto &s_ResourcePtr = GetResourceAs<ZTemplateEntityFactory>();
+    auto& s_ResourcePtr = GetResourceAs<ZTemplateEntityFactory>();
     if (!s_ResourcePtr)
     {
         Logger::Debug(TAG "Cannot spawn entity from resource '{}', resource not loaded.", GetResourcePath());
@@ -47,7 +47,8 @@ ZEntityRef ZTemplateEntitySpawner::Spawn()
         s_ResourcePtr,
         s_Scene.m_entityRef,
         s_ExternalRefs,
-        -1);
+        -1
+    );
 
     if (!s_EntityRef)
     {
@@ -72,18 +73,19 @@ void ZTemplateEntitySpawner::Despawn(ZEntityRef p_rEntity)
         std::remove_if(
             m_aSpawnedEntities.begin(),
             m_aSpawnedEntities.end(),
-            [&](const ZEntityRef &p_Ref)
-            {
+            [&](const ZEntityRef& p_Ref) {
                 return p_Ref == p_rEntity;
-            }),
-        m_aSpawnedEntities.end());
+            }
+        ),
+        m_aSpawnedEntities.end()
+    );
 
     Functions::ZEntityManager_DeleteEntity->Call(Globals::EntityManager, p_rEntity, {});
 }
 
 void ZTemplateEntitySpawner::DespawnAll()
 {
-    for (auto &s_Entity : m_aSpawnedEntities)
+    for (auto& s_Entity : m_aSpawnedEntities)
     {
         // note: not using Despawn() here to avoid modifying m_aSpawnedEntities while iterating over it
         if (s_Entity)
@@ -97,7 +99,5 @@ void ZTemplateEntitySpawner::DespawnAll()
 
 std::string ZTemplateEntitySpawner::ToString() const
 {
-    return fmt::format("{}; Active Entities: {}",
-                       ZResourceProvider::ToString(),
-                       m_aSpawnedEntities.size());
+    return fmt::format("{}; Active Entities: {}", ZResourceProvider::ToString(), m_aSpawnedEntities.size());
 }

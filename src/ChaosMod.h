@@ -15,7 +15,7 @@
 
 class ChaosMod : public IPluginInterface
 {
-public: // Plugin Interface
+  public: // Plugin Interface
     ChaosMod();
     ~ChaosMod();
 
@@ -25,12 +25,12 @@ public: // Plugin Interface
     void OnDrawMenu() override;
     void OnDrawUI(bool p_HasFocus) override;
 
-private: // Hooks
+  private: // Hooks
     DECLARE_PLUGIN_DETOUR(ChaosMod, bool, OnLoadScene, ZEntitySceneContext*, SSceneInitParameters&);
     DECLARE_PLUGIN_DETOUR(ChaosMod, void, OnClearScene, ZEntitySceneContext* th, bool p_FullyUnloadScene);
     DECLARE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th, ESceneLoadingStage stage);
 
-private: // Misc.
+  private: // Misc.
     ZTimer m_SlowUpdateTimer;
     std::queue<std::function<void()>> m_qDeferredFrameUpdateActions;
 
@@ -39,7 +39,7 @@ private: // Misc.
     void OnEffectSlowUpdate();
     void OnLoadOrClearScene();
 
-private: // UI & Debug
+  private: // UI & Debug
     bool m_bMenuActive = false;
     bool m_bDebugMenuActive = false;
     bool m_bDebugMenuAlwaysVisible = false;
@@ -47,27 +47,27 @@ private: // UI & Debug
     IChaosEffect* m_pEffectForDebug = nullptr;
     std::string m_sAuthorNames;
 
-	void InitAuthorNames();
+    void InitAuthorNames();
 
-	void DrawMainUI(const bool p_bHasFocus);
-	void DrawOverlayUI(const bool p_bHasFocus);
+    void DrawMainUI(const bool p_bHasFocus);
+    void DrawOverlayUI(const bool p_bHasFocus);
 
-	void DrawConfigurationContents();
+    void DrawConfigurationContents();
     void DrawOverlayContents();
     void DrawUnlockersContents();
 
     void DrawDebugUI(const bool p_bHasFocus);
     void DrawEffectDebugPane();
 
-private: // Test Mode
+  private: // Test Mode
     bool m_bTestmodeEnabled = false;
     size_t m_nTestmodeEffectIndex = 0;
-	float32 m_fTestmodeInterval = 10.0f;
-	float32 m_fTestmodeTimeToNextEffect = 0.0f;
+    float32 m_fTestmodeInterval = 10.0f;
+    float32 m_fTestmodeTimeToNextEffect = 0.0f;
 
     void UpdateTestMode(const float32 p_fDeltaTime);
 
-private: // Selection & Countdown logic
+  private: // Selection & Countdown logic
     struct SActiveEffect
     {
         IChaosEffect* m_pEffect;

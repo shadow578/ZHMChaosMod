@@ -14,14 +14,14 @@
  */
 class ZSoundFXEffectBase : public virtual IChaosEffect, public virtual ZCompanionModDependentEffectBase
 {
-public:
+  public:
     void LoadResources() override;
     void OnClearScene() override;
     void OnDrawDebugUI() override;
 
     bool Available() const override;
 
-protected:
+  protected:
     /**
      * Play a sound effect at the given position
      * @param p_Position position to play from
@@ -29,6 +29,6 @@ protected:
      */
     ZEntityRef PlayAt(const SMatrix& p_Position, const ZRuntimeResourceID& p_SoundResource);
 
-private:
+  private:
     std::unique_ptr<ZTemplateEntitySpawner> m_pSoundPlayerSpawner;
 };

@@ -11,9 +11,8 @@
  */
 class ZVelocityTracker
 {
-public:
-    ZVelocityTracker(int p_nSampleCount = 10) :
-        m_nSampleCount(p_nSampleCount)
+  public:
+    ZVelocityTracker(int p_nSampleCount = 10) : m_nSampleCount(p_nSampleCount)
     {
         Reset();
     }
@@ -54,7 +53,7 @@ public:
         return m_bLastPostionValid && m_qSamples.size() == m_nSampleCount;
     }
 
-private:
+  private:
     struct STimeDistancePair
     {
         float32 m_fDistance;
@@ -63,7 +62,7 @@ private:
 
     const int m_nSampleCount;
     std::queue<STimeDistancePair> m_qSamples;
-    STimeDistancePair m_Sum{ 0, 0 };
+    STimeDistancePair m_Sum{0, 0};
     float32 m_fVelocity = 0.0f;
 
     bool m_bLastPostionValid = false;

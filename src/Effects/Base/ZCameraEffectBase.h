@@ -13,18 +13,18 @@
  */
 class ZCameraEffectBase : public virtual IChaosEffect
 {
-public:
+  public:
     void LoadResources() override;
     void OnClearScene() override;
     void OnDrawDebugUI() override;
-	bool Available() const override;
-    
+    bool Available() const override;
+
     void Start() override;
     void Stop() override;
 
     bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
 
-protected:
+  protected:
     /**
      * Effect camera, if IsEffectCameraActive() == true.
      */
@@ -49,7 +49,7 @@ protected:
         return m_bEffectCameraActive && m_EffectCameraEntity && m_OriginalCameraEntity;
     }
 
-private:
+  private:
     bool EnsureCameraEntity();
     std::unique_ptr<ZTemplateEntitySpawner> m_pCameraSpawner;
 

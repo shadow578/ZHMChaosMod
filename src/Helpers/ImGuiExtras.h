@@ -4,7 +4,7 @@
 namespace ImGuiEx
 {
     /**
-     * Drop-in replacement of ImGui::SliderFloat with ImGui::DragScalar, for floats. 
+     * Drop-in replacement of ImGui::SliderFloat with ImGui::DragScalar, for floats.
      */
     inline bool DragFloat(
         const char* p_sLabel,
@@ -12,7 +12,8 @@ namespace ImGuiEx
         const float p_fMin,
         const float p_fMax,
         const char* p_sFormat = "%.3f",
-        ImGuiSliderFlags p_nFlags = 0)
+        ImGuiSliderFlags p_nFlags = 0
+    )
     {
         return ImGui::DragScalar(
             p_sLabel,
@@ -36,7 +37,8 @@ namespace ImGuiEx
     inline void ProgressBarTextFit(
         const float p_fFraction,
         const char* p_sOverlayText,
-        const float p_fTextPadding = 10.0f)
+        const float p_fTextPadding = 10.0f
+    )
     {
         const auto s_vTextSize = ImGui::CalcTextSize(p_sOverlayText);
         const auto s_fTextWidth = s_vTextSize.x + (p_fTextPadding * 2.0f);
@@ -58,4 +60,4 @@ namespace ImGuiEx
             p_sOverlayText
         );
     }
-};
+}; // namespace ImGuiEx

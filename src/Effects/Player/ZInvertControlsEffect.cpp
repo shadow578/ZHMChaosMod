@@ -31,15 +31,14 @@ void ZInvertControlsEffect::OnModUnload()
 
 bool ZInvertControlsEffect::Available() const
 {
-    return IChaosEffect::Available() &&
-        Hooks::ZInputAction_Analog != nullptr;
+    return IChaosEffect::Available() && Hooks::ZInputAction_Analog != nullptr;
 }
 
 bool ZInvertControlsEffect::IsCompatibleWith(const IChaosEffect* p_pOtherEffect) const
 {
     return IChaosEffect::IsCompatibleWith(p_pOtherEffect)
-        && !Utils::IsInstanceOf<ZDisableInputsEffect>(p_pOtherEffect)
-        && !Utils::IsInstanceOf<ZForceForwardMovementEffect>(p_pOtherEffect);
+           && !Utils::IsInstanceOf<ZDisableInputsEffect>(p_pOtherEffect)
+           && !Utils::IsInstanceOf<ZForceForwardMovementEffect>(p_pOtherEffect);
 }
 
 void ZInvertControlsEffect::Start()
@@ -57,14 +56,7 @@ DEFINE_PLUGIN_DETOUR(ZInvertControlsEffect, double, OnInputActionAnalog, ZInputA
     if (m_bEnable)
     {
         const std::string s_sName = th->m_szName;
-        if (s_sName == InputActionNames::Keyboard::c_sVertical ||
-            s_sName == InputActionNames::Keyboard::c_sHorizontal ||
-            s_sName == InputActionNames::Keyboard::c_sLookVertical ||
-            s_sName == InputActionNames::Keyboard::c_sLookHorizontal ||
-            s_sName == InputActionNames::Controller::c_sLeftStickVertical ||
-            s_sName == InputActionNames::Controller::c_sLeftStickHorizontal ||
-            s_sName == InputActionNames::Controller::c_sRightStickVertical ||
-            s_sName == InputActionNames::Controller::c_sRightStickHorizontal)
+        if (s_sName == InputActionNames::Keyboard::c_sVertical || s_sName == InputActionNames::Keyboard::c_sHorizontal || s_sName == InputActionNames::Keyboard::c_sLookVertical || s_sName == InputActionNames::Keyboard::c_sLookHorizontal || s_sName == InputActionNames::Controller::c_sLeftStickVertical || s_sName == InputActionNames::Controller::c_sLeftStickHorizontal || s_sName == InputActionNames::Controller::c_sRightStickVertical || s_sName == InputActionNames::Controller::c_sRightStickHorizontal)
         {
             auto s_fValueRaw = p_Hook->CallOriginal(th, a2);
 
@@ -75,7 +67,7 @@ DEFINE_PLUGIN_DETOUR(ZInvertControlsEffect, double, OnInputActionAnalog, ZInputA
             s_fValue *= -1.0f;
 
             auto s_fValueReturn = *Utils::CastRaw<float64>(&s_fValue);
-            return { HookAction::Return(), s_fValueReturn };
+            return {HookAction::Return(), s_fValueReturn};
         }
     }
 

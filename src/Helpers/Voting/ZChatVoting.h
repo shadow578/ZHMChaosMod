@@ -11,7 +11,7 @@
  */
 class ZChatVoting
 {
-public:
+  public:
     struct SVoteOption
     {
         SVoteOption(const std::string& p_sName) : m_sName(p_sName) {}
@@ -58,7 +58,7 @@ public:
      */
     int GetTotalVotes() const;
 
-private:
+  private:
     std::atomic<bool> m_bVotingActive{false};
 
     mutable std::recursive_mutex m_VotesMutex; // Lock for m_aVoteCounts and m_mUserVotes

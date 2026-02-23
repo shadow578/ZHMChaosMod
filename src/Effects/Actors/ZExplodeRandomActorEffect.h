@@ -4,7 +4,7 @@
 
 class ZExplodeRandomActorEffect : public ZExplosionEffectBase
 {
-public:
+  public:
     void Start() override;
     void OnDrawDebugUI() override;
 
@@ -18,7 +18,7 @@ public:
         return EDuration::OneShot;
     }
 
-private:
+  private:
     TEntityRef<ZActor> m_rLastTarget = {};
     SMatrix m_LastTargetPos;
 };

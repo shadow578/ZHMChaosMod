@@ -9,15 +9,15 @@
  */
 class ZActorFollowPlayerHelperEffectBase : public virtual ZCompanionModDependentEffectBase
 {
-public:
-	ZActorFollowPlayerHelperEffectBase()
-		: ZCompanionModDependentEffectBase(CompanionModUtil::SVersion(1, 3, 0)) // NPCActor custom follow player helper
-	{
-	}
+  public:
+    ZActorFollowPlayerHelperEffectBase()
+        : ZCompanionModDependentEffectBase(CompanionModUtil::SVersion(1, 3, 0)) // NPCActor custom follow player helper
+    {
+    }
 
-protected:
-	/**
-	 * Gets the follow helper binding for a specific actor.
-	 */
-	SFollowPlayerHelperBinding GetFollowHelperFor(const TEntityRef<ZActor> p_rActor) const;
+  protected:
+    /**
+     * Gets the follow helper binding for a specific actor.
+     */
+    SFollowPlayerHelperBinding GetFollowHelperFor(const TEntityRef<ZActor> p_rActor) const;
 };

@@ -8,7 +8,7 @@
 
 class ZAuthoritativeFigureEffect : public IChaosEffect
 {
-public:
+  public:
     ZAuthoritativeFigureEffect();
 
     void Start() override;
@@ -20,7 +20,7 @@ public:
         return "Authoritative Figure";
     }
 
-private:
+  private:
     std::vector<std::string> m_aOutfitCommonNames;
 
     TEntityRef<ZGlobalOutfitKit> m_SelectedOutfit;

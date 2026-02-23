@@ -20,9 +20,7 @@ void ZExplosionEffectBase::OnClearScene()
 
 bool ZExplosionEffectBase::Available() const
 {
-    return ZCompanionModDependentEffectBase::Available() &&
-           m_pExplosionSpawner &&
-           m_pExplosionSpawner->IsAvailable();
+    return ZCompanionModDependentEffectBase::Available() && m_pExplosionSpawner && m_pExplosionSpawner->IsAvailable();
 }
 
 void ZExplosionEffectBase::OnDrawDebugUI()
@@ -54,7 +52,7 @@ void ZExplosionEffectBase::OnDrawDebugUI()
     ImGui::EndDisabled();
 }
 
-ZEntityRef ZExplosionEffectBase::SpawnExplosion(const SExplosionParams &p_Params)
+ZEntityRef ZExplosionEffectBase::SpawnExplosion(const SExplosionParams& p_Params)
 {
     if (!m_pExplosionSpawner)
     {

@@ -25,7 +25,8 @@ void ZPlayerRagdollWithImpulseEffect::Start()
         {},
         (-s_WM.Backward * 220.f) + (s_WM.Up * 550.f),
         1,
-        false);
+        false
+    );
 
     m_VelocityTracker.Reset();
     m_bActive = true;
@@ -39,7 +40,7 @@ void ZPlayerRagdollWithImpulseEffect::Stop()
     m_bActive = false;
 }
 
-void ZPlayerRagdollWithImpulseEffect::OnFrameUpdate(const SGameUpdateEvent &p_UpdateEvent, const float32 p_fEffectTimeRemaining)
+void ZPlayerRagdollWithImpulseEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)
 {
     if (!m_bActive)
     {
@@ -62,10 +63,7 @@ void ZPlayerRagdollWithImpulseEffect::OnFrameUpdate(const SGameUpdateEvent &p_Up
 
 void ZPlayerRagdollWithImpulseEffect::OnDrawDebugUI()
 {
-    ImGui::TextUnformatted(fmt::format("Velocity: {:.2f}{}",
-                                       m_VelocityTracker.GetVelocity(),
-                                       m_VelocityTracker.IsVelocityValid() ? "" : " (invalid)")
-                               .c_str());
+    ImGui::TextUnformatted(fmt::format("Velocity: {:.2f}{}", m_VelocityTracker.GetVelocity(), m_VelocityTracker.IsVelocityValid() ? "" : " (invalid)").c_str());
 }
 
 REGISTER_CHAOS_EFFECT(ZPlayerSimpleRagdollEffect)

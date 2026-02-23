@@ -24,7 +24,7 @@ void ZReturnToSpawnEffect::OnEnterScene()
         return;
     }
 
-    for (const auto &s_StartingLocation : s_aStartingLocations)
+    for (const auto& s_StartingLocation : s_aStartingLocations)
     {
         // attempt to get position property first
         auto s_rPosition = Utils::GetProperty<TEntityRef<ZSpatialEntity>>(s_StartingLocation, "m_rPosition").value_or({});
@@ -66,7 +66,7 @@ void ZReturnToSpawnEffect::OnDrawDebugUI()
     ImGui::TextUnformatted(fmt::format("# Spawn Points: {}", m_aSpawnPoints.size()).c_str());
 
     int i = 0;
-    for (const auto &s_SpawnPoint : m_aSpawnPoints)
+    for (const auto& s_SpawnPoint : m_aSpawnPoints)
     {
         if (ImGui::Button(fmt::format("[{}]", i).c_str()))
         {

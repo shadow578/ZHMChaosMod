@@ -4,15 +4,15 @@
 
 class ZExplosiveKnockoutEffect : public ZActorWellbeingChangeEffectBase, public ZExplosionEffectBase
 {
-public:
+  public:
     std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "Explosive Knockout";
     }
 
-protected:
+  protected:
     void OnActorWellbeingChanged(ZActor* p_pActor, const SActorState& p_OldState, const SActorState& p_NewState) override;
 
-private:
+  private:
     void SpawnExplosionAtActor(ZActor* p_pActor, const float32 p_fStrength);
 };

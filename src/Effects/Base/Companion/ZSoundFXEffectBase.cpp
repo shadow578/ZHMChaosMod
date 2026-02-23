@@ -21,9 +21,7 @@ void ZSoundFXEffectBase::OnClearScene()
 
 bool ZSoundFXEffectBase::Available() const
 {
-    return ZCompanionModDependentEffectBase::Available() &&
-           m_pSoundPlayerSpawner &&
-           m_pSoundPlayerSpawner->IsAvailable();
+    return ZCompanionModDependentEffectBase::Available() && m_pSoundPlayerSpawner && m_pSoundPlayerSpawner->IsAvailable();
 }
 
 void ZSoundFXEffectBase::OnDrawDebugUI()
@@ -52,7 +50,7 @@ void ZSoundFXEffectBase::OnDrawDebugUI()
     ImGui::EndDisabled();
 }
 
-ZEntityRef ZSoundFXEffectBase::PlayAt(const SMatrix &p_Position, const ZRuntimeResourceID &p_SoundResource)
+ZEntityRef ZSoundFXEffectBase::PlayAt(const SMatrix& p_Position, const ZRuntimeResourceID& p_SoundResource)
 {
     if (!m_pSoundPlayerSpawner)
     {

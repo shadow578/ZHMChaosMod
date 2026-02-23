@@ -9,16 +9,15 @@
 
 #include <Logging.h>
 
-
 class EffectRegistry
 {
-private:
+  private:
     EffectRegistry() = default;
     std::vector<std::unique_ptr<IChaosEffect>> m_aEffects;
     std::vector<std::unique_ptr<IUnlocker>> m_aUnlockers;
-	std::vector<std::unique_ptr<IVotingIntegration>> m_aVotingIntegrations;
+    std::vector<std::unique_ptr<IVotingIntegration>> m_aVotingIntegrations;
 
-public:
+  public:
     static EffectRegistry& GetInstance()
     {
         // Note: g_Registry is *intentionally* leaked to avoid static deinitialization order issues.
@@ -42,7 +41,7 @@ public:
     {
         Logger::Debug("[EffectRegistry] Registered voting integration '{}'", p_Integration->GetName());
         m_aVotingIntegrations.push_back(std::move(p_Integration));
-	}
+    }
 
     const std::vector<std::unique_ptr<IChaosEffect>>& GetEffects() const
     {
@@ -57,36 +56,33 @@ public:
     const std::vector<std::unique_ptr<IVotingIntegration>>& GetVotingIntegrations() const
     {
         return m_aVotingIntegrations;
-	}
+    }
 
     void Sort()
     {
         std::sort(
             m_aEffects.begin(),
             m_aEffects.end(),
-            [](const std::unique_ptr<IChaosEffect>& a, const std::unique_ptr<IChaosEffect>& b)
-            {
+            [](const std::unique_ptr<IChaosEffect>& a, const std::unique_ptr<IChaosEffect>& b) {
                 return a->GetName() < b->GetName();
             }
-		);
+        );
 
         std::sort(
             m_aUnlockers.begin(),
             m_aUnlockers.end(),
-            [](const std::unique_ptr<IUnlocker>& a, const std::unique_ptr<IUnlocker>& b)
-            {
+            [](const std::unique_ptr<IUnlocker>& a, const std::unique_ptr<IUnlocker>& b) {
                 return a->GetName() < b->GetName();
             }
-		);
+        );
 
         std::sort(
             m_aVotingIntegrations.begin(),
             m_aVotingIntegrations.end(),
-            [](const std::unique_ptr<IVotingIntegration>& a, const std::unique_ptr<IVotingIntegration>& b)
-            {
+            [](const std::unique_ptr<IVotingIntegration>& a, const std::unique_ptr<IVotingIntegration>& b) {
                 return a->GetName() < b->GetName();
-			}
-		);
+            }
+        );
     }
 };
 

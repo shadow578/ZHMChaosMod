@@ -10,7 +10,7 @@
 
 void ZFixPlayerPositionUnlocker::Start()
 {
-    const auto &s_StartingLocation = Utils::ZEntityFinder()
+    const auto& s_StartingLocation = Utils::ZEntityFinder()
                                          .EntityType("ZHeroSpawn")
                                          .FindFirst();
 

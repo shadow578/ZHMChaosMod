@@ -3,16 +3,16 @@
 
 class ZHeavyFogEffect : public ZRenderPostfilterEffectBase
 {
-public:
-	ZHeavyFogEffect()
-	{
-	}
+  public:
+    ZHeavyFogEffect()
+    {
+    }
 
-	void Start() override;
-	void Stop() override;
+    void Start() override;
+    void Stop() override;
 
-	std::string GetDisplayName(const bool p_bVoting) const override
-	{
-		return "Silent Hill";
-	}
+    std::string GetDisplayName(const bool p_bVoting) const override
+    {
+        return "Silent Hill";
+    }
 };

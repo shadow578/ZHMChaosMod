@@ -11,13 +11,13 @@
 void ZFirstPersonCameraEffect::Start()
 {
     const auto s_rPlayer = SDK()->GetLocalPlayer();
-	if (!s_rPlayer)
+    if (!s_rPlayer)
     {
         return;
     }
 
     m_rPlayerHeadAttachEntity = Utils::GetPlayerHeadAttachEntity(s_rPlayer);
-	if (!m_rPlayerHeadAttachEntity)
+    if (!m_rPlayerHeadAttachEntity)
     {
         return;
     }
@@ -80,7 +80,7 @@ void ZFirstPersonCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEve
     auto s_TargetWM = s_OriginalWM;
 
     // move camera to player head position
-	s_TargetWM.Pos = m_rPlayerHeadAttachEntity.m_pInterfaceRef->GetObjectToWorldMatrix().Pos;
+    s_TargetWM.Pos = m_rPlayerHeadAttachEntity.m_pInterfaceRef->GetObjectToWorldMatrix().Pos;
 
     // interpolation
     s_TargetWM = Math::InterpolateAffine(s_OriginalWM, s_TargetWM, GetInterpolationPoint());

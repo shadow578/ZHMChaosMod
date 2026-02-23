@@ -5,7 +5,7 @@
 
 class ZFlipCameraEffect : public ZCameraEffectBase, public ZInterpolatingEffectBase
 {
-public:
+  public:
     ZFlipCameraEffect() : ZInterpolatingEffectBase(1.0f)
     {
     }

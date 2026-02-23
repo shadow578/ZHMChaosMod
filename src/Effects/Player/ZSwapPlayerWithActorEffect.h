@@ -20,6 +20,6 @@ class ZSwapPlayerWithActorEffect : public IChaosEffect
         return EDuration::OneShot;
     }
 
-private:
+  private:
     SMatrix m_PreviousPlayerPosition;
 };

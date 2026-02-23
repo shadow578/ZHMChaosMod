@@ -23,4 +23,4 @@ namespace Utils
      * Get the IRenderDestinationEntity that is currently active for the main screen.
      */
     bool GetRenderDestinationEntity(TEntityRef<IRenderDestinationEntity>& p_RenderDestinationEntity);
-};
+}; // namespace Utils

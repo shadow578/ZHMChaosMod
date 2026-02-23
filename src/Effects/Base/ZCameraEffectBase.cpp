@@ -19,9 +19,7 @@ void ZCameraEffectBase::LoadResources()
 
 bool ZCameraEffectBase::Available() const
 {
-    return IChaosEffect::Available() &&
-        m_pCameraSpawner &&
-        m_pCameraSpawner->IsAvailable();
+    return IChaosEffect::Available() && m_pCameraSpawner && m_pCameraSpawner->IsAvailable();
 }
 
 void ZCameraEffectBase::Start()
@@ -69,7 +67,7 @@ void ZCameraEffectBase::OnClearScene()
     m_bEffectCameraActive = false;
     m_EffectCameraEntity = {};
     m_OriginalCameraEntity = {};
-	m_pCameraSpawner = nullptr;
+    m_pCameraSpawner = nullptr;
 }
 
 void ZCameraEffectBase::OnDrawDebugUI()
@@ -83,9 +81,9 @@ void ZCameraEffectBase::OnDrawDebugUI()
 
 bool ZCameraEffectBase::IsCompatibleWith(const IChaosEffect* p_pOther) const
 {
-    return IChaosEffect::IsCompatibleWith(p_pOther) 
-        // all camera effects are incompatible with each other
-        && !Utils::IsInstanceOf<ZCameraEffectBase>(p_pOther);
+    return IChaosEffect::IsCompatibleWith(p_pOther)
+           // all camera effects are incompatible with each other
+           && !Utils::IsInstanceOf<ZCameraEffectBase>(p_pOther);
 }
 
 bool ZCameraEffectBase::EnsureCameraEntity()
@@ -109,7 +107,7 @@ bool ZCameraEffectBase::EnsureCameraEntity()
         return false;
     }
 
-	auto m_CameraHolderEntity = m_pCameraSpawner->Spawn();
+    auto m_CameraHolderEntity = m_pCameraSpawner->Spawn();
     if (!m_CameraHolderEntity)
     {
         Logger::Debug(TAG "Could not spawn camera entity.");

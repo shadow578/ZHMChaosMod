@@ -4,7 +4,7 @@
 
 class ZCameraZoomFOVEffect : public ZCameraFOVEffectBase
 {
-public:
+  public:
     ZCameraZoomFOVEffect() : ZCameraFOVEffectBase(10.0f)
     {
     }
@@ -22,7 +22,7 @@ public:
 
 class ZCameraWideFOVEffect : public ZCameraFOVEffectBase
 {
-public:
+  public:
     ZCameraWideFOVEffect() : ZCameraFOVEffectBase(120.0f)
     {
     }

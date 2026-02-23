@@ -97,41 +97,40 @@ void TwitchEventSub::OnMessage(const ix::WebSocketMessagePtr& p_Msg)
         Logger::Error(TAG "WebSocket error: {}", p_Msg->errorInfo.reason);
         break;
 
-    case ix::WebSocketMessageType::Message:
+    case ix::WebSocketMessageType::Message: {
+        try
         {
-            try
-            {
-                const auto s_Json = json::parse(p_Msg->str);
-                const auto s_sMessageType = s_Json["metadata"]["message_type"].get<std::string>();
+            const auto s_Json = json::parse(p_Msg->str);
+            const auto s_sMessageType = s_Json["metadata"]["message_type"].get<std::string>();
 
-                if (s_sMessageType == "session_welcome")
-                {
-                    HandleWelcomeMessage(p_Msg->str);
-                }
-                else if (s_sMessageType == "session_keepalive")
-                {
-                    Logger::Debug(TAG "Received keepalive");
-                }
-                else if (s_sMessageType == "notification")
-                {
-                    HandleNotificationMessage(p_Msg->str);
-                }
-                else if (s_sMessageType == "session_reconnect")
-                {
-                    HandleReconnectMessage(p_Msg->str);
-                }
-                else if (s_sMessageType == "revocation")
-                {
-                    Logger::Warn(TAG "Subscription revoked");
-                    // What do we even do here? Ask user to re-auth?
-                }
-            }
-            catch (const json::exception& e)
+            if (s_sMessageType == "session_welcome")
             {
-                Logger::Error(TAG "Failed to parse message: {}", e.what());
+                HandleWelcomeMessage(p_Msg->str);
+            }
+            else if (s_sMessageType == "session_keepalive")
+            {
+                Logger::Debug(TAG "Received keepalive");
+            }
+            else if (s_sMessageType == "notification")
+            {
+                HandleNotificationMessage(p_Msg->str);
+            }
+            else if (s_sMessageType == "session_reconnect")
+            {
+                HandleReconnectMessage(p_Msg->str);
+            }
+            else if (s_sMessageType == "revocation")
+            {
+                Logger::Warn(TAG "Subscription revoked");
+                // What do we even do here? Ask user to re-auth?
             }
         }
-        break;
+        catch (const json::exception& e)
+        {
+            Logger::Error(TAG "Failed to parse message: {}", e.what());
+        }
+    }
+    break;
 
     default:
         break;
@@ -228,14 +227,8 @@ void TwitchEventSub::SubscribeToChatMessages()
     json s_SubBody = {
         {"type", "channel.chat.message"},
         {"version", "1"},
-        {"condition", {
-            {"broadcaster_user_id", m_sUserId},
-            {"user_id", m_sUserId}
-        }},
-        {"transport", {
-            {"method", "websocket"},
-            {"session_id", m_sSessionId}
-        }}
+        {"condition", {{"broadcaster_user_id", m_sUserId}, {"user_id", m_sUserId}}},
+        {"transport", {{"method", "websocket"}, {"session_id", m_sSessionId}}}
     };
 
     std::string s_sResponse;
@@ -255,8 +248,8 @@ void TwitchEventSub::SubscribeToChatMessages()
     }
 }
 
-bool TwitchEventSub::MakeApiRequest(const std::string& p_sEndpoint, const std::string& p_sMethod,
-                                     const std::string& p_sBody, std::string& p_sResponse) const {
+bool TwitchEventSub::MakeApiRequest(const std::string& p_sEndpoint, const std::string& p_sMethod, const std::string& p_sBody, std::string& p_sResponse) const
+{
     ix::HttpClient s_Client;
     ix::HttpRequestArgsPtr s_Args = s_Client.createRequest();
 
@@ -299,4 +292,3 @@ bool TwitchEventSub::MakeApiRequest(const std::string& p_sEndpoint, const std::s
     Logger::Error(TAG "API request failed with status {}: {}", s_Response->statusCode, s_Response->body);
     return false;
 }
-
