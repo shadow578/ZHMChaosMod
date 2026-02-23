@@ -34,12 +34,7 @@ bool ZYoutubeBroadcastConnection::Connect()
         return false;
     }
 
-    Logger::Info(
-        TAG "Connected to live broadcast: id='{}', title='{}', liveChatId='{}'",
-        m_ActiveBroadcast.m_sId,
-        m_ActiveBroadcast.m_sTitle,
-        m_ActiveBroadcast.m_sLiveChatId
-    );
+    Logger::Info(TAG "Connected to live broadcast: id='{}', title='{}', liveChatId='{}'", m_ActiveBroadcast.m_sId, m_ActiveBroadcast.m_sTitle, m_ActiveBroadcast.m_sLiveChatId);
 
     // start polling loop
     m_ChatPollingThread = std::thread(&ZYoutubeBroadcastConnection::RunLiveChatPolling, this);
@@ -64,14 +59,11 @@ YT::SLiveBroadcast ZYoutubeBroadcastConnection::GetActiveBroadcast()
     s_pRequest->extraHeaders["Accept"] = "application/json";
 
     const auto s_pResponse = s_Client.get(
-        UrlUtils::BuildQueryUrl(
-            "https://www.googleapis.com/youtube/v3/liveBroadcasts",
-            {
-                {"part", "id,status,snippet"},
-                {"broadcastStatus", "active"},
-                {"maxResults", "1"} // assume only one active broadcast
-            }
-        ),
+        UrlUtils::BuildQueryUrl("https://www.googleapis.com/youtube/v3/liveBroadcasts", {
+                                                                                            {"part", "id,status,snippet"},
+                                                                                            {"broadcastStatus", "active"},
+                                                                                            {"maxResults", "1"} // assume only one active broadcast
+                                                                                        }),
         s_pRequest
     );
 
@@ -85,13 +77,7 @@ YT::SLiveBroadcast ZYoutubeBroadcastConnection::GetActiveBroadcast()
     for (auto& s_Item : s_Json.value("items", json::array()))
     {
         const auto s_Broadcast = YT::SLiveBroadcast::FromJson(s_Item);
-        Logger::Debug(
-            TAG "Got active broadcast: id='{}', title='{}', liveChatId='{}', status='{}'",
-            s_Broadcast.m_sId,
-            s_Broadcast.m_sTitle,
-            s_Broadcast.m_sLiveChatId,
-            s_Broadcast.m_sLifecycleStatus
-        );
+        Logger::Debug(TAG "Got active broadcast: id='{}', title='{}', liveChatId='{}', status='{}'", s_Broadcast.m_sId, s_Broadcast.m_sTitle, s_Broadcast.m_sLiveChatId, s_Broadcast.m_sLifecycleStatus);
 
         if (s_Broadcast.m_sLifecycleStatus == "live")
         {
@@ -102,10 +88,7 @@ YT::SLiveBroadcast ZYoutubeBroadcastConnection::GetActiveBroadcast()
     return {};
 }
 
-bool ZYoutubeBroadcastConnection::IsSuccessfulResponse(
-    const ix::HttpResponsePtr p_pResponse,
-    const std::string& p_sContext
-)
+bool ZYoutubeBroadcastConnection::IsSuccessfulResponse(const ix::HttpResponsePtr p_pResponse, const std::string& p_sContext)
 {
     if (!p_pResponse)
     {
@@ -186,10 +169,7 @@ bool ZYoutubeBroadcastConnection::EndLivePoll(YT::SLivePollDetails& p_PollDetail
     s_pRequest->extraHeaders["Accept"] = "application/json";
 
     const auto s_pResponse = s_Client.post(
-        UrlUtils::BuildQueryUrl(
-            "https://www.googleapis.com/youtube/v3/liveChat/messages/transition",
-            {{"id", p_PollDetails.m_sId}, {"status", "closed"}, {"part", "snippet"}}
-        ),
+        UrlUtils::BuildQueryUrl("https://www.googleapis.com/youtube/v3/liveChat/messages/transition", {{"id", p_PollDetails.m_sId}, {"status", "closed"}, {"part", "snippet"}}),
         "",
         s_pRequest
     );

@@ -3,8 +3,8 @@
 
 #include "Helpers/Repository/ZRepositoryEntryPatcher.h"
 
-#include <memory>
 #include <vector>
+#include <memory>
 
 /**
  * Base class that allows patching the game repository.

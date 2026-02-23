@@ -1,13 +1,13 @@
 #pragma once
 #include "Model.h"
 
+#include <string>
 #include <memory>
 #include <mutex>
-#include <string>
 #include <thread>
 
-#include <ixwebsocket/IXHttpClient.h>
 #include <nlohmann/json.hpp>
+#include <ixwebsocket/IXHttpClient.h>
 
 using json = nlohmann::json;
 
@@ -23,13 +23,10 @@ class ZAuthToken
     /**
      * Create auth token from OAuth2 authorization code.
      */
-    static std::shared_ptr<ZAuthToken> FromAuthCode(
-        const std::string& p_sClientId,
-        const std::string& p_sAuthCode,
-        const std::string& p_sRedirectUri
-    );
+    static std::shared_ptr<ZAuthToken> FromAuthCode(const std::string& p_sClientId, const std::string& p_sAuthCode, const std::string& p_sRedirectUri);
 
-    ZAuthToken(const std::string& p_sClientId, const YT::SAuthToken& p_Token) : m_sClientId(p_sClientId)
+    ZAuthToken(const std::string& p_sClientId, const YT::SAuthToken& p_Token)
+        : m_sClientId(p_sClientId)
     {
         SetToken(p_Token, false);
     }

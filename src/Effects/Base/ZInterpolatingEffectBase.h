@@ -17,7 +17,9 @@ class ZInterpolatingEffectBase : public virtual IChaosEffect
     void OnDrawDebugUI() override;
 
   protected:
-    ZInterpolatingEffectBase(const float32 p_fInterpolationTime) : m_fInterpolationTime(p_fInterpolationTime) {}
+    ZInterpolatingEffectBase(const float32 p_fInterpolationTime) : m_fInterpolationTime(p_fInterpolationTime)
+    {
+    }
 
     /**
      * Interpolation point (0.0 - 1.0).

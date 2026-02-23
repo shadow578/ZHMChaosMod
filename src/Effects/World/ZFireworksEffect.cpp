@@ -7,9 +7,7 @@
 
 void ZFireworksEffect::LoadResources()
 {
-    m_pFireworksSpawner =
-        ZTemplateEntitySpawner::Create<"[assembly:/_pro/effects/templates/fire/fx_fireworks.template?/"
-                                       "fx_fireworks_launchpad.entitytemplate].pc_entitytype">();
+    m_pFireworksSpawner = ZTemplateEntitySpawner::Create<"[assembly:/_pro/effects/templates/fire/fx_fireworks.template?/fx_fireworks_launchpad.entitytemplate].pc_entitytype">();
 }
 
 void ZFireworksEffect::OnClearScene()
@@ -37,7 +35,9 @@ void ZFireworksEffect::Start()
     }
 
     // aquire refs to sub-entities
-    ZEntityRef s_rFireworksFXEntity, s_rSwirlMachine1, s_rSwirlMachine2, s_rTimer0, s_rTimer1, s_rTimer2, s_rTimer3;
+    ZEntityRef s_rFireworksFXEntity,
+        s_rSwirlMachine1, s_rSwirlMachine2,
+        s_rTimer0, s_rTimer1, s_rTimer2, s_rTimer3;
     if (auto* s_pBlueprint = s_rFireworksBarge.GetBlueprintFactory())
     {
         // Fireworks
@@ -150,9 +150,7 @@ void ZFireworksEffect::Start()
         {
             if (auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_rPlayer.m_entityRef))
             {
-                s_rFireworksFXSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(
-                    s_rPlayerSpatial.m_pInterfaceRef->GetObjectToWorldMatrix()
-                );
+                s_rFireworksFXSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_rPlayerSpatial.m_pInterfaceRef->GetObjectToWorldMatrix());
             }
         }
     }

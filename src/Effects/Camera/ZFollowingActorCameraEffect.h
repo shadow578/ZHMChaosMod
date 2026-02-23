@@ -1,11 +1,15 @@
 #pragma once
-#include "Effects/Base/Companion/ZActorFollowPlayerHelperEffectBase.h"
 #include "Effects/Base/ZCameraEffectBase.h"
+#include "Effects/Base/Companion/ZActorFollowPlayerHelperEffectBase.h"
 
-class ZFollowingActorCameraEffect : public ZCameraEffectBase, public ZActorFollowPlayerHelperEffectBase
+class ZFollowingActorCameraEffect : public ZCameraEffectBase,
+                                    public ZActorFollowPlayerHelperEffectBase
 {
   public:
-    ZFollowingActorCameraEffect() : ZCameraEffectBase(), ZActorFollowPlayerHelperEffectBase() {}
+    ZFollowingActorCameraEffect() : ZCameraEffectBase(),
+                                    ZActorFollowPlayerHelperEffectBase()
+    {
+    }
 
     bool Available() const override;
     void OnDrawDebugUI() override;

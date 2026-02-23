@@ -3,16 +3,15 @@
 #include "IPluginInterface.h"
 #include "Logging.h"
 
-#include "Helpers/EntityUtils.h"
 #include "Helpers/Utils.h"
+#include "Helpers/EntityUtils.h"
 
 #define TAG "[ZGravityModifierEffectBase] "
 
 /**
  * Static Entity ID for PhysicsWorld entity.
  * There should only ever be one of these, so we can just lookup by ID.
- * [assembly:/_pro/effects/templates/logic/fx_logic_physicsworld.template?/fx_logic_physicsworld.entitytemplate].pc_entitytype,
- * PhysicsWorld
+ * [assembly:/_pro/effects/templates/logic/fx_logic_physicsworld.template?/fx_logic_physicsworld.entitytemplate].pc_entitytype, PhysicsWorld
  */
 constexpr uint64_t c_nPhysicsWorldId = 0x859611037148f21b;
 
@@ -30,7 +29,9 @@ void ZGravityModifierEffectBase::RestoreDefaultGravity()
 
 void ZGravityModifierEffectBase::SetGravity(const SVector3 p_vGravity)
 {
-    auto s_rPhysicsEntity = Utils::ZEntityFinder().EntityID(c_nPhysicsWorldId).FindFirst();
+    auto s_rPhysicsEntity = Utils::ZEntityFinder()
+                                .EntityID(c_nPhysicsWorldId)
+                                .FindFirst();
 
     if (!s_rPhysicsEntity)
     {

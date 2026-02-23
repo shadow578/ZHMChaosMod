@@ -10,12 +10,10 @@
 class ZTriggerInteractionEffect : public IChaosEffect
 {
   public:
-    ZTriggerInteractionEffect(
-        const std::string p_sNameSuffix,
-        const std::string p_sDisplayName,
-        const float32 p_fRadius
-    )
-        : m_sNameSuffix(p_sNameSuffix), m_sDisplayName(p_sDisplayName), m_fRadius(p_fRadius)
+    ZTriggerInteractionEffect(const std::string p_sNameSuffix, const std::string p_sDisplayName, const float32 p_fRadius)
+        : m_sNameSuffix(p_sNameSuffix),
+          m_sDisplayName(p_sDisplayName),
+          m_fRadius(p_fRadius)
     {
     }
 

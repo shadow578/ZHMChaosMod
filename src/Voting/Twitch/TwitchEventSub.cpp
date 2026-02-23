@@ -2,8 +2,8 @@
 
 #include "Logging.h"
 
-#include <ixwebsocket/IXHttpClient.h>
 #include <nlohmann/json.hpp>
+#include <ixwebsocket/IXHttpClient.h>
 
 #define TAG "[TwitchEventSub] "
 
@@ -14,11 +14,7 @@ TwitchEventSub::~TwitchEventSub()
     Disconnect();
 }
 
-void TwitchEventSub::Connect(
-    const std::string& p_sAccessToken,
-    const std::string& p_sUserId,
-    const std::string& p_sClientId
-)
+void TwitchEventSub::Connect(const std::string& p_sAccessToken, const std::string& p_sUserId, const std::string& p_sClientId)
 {
     std::lock_guard s_Lock(m_Mutex);
 
@@ -34,7 +30,9 @@ void TwitchEventSub::Connect(
     m_pWebSocket = std::make_unique<ix::WebSocket>();
     m_pWebSocket->setUrl(c_sEventSubUrl);
 
-    m_pWebSocket->setOnMessageCallback([this](const ix::WebSocketMessagePtr& msg) { OnMessage(msg); });
+    m_pWebSocket->setOnMessageCallback([this](const ix::WebSocketMessagePtr& msg) {
+        OnMessage(msg);
+    });
 
     Logger::Debug(TAG "Connecting to Twitch EventSub...");
     m_pWebSocket->start();
@@ -197,7 +195,9 @@ void TwitchEventSub::HandleReconnectMessage(const std::string& p_sPayload)
         // Create new WebSocket connection to the reconnect URL
         auto s_pNewWebSocket = std::make_unique<ix::WebSocket>();
         s_pNewWebSocket->setUrl(s_sReconnectUrl);
-        s_pNewWebSocket->setOnMessageCallback([this](const ix::WebSocketMessagePtr& msg) { OnMessage(msg); });
+        s_pNewWebSocket->setOnMessageCallback([this](const ix::WebSocketMessagePtr& msg) {
+            OnMessage(msg);
+        });
 
         // Acquire lock before modifying shared state
         // Stop old socket, swap in new one, then start new one
@@ -248,12 +248,7 @@ void TwitchEventSub::SubscribeToChatMessages()
     }
 }
 
-bool TwitchEventSub::MakeApiRequest(
-    const std::string& p_sEndpoint,
-    const std::string& p_sMethod,
-    const std::string& p_sBody,
-    std::string& p_sResponse
-) const
+bool TwitchEventSub::MakeApiRequest(const std::string& p_sEndpoint, const std::string& p_sMethod, const std::string& p_sBody, std::string& p_sResponse) const
 {
     ix::HttpClient s_Client;
     ix::HttpRequestArgsPtr s_Args = s_Client.createRequest();

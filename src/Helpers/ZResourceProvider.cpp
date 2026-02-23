@@ -1,7 +1,7 @@
 #include "ZResourceProvider.h"
 
-#include <Functions.h>
 #include <Globals.h>
+#include <Functions.h>
 #include <Logging.h>
 
 #define TAG "[ZResourceProvider] "
@@ -25,8 +25,8 @@ static std::string ResourceStatusToString(const EResourceStatus p_eStatus)
     }
 }
 
-ZResourceProvider::ZResourceProvider(const std::string p_sResourcePath, const ZRuntimeResourceID p_ResourceId)
-    : m_sResourcePath(p_sResourcePath), m_ResourceID(p_ResourceId)
+ZResourceProvider::ZResourceProvider(const std::string p_sResourcePath, const ZRuntimeResourceID p_ResourceId) : m_sResourcePath(p_sResourcePath),
+                                                                                                                 m_ResourceID(p_ResourceId)
 {
     if (!LoadResource(m_ResourcePtr))
     {
@@ -52,14 +52,7 @@ bool ZResourceProvider::IsAvailable() const
 
 std::string ZResourceProvider::ToString() const
 {
-    return fmt::format(
-        "{} (RID={:016X}; ResIndex={}, ResStatus={}, ResRefCount={})",
-        GetResourcePath(),
-        GetResourceID().GetID(),
-        (IsAvailable() ? std::to_string(m_ResourcePtr.m_nResourceIndex.val) : "N/A"),
-        (IsAvailable() ? ResourceStatusToString(m_ResourcePtr.GetResourceInfo().status) : "N/A"),
-        (IsAvailable() ? std::to_string(m_ResourcePtr.GetResourceInfo().refCount) : "N/A")
-    );
+    return fmt::format("{} (RID={:016X}; ResIndex={}, ResStatus={}, ResRefCount={})", GetResourcePath(), GetResourceID().GetID(), (IsAvailable() ? std::to_string(m_ResourcePtr.m_nResourceIndex.val) : "N/A"), (IsAvailable() ? ResourceStatusToString(m_ResourcePtr.GetResourceInfo().status) : "N/A"), (IsAvailable() ? std::to_string(m_ResourcePtr.GetResourceInfo().refCount) : "N/A"));
 }
 
 bool ZResourceProvider::LoadResource(ZResourcePtr& p_ResourcePtr) const
@@ -68,11 +61,7 @@ bool ZResourceProvider::LoadResource(ZResourcePtr& p_ResourcePtr) const
 
     if (!Globals::ResourceManager->GetResourcePtr(p_ResourcePtr, s_ResourceId, 0) || !p_ResourcePtr)
     {
-        Logger::Debug(
-            TAG "Resource '{}' ({:016X}) not loaded, attempting to load now.",
-            m_sResourcePath,
-            m_ResourceID.GetID()
-        );
+        Logger::Debug(TAG "Resource '{}' ({:016X}) not loaded, attempting to load now.", m_sResourcePath, m_ResourceID.GetID());
 
         if (!Globals::ResourceManager->LoadResource(p_ResourcePtr, s_ResourceId) || !p_ResourcePtr)
         {
@@ -89,25 +78,13 @@ bool ZResourceProvider::LoadResource(ZResourcePtr& p_ResourcePtr) const
     }
 
     auto& s_Info = p_ResourcePtr.GetResourceInfo();
-    Logger::Debug(
-        TAG "Resource '{}' ({:016X}) loaded; status={}, refCount={}.",
-        m_sResourcePath,
-        m_ResourceID.GetID(),
-        ResourceStatusToString(s_Info.status),
-        s_Info.refCount
-    );
+    Logger::Debug(TAG "Resource '{}' ({:016X}) loaded; status={}, refCount={}.", m_sResourcePath, m_ResourceID.GetID(), ResourceStatusToString(s_Info.status), s_Info.refCount);
 
     // FIXME sometimes, resources are valid but have negative refcounts?
     // most noticeable when re-loading the scene multiple times.
     if (s_Info.status == EResourceStatus::RESOURCE_STATUS_VALID && s_Info.refCount < 1)
     {
-        Logger::Warn(
-            TAG "Resource '{}' ({:016X}) is valid but has refCount < 1 (refCount={}). Fudging higher refcount to make "
-                "valid!",
-            m_sResourcePath,
-            m_ResourceID.GetID(),
-            s_Info.refCount
-        );
+        Logger::Warn(TAG "Resource '{}' ({:016X}) is valid but has refCount < 1 (refCount={}). Fudging higher refcount to make valid!", m_sResourcePath, m_ResourceID.GetID(), s_Info.refCount);
 
         s_Info.refCount = 1;
     }

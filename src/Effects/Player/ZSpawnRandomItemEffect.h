@@ -5,7 +5,9 @@ class ZSpawnRandomItemEffect : public ZSpawnRepositoryItemEffectBase
 {
   public:
     ZSpawnRandomItemEffect(const std::string p_sDisplayName, const int p_nCount)
-        : ZSpawnRepositoryItemEffectBase(), m_sDisplayName(p_sDisplayName), m_pCount(p_nCount)
+        : ZSpawnRepositoryItemEffectBase(),
+          m_sDisplayName(p_sDisplayName),
+          m_pCount(p_nCount)
     {
     }
 

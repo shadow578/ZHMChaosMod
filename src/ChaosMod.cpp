@@ -2,30 +2,25 @@
 
 #include "Logging.h"
 
-#include <Glacier/ZActor.h>
-#include <Glacier/ZGameLoopManager.h>
 #include <Glacier/ZGameTime.h>
+#include <Glacier/ZGameLoopManager.h>
+#include <Glacier/ZActor.h>
 #include <Glacier/ZSpatialEntity.h>
 
+#include "Helpers/ZTimer.h"
+#include "Helpers/Utils.h"
 #include "Helpers/CompanionMod.h"
 #include "Helpers/Repository/ZHMRepositoryHelper.h"
-#include "Helpers/Utils.h"
-#include "Helpers/ZTimer.h"
 
-#include "BuildInfo.h"
 #include "EffectRegistry.h"
+#include "BuildInfo.h"
 
 #define TAG "[ChaosMod] "
 
-ChaosMod::ChaosMod()
-    : m_fFullEffectDuration(60.0f), m_nVoteOptions(4),
-      m_EffectTimer(std::bind(&ChaosMod::OnEffectTimerTrigger, this), 30.0),
-      m_SlowUpdateTimer(
-          std::bind(&ChaosMod::OnEffectSlowUpdate, this),
-          0.2,
-          ZTimer::ETimeMode::RealTime,
-          true
-      ) // ~5 FPS
+ChaosMod::ChaosMod() : m_fFullEffectDuration(60.0f),
+                       m_nVoteOptions(4),
+                       m_EffectTimer(std::bind(&ChaosMod::OnEffectTimerTrigger, this), 30.0),
+                       m_SlowUpdateTimer(std::bind(&ChaosMod::OnEffectSlowUpdate, this), 0.2, ZTimer::ETimeMode::RealTime, true) // ~5 FPS
 {
 }
 
@@ -46,14 +41,7 @@ ChaosMod::~ChaosMod()
 
 void ChaosMod::Init()
 {
-    Logger::Info(
-        TAG " ChaosMod Version {} ({} on {}) loaded on ZHMModSDK {} (target {}).",
-        BuildInfo::GetDisplayVersion(),
-        BuildInfo::GetInternalVersion(),
-        BuildInfo::c_sRemoteUrl,
-        SDKVersion(),
-        BuildInfo::c_sTargetSDKVersion
-    );
+    Logger::Info(TAG " ChaosMod Version {} ({} on {}) loaded on ZHMModSDK {} (target {}).", BuildInfo::GetDisplayVersion(), BuildInfo::GetInternalVersion(), BuildInfo::c_sRemoteUrl, SDKVersion(), BuildInfo::c_sTargetSDKVersion);
 
     Hooks::ZEntitySceneContext_LoadScene->AddDetour(this, &ChaosMod::OnLoadScene);
     Hooks::ZEntitySceneContext_ClearScene->AddDetour(this, &ChaosMod::OnClearScene);

@@ -10,11 +10,9 @@
 
 void ZTriggerInteractionEffect::OnEnterScene()
 {
-    const auto& s_aInteractions =
-        Utils::ZEntityFinder()
-            .BlueprintResource<"[assembly:/_pro/design/gamecore/interactionbase.template?/"
-                               "interaction_subaction_noinvestigate.entitytemplate].pc_entityblueprint">()
-            .Find();
+    const auto& s_aInteractions = Utils::ZEntityFinder()
+                                      .BlueprintResource<"[assembly:/_pro/design/gamecore/interactionbase.template?/interaction_subaction_noinvestigate.entitytemplate].pc_entityblueprint">()
+                                      .Find();
 
     for (auto& s_rEntity : s_aInteractions)
     {
@@ -66,8 +64,7 @@ void ZTriggerInteractionEffect::Start()
             continue;
         }
 
-        const auto s_vInteractionPosition =
-            s_rContextObjectSpatial.value().m_pInterfaceRef->GetObjectToWorldMatrix().Trans;
+        const auto s_vInteractionPosition = s_rContextObjectSpatial.value().m_pInterfaceRef->GetObjectToWorldMatrix().Trans;
 
         const auto s_fDistance = float4::Distance(s_vPlayerPosition, s_vInteractionPosition);
 

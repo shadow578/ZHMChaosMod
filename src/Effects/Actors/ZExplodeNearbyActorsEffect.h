@@ -1,8 +1,8 @@
 #pragma once
 #include "Effects/Base/Companion/ZExplosionEffectBase.h"
 
-#include <Glacier/ZActor.h>
 #include <Glacier/ZMath.h>
+#include <Glacier/ZActor.h>
 
 #include <vector>
 

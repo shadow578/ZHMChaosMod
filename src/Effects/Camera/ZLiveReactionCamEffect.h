@@ -9,7 +9,9 @@
 class ZLiveReactionCamEffect : public IChaosEffect
 {
   public:
-    ZLiveReactionCamEffect(const bool p_bTargetPlayer) : m_bTargetPlayer(p_bTargetPlayer) {}
+    ZLiveReactionCamEffect(const bool p_bTargetPlayer) : m_bTargetPlayer(p_bTargetPlayer)
+    {
+    }
 
     void LoadResources() override;
     void OnClearScene() override;
@@ -43,9 +45,5 @@ class ZLiveReactionCamEffect : public IChaosEffect
     TEntityRef<ZSpatialEntity> GetRandomActorHeadAttachEntity();
     TEntityRef<ZSpatialEntity> GetPlayerHeadAttachEntity();
 
-    void SpawnLiveReactionCam(
-        TEntityRef<ZSpatialEntity> p_rTargetHead,
-        const ZRuntimeResourceID p_HudMessageId,
-        const ZPIPMessageEntity_EIcon p_eIcon
-    );
+    void SpawnLiveReactionCam(TEntityRef<ZSpatialEntity> p_rTargetHead, const ZRuntimeResourceID p_HudMessageId, const ZPIPMessageEntity_EIcon p_eIcon);
 };

@@ -48,7 +48,8 @@ YT::SLiveChatMessage YT::SLiveChatMessage::FromJson(const json& p_Json)
     s_Message.m_bAuthorIsModerator = s_AuthorDetails.value("isChatModerator", false);
     s_Message.m_bAuthorIsSponsor = s_AuthorDetails.value("isChatSponsor", false);
 
-    s_Message.m_sMessageText = s_Snippet.value("textMessageDetails", json::object()).value("messageText", "");
+    s_Message.m_sMessageText = s_Snippet.value("textMessageDetails", json::object())
+                                   .value("messageText", "");
     s_Message.m_sLiveChatId = s_Snippet.value("liveChatId", "");
 
     return s_Message;
@@ -57,12 +58,7 @@ YT::SLiveChatMessage YT::SLiveChatMessage::FromJson(const json& p_Json)
 json YT::SLiveChatMessage::ToJson(const SLiveChatMessage& p_Message)
 {
     return json{
-        {"snippet",
-         json{
-             {"liveChatId", p_Message.m_sLiveChatId},
-             {"type", "textMessageEvent"},
-             {"textMessageDetails", json{{"messageText", p_Message.m_sMessageText}}}
-         }}
+        {"snippet", json{{"liveChatId", p_Message.m_sLiveChatId}, {"type", "textMessageEvent"}, {"textMessageDetails", json{{"messageText", p_Message.m_sMessageText}}}}}
     };
 }
 
@@ -91,7 +87,8 @@ json YT::SLivePollOption::ToJson(const SLivePollOption& p_Option)
 YT::SLivePollDetails YT::SLivePollDetails::FromJson(const json& p_Json)
 {
     const auto s_Snippet = p_Json.value("snippet", json::object());
-    const auto s_Metadata = s_Snippet.value("pollDetails", json::object()).value("metadata", json::object());
+    const auto s_Metadata = s_Snippet.value("pollDetails", json::object())
+                                .value("metadata", json::object());
 
     if (s_Snippet.value("type", "") != "pollEvent")
     {
@@ -124,12 +121,6 @@ json YT::SLivePollDetails::ToJson(const SLivePollDetails& p_PollDetails)
     }
 
     return json{
-        {"snippet",
-         json{
-             {"type", "pollEvent"},
-             {"liveChatId", p_PollDetails.m_sLiveChatId},
-             {"pollDetails",
-              json{{"metadata", json{{"questionText", p_PollDetails.m_sQuestionText}, {"options", s_Options}}}}}
-         }}
+        {"snippet", json{{"type", "pollEvent"}, {"liveChatId", p_PollDetails.m_sLiveChatId}, {"pollDetails", json{{"metadata", json{{"questionText", p_PollDetails.m_sQuestionText}, {"options", s_Options}}}}}}}
     };
 }

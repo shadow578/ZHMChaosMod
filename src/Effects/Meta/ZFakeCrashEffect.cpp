@@ -1,8 +1,8 @@
 #include "ZFakeCrashEffect.h"
 
-#include <TlHelp32.h>
-#include <Windows.h>
 #include <vector>
+#include <Windows.h>
+#include <TlHelp32.h>
 
 #include "EffectRegistry.h"
 
@@ -29,8 +29,7 @@ void ZFakeCrashEffect::SuspendAllThreads()
         if (s_ThreadEntry.dwSize
             >= FIELD_OFFSET(THREADENTRY32, th32OwnerProcessID) + sizeof(s_ThreadEntry.th32OwnerProcessID))
         {
-            if (s_ThreadEntry.th32ThreadID != GetCurrentThreadId()
-                && s_ThreadEntry.th32OwnerProcessID == GetCurrentProcessId())
+            if (s_ThreadEntry.th32ThreadID != GetCurrentThreadId() && s_ThreadEntry.th32OwnerProcessID == GetCurrentProcessId())
             {
                 HANDLE s_hThread = OpenThread(THREAD_SUSPEND_RESUME, FALSE, s_ThreadEntry.th32ThreadID);
                 if (s_hThread)

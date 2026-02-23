@@ -14,7 +14,9 @@
 class ZSpawnRepositoryItemEffectBase : public virtual IChaosEffect
 {
   public:
-    ZSpawnRepositoryItemEffectBase() {}
+    ZSpawnRepositoryItemEffectBase()
+    {
+    }
 
     void LoadResources() override;
     void OnClearScene() override;

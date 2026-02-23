@@ -1,12 +1,12 @@
 #pragma once
+#include <Glacier/ZResource.h>
+#include <Glacier/ZEntity.h>
 #include <Glacier/CompileReflection.h>
 #include <Glacier/EntityFactory.h>
-#include <Glacier/ZEntity.h>
-#include <Glacier/ZResource.h>
 
-#include <memory>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "Utils.h"
 

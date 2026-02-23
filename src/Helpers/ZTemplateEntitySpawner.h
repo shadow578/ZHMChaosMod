@@ -1,9 +1,9 @@
 #pragma once
 #include "ZResourceProvider.h"
 
-#include <memory>
 #include <string>
 #include <vector>
+#include <memory>
 
 /**
  * Provides easy access to entity resources for spawning.

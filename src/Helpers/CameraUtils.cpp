@@ -1,7 +1,7 @@
 #include "CameraUtils.h"
 
-#include "Functions.h"
 #include "Globals.h"
+#include "Functions.h"
 #include "Logging.h"
 
 #include "EntityUtils.h"
@@ -48,7 +48,8 @@ bool Utils::IsMainHitmanCamera(ZEntityRef& p_CameraEntity)
     constexpr uint64_t c_nMainHitmanCameraEntityId = 1520968122659560567;
     constexpr uint64_t c_nMainHitmanCameraOwningEntityId = 5884861939421351664;
 
-    uint64_t s_nCameraEntityId = 0, s_nOwningEntityId = 0;
+    uint64_t s_nCameraEntityId = 0,
+             s_nOwningEntityId = 0;
 
     // TODO: holy f this is ugly
     if (const auto s_pCameraEntity = p_CameraEntity.GetEntity())

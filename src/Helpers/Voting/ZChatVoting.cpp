@@ -82,9 +82,14 @@ std::vector<ZChatVoting::SVoteOption> ZChatVoting::GetVotes() const
 int ZChatVoting::GetTotalVotes() const
 {
     std::lock_guard s_Lock(m_VotesMutex);
-    return std::accumulate(m_aVoteCounts.begin(), m_aVoteCounts.end(), 0, [](int p_nAcc, const SVoteOption& p_Option) {
-        return p_nAcc + p_Option.m_nVoteCount;
-    });
+    return std::accumulate(
+        m_aVoteCounts.begin(),
+        m_aVoteCounts.end(),
+        0,
+        [](int p_nAcc, const SVoteOption& p_Option) {
+            return p_nAcc + p_Option.m_nVoteCount;
+        }
+    );
 }
 
 int ZChatVoting::GetExistingVote(const std::string& p_sUserId) const

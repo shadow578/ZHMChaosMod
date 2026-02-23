@@ -27,5 +27,7 @@ AlignAfterOpenBracket: BlockIndent
 AllowShortFunctionsOnASingleLine: Empty
 
 BreakBeforeBinaryOperators: NonAssignment
-
 ColumnLimit: 0
+
+# don't sort includes, some ZHMModSDK headers have to be included in a specific order
+SortIncludes: false

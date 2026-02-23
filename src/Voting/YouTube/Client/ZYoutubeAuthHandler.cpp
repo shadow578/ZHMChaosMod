@@ -1,23 +1,20 @@
 #include "ZYoutubeAuthHandler.h"
-#include "HttpPages.h"
 #include "ZAuthToken.h"
+#include "HttpPages.h"
 
 #include <Logging.h>
 
-#include "Helpers/Math.h"
 #include "Helpers/Net/UrlUtils.h"
 #include "Helpers/Utils.h"
+#include "Helpers/Math.h"
 
 #include <ixwebsocket/IXHttpServer.h>
 
 #define TAG "[ZYoutubeAuthHandler] "
 
-ZYoutubeAuthHandler::ZYoutubeAuthHandler(
-    const std::string p_sClientId,
-    const bool p_bReadOnly,
-    const int p_nTokenCapturePort
-)
-    : m_sClientId(p_sClientId), m_sApiScope(p_bReadOnly ? YT::c_sReadOnlyScope : YT::c_sReadWriteScope),
+ZYoutubeAuthHandler::ZYoutubeAuthHandler(const std::string p_sClientId, const bool p_bReadOnly, const int p_nTokenCapturePort)
+    : m_sClientId(p_sClientId),
+      m_sApiScope(p_bReadOnly ? YT::c_sReadOnlyScope : YT::c_sReadWriteScope),
       m_nTokenCapturePort(p_nTokenCapturePort)
 {
 }
@@ -32,16 +29,7 @@ std::string ZYoutubeAuthHandler::GetAuthorizationUrl()
 {
     m_sCurrentOAuthState = std::to_string(Math::GetRandomNumber(100000, 9999999));
 
-    return UrlUtils::BuildQueryUrl(
-        "https://accounts.google.com/o/oauth2/v2/auth",
-        {{"client_id", m_sClientId},
-         {"redirect_uri", ("http://localhost:" + std::to_string(m_nTokenCapturePort))},
-         {"scope", m_sApiScope},
-         {"response_type", "code"},
-         {"access_type", "offline"},
-         {"prompt", "consent"},
-         {"state", m_sCurrentOAuthState}}
-    );
+    return UrlUtils::BuildQueryUrl("https://accounts.google.com/o/oauth2/v2/auth", {{"client_id", m_sClientId}, {"redirect_uri", ("http://localhost:" + std::to_string(m_nTokenCapturePort))}, {"scope", m_sApiScope}, {"response_type", "code"}, {"access_type", "offline"}, {"prompt", "consent"}, {"state", m_sCurrentOAuthState}});
 }
 
 void ZYoutubeAuthHandler::StartAuthorization(const bool p_bOpenBrowser)
@@ -195,11 +183,7 @@ void ZYoutubeAuthHandler::RunTokenCaptureServer()
                     // ensure state matches expected
                     if (s_sState != m_sCurrentOAuthState)
                     {
-                        Logger::Error(
-                            "Received OAuth state '{}' does not match expected value '{}'!",
-                            s_sState,
-                            m_sCurrentOAuthState
-                        );
+                        Logger::Error("Received OAuth state '{}' does not match expected value '{}'!", s_sState, m_sCurrentOAuthState);
                         return std::make_shared<ix::HttpResponse>(
                             400,
                             "Bad Request",

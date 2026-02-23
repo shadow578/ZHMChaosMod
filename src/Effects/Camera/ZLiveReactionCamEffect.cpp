@@ -1,30 +1,26 @@
 #include "ZLiveReactionCamEffect.h"
 
-#include <Glacier/CompileReflection.h>
 #include <Glacier/ZResourceID.h>
+#include <Glacier/CompileReflection.h>
 
 #include "EffectRegistry.h"
 #include "Helpers/ActorUtils.h"
-#include "Helpers/EntityUtils.h"
 #include "Helpers/PlayerUtils.h"
+#include "Helpers/EntityUtils.h"
 
 #include "Helpers/EntityBindings/SPIPCameraCustomEventBinding.h"
 
 void ZLiveReactionCamEffect::LoadResources()
 {
-    m_pPIPCameraSpawner =
-        ZTemplateEntitySpawner::Create<"[assembly:/_pro/design/templates/camera/pictureinpicture.template?/"
-                                       "pip_camera_custom_event.entitytemplate].pc_entitytype">();
+    m_pPIPCameraSpawner = ZTemplateEntitySpawner::Create<"[assembly:/_pro/design/templates/camera/pictureinpicture.template?/pip_camera_custom_event.entitytemplate].pc_entitytype">();
 
     if (m_bTargetPlayer)
     {
-        m_pHudMessageResource = ZResourceProvider::Create<
-            "[assembly:/_pro/chaosmod/localization/ui/hud_pip_livereaction/player.sweetline].pc_sweetline">();
+        m_pHudMessageResource = ZResourceProvider::Create<"[assembly:/_pro/chaosmod/localization/ui/hud_pip_livereaction/player.sweetline].pc_sweetline">();
     }
     else
     {
-        m_pHudMessageResource = ZResourceProvider::Create<
-            "[assembly:/_pro/chaosmod/localization/ui/hud_pip_livereaction/actor.sweetline].pc_sweetline">();
+        m_pHudMessageResource = ZResourceProvider::Create<"[assembly:/_pro/chaosmod/localization/ui/hud_pip_livereaction/actor.sweetline].pc_sweetline">();
     }
 }
 
@@ -36,8 +32,7 @@ void ZLiveReactionCamEffect::OnClearScene()
 
 bool ZLiveReactionCamEffect::Available() const
 {
-    return IChaosEffect::Available() && m_pPIPCameraSpawner && m_pPIPCameraSpawner->IsAvailable()
-           && m_pHudMessageResource && m_pHudMessageResource->IsAvailable();
+    return IChaosEffect::Available() && m_pPIPCameraSpawner && m_pPIPCameraSpawner->IsAvailable() && m_pHudMessageResource && m_pHudMessageResource->IsAvailable();
 }
 
 void ZLiveReactionCamEffect::OnDrawDebugUI()
@@ -113,11 +108,7 @@ TEntityRef<ZSpatialEntity> ZLiveReactionCamEffect::GetPlayerHeadAttachEntity()
     return Utils::GetPlayerHeadAttachEntity(s_rPlayer);
 }
 
-void ZLiveReactionCamEffect::SpawnLiveReactionCam(
-    TEntityRef<ZSpatialEntity> p_rTargetHead,
-    const ZRuntimeResourceID p_HudMessageId,
-    const ZPIPMessageEntity_EIcon p_eIcon
-)
+void ZLiveReactionCamEffect::SpawnLiveReactionCam(TEntityRef<ZSpatialEntity> p_rTargetHead, const ZRuntimeResourceID p_HudMessageId, const ZPIPMessageEntity_EIcon p_eIcon)
 {
     if (!p_rTargetHead)
     {
@@ -171,8 +162,7 @@ void ZLiveReactionCamEffect::SpawnLiveReactionCam(
     {
         if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x2c2b10f742467d79); s_nIdx != -1)
         {
-            if (auto* s_pLookAtTrigger = s_pBlueprint->GetSubEntity(m_rPIPCameraEntity.m_pObj, s_nIdx);
-                s_pLookAtTrigger != nullptr)
+            if (auto* s_pLookAtTrigger = s_pBlueprint->GetSubEntity(m_rPIPCameraEntity.m_pObj, s_nIdx); s_pLookAtTrigger != nullptr)
             {
                 auto s_rLookAtTrigger = ZEntityRef(s_pLookAtTrigger);
 

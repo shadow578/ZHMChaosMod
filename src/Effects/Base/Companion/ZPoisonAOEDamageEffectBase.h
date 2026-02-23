@@ -4,8 +4,8 @@
 
 #include <Glacier/SColorRGB.h>
 
-#include "Effects/Base/Companion/ZCompanionModDependentEffectBase.h"
 #include "Helpers/ZTemplateEntitySpawner.h"
+#include "Effects/Base/Companion/ZCompanionModDependentEffectBase.h"
 
 /**
  * Reusable base for spawning Poison Area-of-Effect Damage Clouds.

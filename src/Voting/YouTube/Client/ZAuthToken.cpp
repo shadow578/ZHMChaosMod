@@ -2,9 +2,9 @@
 
 #include <Logging.h>
 
-#include <ixwebsocket/IXHttpClient.h>
-#include <ixwebsocket/IXHttpServer.h>
 #include <nlohmann/json.hpp>
+#include <ixwebsocket/IXHttpServer.h>
+#include <ixwebsocket/IXHttpClient.h>
 
 #include "Helpers/Utils.h"
 
@@ -14,11 +14,7 @@ using json = nlohmann::json;
 
 constexpr uint64_t c_nTokenRefreshThresholdSeconds = 5 * 60; // 5 minutes
 
-std::shared_ptr<ZAuthToken> ZAuthToken::FromAuthCode(
-    const std::string& p_sClientId,
-    const std::string& p_sAuthCode,
-    const std::string& p_sRedirectUri
-)
+std::shared_ptr<ZAuthToken> ZAuthToken::FromAuthCode(const std::string& p_sClientId, const std::string& p_sAuthCode, const std::string& p_sRedirectUri)
 {
     const json s_RequestJson = {
         {"code", p_sAuthCode},
@@ -33,7 +29,11 @@ std::shared_ptr<ZAuthToken> ZAuthToken::FromAuthCode(
     s_pRequest->extraHeaders["Content-Type"] = "application/json";
     s_pRequest->extraHeaders["Accept"] = "application/json";
 
-    const auto s_pResponse = s_Client.post("https://oauth2.googleapis.com/token", s_RequestJson.dump(), s_pRequest);
+    const auto s_pResponse = s_Client.post(
+        "https://oauth2.googleapis.com/token",
+        s_RequestJson.dump(),
+        s_pRequest
+    );
 
     if (!s_pResponse)
     {
@@ -98,11 +98,7 @@ void ZAuthToken::Refresh(const bool p_bForce)
 
 void ZAuthToken::SetToken(const YT::SAuthToken& p_Token, const bool p_bIsRefresh)
 {
-    Logger::Debug(
-        TAG "Got access token for scope {}. Expiration in {} seconds",
-        p_Token.m_sScope,
-        p_Token.m_nExpiresIn
-    );
+    Logger::Debug(TAG "Got access token for scope {}. Expiration in {} seconds", p_Token.m_sScope, p_Token.m_nExpiresIn);
 
     std::lock_guard s_Lock(m_TokenMutex);
 
@@ -156,7 +152,11 @@ bool ZAuthToken::RefreshToken()
     s_pRequest->extraHeaders["Content-Type"] = "application/json";
     s_pRequest->extraHeaders["Accept"] = "application/json";
 
-    const auto s_pResponse = s_Client.post("https://oauth2.googleapis.com/token", s_RequestJson.dump(), s_pRequest);
+    const auto s_pResponse = s_Client.post(
+        "https://oauth2.googleapis.com/token",
+        s_RequestJson.dump(),
+        s_pRequest
+    );
 
     if (!s_pResponse)
     {

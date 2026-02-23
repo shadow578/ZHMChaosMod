@@ -4,7 +4,9 @@
 class ZHeavyFogEffect : public ZRenderPostfilterEffectBase
 {
   public:
-    ZHeavyFogEffect() {}
+    ZHeavyFogEffect()
+    {
+    }
 
     void Start() override;
     void Stop() override;

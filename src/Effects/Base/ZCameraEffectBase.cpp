@@ -1,22 +1,20 @@
 #include "ZCameraEffectBase.h"
 
-#include <Glacier/SExternalReferences.h>
+#include <Globals.h>
 #include <Glacier/ZModule.h>
 #include <Glacier/ZScene.h>
-#include <Globals.h>
+#include <Glacier/SExternalReferences.h>
 
 #include "Logging.h"
 
-#include "Helpers/CameraUtils.h"
 #include "Helpers/Utils.h"
+#include "Helpers/CameraUtils.h"
 
 #define TAG "[ZCameraEffectBase] "
 
 void ZCameraEffectBase::LoadResources()
 {
-    m_pCameraSpawner =
-        ZTemplateEntitySpawner::Create<"[assembly:/templates/core/hm5camera.template?/"
-                                       "compositeentity_norenderdestination.entitytemplate].pc_entitytype">();
+    m_pCameraSpawner = ZTemplateEntitySpawner::Create<"[assembly:/templates/core/hm5camera.template?/compositeentity_norenderdestination.entitytemplate].pc_entitytype">();
 }
 
 bool ZCameraEffectBase::Available() const
@@ -78,9 +76,7 @@ void ZCameraEffectBase::OnDrawDebugUI()
 
     ImGui::TextUnformatted(fmt::format("Effect Camera Active: {}", m_bEffectCameraActive ? "Yes" : "No").c_str());
     ImGui::TextUnformatted(fmt::format("Effect Camera Entity: {}", m_EffectCameraEntity ? "Valid" : "Invalid").c_str());
-    ImGui::TextUnformatted(
-        fmt::format("Original Camera Entity: {}", m_OriginalCameraEntity ? "Valid" : "Invalid").c_str()
-    );
+    ImGui::TextUnformatted(fmt::format("Original Camera Entity: {}", m_OriginalCameraEntity ? "Valid" : "Invalid").c_str());
 }
 
 bool ZCameraEffectBase::IsCompatibleWith(const IChaosEffect* p_pOther) const

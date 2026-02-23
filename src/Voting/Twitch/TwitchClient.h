@@ -1,11 +1,11 @@
 #pragma once
 
-#include <functional>
-#include <memory>
-#include <mutex>
 #include <string>
 #include <thread>
+#include <functional>
+#include <memory>
 #include <vector>
+#include <mutex>
 
 #include "TwitchEventSub.h"
 #include "TwitchVoting.h"

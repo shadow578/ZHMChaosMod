@@ -4,9 +4,9 @@
 #include <Glacier/ZSpatialEntity.h>
 
 #include "EffectRegistry.h"
-#include "Helpers/EntityUtils.h"
 #include "Helpers/Math.h"
 #include "Helpers/PlayerUtils.h"
+#include "Helpers/EntityUtils.h"
 
 void ZLaggyCameraEffect::Start()
 {

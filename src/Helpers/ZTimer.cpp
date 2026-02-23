@@ -1,7 +1,7 @@
 #include "ZTimer.h"
 
-#include "Glacier/ZGameLoopManager.h"
 #include "Globals.h"
+#include "Glacier/ZGameLoopManager.h"
 
 void ZTimer::Initialize()
 {

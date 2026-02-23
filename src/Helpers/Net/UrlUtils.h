@@ -20,10 +20,7 @@ namespace UrlUtils
      * Build query url given base url and parameters.
      * Parameters may contain duplicate keys
      */
-    inline std::string BuildQueryUrl(
-        const std::string& p_sBaseUrl,
-        const std::vector<std::pair<std::string, std::string>>& m_aParams
-    )
+    inline std::string BuildQueryUrl(const std::string& p_sBaseUrl, const std::vector<std::pair<std::string, std::string>>& m_aParams)
     {
         return p_sBaseUrl + "?" + BuildQueryParams(m_aParams);
     }

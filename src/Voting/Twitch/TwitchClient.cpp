@@ -2,10 +2,10 @@
 
 #include "Logging.h"
 
-#include <Windows.h>
-#include <ixwebsocket/IXHttpClient.h>
 #include <ixwebsocket/IXHttpServer.h>
+#include <ixwebsocket/IXHttpClient.h>
 #include <nlohmann/json.hpp>
+#include <Windows.h>
 #include <shellapi.h>
 
 #define TAG "[TwitchClient] "
@@ -13,7 +13,8 @@
 using json = nlohmann::json;
 
 TwitchClient::TwitchClient(const std::string p_sClientId, const int p_nServerPort)
-    : m_sClientId(p_sClientId), m_nServerPort(p_nServerPort)
+    : m_sClientId(p_sClientId),
+      m_nServerPort(p_nServerPort)
 {
     m_EventSub.SetOnChatMessageCallback([this](const std::string& username, const std::string& message) {
         OnChatMessage(username, message);
@@ -139,8 +140,7 @@ void TwitchClient::RunServer()
         m_pServer = std::make_unique<ix::HttpServer>(m_nServerPort, "127.0.0.1");
 
         m_pServer->setOnConnectionCallback(
-            [this, &s_bTokenReceived](ix::HttpRequestPtr p_Request, std::shared_ptr<ix::ConnectionState>)
-                -> ix::HttpResponsePtr {
+            [this, &s_bTokenReceived](ix::HttpRequestPtr p_Request, std::shared_ptr<ix::ConnectionState>) -> ix::HttpResponsePtr {
                 Logger::Debug(TAG "HTTP request: {} {}", p_Request->method, p_Request->uri);
 
                 // Serve the token capture page at the root

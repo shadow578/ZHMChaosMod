@@ -4,14 +4,15 @@
 #include "Client/ZYoutubeBroadcastConnection.h"
 
 #include "EffectRegistry.h"
-#include "Helpers/ImGuiExtras.h"
 #include "Helpers/Math.h"
+#include "Helpers/ImGuiExtras.h"
 #include "Helpers/Voting/ZChatVoting.h"
 
 #define TAG "[ZYoutubeChatVotingIntegration] "
 
 ZYoutubeChatVotingIntegration::ZYoutubeChatVotingIntegration()
-    : ZYoutubeIntegrationBase(/* read-only */ true), m_pVoting(std::make_unique<ZChatVoting>())
+    : ZYoutubeIntegrationBase(/* read-only */ true),
+      m_pVoting(std::make_unique<ZChatVoting>())
 {
 }
 
@@ -23,18 +24,25 @@ void ZYoutubeChatVotingIntegration::OnBroadcastConnected()
     }
 
     // forward chat messages to voting system
-    m_pCurrentBroadcast->SetOnChatMessageCallback([this](const YT::SLiveChatMessage& p_Message) {
-        if (m_bMembersOnlyVoting)
-        {
-            // only owner, moderator and sponsors can vote
-            if (!p_Message.m_bAuthorIsOwner && !p_Message.m_bAuthorIsModerator && !p_Message.m_bAuthorIsSponsor)
+    m_pCurrentBroadcast->SetOnChatMessageCallback(
+        [this](const YT::SLiveChatMessage& p_Message) {
+            if (m_bMembersOnlyVoting)
             {
-                return;
+                // only owner, moderator and sponsors can vote
+                if (!p_Message.m_bAuthorIsOwner
+                    && !p_Message.m_bAuthorIsModerator
+                    && !p_Message.m_bAuthorIsSponsor)
+                {
+                    return;
+                }
             }
-        }
 
-        m_pVoting->PushMessage(p_Message.m_sAuthorId, p_Message.m_sMessageText);
-    });
+            m_pVoting->PushMessage(
+                p_Message.m_sAuthorId,
+                p_Message.m_sMessageText
+            );
+        }
+    );
 }
 
 void ZYoutubeChatVotingIntegration::StartVoteImpl()
@@ -67,11 +75,7 @@ IChaosEffect* ZYoutubeChatVotingIntegration::EndVoteImpl()
     // vote options vs effects count mismatch?
     if (m_aActiveVote.size() != s_aFinalTally.size())
     {
-        Logger::Debug(
-            TAG "Vote options count ({}) does not match effects count ({})",
-            s_aFinalTally.size(),
-            m_aActiveVote.size()
-        );
+        Logger::Debug(TAG "Vote options count ({}) does not match effects count ({})", s_aFinalTally.size(), m_aActiveVote.size());
         return nullptr;
     }
 
@@ -83,15 +87,10 @@ IChaosEffect* ZYoutubeChatVotingIntegration::EndVoteImpl()
     }
 
     // collect winning vote count, then collect all tied options
-    const auto s_nWinningVoteCountIt = std::max_element(
-        s_aFinalTally.begin(),
-        s_aFinalTally.end(),
-        [](const ZChatVoting::SVoteOption& s_Lhs, const ZChatVoting::SVoteOption& s_Rhs) {
-            return s_Lhs.m_nVoteCount < s_Rhs.m_nVoteCount;
-        }
-    );
-    const auto s_nWinningVoteCount =
-        s_nWinningVoteCountIt != s_aFinalTally.end() ? s_nWinningVoteCountIt->m_nVoteCount : -1;
+    const auto s_nWinningVoteCountIt = std::max_element(s_aFinalTally.begin(), s_aFinalTally.end(), [](const ZChatVoting::SVoteOption& s_Lhs, const ZChatVoting::SVoteOption& s_Rhs) {
+        return s_Lhs.m_nVoteCount < s_Rhs.m_nVoteCount;
+    });
+    const auto s_nWinningVoteCount = s_nWinningVoteCountIt != s_aFinalTally.end() ? s_nWinningVoteCountIt->m_nVoteCount : -1;
     if (s_nWinningVoteCount <= 0)
     {
         return nullptr;
@@ -151,9 +150,16 @@ void ZYoutubeChatVotingIntegration::DrawOverlayUI()
         const auto s_pEffect = m_aActiveVote[i - 1];
         const int s_nVoteCount = s_Vote.m_nVoteCount;
 
-        const float s_fPercentage = (s_nTotalVotes > 0) ? (static_cast<float>(s_nVoteCount) / s_nTotalVotes) : 0.0f;
+        const float s_fPercentage = (s_nTotalVotes > 0)
+                                        ? (static_cast<float>(s_nVoteCount) / s_nTotalVotes)
+                                        : 0.0f;
 
-        const auto s_sText = fmt::format("[{}] {} ({} votes)", i, s_pEffect->GetDisplayName(true), s_nVoteCount);
+        const auto s_sText = fmt::format(
+            "[{}] {} ({} votes)",
+            i,
+            s_pEffect->GetDisplayName(true),
+            s_nVoteCount
+        );
         ImGuiEx::ProgressBarTextFit(s_fPercentage, s_sText.c_str());
 
         i++;

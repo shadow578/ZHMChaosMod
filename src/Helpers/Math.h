@@ -1,10 +1,10 @@
 #pragma once
-#include "Glacier/SColorRGB.h"
 #include "Glacier/ZMath.h"
+#include "Glacier/SColorRGB.h"
 
+#include <vector>
 #include <random>
 #include <type_traits>
-#include <vector>
 
 namespace Math
 {

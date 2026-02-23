@@ -3,8 +3,8 @@
 
 #include <imgui.h>
 
-#include <string>
 #include <vector>
+#include <string>
 
 /**
  * Interface for voting integration modules.

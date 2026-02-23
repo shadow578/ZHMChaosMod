@@ -11,7 +11,9 @@
 class ZCameraFOVEffectBase : public ZCameraEffectBase, public ZInterpolatingEffectBase
 {
   public:
-    ZCameraFOVEffectBase(const float32 p_fTargetFOV) : ZInterpolatingEffectBase(1.0f), m_fTargetFOV(p_fTargetFOV) {}
+    ZCameraFOVEffectBase(const float32 p_fTargetFOV) : ZInterpolatingEffectBase(1.0f), m_fTargetFOV(p_fTargetFOV)
+    {
+    }
 
     void Start() override;
     void Stop() override;

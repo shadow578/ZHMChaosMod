@@ -3,8 +3,8 @@
 #include <Glacier/ZInput.h>
 
 #include "EffectRegistry.h"
-#include "Helpers/InputActionNames.h"
 #include "Helpers/Utils.h"
+#include "Helpers/InputActionNames.h"
 
 #include "ZDisableInputsEffect.h"
 #include "ZForceForwardMovementEffect.h"
@@ -36,7 +36,8 @@ bool ZInvertControlsEffect::Available() const
 
 bool ZInvertControlsEffect::IsCompatibleWith(const IChaosEffect* p_pOtherEffect) const
 {
-    return IChaosEffect::IsCompatibleWith(p_pOtherEffect) && !Utils::IsInstanceOf<ZDisableInputsEffect>(p_pOtherEffect)
+    return IChaosEffect::IsCompatibleWith(p_pOtherEffect)
+           && !Utils::IsInstanceOf<ZDisableInputsEffect>(p_pOtherEffect)
            && !Utils::IsInstanceOf<ZForceForwardMovementEffect>(p_pOtherEffect);
 }
 
@@ -55,13 +56,7 @@ DEFINE_PLUGIN_DETOUR(ZInvertControlsEffect, double, OnInputActionAnalog, ZInputA
     if (m_bEnable)
     {
         const std::string s_sName = th->m_szName;
-        if (s_sName == InputActionNames::Keyboard::c_sVertical || s_sName == InputActionNames::Keyboard::c_sHorizontal
-            || s_sName == InputActionNames::Keyboard::c_sLookVertical
-            || s_sName == InputActionNames::Keyboard::c_sLookHorizontal
-            || s_sName == InputActionNames::Controller::c_sLeftStickVertical
-            || s_sName == InputActionNames::Controller::c_sLeftStickHorizontal
-            || s_sName == InputActionNames::Controller::c_sRightStickVertical
-            || s_sName == InputActionNames::Controller::c_sRightStickHorizontal)
+        if (s_sName == InputActionNames::Keyboard::c_sVertical || s_sName == InputActionNames::Keyboard::c_sHorizontal || s_sName == InputActionNames::Keyboard::c_sLookVertical || s_sName == InputActionNames::Keyboard::c_sLookHorizontal || s_sName == InputActionNames::Controller::c_sLeftStickVertical || s_sName == InputActionNames::Controller::c_sLeftStickHorizontal || s_sName == InputActionNames::Controller::c_sRightStickVertical || s_sName == InputActionNames::Controller::c_sRightStickHorizontal)
         {
             auto s_fValueRaw = p_Hook->CallOriginal(th, a2);
 

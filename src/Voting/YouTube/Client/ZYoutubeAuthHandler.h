@@ -1,8 +1,8 @@
 #pragma once
-#include <functional>
+#include <string>
 #include <memory>
 #include <mutex>
-#include <string>
+#include <functional>
 #include <thread>
 
 class ZAuthToken;

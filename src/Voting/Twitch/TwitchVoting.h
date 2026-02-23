@@ -1,10 +1,10 @@
 #pragma once
 
-#include <atomic>
-#include <mutex>
 #include <string>
-#include <unordered_map>
 #include <vector>
+#include <unordered_map>
+#include <mutex>
+#include <atomic>
 
 /**
  * Handles vote tallying for Twitch chat voting.

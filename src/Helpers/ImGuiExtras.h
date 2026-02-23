@@ -15,7 +15,16 @@ namespace ImGuiEx
         ImGuiSliderFlags p_nFlags = 0
     )
     {
-        return ImGui::DragScalar(p_sLabel, ImGuiDataType_Float, p_fValue, 0.1f, &p_fMin, &p_fMax, p_sFormat, p_nFlags);
+        return ImGui::DragScalar(
+            p_sLabel,
+            ImGuiDataType_Float,
+            p_fValue,
+            0.1f,
+            &p_fMin,
+            &p_fMax,
+            p_sFormat,
+            p_nFlags
+        );
     }
 
     /**
@@ -45,7 +54,10 @@ namespace ImGuiEx
         const auto s_fTextX = s_vBarMin.x + p_fTextPadding;
         const auto s_fTextY = s_vBarMin.y + (s_vBarMax.y - s_vBarMin.y - s_vTextSize.y) * 0.5f;
 
-        ImGui::GetWindowDrawList()
-            ->AddText(ImVec2(s_fTextX, s_fTextY), ImGui::GetColorU32(ImGuiCol_Text), p_sOverlayText);
+        ImGui::GetWindowDrawList()->AddText(
+            ImVec2(s_fTextX, s_fTextY),
+            ImGui::GetColorU32(ImGuiCol_Text),
+            p_sOverlayText
+        );
     }
 }; // namespace ImGuiEx

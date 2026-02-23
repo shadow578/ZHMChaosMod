@@ -15,10 +15,13 @@ class ZNearbyActorSpeakEffect : public ZSpeakEntityEffectBase
         const float32 p_fRepetitionDelay = -1.0f,        // disable repetition when negative
         const float32 p_fRepetitionDelayVariance = 0.0f, // +- variance on repetition delay
         const float32 p_fRadius = 50.0f
-    )
-        : m_sNameSuffix(p_sNameSuffix), m_sDisplayName(p_sDisplayName), m_aSoundDefs(p_aSoundDefs),
-          m_fRadius(p_fRadius), m_fRepetitionDelay(p_fRepetitionDelay),
-          m_fRepetitionDelayVariance(p_fRepetitionDelayVariance), m_bRepeat(p_fRepetitionDelay >= 0.0f)
+    ) : m_sNameSuffix(p_sNameSuffix),
+        m_sDisplayName(p_sDisplayName),
+        m_aSoundDefs(p_aSoundDefs),
+        m_fRadius(p_fRadius),
+        m_fRepetitionDelay(p_fRepetitionDelay),
+        m_fRepetitionDelayVariance(p_fRepetitionDelayVariance),
+        m_bRepeat(p_fRepetitionDelay >= 0.0f)
     {
     }
 

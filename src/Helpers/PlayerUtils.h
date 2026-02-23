@@ -1,8 +1,8 @@
 #pragma once
 #include <Glacier/Enums.h>
 #include <Glacier/ZEntity.h>
-#include <Glacier/ZMath.h>
 #include <Glacier/ZOutfit.h>
+#include <Glacier/ZMath.h>
 
 class ZSpatialEntity;
 class ZHitman5;

@@ -72,8 +72,7 @@ CompanionModUtil::SCompanionModMetadata CompanionModUtil::LoadCompanionModInfo(c
             const auto s_nDot2 = g_Metadata.m_sVersion.find('.', s_nDot + 1);
             if (s_nDot2 != std::string::npos)
             {
-                g_Metadata.m_Version.m_nMinor =
-                    std::stoi(g_Metadata.m_sVersion.substr(s_nDot + 1, s_nDot2 - s_nDot - 1));
+                g_Metadata.m_Version.m_nMinor = std::stoi(g_Metadata.m_sVersion.substr(s_nDot + 1, s_nDot2 - s_nDot - 1));
                 g_Metadata.m_Version.m_nPatch = std::stoi(g_Metadata.m_sVersion.substr(s_nDot2 + 1));
             }
             else
@@ -83,13 +82,7 @@ CompanionModUtil::SCompanionModMetadata CompanionModUtil::LoadCompanionModInfo(c
         }
     }
 
-    Logger::Debug(
-        TAG "Detected companion mod version {} ({}.{}.{}).",
-        g_Metadata.m_sVersion,
-        g_Metadata.m_Version.m_nMajor,
-        g_Metadata.m_Version.m_nMinor,
-        g_Metadata.m_Version.m_nPatch
-    );
+    Logger::Debug(TAG "Detected companion mod version {} ({}.{}.{}).", g_Metadata.m_sVersion, g_Metadata.m_Version.m_nMajor, g_Metadata.m_Version.m_nMinor, g_Metadata.m_Version.m_nPatch);
     return g_Metadata;
 }
 

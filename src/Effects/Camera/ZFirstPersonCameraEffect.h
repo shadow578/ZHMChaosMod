@@ -7,7 +7,10 @@ class ZSpatialEntity;
 class ZFirstPersonCameraEffect : public ZCameraEffectBase, public ZInterpolatingEffectBase
 {
   public:
-    ZFirstPersonCameraEffect() : ZCameraEffectBase(), ZInterpolatingEffectBase(1.0f) {}
+    ZFirstPersonCameraEffect() : ZCameraEffectBase(),
+                                 ZInterpolatingEffectBase(1.0f)
+    {
+    }
 
     void OnClearScene() override;
     void OnDrawDebugUI() override;

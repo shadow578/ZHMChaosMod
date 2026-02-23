@@ -10,8 +10,7 @@
 
 void ZExplosionEffectBase::LoadResources()
 {
-    m_pExplosionSpawner =
-        ZTemplateEntitySpawner::Create<"[assembly:/_pro/chaosmod/explosioneffect.entitytemplate].pc_entitytype">();
+    m_pExplosionSpawner = ZTemplateEntitySpawner::Create<"[assembly:/_pro/chaosmod/explosioneffect.entitytemplate].pc_entitytype">();
 }
 
 void ZExplosionEffectBase::OnClearScene()

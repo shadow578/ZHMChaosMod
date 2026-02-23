@@ -117,18 +117,24 @@ struct VotingIntegrationRegistrar
  * REGISTER_CHAOS_EFFECT(MySimpleEffect);
  * REGISTER_CHAOS_EFFECT_PARAM(MyParameterizedEffect, constructor_arg1, constructor_arg2);
  */
-#define REGISTER_CHAOS_EFFECT(EFFECT_CLASS) \
-    static EffectRegistrar g_EffectRegistrar_##EFFECT_CLASS(std::make_unique<EFFECT_CLASS>());
+#define REGISTER_CHAOS_EFFECT(EFFECT_CLASS)                  \
+    static EffectRegistrar g_EffectRegistrar_##EFFECT_CLASS( \
+        std::make_unique<EFFECT_CLASS>()                     \
+    );
 
-#define REGISTER_CHAOS_EFFECT_PARAM(NAME, EFFECT_CLASS, ...) \
-    static EffectRegistrar g_EffectRegistrar_##EFFECT_CLASS##NAME(std::make_unique<EFFECT_CLASS>(__VA_ARGS__));
+#define REGISTER_CHAOS_EFFECT_PARAM(NAME, EFFECT_CLASS, ...)       \
+    static EffectRegistrar g_EffectRegistrar_##EFFECT_CLASS##NAME( \
+        std::make_unique<EFFECT_CLASS>(__VA_ARGS__)                \
+    );
 
 /**
  * Register an unlocker class with the EffectRegistry.
  * Unlockes are registered similarly to effects.
  */
-#define REGISTER_CHAOS_UNLOCKER(UNLOCKER_CLASS) \
-    static UnlockerRegistrar g_UnlockerRegistrar_##UNLOCKER_CLASS(std::make_unique<UNLOCKER_CLASS>());
+#define REGISTER_CHAOS_UNLOCKER(UNLOCKER_CLASS)                    \
+    static UnlockerRegistrar g_UnlockerRegistrar_##UNLOCKER_CLASS( \
+        std::make_unique<UNLOCKER_CLASS>()                         \
+    );
 
 /**
  * Register a voting integration class with the Registry.

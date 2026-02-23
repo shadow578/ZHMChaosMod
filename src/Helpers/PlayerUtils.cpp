@@ -2,8 +2,8 @@
 
 #include "IPluginInterface.h"
 
-#include <Glacier/ZContentKitManager.h>
 #include <Glacier/ZSpatialEntity.h>
+#include <Glacier/ZContentKitManager.h>
 
 #include <Logging.h>
 
@@ -63,7 +63,14 @@ bool Utils::SetPlayerOutfit(const std::string& p_sCommonName, TEntityRef<ZGlobal
         return false;
     }
 
-    Functions::ZHitman5_SetOutfit->Call(s_Player.m_pInterfaceRef, p_OutfitOut, 0, 0, false, false);
+    Functions::ZHitman5_SetOutfit->Call(
+        s_Player.m_pInterfaceRef,
+        p_OutfitOut,
+        0,
+        0,
+        false,
+        false
+    );
 
     return true;
 }

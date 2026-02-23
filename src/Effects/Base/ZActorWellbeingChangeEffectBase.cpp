@@ -53,8 +53,7 @@ ZActorWellbeingChangeEffectBase::SActorState ZActorWellbeingChangeEffectBase::Ge
     //
     // i gues for IOI, a pacified actor is considered "dead" in the sense that they cannot do anything...
     // for our purposes, we'd want a clear distinction between dead and pacified actors.
-    // thus, this method does some additional checks to determine the actual state of the actor, which is then used for
-    // comparison in the effect logic.
+    // thus, this method does some additional checks to determine the actual state of the actor, which is then used for comparison in the effect logic.
 
     const auto s_bIsPacified = p_pActor->IsPacified();
     const auto s_bIsDead = p_pActor->IsDead();

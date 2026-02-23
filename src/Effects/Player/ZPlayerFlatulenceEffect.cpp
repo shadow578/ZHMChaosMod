@@ -8,16 +8,14 @@
 #include "EffectRegistry.h"
 #include "Helpers/EntityUtils.h"
 
-constexpr auto c_ridSFXFallback = ResId<"[assembly:/sound/wwise/exportedwwisedata/events/props_events/"
-                                        "play_sfx_inflatable_deflate_01.wwiseevent].pc_wwisebank">;
+constexpr auto c_ridSFXFallback = ResId<"[assembly:/sound/wwise/exportedwwisedata/events/props_events/play_sfx_inflatable_deflate_01.wwiseevent].pc_wwisebank">;
 
 void ZPlayerFlatulenceEffect::LoadResources()
 {
     ZPoisonAOEDamageEffectBase::LoadResources();
     ZSoundFXEffectBase::LoadResources();
 
-    m_pSFXResource = ZResourceProvider::Create<
-        "[assembly:/sound/wwise/exportedwwisedata/events/chaosmod/play_sfx_flatulence.wwiseevent].pc_wwisebank">();
+    m_pSFXResource = ZResourceProvider::Create<"[assembly:/sound/wwise/exportedwwisedata/events/chaosmod/play_sfx_flatulence.wwiseevent].pc_wwisebank">();
 }
 
 void ZPlayerFlatulenceEffect::OnClearScene()
@@ -67,10 +65,7 @@ void ZPlayerFlatulenceEffect::Start()
             auto s_rPoisonEntity = ZPoisonAOEDamageEffectBase::Spawn(s_PoisonParams);
 
             // sound effect
-            auto s_rSFXEntity = ZSoundFXEffectBase::PlayAt(
-                s_WM,
-                m_pSFXResource->IsAvailable() ? m_pSFXResource->GetResourceID() : c_ridSFXFallback
-            );
+            auto s_rSFXEntity = ZSoundFXEffectBase::PlayAt(s_WM, m_pSFXResource->IsAvailable() ? m_pSFXResource->GetResourceID() : c_ridSFXFallback);
 
             // set player as parent of entities
             Utils::SetProperty<TEntityRef<ZSpatialEntity>>(s_rPoisonEntity, "m_eidParent", s_rPlayerSpatial);

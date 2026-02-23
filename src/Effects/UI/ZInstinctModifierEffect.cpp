@@ -25,9 +25,7 @@ void ZInstinctModifierEffectBase::Start()
             continue;
         }
 
-        auto s_eOriginalGlowType =
-            Utils::GetProperty<ERenderGlowTypes>(s_rCharacter.m_entityRef, c_GlowTypePropertyName)
-                .value_or(ERenderGlowTypes::ERENDERGLOWTYPE_CIVILIAN);
+        auto s_eOriginalGlowType = Utils::GetProperty<ERenderGlowTypes>(s_rCharacter.m_entityRef, c_GlowTypePropertyName).value_or(ERenderGlowTypes::ERENDERGLOWTYPE_CIVILIAN);
         Utils::SetProperty<ERenderGlowTypes>(s_rCharacter.m_entityRef, c_GlowTypePropertyName, m_eGlowType);
 
         m_mOriginalGlowTypes[s_rActor.m_pInterfaceRef] = s_eOriginalGlowType;

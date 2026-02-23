@@ -1,10 +1,10 @@
 #pragma once
 
+#include <string>
 #include <atomic>
 #include <functional>
-#include <memory>
 #include <mutex>
-#include <string>
+#include <memory>
 
 #include <ixwebsocket/IXWebSocket.h>
 
@@ -95,10 +95,5 @@ class TwitchEventSub
     /**
      * Make an HTTP request to the Twitch API.
      */
-    bool MakeApiRequest(
-        const std::string& p_sEndpoint,
-        const std::string& p_sMethod,
-        const std::string& p_sBody,
-        std::string& p_sResponse
-    ) const;
+    bool MakeApiRequest(const std::string& p_sEndpoint, const std::string& p_sMethod, const std::string& p_sBody, std::string& p_sResponse) const;
 };

@@ -23,10 +23,7 @@ void ZInterpolatingEffectBase::OnClearScene()
     m_eState = EState::Idle;
 }
 
-void ZInterpolatingEffectBase::OnFrameUpdate(
-    const SGameUpdateEvent& p_UpdateEvent,
-    const float32 p_fEffectTimeRemaining
-)
+void ZInterpolatingEffectBase::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)
 {
     switch (m_eState)
     {

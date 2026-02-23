@@ -3,8 +3,8 @@
 
 #include <Glacier/ZOutfit.h>
 
-#include <string>
 #include <vector>
+#include <string>
 
 class ZAuthoritativeFigureEffect : public IChaosEffect
 {

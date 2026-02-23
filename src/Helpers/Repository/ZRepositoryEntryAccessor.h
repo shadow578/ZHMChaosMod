@@ -1,11 +1,11 @@
 #pragma once
-#include <Glacier/TArray.h>
-#include <Glacier/ZObject.h>
 #include <Glacier/ZPrimitives.h>
+#include <Glacier/ZObject.h>
+#include <Glacier/TArray.h>
 
-#include <memory>
 #include <optional>
 #include <string>
+#include <memory>
 
 class ZRepositoryEntryAccessor
 {

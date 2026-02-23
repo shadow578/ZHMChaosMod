@@ -1,7 +1,7 @@
 #include "UrlUtils.h"
 
-#include <iomanip>
 #include <sstream>
+#include <iomanip>
 
 std::string UrlUtils::URLEncode(const std::string& p_sComponent)
 {
@@ -11,9 +11,13 @@ std::string UrlUtils::URLEncode(const std::string& p_sComponent)
     for (char s_cChar : p_sComponent)
     {
         // take as-is?
-        if (std::isalnum(s_cChar) // A-Z a-z 0-9
+        if (
+            std::isalnum(s_cChar) // A-Z a-z 0-9
             || s_cChar == '-'     // allowed special chars
-            || s_cChar == '_' || s_cChar == '~' || s_cChar == '~')
+            || s_cChar == '_'
+            || s_cChar == '~'
+            || s_cChar == '~'
+        )
         {
             s_Out << s_cChar;
             continue;

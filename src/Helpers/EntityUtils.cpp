@@ -86,12 +86,7 @@ after_outer_loop:
     return s_aFoundEntities;
 }
 
-bool Utils::ZEntityFinder::Evaluate(
-    const ZEntityRef& p_rEntity,
-    ZEntityBlueprintFactoryBase* p_pParentFactory,
-    ZEntityBlueprintFactoryBase* p_pSubFactory,
-    int p_nSubIndex
-) const
+bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprintFactoryBase* p_pParentFactory, ZEntityBlueprintFactoryBase* p_pSubFactory, int p_nSubIndex) const
 {
     // check entity id
     if (m_nEntityID.has_value())
@@ -239,9 +234,7 @@ ZEntityBlueprintFactoryBase* Utils::GetEntityBlueprintFactoryFor(ZEntityRef p_rE
 
                 const auto s_AspectSubIndex = s_pAspectBPFactory->m_aSubEntitiesLookUp[s_nSubIndex];
 
-                s_pBPFactory = reinterpret_cast<ZEntityBlueprintFactoryBase*>(
-                    s_pAspectBPFactory->m_aBlueprintFactories[s_AspectSubIndex.m_nSubentityIdx]
-                );
+                s_pBPFactory = reinterpret_cast<ZEntityBlueprintFactoryBase*>(s_pAspectBPFactory->m_aBlueprintFactories[s_AspectSubIndex.m_nSubentityIdx]);
             }
 
             return s_pBPFactory;

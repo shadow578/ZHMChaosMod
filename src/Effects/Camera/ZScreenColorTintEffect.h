@@ -5,8 +5,10 @@ class ZScreenColorTintEffect : public ZRenderPostfilterEffectBase
 {
   public:
     ZScreenColorTintEffect(const std::string p_sNameSuffix, const std::string p_sDisplayName, const SColorRGB p_vColor)
-        : ZRenderPostfilterEffectBase(), m_sNameSuffix(std::move(p_sNameSuffix)),
-          m_sDisplayName(std::move(p_sDisplayName)), m_vColor(p_vColor)
+        : ZRenderPostfilterEffectBase(),
+          m_sNameSuffix(std::move(p_sNameSuffix)),
+          m_sDisplayName(std::move(p_sDisplayName)),
+          m_vColor(p_vColor)
     {
     }
 

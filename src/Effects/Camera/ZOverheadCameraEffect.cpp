@@ -1,8 +1,8 @@
 #include "ZOverheadCameraEffect.h"
 
-#include <Glacier/ZCollision.h>
 #include <Glacier/ZEntity.h>
 #include <Glacier/ZSpatialEntity.h>
+#include <Glacier/ZCollision.h>
 
 #include "EffectRegistry.h"
 #include "Helpers/Math.h"
@@ -63,7 +63,10 @@ void ZOverheadCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent,
 
     // raycast to ceiling, move camera up as far as possible
     s_TargetWM.Trans.z += c_fOverheadMinDistance;
-    s_TargetWM.Trans.z = GetMaxOverheadZAt(s_TargetWM, c_fOverheadMaxDistance);
+    s_TargetWM.Trans.z = GetMaxOverheadZAt(
+        s_TargetWM,
+        c_fOverheadMaxDistance
+    );
 
     // rotate facing downwards
     s_TargetWM.XAxis = float4(0.0f, 1.0f, 0.0f, 0.0f);

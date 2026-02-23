@@ -5,7 +5,10 @@
 class ZLagEffect : public IChaosEffect
 {
   public:
-    ZLagEffect(const float32 p_fTargetFPS) : m_fTargetFPS(p_fTargetFPS) {}
+    ZLagEffect(const float32 p_fTargetFPS)
+        : m_fTargetFPS(p_fTargetFPS)
+    {
+    }
 
     void Start() override;
     void Stop() override;

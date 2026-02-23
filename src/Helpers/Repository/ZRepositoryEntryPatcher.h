@@ -57,10 +57,7 @@ class ZRepositoryEntryPatcher
             const auto& s_Pair = m_sUndoStack.top();
             if (!m_pEntry->Set(s_Pair.sKey.c_str(), s_Pair.value, true))
             {
-                Logger::Debug(
-                    "[ZRepositoryEntryPatcher] Failed to restore original value for key = {}",
-                    s_Pair.sKey.c_str()
-                );
+                Logger::Debug("[ZRepositoryEntryPatcher] Failed to restore original value for key = {}", s_Pair.sKey.c_str());
             }
             m_sUndoStack.pop();
         }

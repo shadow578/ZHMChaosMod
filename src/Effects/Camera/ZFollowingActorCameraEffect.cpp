@@ -10,7 +10,8 @@
 
 bool ZFollowingActorCameraEffect::Available() const
 {
-    return ZCameraEffectBase::Available() && ZActorFollowPlayerHelperEffectBase::Available();
+    return ZCameraEffectBase::Available()
+           && ZActorFollowPlayerHelperEffectBase::Available();
 }
 
 void ZFollowingActorCameraEffect::OnDrawDebugUI()
@@ -18,13 +19,7 @@ void ZFollowingActorCameraEffect::OnDrawDebugUI()
     ZCameraEffectBase::OnDrawDebugUI();
     ZActorFollowPlayerHelperEffectBase::OnDrawDebugUI();
 
-    ImGui::TextUnformatted(
-        fmt::format(
-            "Following Actor: {}",
-            m_rFollowingActor ? m_rFollowingActor.m_pInterfaceRef->GetActorName().c_str() : "None"
-        )
-            .c_str()
-    );
+    ImGui::TextUnformatted(fmt::format("Following Actor: {}", m_rFollowingActor ? m_rFollowingActor.m_pInterfaceRef->GetActorName().c_str() : "None").c_str());
 }
 
 void ZFollowingActorCameraEffect::Start()
@@ -75,10 +70,7 @@ void ZFollowingActorCameraEffect::Stop()
     }
 }
 
-void ZFollowingActorCameraEffect::OnFrameUpdate(
-    const SGameUpdateEvent& p_UpdateEvent,
-    const float32 p_fEffectTimeRemaining
-)
+void ZFollowingActorCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)
 {
     ZCameraEffectBase::OnFrameUpdate(p_UpdateEvent, p_fEffectTimeRemaining);
 
@@ -90,8 +82,7 @@ void ZFollowingActorCameraEffect::OnFrameUpdate(
             if (auto s_rOriginalCameraSpatial = TEntityRef<ZSpatialEntity>(GetOriginalCameraEntity()))
             {
                 const auto s_mOriginalTransform = s_rOriginalCameraSpatial.m_pInterfaceRef->GetObjectToWorldMatrix();
-                const auto s_mActorHeadTransform =
-                    m_rFollowingActorHeadAttach.m_pInterfaceRef->GetObjectToWorldMatrix();
+                const auto s_mActorHeadTransform = m_rFollowingActorHeadAttach.m_pInterfaceRef->GetObjectToWorldMatrix();
 
                 auto s_mEffectTransform = s_rEffectCameraSpatial.m_pInterfaceRef->GetObjectToWorldMatrix();
                 s_mEffectTransform.XAxis = s_mOriginalTransform.XAxis; // rotation from original camera

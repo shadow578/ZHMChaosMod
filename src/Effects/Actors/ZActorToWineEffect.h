@@ -14,11 +14,7 @@ class ZActorToWineEffect : public ZActorWellbeingChangeEffectBase, public ZSpawn
     }
 
   protected:
-    void OnActorWellbeingChanged(
-        ZActor* p_pActor,
-        const SActorState& p_OldState,
-        const SActorState& p_NewState
-    ) override;
+    void OnActorWellbeingChanged(ZActor* p_pActor, const SActorState& p_OldState, const SActorState& p_NewState) override;
 
   private:
     SRepositoryPropInfo m_WineBottleProp;

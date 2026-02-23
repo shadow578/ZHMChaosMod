@@ -11,11 +11,7 @@
 constexpr float32 c_fDeathExplosionStrength = 500.0f;
 constexpr float32 c_fPacifyExplosionStrength = 50.0f;
 
-void ZExplosiveKnockoutEffect::OnActorWellbeingChanged(
-    ZActor* p_pActor,
-    const SActorState& p_OldState,
-    const SActorState& p_NewState
-)
+void ZExplosiveKnockoutEffect::OnActorWellbeingChanged(ZActor* p_pActor, const SActorState& p_OldState, const SActorState& p_NewState)
 {
     if (!p_OldState.m_bDead && p_NewState.m_bDead)
     {

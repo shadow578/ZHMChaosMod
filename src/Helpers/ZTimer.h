@@ -20,14 +20,12 @@ class ZTimer
         RealTime
     };
 
-    ZTimer(
-        const ZTimerCallback p_Callback,
-        const float32 p_fIntervalSeconds,
-        const ETimeMode p_eTimeMode = ETimeMode::GameTime,
-        const bool p_bStartEnabled = false
-    )
-        : m_bEnable(p_bStartEnabled), m_fIntervalSeconds(p_fIntervalSeconds), m_fElapsedSeconds(0),
-          m_eTimeMode(p_eTimeMode), m_Callback(p_Callback)
+    ZTimer(const ZTimerCallback p_Callback, const float32 p_fIntervalSeconds, const ETimeMode p_eTimeMode = ETimeMode::GameTime, const bool p_bStartEnabled = false)
+        : m_bEnable(p_bStartEnabled),
+          m_fIntervalSeconds(p_fIntervalSeconds),
+          m_fElapsedSeconds(0),
+          m_eTimeMode(p_eTimeMode),
+          m_Callback(p_Callback)
     {
     }
 

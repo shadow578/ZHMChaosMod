@@ -1,8 +1,8 @@
 #pragma once
 #include "IChaosEffect.h"
 
-#include <Glacier/ZActor.h>
 #include <Glacier/ZEntity.h>
+#include <Glacier/ZActor.h>
 
 #include <map>
 
@@ -39,11 +39,7 @@ class ZActorWellbeingChangeEffectBase : public virtual IChaosEffect
 
     static SActorState GetActorState(ZActor* p_pActor);
 
-    virtual void OnActorWellbeingChanged(
-        ZActor* p_pActor,
-        const SActorState& p_OldState,
-        const SActorState& p_NewState
-    ) = 0;
+    virtual void OnActorWellbeingChanged(ZActor* p_pActor, const SActorState& p_OldState, const SActorState& p_NewState) = 0;
 
   private:
     bool m_bMonitorChanges = false;

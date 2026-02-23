@@ -4,7 +4,9 @@
 class ZWobblyVisionEffect : public ZRenderPostfilterEffectBase
 {
   public:
-    ZWobblyVisionEffect() {}
+    ZWobblyVisionEffect()
+    {
+    }
 
     void Start() override;
     void Stop() override;

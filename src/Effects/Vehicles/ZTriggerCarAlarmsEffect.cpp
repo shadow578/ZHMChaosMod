@@ -6,8 +6,7 @@
 void ZTriggerCarAlarmsEffect::OnEnterScene()
 {
     m_aVehicleCores = Utils::ZEntityFinder()
-                          .BlueprintResource<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/"
-                                             "vehicle_core.entitytemplate].pc_entityblueprint">()
+                          .BlueprintResource<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_core.entitytemplate].pc_entityblueprint">()
                           .Find();
 }
 

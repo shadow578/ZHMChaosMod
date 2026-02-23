@@ -1,7 +1,7 @@
 #include "ZActorToWineEffect.h"
 
-#include <Glacier/ZActor.h>
 #include <Glacier/ZEntity.h>
+#include <Glacier/ZActor.h>
 #include <Glacier/ZSpatialEntity.h>
 
 #include "Logging.h"
@@ -31,11 +31,7 @@ void ZActorToWineEffect::OnDrawDebugUI()
     ImGui::Checkbox("Teleport Bodies", &m_bTeleportBodies);
 }
 
-void ZActorToWineEffect::OnActorWellbeingChanged(
-    ZActor* p_pActor,
-    const SActorState& p_OldState,
-    const SActorState& p_NewState
-)
+void ZActorToWineEffect::OnActorWellbeingChanged(ZActor* p_pActor, const SActorState& p_OldState, const SActorState& p_NewState)
 {
     if (!p_OldState.m_bDead && p_NewState.m_bDead && !p_pActor->m_bBodyHidden)
     {

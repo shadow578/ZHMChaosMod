@@ -2,8 +2,8 @@
 
 #include "IChaosEffect.h"
 
-#include <Glacier/ZCameraEntity.h>
 #include <Glacier/ZEntity.h>
+#include <Glacier/ZCameraEntity.h>
 
 #include "Helpers/ZTemplateEntitySpawner.h"
 

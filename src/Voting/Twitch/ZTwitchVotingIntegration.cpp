@@ -1,14 +1,14 @@
 #include "ZTwitchVotingIntegration.h"
 
-#include <IconsMaterialDesign.h>
 #include <Logging.h>
+#include <IconsMaterialDesign.h>
 
 #include <numeric>
 
 #include "EffectRegistry.h"
-#include "Helpers/ImGuiExtras.h"
 #include "Helpers/Math.h"
 #include "Helpers/Utils.h"
+#include "Helpers/ImGuiExtras.h"
 
 #define TAG "[ZTwitchVotingIntegration] "
 
@@ -164,7 +164,12 @@ void ZTwitchVotingIntegration::DrawOverlayUI()
 
         // Show vote count and percentage
         const float s_fPercentage = s_nTotalVotes > 0 ? static_cast<float>(s_aVoteCounts[i]) / s_nTotalVotes : 0.0f;
-        const auto s_sText = fmt::format("[{}] {} ({} votes)", i + 1, s_Effect->GetDisplayName(true), s_aVoteCounts[i]);
+        const auto s_sText = fmt::format(
+            "[{}] {} ({} votes)",
+            i + 1,
+            s_Effect->GetDisplayName(true),
+            s_aVoteCounts[i]
+        );
 
         ImGuiEx::ProgressBarTextFit(s_fPercentage, s_sText.c_str());
     }

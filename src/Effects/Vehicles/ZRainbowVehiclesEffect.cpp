@@ -7,8 +7,7 @@
 void ZRainbowVehiclesEffect::OnEnterScene()
 {
     const auto& s_aVehicleCores = Utils::ZEntityFinder()
-                                      .BlueprintResource<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/"
-                                                         "vehicle_core.entitytemplate].pc_entityblueprint">()
+                                      .BlueprintResource<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_core.entitytemplate].pc_entityblueprint">()
                                       .Find();
 
     for (auto& s_rVehicleCore : s_aVehicleCores)

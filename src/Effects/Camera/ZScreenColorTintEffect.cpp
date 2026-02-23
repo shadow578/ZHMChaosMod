@@ -30,10 +30,4 @@ void ZScreenColorTintEffect::OnDrawDebugUI()
     ZRenderPostfilterEffectBase::OnDrawDebugUI();
 }
 
-REGISTER_CHAOS_EFFECT_PARAM(
-    yellow,
-    ZScreenColorTintEffect,
-    "yellow",
-    "Is this Mexico?",
-    SColorRGB{.r = 1.0f, .g = 1.0f, .b = 0.7f}
-);
+REGISTER_CHAOS_EFFECT_PARAM(yellow, ZScreenColorTintEffect, "yellow", "Is this Mexico?", SColorRGB{.r = 1.0f, .g = 1.0f, .b = 0.7f});

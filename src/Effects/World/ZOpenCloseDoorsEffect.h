@@ -4,9 +4,8 @@
 class ZOpenCloseDoorsEffect : public ZDoorsEffectBase
 {
   public:
-    ZOpenCloseDoorsEffect()
-        : ZDoorsEffectBase(50), // require 50 doors
-          m_fInterval(0.75f)
+    ZOpenCloseDoorsEffect() : ZDoorsEffectBase(50), // require 50 doors
+                              m_fInterval(0.75f)
     {
     }
 

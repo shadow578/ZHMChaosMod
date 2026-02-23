@@ -3,11 +3,11 @@
 #include <Glacier/ZInput.h>
 
 #include "EffectRegistry.h"
-#include "Helpers/InputActionNames.h"
 #include "Helpers/Utils.h"
+#include "Helpers/InputActionNames.h"
 
-#include "ZForceForwardMovementEffect.h"
 #include "ZInvertControlsEffect.h"
+#include "ZForceForwardMovementEffect.h"
 
 void ZDisableInputsEffect::OnModInitialized()
 {
@@ -38,7 +38,8 @@ bool ZDisableInputsEffect::Available() const
 
 bool ZDisableInputsEffect::IsCompatibleWith(const IChaosEffect* p_pOtherEffect) const
 {
-    return IChaosEffect::IsCompatibleWith(p_pOtherEffect) && !Utils::IsInstanceOf<ZInvertControlsEffect>(p_pOtherEffect)
+    return IChaosEffect::IsCompatibleWith(p_pOtherEffect)
+           && !Utils::IsInstanceOf<ZInvertControlsEffect>(p_pOtherEffect)
            && !Utils::IsInstanceOf<ZForceForwardMovementEffect>(p_pOtherEffect);
 }
 

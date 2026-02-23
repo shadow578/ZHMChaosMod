@@ -44,12 +44,7 @@ void ZHMRepositoryHelper::Initialize()
 #endif
     }
 
-    Logger::Debug(
-        TAG "Repository loaded. Total {} entries, {} cached IDs, {} cached types.",
-        s_pmRepositoryData->size(),
-        m_mRepositoryIdToKey.size(),
-        m_mRepositoryKeyToType.size()
-    );
+    Logger::Debug(TAG "Repository loaded. Total {} entries, {} cached IDs, {} cached types.", s_pmRepositoryData->size(), m_mRepositoryIdToKey.size(), m_mRepositoryKeyToType.size());
 
 #if _DEBUG
     for (const auto& [eType, count] : s_TypeCounts)

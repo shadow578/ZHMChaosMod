@@ -1,6 +1,6 @@
 #pragma once
-#include <functional>
 #include <string>
+#include <functional>
 
 #include <ixwebsocket/IXHttpClient.h>
 
@@ -37,7 +37,9 @@ class ZYoutubeBroadcastConnection
      */
     bool IsConnected() const
     {
-        return m_pToken != nullptr && m_pToken && m_ActiveBroadcast;
+        return m_pToken != nullptr
+               && m_pToken
+               && m_ActiveBroadcast;
     }
 
     /**

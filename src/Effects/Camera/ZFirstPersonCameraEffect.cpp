@@ -4,9 +4,9 @@
 #include <Glacier/ZSpatialEntity.h>
 
 #include "EffectRegistry.h"
-#include "Helpers/EntityUtils.h"
 #include "Helpers/Math.h"
 #include "Helpers/PlayerUtils.h"
+#include "Helpers/EntityUtils.h"
 
 void ZFirstPersonCameraEffect::Start()
 {
@@ -57,10 +57,7 @@ void ZFirstPersonCameraEffect::OnDrawDebugUI()
     ZInterpolatingEffectBase::OnDrawDebugUI();
 }
 
-void ZFirstPersonCameraEffect::OnFrameUpdate(
-    const SGameUpdateEvent& p_UpdateEvent,
-    const float32 p_fEffectTimeRemaining
-)
+void ZFirstPersonCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)
 {
     ZInterpolatingEffectBase::OnFrameUpdate(p_UpdateEvent, p_fEffectTimeRemaining);
 

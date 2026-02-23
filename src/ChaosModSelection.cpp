@@ -29,10 +29,7 @@ void ChaosMod::OnEffectTimerTrigger()
         // this should be fairly rare
         if (!s_pSelectedEffect->Available())
         {
-            Logger::Warn(
-                TAG "Selected effect '{}' is no longer available, selecting random fallback.",
-                s_pSelectedEffect->GetName()
-            );
+            Logger::Warn(TAG "Selected effect '{}' is no longer available, selecting random fallback.", s_pSelectedEffect->GetName());
             const auto s_aFallbacks = GetRandomEffectSelection(1);
             if (!s_aFallbacks.empty())
             {
@@ -107,11 +104,9 @@ void ChaosMod::UpdateEffectExpiration(const float32 p_fDeltaTime)
 
     // remove expired
     m_aActiveEffects.erase(
-        std::remove_if(
-            m_aActiveEffects.begin(),
-            m_aActiveEffects.end(),
-            [](const SActiveEffect& e) { return e.m_fTimeRemaining <= 0.0f; }
-        ),
+        std::remove_if(m_aActiveEffects.begin(), m_aActiveEffects.end(), [](const SActiveEffect& e) {
+            return e.m_fTimeRemaining <= 0.0f;
+        }),
         m_aActiveEffects.end()
     );
 }

@@ -4,9 +4,9 @@
 
 #include "EffectRegistry.h"
 #include "Helpers/ActorUtils.h"
-#include "Helpers/ImGuiExtras.h"
 #include "Helpers/Math.h"
 #include "Helpers/Utils.h"
+#include "Helpers/ImGuiExtras.h"
 
 void ZNearbyActorSpeakEffect::OnClearScene()
 {
@@ -36,8 +36,7 @@ void ZNearbyActorSpeakEffect::OnDrawDebugUI()
 
 bool ZNearbyActorSpeakEffect::IsCompatibleWith(const IChaosEffect* p_pOtherEffect) const
 {
-    return ZSpeakEntityEffectBase::IsCompatibleWith(p_pOtherEffect)
-           && !Utils::IsInstanceOf<ZSpeakEntityEffectBase>(p_pOtherEffect);
+    return ZSpeakEntityEffectBase::IsCompatibleWith(p_pOtherEffect) && !Utils::IsInstanceOf<ZSpeakEntityEffectBase>(p_pOtherEffect);
 }
 
 void ZNearbyActorSpeakEffect::Start()
@@ -95,7 +94,9 @@ void ZNearbyActorSpeakEffect::FindAndRemoveSpeakersNearby()
             auto s_nIt = std::remove_if(
                 m_aActiveSpeakers.begin(),
                 m_aActiveSpeakers.end(),
-                [&s_rActor](const SActiveSpeakerEntry& p_Entry) { return p_Entry.m_rActor == s_rActor; }
+                [&s_rActor](const SActiveSpeakerEntry& p_Entry) {
+                    return p_Entry.m_rActor == s_rActor;
+                }
             );
             m_aActiveSpeakers.erase(s_nIt, m_aActiveSpeakers.end());
             continue;
@@ -105,7 +106,9 @@ void ZNearbyActorSpeakEffect::FindAndRemoveSpeakersNearby()
         const bool s_bExists = std::any_of(
             m_aActiveSpeakers.begin(),
             m_aActiveSpeakers.end(),
-            [&s_rActor](const SActiveSpeakerEntry& p_Entry) { return p_Entry.m_rActor == s_rActor; }
+            [&s_rActor](const SActiveSpeakerEntry& p_Entry) {
+                return p_Entry.m_rActor == s_rActor;
+            }
         );
         if (s_bExists)
         {
@@ -187,79 +190,56 @@ float32 ZNearbyActorSpeakEffect::GetRepetitionDelay() const
     return max(s_fDelay, 0.0f);
 }
 
-REGISTER_CHAOS_EFFECT_PARAM(
-    curse,
-    ZNearbyActorSpeakEffect,
-    "curse",
-    "Cussocalypse",
-    std::vector<EActorSoundDefs>{
-        EActorSoundDefs::Gen_Curse,    // cursing
-        EActorSoundDefs::Gen_CurseLow, // less intense cursing
-        EActorSoundDefs::Gen_CoinCurse // curse at coin (?)
-    },
-    1.0f, // repetition
-    0.5f  // variance
+REGISTER_CHAOS_EFFECT_PARAM(curse, ZNearbyActorSpeakEffect, "curse", "Cussocalypse",
+                            std::vector<EActorSoundDefs>{
+                                EActorSoundDefs::Gen_Curse,    // cursing
+                                EActorSoundDefs::Gen_CurseLow, // less intense cursing
+                                EActorSoundDefs::Gen_CoinCurse // curse at coin (?)
+                            },
+                            1.0f, // repetition
+                            0.5f  // variance
 );
 
-REGISTER_CHAOS_EFFECT_PARAM(
-    scream,
-    ZNearbyActorSpeakEffect,
-    "scream",
-    "Aaaaaah!",
-    std::vector<EActorSoundDefs>{
-        EActorSoundDefs::Dth_Fll,  // fall scream
-        EActorSoundDefs::Dth_Xplo, // explosion scream
-        EActorSoundDefs::Cmbt_Scrm // combat scream
-    },
-    0.5f,
-    0.2f
-);
+REGISTER_CHAOS_EFFECT_PARAM(scream, ZNearbyActorSpeakEffect, "scream", "Aaaaaah!",
+                            std::vector<EActorSoundDefs>{
+                                EActorSoundDefs::Dth_Fll,  // fall scream
+                                EActorSoundDefs::Dth_Xplo, // explosion scream
+                                EActorSoundDefs::Cmbt_Scrm // combat scream
+                            },
+                            0.5f,
+                            0.2f);
 
-REGISTER_CHAOS_EFFECT_PARAM(
-    cough,
-    ZNearbyActorSpeakEffect,
-    "cough",
-    "Pandemic Mode",
-    std::vector<EActorSoundDefs>{
-        EActorSoundDefs::Exp_Cough, // *cough*
-        EActorSoundDefs::Exp_Cough,
-        EActorSoundDefs::Exp_Cough,
-        EActorSoundDefs::Exp_ClearThroat // (rarely) *clears throat*
-    },
-    2.0f,
-    1.0f
-);
+REGISTER_CHAOS_EFFECT_PARAM(cough, ZNearbyActorSpeakEffect, "cough", "Pandemic Mode",
+                            std::vector<EActorSoundDefs>{
+                                EActorSoundDefs::Exp_Cough, // *cough*
+                                EActorSoundDefs::Exp_Cough,
+                                EActorSoundDefs::Exp_Cough,
+                                EActorSoundDefs::Exp_ClearThroat // (rarely) *clears throat*
+                            },
+                            2.0f,
+                            1.0f);
 
-REGISTER_CHAOS_EFFECT_PARAM(
-    mean,
-    ZNearbyActorSpeakEffect,
-    "mean",
-    "Mean Actors", // TODO better name :D
-    std::vector<EActorSoundDefs>{
-        EActorSoundDefs::Gen_SmellAck, // "Phew, you stink!"
-        EActorSoundDefs::Gen_SmellAck,
-        EActorSoundDefs::Cmbt_HMMssTnt, // combat taunt, "this guy can't hit anything!"
-        EActorSoundDefs::Cmbt_HMMssTnt,
-        EActorSoundDefs::InCa_ClstTnt, // hiding taunt, "are we playing peekaboo?"
-        EActorSoundDefs::InCa_ClstTnt,
-        EActorSoundDefs::InSt_HM2Cls, // too close banter
-        EActorSoundDefs::InSt_HM2Cls,
-        EActorSoundDefs::InSt_HM2Cls,
-        EActorSoundDefs::InDsg_FllwWrn1Nkd, // "Are those my pants?!"
-        EActorSoundDefs::Gen_NkdRunAck      // ;)
-    },
-    8.0f,
-    3.0f
-);
+REGISTER_CHAOS_EFFECT_PARAM(mean, ZNearbyActorSpeakEffect, "mean",
+                            "Mean Actors", // TODO better name :D
+                            std::vector<EActorSoundDefs>{
+                                EActorSoundDefs::Gen_SmellAck, // "Phew, you stink!"
+                                EActorSoundDefs::Gen_SmellAck,
+                                EActorSoundDefs::Cmbt_HMMssTnt, // combat taunt, "this guy can't hit anything!"
+                                EActorSoundDefs::Cmbt_HMMssTnt,
+                                EActorSoundDefs::InCa_ClstTnt, // hiding taunt, "are we playing peekaboo?"
+                                EActorSoundDefs::InCa_ClstTnt,
+                                EActorSoundDefs::InSt_HM2Cls, // too close banter
+                                EActorSoundDefs::InSt_HM2Cls,
+                                EActorSoundDefs::InSt_HM2Cls,
+                                EActorSoundDefs::InDsg_FllwWrn1Nkd, // "Are those my pants?!"
+                                EActorSoundDefs::Gen_NkdRunAck      // ;)
+                            },
+                            8.0f,
+                            3.0f);
 
-REGISTER_CHAOS_EFFECT_PARAM(
-    bees,
-    ZNearbyActorSpeakEffect,
-    "bees",
-    "Bees!",
-    std::vector<EActorSoundDefs>{
-        EActorSoundDefs::Dth_BeeSting // "i was stung by a bee!"
-    },
-    -1.0f, // no repetition
-    2.0f
-);
+REGISTER_CHAOS_EFFECT_PARAM(bees, ZNearbyActorSpeakEffect, "bees", "Bees!",
+                            std::vector<EActorSoundDefs>{
+                                EActorSoundDefs::Dth_BeeSting // "i was stung by a bee!"
+                            },
+                            -1.0f, // no repetition
+                            2.0f);

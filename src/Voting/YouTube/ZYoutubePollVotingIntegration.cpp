@@ -4,8 +4,8 @@
 #include "Client/ZYoutubeBroadcastConnection.h"
 
 #include "EffectRegistry.h"
-#include "Helpers/ImGuiExtras.h"
 #include "Helpers/Math.h"
+#include "Helpers/ImGuiExtras.h"
 #include "Helpers/ZBackgroundWorker.h"
 
 #define TAG "[ZYoutubePollVotingIntegration] "
@@ -24,72 +24,76 @@ void ZYoutubePollVotingIntegration::OnBroadcastConnected()
     }
 
     // store poll updates
-    m_pCurrentBroadcast->SetOnPollUpdateCallback([this](const YT::SLivePollDetails& p_Poll) {
-        std::lock_guard s_Lock(m_PollDetailsMutex);
-        m_CurrentPollDetails = p_Poll;
-    });
+    m_pCurrentBroadcast->SetOnPollUpdateCallback(
+        [this](const YT::SLivePollDetails& p_Poll) {
+            std::lock_guard s_Lock(m_PollDetailsMutex);
+            m_CurrentPollDetails = p_Poll;
+        }
+    );
 }
 
 void ZYoutubePollVotingIntegration::StartVoteImpl()
 {
-    m_pWorker->Enqueue([this]() {
-        m_bVoteActive = false;
+    m_pWorker->Enqueue(
+        [this]() {
+            m_bVoteActive = false;
 
-        if (!m_pCurrentBroadcast || !m_pCurrentBroadcast->IsConnected())
-        {
-            return;
-        }
-
-        // end any existing poll first
-        YT::SLivePollDetails s_ExistingPoll;
-        {
-            std::lock_guard s_Lock(m_PollDetailsMutex);
-            s_ExistingPoll = m_CurrentPollDetails;
-
-            m_CurrentPollDetails = {};
-        }
-
-        if (s_ExistingPoll)
-        {
-            Logger::Debug(TAG "Ending existing YouTube live poll before starting a new one");
-            if (!m_pCurrentBroadcast->EndLivePoll(s_ExistingPoll))
+            if (!m_pCurrentBroadcast || !m_pCurrentBroadcast->IsConnected())
             {
-                Logger::Debug(TAG "Failed to end existing YouTube live poll");
+                return;
             }
-        }
 
-        // start new poll
-        YT::SLivePollDetails s_Poll;
-        s_Poll.m_sQuestionText = "Vote for the next effect!";
-
-        s_Poll.m_aOptions.clear();
-        s_Poll.m_aOptions.reserve(m_aActiveVote.size());
-        for (const auto* s_pEffect : m_aActiveVote)
-        {
-            s_Poll.m_aOptions.push_back({s_pEffect->GetDisplayName(true)});
-
-            if (s_Poll.m_aOptions.size() >= YT::c_nMaxLivePollOptions)
-            {
-                break;
-            }
-        }
-
-        if (m_pCurrentBroadcast->CreateLivePoll(s_Poll))
-        {
-            Logger::Debug(TAG "Started YouTube live poll with {} options", s_Poll.m_aOptions.size());
-
+            // end any existing poll first
+            YT::SLivePollDetails s_ExistingPoll;
             {
                 std::lock_guard s_Lock(m_PollDetailsMutex);
-                m_CurrentPollDetails = s_Poll;
+                s_ExistingPoll = m_CurrentPollDetails;
+
+                m_CurrentPollDetails = {};
             }
 
-            m_bVoteActive = true;
+            if (s_ExistingPoll)
+            {
+                Logger::Debug(TAG "Ending existing YouTube live poll before starting a new one");
+                if (!m_pCurrentBroadcast->EndLivePoll(s_ExistingPoll))
+                {
+                    Logger::Debug(TAG "Failed to end existing YouTube live poll");
+                }
+            }
+
+            // start new poll
+            YT::SLivePollDetails s_Poll;
+            s_Poll.m_sQuestionText = "Vote for the next effect!";
+
+            s_Poll.m_aOptions.clear();
+            s_Poll.m_aOptions.reserve(m_aActiveVote.size());
+            for (const auto* s_pEffect : m_aActiveVote)
+            {
+                s_Poll.m_aOptions.push_back({s_pEffect->GetDisplayName(true)});
+
+                if (s_Poll.m_aOptions.size() >= YT::c_nMaxLivePollOptions)
+                {
+                    break;
+                }
+            }
+
+            if (m_pCurrentBroadcast->CreateLivePoll(s_Poll))
+            {
+                Logger::Debug(TAG "Started YouTube live poll with {} options", s_Poll.m_aOptions.size());
+
+                {
+                    std::lock_guard s_Lock(m_PollDetailsMutex);
+                    m_CurrentPollDetails = s_Poll;
+                }
+
+                m_bVoteActive = true;
+            }
+            else
+            {
+                Logger::Debug(TAG "Failed to start YouTube live poll");
+            }
         }
-        else
-        {
-            Logger::Debug(TAG "Failed to start YouTube live poll");
-        }
-    });
+    );
 }
 
 IChaosEffect* ZYoutubePollVotingIntegration::EndVoteImpl()
@@ -106,17 +110,19 @@ IChaosEffect* ZYoutubePollVotingIntegration::EndVoteImpl()
     m_bVoteActive = false;
 
     // attempt to end the live poll asynchronously
-    m_pWorker->Enqueue([this, s_FinalPollDetails]() {
-        if (!m_pCurrentBroadcast || !m_pCurrentBroadcast->IsConnected())
-        {
-            return;
+    m_pWorker->Enqueue(
+        [this, s_FinalPollDetails]() {
+            if (!m_pCurrentBroadcast || !m_pCurrentBroadcast->IsConnected())
+            {
+                return;
+            }
+
+            auto s_PollToEnd = s_FinalPollDetails;
+
+            m_pCurrentBroadcast->EndLivePoll(s_PollToEnd);
+            Logger::Debug(TAG "Ended YouTube live poll async");
         }
-
-        auto s_PollToEnd = s_FinalPollDetails;
-
-        m_pCurrentBroadcast->EndLivePoll(s_PollToEnd);
-        Logger::Debug(TAG "Ended YouTube live poll async");
-    });
+    );
 
     // no poll?
     if (!s_FinalPollDetails)
@@ -128,11 +134,7 @@ IChaosEffect* ZYoutubePollVotingIntegration::EndVoteImpl()
     // vote options vs effects count mismatch?
     if (m_aActiveVote.size() != s_FinalPollDetails.m_aOptions.size())
     {
-        Logger::Debug(
-            TAG "Vote options count ({}) does not match effects count ({})",
-            s_FinalPollDetails.m_aOptions.size(),
-            m_aActiveVote.size()
-        );
+        Logger::Debug(TAG "Vote options count ({}) does not match effects count ({})", s_FinalPollDetails.m_aOptions.size(), m_aActiveVote.size());
         return nullptr;
     }
 
@@ -145,15 +147,10 @@ IChaosEffect* ZYoutubePollVotingIntegration::EndVoteImpl()
     }
 
     // collect winning vote count, then collect all tied options
-    const auto s_nWinningVoteCountIt = std::max_element(
-        s_FinalPollDetails.m_aOptions.begin(),
-        s_FinalPollDetails.m_aOptions.end(),
-        [](const YT::SLivePollOption& s_Lhs, const YT::SLivePollOption& s_Rhs) {
-            return s_Lhs.m_nVoteCount < s_Rhs.m_nVoteCount;
-        }
-    );
-    const auto s_nWinningVoteCount =
-        s_nWinningVoteCountIt != s_FinalPollDetails.m_aOptions.end() ? s_nWinningVoteCountIt->m_nVoteCount : -1;
+    const auto s_nWinningVoteCountIt = std::max_element(s_FinalPollDetails.m_aOptions.begin(), s_FinalPollDetails.m_aOptions.end(), [](const YT::SLivePollOption& s_Lhs, const YT::SLivePollOption& s_Rhs) {
+        return s_Lhs.m_nVoteCount < s_Rhs.m_nVoteCount;
+    });
+    const auto s_nWinningVoteCount = s_nWinningVoteCountIt != s_FinalPollDetails.m_aOptions.end() ? s_nWinningVoteCountIt->m_nVoteCount : -1;
     if (s_nWinningVoteCount <= 0)
     {
         return nullptr;
@@ -225,9 +222,15 @@ void ZYoutubePollVotingIntegration::DrawOverlayUI()
         {
             const int s_nVoteCount = s_Option.m_nVoteCount;
 
-            const float s_fPercentage = (s_nTotalVotes > 0) ? (static_cast<float>(s_nVoteCount) / s_nTotalVotes) : 0.0f;
+            const float s_fPercentage = (s_nTotalVotes > 0)
+                                            ? (static_cast<float>(s_nVoteCount) / s_nTotalVotes)
+                                            : 0.0f;
 
-            const auto s_sText = fmt::format("{} ({} votes)", s_Option.m_sOptionText, s_nVoteCount);
+            const auto s_sText = fmt::format(
+                "{} ({} votes)",
+                s_Option.m_sOptionText,
+                s_nVoteCount
+            );
             ImGuiEx::ProgressBarTextFit(s_fPercentage, s_sText.c_str());
         }
     }

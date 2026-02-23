@@ -1,13 +1,13 @@
 #pragma once
-#include <Glacier/THashMap.h>
-#include <Glacier/ZObject.h>
 #include <Glacier/ZPrimitives.h>
 #include <Glacier/ZResource.h>
+#include <Glacier/ZObject.h>
+#include <Glacier/THashMap.h>
 
 #include <map>
+#include <string>
 #include <optional>
 #include <ranges>
-#include <string>
 
 #include "ZRepositoryEntryAccessor.h"
 #include "ZRepositoryEntryPatcher.h"

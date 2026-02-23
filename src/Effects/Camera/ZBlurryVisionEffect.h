@@ -4,7 +4,9 @@
 class ZBlurryVisionEffect : public ZRenderPostfilterEffectBase
 {
   public:
-    ZBlurryVisionEffect() {}
+    ZBlurryVisionEffect()
+    {
+    }
 
     void Start() override;
     void Stop() override;

@@ -38,11 +38,14 @@
 // for intellisense pass.
 #ifdef __INTELLISENSE__
 
-#define PROPERTY(TYPE, NAME) std::optional<TYPE> NAME;
+#define PROPERTY(TYPE, NAME) \
+    std::optional<TYPE> NAME;
 
-#define PROPERTY_RO(TYPE, NAME) const std::optional<TYPE> NAME;
+#define PROPERTY_RO(TYPE, NAME) \
+    const std::optional<TYPE> NAME;
 
-#define MEMBER_BINDING(BINDING_TYPE, BINDING_NAME, BOUND_MEMBER) BINDING_TYPE BINDING_NAME;
+#define MEMBER_BINDING(BINDING_TYPE, BINDING_NAME, BOUND_MEMBER) \
+    BINDING_TYPE BINDING_NAME;
 
 #else // !__INTELLISENSE__
 

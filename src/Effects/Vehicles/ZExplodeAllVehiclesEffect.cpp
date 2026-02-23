@@ -8,8 +8,7 @@ void ZExplodeAllVehiclesEffect::OnEnterScene()
     ZSingleTimeEffectBase::OnEnterScene();
 
     m_aFuelTanks = Utils::ZEntityFinder()
-                       .BlueprintResource<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/"
-                                          "vehicle_fueltank_a.entitytemplate].pc_entityblueprint">()
+                       .BlueprintResource<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_fueltank_a.entitytemplate].pc_entityblueprint">()
                        .Find();
 }
 

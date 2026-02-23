@@ -1,6 +1,6 @@
 #pragma once
-#include "Effects/Base/Companion/ZExplosionEffectBase.h"
 #include "Effects/Base/ZActorWellbeingChangeEffectBase.h"
+#include "Effects/Base/Companion/ZExplosionEffectBase.h"
 
 class ZExplosiveKnockoutEffect : public ZActorWellbeingChangeEffectBase, public ZExplosionEffectBase
 {
@@ -11,11 +11,7 @@ class ZExplosiveKnockoutEffect : public ZActorWellbeingChangeEffectBase, public 
     }
 
   protected:
-    void OnActorWellbeingChanged(
-        ZActor* p_pActor,
-        const SActorState& p_OldState,
-        const SActorState& p_NewState
-    ) override;
+    void OnActorWellbeingChanged(ZActor* p_pActor, const SActorState& p_OldState, const SActorState& p_NewState) override;
 
   private:
     void SpawnExplosionAtActor(ZActor* p_pActor, const float32 p_fStrength);

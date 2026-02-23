@@ -12,7 +12,10 @@
 class ZDoorsEffectBase : public virtual IChaosEffect
 {
   public:
-    ZDoorsEffectBase(size_t p_nMinDoors = 50) : m_nMinDoors(p_nMinDoors) {}
+    ZDoorsEffectBase(size_t p_nMinDoors = 50)
+        : m_nMinDoors(p_nMinDoors)
+    {
+    }
 
     void OnEnterScene() override;
     void OnClearScene() override;

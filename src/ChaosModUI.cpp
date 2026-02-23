@@ -6,8 +6,8 @@
 #include <imgui.h>
 
 #include "EffectRegistry.h"
-#include "Helpers/CompanionMod.h"
 #include "Helpers/ImGuiExtras.h"
+#include "Helpers/CompanionMod.h"
 
 #include "BuildInfo.h"
 
@@ -77,7 +77,9 @@ void ChaosMod::OnDrawMenu()
 
 void ChaosMod::OnDrawUI(const bool p_HasFocus)
 {
-    ForeachEffect(false, [p_HasFocus](IChaosEffect* p_pEffect) { p_pEffect->OnDrawUI(p_HasFocus); });
+    ForeachEffect(false, [p_HasFocus](IChaosEffect* p_pEffect) {
+        p_pEffect->OnDrawUI(p_HasFocus);
+    });
 
     DrawMainUI(p_HasFocus);
     DrawOverlayUI(p_HasFocus);
@@ -104,10 +106,7 @@ void ChaosMod::DrawMainUI(const bool p_bHasFocus)
         const auto& s_CompanionMeta = CompanionModUtil::LoadCompanionModInfo(false);
         if (!s_CompanionMeta.m_bPresent)
         {
-            ImGui::TextColored(
-                ImVec4(1.0f, 0.0f, 0.0f, 1.0f),
-                "Companion Mod not detected! Consider installing it to unlock more effects."
-            );
+            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Companion Mod not detected! Consider installing it to unlock more effects.");
         }
 
         ImGui::SeparatorText("Settings");
@@ -117,10 +116,7 @@ void ChaosMod::DrawMainUI(const bool p_bHasFocus)
         DrawUnlockersContents();
 
         ImGui::SeparatorText("About");
-        ImGui::TextWrapped(
-            fmt::format("ZHMChaosMod Version {}, developed by {}.", BuildInfo::GetDisplayVersion(), m_sAuthorNames)
-                .c_str()
-        );
+        ImGui::TextWrapped(fmt::format("ZHMChaosMod Version {}, developed by {}.", BuildInfo::GetDisplayVersion(), m_sAuthorNames).c_str());
     }
 
     ImGui::PopFont();
@@ -137,11 +133,21 @@ void ChaosMod::DrawConfigurationContents()
 
     ImGui::TextUnformatted("Chaos Interval");
     ImGui::SameLine();
-    ImGuiEx::DragFloat("##Chaos Interval", &m_EffectTimer.m_fIntervalSeconds, 5.0f, 120.0f);
+    ImGuiEx::DragFloat(
+        "##Chaos Interval",
+        &m_EffectTimer.m_fIntervalSeconds,
+        5.0f,
+        120.0f
+    );
 
     ImGui::TextUnformatted("Effect Duration");
     ImGui::SameLine();
-    ImGuiEx::DragFloat("##Effect Duration", &m_fFullEffectDuration, 5.0, 120.0);
+    ImGuiEx::DragFloat(
+        "##Effect Duration",
+        &m_fFullEffectDuration,
+        5.0,
+        120.0
+    );
 
     ImGui::SeparatorText("Voting");
 
@@ -153,7 +159,10 @@ void ChaosMod::DrawConfigurationContents()
     {
         for (auto& s_pOption : EffectRegistry::GetInstance().GetVotingIntegrations())
         {
-            if (ImGui::Selectable(s_pOption->GetDisplayName().c_str(), s_pVoting == s_pOption.get()))
+            if (ImGui::Selectable(
+                    s_pOption->GetDisplayName().c_str(),
+                    s_pVoting == s_pOption.get()
+                ))
             {
                 if (s_pVoting)
                 {
@@ -212,8 +221,10 @@ void ChaosMod::DrawOverlayUI(const bool p_bHasFocus)
     }
 
     // configure overlay window to auto-size and have transparent background
-    ImGuiWindowFlags s_OverlayFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize
-                                      | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
+    ImGuiWindowFlags s_OverlayFlags =
+        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize
+        | ImGuiWindowFlags_NoCollapse
+        | ImGuiWindowFlags_NoTitleBar;
     if (!p_bHasFocus)
     {
         s_OverlayFlags |= ImGuiWindowFlags_NoBackground;
@@ -301,53 +312,22 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
             }
         }
 
-        ImGui::TextUnformatted(
-            fmt::format(
-                "ZHMChaosMod version {} ({}) (targeting ZHMModSDK {}, running on {}); {} effects loaded, {} effects "
-                "available",
-                BuildInfo::GetDisplayVersion(),
-                BuildInfo::GetInternalVersion(),
-                BuildInfo::c_sTargetSDKVersion,
-                SDKVersion(),
-                s_aEffects.size(),
-                s_nAvailableEffects
-            )
-                .c_str()
-        );
+        ImGui::TextUnformatted(fmt::format("ZHMChaosMod version {} ({}) (targeting ZHMModSDK {}, running on {}); {} effects loaded, {} effects available", BuildInfo::GetDisplayVersion(), BuildInfo::GetInternalVersion(), BuildInfo::c_sTargetSDKVersion, SDKVersion(), s_aEffects.size(), s_nAvailableEffects).c_str());
 
         const auto& s_CompanionMeta = CompanionModUtil::LoadCompanionModInfo(false);
         if (s_CompanionMeta.m_bPresent)
         {
-            ImGui::TextUnformatted(
-                fmt::format(
-                    "Companion Mod version {} ({}.{}.{}) detected!",
-                    s_CompanionMeta.m_sVersion,
-                    s_CompanionMeta.m_Version.m_nMajor,
-                    s_CompanionMeta.m_Version.m_nMinor,
-                    s_CompanionMeta.m_Version.m_nPatch
-                )
-                    .c_str()
-            );
+            ImGui::TextUnformatted(fmt::format("Companion Mod version {} ({}.{}.{}) detected!", s_CompanionMeta.m_sVersion, s_CompanionMeta.m_Version.m_nMajor, s_CompanionMeta.m_Version.m_nMinor, s_CompanionMeta.m_Version.m_nPatch).c_str());
         }
         else
         {
             ImGui::TextUnformatted("Companion Mod not detected");
         }
 
-        ImGui::TextUnformatted(
-            fmt::format(
-                "Enable States: MOD={}, USER={}, TIMER={}",
-                m_bModEnabled ? "True" : "False",
-                m_bUserEnabled ? "True" : "False",
-                m_EffectTimer.m_bEnable ? "True" : "False"
-            )
-                .c_str()
-        );
+        ImGui::TextUnformatted(fmt::format("Enable States: MOD={}, USER={}, TIMER={}", m_bModEnabled ? "True" : "False", m_bUserEnabled ? "True" : "False", m_EffectTimer.m_bEnable ? "True" : "False").c_str());
 
         auto* s_pVoting = GetCurrentVotingIntegration();
-        ImGui::TextUnformatted(
-            fmt::format("Using Voting Integration: {}", s_pVoting ? s_pVoting->GetName() : "<null>").c_str()
-        );
+        ImGui::TextUnformatted(fmt::format("Using Voting Integration: {}", s_pVoting ? s_pVoting->GetName() : "<null>").c_str());
 
         ImGui::Checkbox("Menu Always Visible", &m_bDebugMenuAlwaysVisible);
 
@@ -360,15 +340,7 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 
         if (m_bTestmodeEnabled)
         {
-            ImGui::TextUnformatted(
-                fmt::format(
-                    "Next Effect in {:.1f} seconds. Last effect: '{}' (#{})",
-                    m_fTestmodeTimeToNextEffect,
-                    m_pEffectForDebug ? m_pEffectForDebug->GetName() : "<none>",
-                    m_nTestmodeEffectIndex
-                )
-                    .c_str()
-            );
+            ImGui::TextUnformatted(fmt::format("Next Effect in {:.1f} seconds. Last effect: '{}' (#{})", m_fTestmodeTimeToNextEffect, m_pEffectForDebug ? m_pEffectForDebug->GetName() : "<none>", m_nTestmodeEffectIndex).c_str());
         }
 
 #endif // _DEBUG
@@ -389,7 +361,10 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
                     ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.75f, 0.0f, 0.0f, 1.0f));
                 }
 
-                if (ImGui::Selectable(s_sEffectName.c_str(), m_pEffectForDebug == s_Effect.get()))
+                if (ImGui::Selectable(
+                        s_sEffectName.c_str(),
+                        m_pEffectForDebug == s_Effect.get()
+                    ))
                 {
                     m_pEffectForDebug = s_Effect.get();
                     Logger::Debug(TAG "Selected '{}' for debug", s_Effect->GetName());
@@ -439,18 +414,9 @@ void ChaosMod::DrawEffectDebugPane()
     }
 
     ImGui::TextUnformatted(fmt::format("Name:         {}", m_pEffectForDebug->GetName()).c_str());
-    ImGui::TextUnformatted(
-        fmt::format(
-            "Display Name: {} / {}",
-            m_pEffectForDebug->GetDisplayName(false),
-            m_pEffectForDebug->GetDisplayName(true)
-        )
-            .c_str()
-    );
+    ImGui::TextUnformatted(fmt::format("Display Name: {} / {}", m_pEffectForDebug->GetDisplayName(false), m_pEffectForDebug->GetDisplayName(true)).c_str());
     ImGui::TextUnformatted(fmt::format("Attribution:  {}", s_sAttribution).c_str());
-    ImGui::TextUnformatted(
-        fmt::format("Duration:     {}", EffectDurationToString(m_pEffectForDebug->GetDuration())).c_str()
-    );
+    ImGui::TextUnformatted(fmt::format("Duration:     {}", EffectDurationToString(m_pEffectForDebug->GetDuration())).c_str());
     ImGui::TextUnformatted(fmt::format("Available:    {}", m_pEffectForDebug->Available() ? "Yes" : "No").c_str());
 
     ImGui::BeginDisabled(!m_pEffectForDebug->Available());
@@ -478,11 +444,18 @@ void ChaosMod::DrawEffectDebugPane()
         m_fDebugEffectRemainingTime = 0.5f;
     }
     ImGui::SameLine();
-    ImGuiEx::DragFloat("##Debug Effect Remaining", &m_fDebugEffectRemainingTime, 0.0f, 60.0f);
+    ImGuiEx::DragFloat(
+        "##Debug Effect Remaining",
+        &m_fDebugEffectRemainingTime,
+        0.0f,
+        60.0f
+    );
 
     if (ImGui::Button("Trigger Effect Activation"))
     {
-        m_qDeferredFrameUpdateActions.push([this]() { ActivateEffect(m_pEffectForDebug); });
+        m_qDeferredFrameUpdateActions.push([this]() {
+            ActivateEffect(m_pEffectForDebug);
+        });
     }
 
     if (ImGui::Button("Print Compatibility"))

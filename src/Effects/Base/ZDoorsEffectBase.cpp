@@ -8,10 +8,12 @@ void ZDoorsEffectBase::OnEnterScene()
 {
     m_aDoors.clear();
 
-    const auto& s_aSingleDoors =
-        Utils::ZEntityFinder().BlueprintResource<"[modules:/zhm5singledoor2.class].pc_entityblueprint">().Find();
-    const auto& s_aDoubleDoors =
-        Utils::ZEntityFinder().BlueprintResource<"[modules:/zhm5doubledoor2.class].pc_entityblueprint">().Find();
+    const auto& s_aSingleDoors = Utils::ZEntityFinder()
+                                     .BlueprintResource<"[modules:/zhm5singledoor2.class].pc_entityblueprint">()
+                                     .Find();
+    const auto& s_aDoubleDoors = Utils::ZEntityFinder()
+                                     .BlueprintResource<"[modules:/zhm5doubledoor2.class].pc_entityblueprint">()
+                                     .Find();
 
     for (const auto& s_rDoor : s_aSingleDoors)
     {
@@ -41,7 +43,8 @@ void ZDoorsEffectBase::OnClearScene()
 
 bool ZDoorsEffectBase::Available() const
 {
-    return IChaosEffect::Available() && m_aDoors.size() >= m_nMinDoors;
+    return IChaosEffect::Available()
+           && m_aDoors.size() >= m_nMinDoors;
 }
 
 void ZDoorsEffectBase::OnDrawDebugUI()

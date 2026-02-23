@@ -9,8 +9,7 @@
 
 void ZTitaniumBulletsEffect::Start()
 {
-    for (const ZRepositoryID& s_RepoId :
-         ZHMRepositoryHelper::GetInstance().GetEntryIdsByType(ZHMRepositoryHelper::EEntryType::MagazineConfig))
+    for (const ZRepositoryID& s_RepoId : ZHMRepositoryHelper::GetInstance().GetEntryIdsByType(ZHMRepositoryHelper::EEntryType::MagazineConfig))
     {
         auto s_pPatcher = Patch(s_RepoId);
         if (!s_pPatcher)
@@ -21,10 +20,7 @@ void ZTitaniumBulletsEffect::Start()
         Logger::Debug(TAG "Patching MagazineConfig entry {}", s_RepoId.ToString().c_str());
 
         const auto s_sOriginalAmmoConfigOpt = s_pPatcher->Get<ZString>("AmmoConfig");
-        Logger::Debug(
-            TAG " - Original AmmoConfig: {}",
-            s_sOriginalAmmoConfigOpt.has_value() ? s_sOriginalAmmoConfigOpt.value()->c_str() : "<null>"
-        );
+        Logger::Debug(TAG " - Original AmmoConfig: {}", s_sOriginalAmmoConfigOpt.has_value() ? s_sOriginalAmmoConfigOpt.value()->c_str() : "<null>");
 
         if (!s_pPatcher->Set<ZString>("AmmoConfig", "87ae0524-2f22-4fe0-82e1-84a050b43cf0"))
         {
@@ -33,10 +29,7 @@ void ZTitaniumBulletsEffect::Start()
         }
 
         const auto s_sNewAmmoConfigOpt = s_pPatcher->Get<ZString>("AmmoConfig");
-        Logger::Debug(
-            TAG " - New AmmoConfig: {}",
-            s_sNewAmmoConfigOpt.has_value() ? s_sNewAmmoConfigOpt.value()->c_str() : "<null>"
-        );
+        Logger::Debug(TAG " - New AmmoConfig: {}", s_sNewAmmoConfigOpt.has_value() ? s_sNewAmmoConfigOpt.value()->c_str() : "<null>");
     }
 }
 

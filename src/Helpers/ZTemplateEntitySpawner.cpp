@@ -1,11 +1,11 @@
 #include "ZTemplateEntitySpawner.h"
 
-#include <Glacier/SExternalReferences.h>
 #include <Glacier/ZModule.h>
 #include <Glacier/ZScene.h>
+#include <Glacier/SExternalReferences.h>
 
-#include <Functions.h>
 #include <Globals.h>
+#include <Functions.h>
 #include <Logging.h>
 
 #define TAG "[ZTemplateEntitySpawner] "
@@ -40,8 +40,15 @@ ZEntityRef ZTemplateEntitySpawner::Spawn()
 
     ZEntityRef s_EntityRef;
     SExternalReferences s_ExternalRefs;
-    Functions::ZEntityManager_NewEntity
-        ->Call(Globals::EntityManager, s_EntityRef, "", s_ResourcePtr, s_Scene.m_entityRef, s_ExternalRefs, -1);
+    Functions::ZEntityManager_NewEntity->Call(
+        Globals::EntityManager,
+        s_EntityRef,
+        "",
+        s_ResourcePtr,
+        s_Scene.m_entityRef,
+        s_ExternalRefs,
+        -1
+    );
 
     if (!s_EntityRef)
     {
@@ -66,7 +73,9 @@ void ZTemplateEntitySpawner::Despawn(ZEntityRef p_rEntity)
         std::remove_if(
             m_aSpawnedEntities.begin(),
             m_aSpawnedEntities.end(),
-            [&](const ZEntityRef& p_Ref) { return p_Ref == p_rEntity; }
+            [&](const ZEntityRef& p_Ref) {
+                return p_Ref == p_rEntity;
+            }
         ),
         m_aSpawnedEntities.end()
     );

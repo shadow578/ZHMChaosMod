@@ -21,8 +21,7 @@ std::vector<TEntityRef<ZActor>> Utils::GetActors(const bool p_bIncludeDead, cons
             continue;
         }
 
-        if ((!p_bIncludeDead && s_rActor.m_pInterfaceRef->IsDead())
-            || (!p_bIncludePacified && s_rActor.m_pInterfaceRef->IsPacified()))
+        if ((!p_bIncludeDead && s_rActor.m_pInterfaceRef->IsDead()) || (!p_bIncludePacified && s_rActor.m_pInterfaceRef->IsPacified()))
         {
             continue;
         }
@@ -99,9 +98,13 @@ std::vector<std::pair<TEntityRef<ZActor>, float32>> Utils::GetNearbyActors(
     }
 
     // for n > 1, sort by distance and return the closest n
-    std::sort(s_aNearbyActors.begin(), s_aNearbyActors.end(), [](const auto& a, const auto& b) {
-        return a.second < b.second;
-    });
+    std::sort(
+        s_aNearbyActors.begin(),
+        s_aNearbyActors.end(),
+        [](const auto& a, const auto& b) {
+            return a.second < b.second;
+        }
+    );
 
     if (s_aNearbyActors.size() > p_nMaxCount)
     {

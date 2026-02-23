@@ -32,7 +32,10 @@ void ZVelocityTracker::Update(const SGameUpdateEvent& p_UpdateEvent, const float
     const auto s_fDistance = float4::Distance(p_Position, m_LastPosition);
     m_LastPosition = p_Position;
 
-    const STimeDistancePair s_NewPair{s_fDistance, p_UpdateEvent.m_GameTimeDelta.ToSeconds()};
+    const STimeDistancePair s_NewPair{
+        s_fDistance,
+        p_UpdateEvent.m_GameTimeDelta.ToSeconds()
+    };
     m_qSamples.push(s_NewPair);
 
     m_Sum.m_fDistance += s_NewPair.m_fDistance;

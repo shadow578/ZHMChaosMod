@@ -2,8 +2,8 @@
 
 #include "IPluginInterface.h"
 
-#include <set>
 #include <string>
+#include <set>
 
 /**
  * Interface for all chaos effects.

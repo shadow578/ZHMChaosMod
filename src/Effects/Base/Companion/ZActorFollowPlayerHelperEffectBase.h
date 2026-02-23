@@ -5,8 +5,7 @@
 
 /**
  * Base class for effects that use the NPCActor custom player follow helper from Companion Mod.
- * Use GetFollowHelperFor to get the follow player helper binding for a specific actor, and use the input pins on the
- * binding to control the actor.
+ * Use GetFollowHelperFor to get the follow player helper binding for a specific actor, and use the input pins on the binding to control the actor.
  */
 class ZActorFollowPlayerHelperEffectBase : public virtual ZCompanionModDependentEffectBase
 {

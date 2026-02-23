@@ -6,7 +6,9 @@
 class ZOverheadCameraEffect : public ZCameraEffectBase, public ZInterpolatingEffectBase
 {
   public:
-    ZOverheadCameraEffect() : ZInterpolatingEffectBase(1.0f) {}
+    ZOverheadCameraEffect() : ZInterpolatingEffectBase(1.0f)
+    {
+    }
 
     void Start() override;
     void Stop() override;

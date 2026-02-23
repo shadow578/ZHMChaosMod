@@ -28,7 +28,9 @@ void ZMinimapNoActorsEffect::Stop()
 
 void ZMinimapNoActorsEffect::SetMinimapType(const EMapType p_eMapType)
 {
-    auto s_rMinimapRoot = Utils::ZEntityFinder().EntityID(c_nMinimapRootId).FindFirst();
+    auto s_rMinimapRoot = Utils::ZEntityFinder()
+                              .EntityID(c_nMinimapRootId)
+                              .FindFirst();
 
     if (!s_rMinimapRoot || !Utils::SetProperty<EMapType>(s_rMinimapRoot, c_sMinimapTypePropertyName, p_eMapType))
     {

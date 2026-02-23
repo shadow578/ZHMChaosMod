@@ -6,14 +6,11 @@
 class ZLaggyCameraEffect : public ZCameraEffectBase
 {
   public:
-    ZLaggyCameraEffect(
-        const std::string p_sNameSuffix,
-        const std::string p_sDisplayName,
-        const int p_nDelayFrames,
-        const float32 p_fApplyPercent
-    )
-        : ZCameraEffectBase(), m_sNameSuffix(p_sNameSuffix), m_sDisplayName(p_sDisplayName),
-          m_nDelayFrames(p_nDelayFrames), m_fTransformApplyPercent(p_fApplyPercent)
+    ZLaggyCameraEffect(const std::string p_sNameSuffix, const std::string p_sDisplayName, const int p_nDelayFrames, const float32 p_fApplyPercent) : ZCameraEffectBase(),
+                                                                                                                                                     m_sNameSuffix(p_sNameSuffix),
+                                                                                                                                                     m_sDisplayName(p_sDisplayName),
+                                                                                                                                                     m_nDelayFrames(p_nDelayFrames),
+                                                                                                                                                     m_fTransformApplyPercent(p_fApplyPercent)
     {
     }
 

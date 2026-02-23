@@ -8,8 +8,7 @@
 
 #define TAG "[ZAuthoritativeFigureEffect] "
 
-ZAuthoritativeFigureEffect::ZAuthoritativeFigureEffect()
-    : m_bOriginalAuthorityFigure(false), m_bOriginalWeaponsAllowed(false)
+ZAuthoritativeFigureEffect::ZAuthoritativeFigureEffect() : m_bOriginalAuthorityFigure(false), m_bOriginalWeaponsAllowed(false)
 {
     m_aOutfitCommonNames = {
         "CHAR_Reward_Chlorine_Hero_M_Flamingo_Suit_PRO167217", // Flamingo

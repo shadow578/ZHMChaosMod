@@ -51,7 +51,10 @@ namespace YT
 
         operator bool() const
         {
-            return !m_sId.empty() && !m_sLiveChatId.empty() && !m_sAuthorId.empty() && !m_sAuthorName.empty()
+            return !m_sId.empty()
+                   && !m_sLiveChatId.empty()
+                   && !m_sAuthorId.empty()
+                   && !m_sAuthorName.empty()
                    && !m_sMessageText.empty();
         }
 
@@ -82,7 +85,9 @@ namespace YT
 
         operator bool() const
         {
-            return !m_sId.empty() && !m_sLiveChatId.empty() && !m_aOptions.empty();
+            return !m_sId.empty()
+                   && !m_sLiveChatId.empty()
+                   && !m_aOptions.empty();
         }
 
         inline size_t GetTotalVotes() const

@@ -1,29 +1,26 @@
 #include "ZYoutubeIntegrationBase.h"
 
-#include <IconsMaterialDesign.h>
 #include <Logging.h>
+#include <IconsMaterialDesign.h>
 
-#include "Client/ZAuthToken.h"
 #include "Client/ZYoutubeAuthHandler.h"
 #include "Client/ZYoutubeBroadcastConnection.h"
+#include "Client/ZAuthToken.h"
 
-#include "Helpers/Math.h"
 #include "Helpers/Utils.h"
+#include "Helpers/Math.h"
 
 #define TAG "[ZYoutubeIntegrationBase] "
 
 ZYoutubeIntegrationBase::ZYoutubeIntegrationBase(const bool p_bReadOnly)
-    : m_pYoutubeAuth(
-          std::make_unique<ZYoutubeAuthHandler>(
-              "200073485619-fc2jvhk4rsqve7lfv93s888al922phbi.apps.googleusercontent.com",
-              p_bReadOnly
-          )
-      ),
+    : m_pYoutubeAuth(std::make_unique<ZYoutubeAuthHandler>("200073485619-fc2jvhk4rsqve7lfv93s888al922phbi.apps.googleusercontent.com", p_bReadOnly)),
       m_pCurrentBroadcast(nullptr)
 {
-    m_pYoutubeAuth->SetOnAuthTokenReceivedCallback([this](std::shared_ptr<ZAuthToken> p_pToken) {
-        this->ConnectCurrentBroadcast();
-    });
+    m_pYoutubeAuth->SetOnAuthTokenReceivedCallback(
+        [this](std::shared_ptr<ZAuthToken> p_pToken) {
+            this->ConnectCurrentBroadcast();
+        }
+    );
 }
 
 void ZYoutubeIntegrationBase::Deactivate()

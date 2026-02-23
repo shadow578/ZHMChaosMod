@@ -7,8 +7,8 @@
 
 #include "EffectRegistry.h"
 #include "Helpers/EntityUtils.h"
-#include "Helpers/Math.h"
 #include "Helpers/PlayerUtils.h"
+#include "Helpers/Math.h"
 
 #define TAG "[ZReturnToSpawnEffect] "
 
@@ -16,7 +16,9 @@ void ZReturnToSpawnEffect::OnEnterScene()
 {
     m_aSpawnPoints.clear();
 
-    const auto s_aStartingLocations = Utils::ZEntityFinder().EntityType("ZHeroSpawn").Find();
+    const auto s_aStartingLocations = Utils::ZEntityFinder()
+                                          .EntityType("ZHeroSpawn")
+                                          .Find();
     if (s_aStartingLocations.empty())
     {
         return;
@@ -25,8 +27,7 @@ void ZReturnToSpawnEffect::OnEnterScene()
     for (const auto& s_StartingLocation : s_aStartingLocations)
     {
         // attempt to get position property first
-        auto s_rPosition =
-            Utils::GetProperty<TEntityRef<ZSpatialEntity>>(s_StartingLocation, "m_rPosition").value_or({});
+        auto s_rPosition = Utils::GetProperty<TEntityRef<ZSpatialEntity>>(s_StartingLocation, "m_rPosition").value_or({});
         if (!s_rPosition)
         {
             // if that fails, fall back to the spatial entity of the location itself

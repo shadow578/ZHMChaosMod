@@ -1,8 +1,8 @@
 #pragma once
 #include "IChaosEffect.h"
 
-#include <Glacier/SColorRGB.h>
 #include <Glacier/ZEntity.h>
+#include <Glacier/SColorRGB.h>
 
 #include "Helpers/EntityUtils.h"
 
@@ -33,16 +33,16 @@ class ZRGBLightsEffect : public IChaosEffect
         float32 m_fOriginalBrightness;
         SColorRGB m_vOriginalColor;
 
-        SLightEntityInfo(ZEntityRef p_rLightEntity)
-            : m_rLightEntity(p_rLightEntity), m_bOriginalVisible(false), m_fOriginalBrightness(0.0f),
-              m_vOriginalColor({0.0f, 0.0f, 0.0f})
+        SLightEntityInfo(ZEntityRef p_rLightEntity) : m_rLightEntity(p_rLightEntity),
+                                                      m_bOriginalVisible(false),
+                                                      m_fOriginalBrightness(0.0f),
+                                                      m_vOriginalColor({0.0f, 0.0f, 0.0f})
         {
             if (m_rLightEntity)
             {
                 m_bOriginalVisible = Utils::GetProperty<bool>(m_rLightEntity, "m_bVisible").value_or(false);
                 m_fOriginalBrightness = Utils::GetProperty<float32>(m_rLightEntity, "m_fDiffusePower").value_or(0.0f);
-                m_vOriginalColor = Utils::GetProperty<SColorRGB>(m_rLightEntity, "m_diffuseColor")
-                                       .value_or(SColorRGB{1.0f, 1.0f, 1.0f});
+                m_vOriginalColor = Utils::GetProperty<SColorRGB>(m_rLightEntity, "m_diffuseColor").value_or(SColorRGB{1.0f, 1.0f, 1.0f});
             }
         }
 

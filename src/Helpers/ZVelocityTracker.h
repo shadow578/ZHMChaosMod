@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Glacier/SGameUpdateEvent.h>
 #include <Glacier/ZEntity.h>
+#include <Glacier/SGameUpdateEvent.h>
 #include <Glacier/ZMath.h>
 
 #include <queue>

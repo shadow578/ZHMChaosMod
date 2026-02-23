@@ -42,11 +42,7 @@ void ZActorsFireRandomlyEffect::SetAllActorsShootingContinuous(const bool p_bSho
 
                     if (auto s_rActorSpatial = TEntityRef<ZSpatialEntity>(s_rActor.m_entityRef))
                     {
-                        Utils::SetProperty<TEntityRef<ZSpatialEntity>>(
-                            s_rTarget.m_entityRef,
-                            "m_eidParent",
-                            s_rActorSpatial
-                        );
+                        Utils::SetProperty<TEntityRef<ZSpatialEntity>>(s_rTarget.m_entityRef, "m_eidParent", s_rActorSpatial);
 
                         SMatrix43 s_mLocalTransform = SMatrix43();
                         s_mLocalTransform.Trans.y = -5.f; // in front

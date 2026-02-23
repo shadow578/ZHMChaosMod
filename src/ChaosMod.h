@@ -8,10 +8,10 @@
 #include "IChaosEffect.h"
 #include "IVotingIntegration.h"
 
+#include <vector>
+#include <queue>
 #include <functional>
 #include <memory>
-#include <queue>
-#include <vector>
 
 class ChaosMod : public IPluginInterface
 {

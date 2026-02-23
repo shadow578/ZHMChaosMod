@@ -470,7 +470,10 @@ void ZSpeakEntityEffectBase::OnDrawDebugUI()
     {
         for (auto [s_eDef, s_sName] : g_mSoundDefs)
         {
-            if (ImGui::Selectable(s_sName.c_str(), s_eDef == m_eDebugSoundDef))
+            if (ImGui::Selectable(
+                    s_sName.c_str(),
+                    s_eDef == m_eDebugSoundDef
+                ))
             {
                 m_eDebugSoundDef = s_eDef;
                 DebugSpeakAtNearestActor();
@@ -484,7 +487,10 @@ void ZSpeakEntityEffectBase::OnDrawDebugUI()
     {
         for (auto [s_eCat, s_sName] : g_mGestureCategories)
         {
-            if (ImGui::Selectable(s_sName.c_str(), s_eCat == m_eDebugGestureCategory))
+            if (ImGui::Selectable(
+                    s_sName.c_str(),
+                    s_eCat == m_eDebugGestureCategory
+                ))
             {
                 m_eDebugGestureCategory = s_eCat;
                 DebugSpeakAtNearestActor();
