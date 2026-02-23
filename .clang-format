@@ -25,3 +25,7 @@ AlignAfterOpenBracket: BlockIndent
 
 # Allow empty functions on a single line
 AllowShortFunctionsOnASingleLine: Empty
+
+BreakBeforeBinaryOperators: NonAssignment
+
+ColumnLimit: 0
