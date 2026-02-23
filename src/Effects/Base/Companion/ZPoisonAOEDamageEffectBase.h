@@ -4,8 +4,8 @@
 
 #include <Glacier/SColorRGB.h>
 
-#include "Helpers/ZTemplateEntitySpawner.h"
 #include "Effects/Base/Companion/ZCompanionModDependentEffectBase.h"
+#include "Helpers/ZTemplateEntitySpawner.h"
 
 /**
  * Reusable base for spawning Poison Area-of-Effect Damage Clouds.
@@ -14,12 +14,12 @@
  */
 class ZPoisonAOEDamageEffectBase : public virtual IChaosEffect, public virtual ZCompanionModDependentEffectBase
 {
-public:
+  public:
     void LoadResources() override;
     void OnClearScene() override;
     void OnDrawDebugUI() override;
 
-	bool Available() const override;
+    bool Available() const override;
 
     // Note: poison type values must match those of the Keyword_ITEM_POISON_* entities
     // in the g_AOECloudProp template.
@@ -32,7 +32,7 @@ public:
         LETHAL_FAST = 0xe004
     };
 
-protected:
+  protected:
     struct SParams
     {
         /**
@@ -53,13 +53,13 @@ protected:
         /**
          * Colors of the Particle effect.
          */
-        SColorRGB m_ParticleColorRangeStart{ .r = 255, .g = 0, .b = 0 };
-        SColorRGB m_ParticleColorRangeEnd{ .r = 255, .g = 0, .b = 0 };
+        SColorRGB m_ParticleColorRangeStart{.r = 255, .g = 0, .b = 0};
+        SColorRGB m_ParticleColorRangeEnd{.r = 255, .g = 0, .b = 0};
     };
 
     ZEntityRef Spawn(const SParams& p_Params);
 
-private:
+  private:
     bool GetPoisonKeywordEntity(const EPoisonType p_eType, ZEntityRef p_RootEntity, ZEntityRef& p_KeywordEntity);
 
     std::unique_ptr<ZTemplateEntitySpawner> m_pEffectCloudSpawner;

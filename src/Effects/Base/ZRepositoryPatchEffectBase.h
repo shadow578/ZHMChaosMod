@@ -3,8 +3,8 @@
 
 #include "Helpers/Repository/ZRepositoryEntryPatcher.h"
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 /**
  * Base class that allows patching the game repository.
@@ -12,16 +12,16 @@
  */
 class ZRepositoryPatchEffectBase : public virtual IChaosEffect
 {
-public:
-	void LoadResources() override;
-	void OnClearScene() override;
+  public:
+    void LoadResources() override;
+    void OnClearScene() override;
 
-	void Stop() override;
+    void Stop() override;
 
-protected:
-	std::shared_ptr<ZRepositoryEntryPatcher> Patch(const std::string& p_sId);
-	std::shared_ptr<ZRepositoryEntryPatcher> Patch(const ZRepositoryID& p_RepoId);
+  protected:
+    std::shared_ptr<ZRepositoryEntryPatcher> Patch(const std::string& p_sId);
+    std::shared_ptr<ZRepositoryEntryPatcher> Patch(const ZRepositoryID& p_RepoId);
 
-private:
-	std::vector<std::shared_ptr<ZRepositoryEntryPatcher>> m_aPatches;
+  private:
+    std::vector<std::shared_ptr<ZRepositoryEntryPatcher>> m_aPatches;
 };

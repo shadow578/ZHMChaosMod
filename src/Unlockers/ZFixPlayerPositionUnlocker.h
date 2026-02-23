@@ -3,7 +3,7 @@
 
 class ZFixPlayerPositionUnlocker : public IUnlocker
 {
-public:
+  public:
     void Start() override;
 
     std::string GetDisplayName() const override

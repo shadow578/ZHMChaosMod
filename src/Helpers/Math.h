@@ -1,10 +1,10 @@
 #pragma once
-#include "Glacier/ZMath.h"
 #include "Glacier/SColorRGB.h"
+#include "Glacier/ZMath.h"
 
-#include <vector>
 #include <random>
 #include <type_traits>
+#include <vector>
 
 namespace Math
 {
@@ -14,17 +14,16 @@ namespace Math
      * @param p_Min Minimum value, inclusive.
      * @param p_Max Maximum value, inclusive.
      */
-    template <typename T>
-    static T GetRandomNumber(const T p_Min, const T p_Max)
+    template <typename T> static T GetRandomNumber(const T p_Min, const T p_Max)
     {
         static_assert(std::is_arithmetic<T>::value, "GetRandomNumber only supports arithmetic types.");
 
-        static thread_local std::mt19937 s_Generator{ std::random_device{}() };
+        static thread_local std::mt19937 s_Generator{std::random_device{}()};
 
         if constexpr (std::is_integral<T>::value)
         {
             std::uniform_int_distribution<T> s_Distribution(p_Min, p_Max);
-			return s_Distribution(s_Generator);
+            return s_Distribution(s_Generator);
         }
         else
         {
@@ -38,8 +37,7 @@ namespace Math
      * @template T Element type.
      * @param p_aElements List to select from.
      */
-    template <typename T>
-    static T SelectRandomElement(const std::vector<T>& p_aElements)
+    template <typename T> static T SelectRandomElement(const std::vector<T>& p_aElements)
     {
         if (p_aElements.empty())
         {
@@ -51,14 +49,14 @@ namespace Math
     }
 
     /**
-	 * Get a random boolean with a given chance of being true.
-	 * @param p_fTrueChance Chance of returning true, between 0.0 and 1.0.
+     * Get a random boolean with a given chance of being true.
+     * @param p_fTrueChance Chance of returning true, between 0.0 and 1.0.
      */
     static inline bool GetRandomBool(const float32 p_fTrueChance)
     {
         const auto s_RandomValue = GetRandomNumber<float32>(0.0f, 1.0f);
         return s_RandomValue <= p_fTrueChance;
-	}
+    }
 
     /**
      * Linear interpolate between A and B as per T.
@@ -67,8 +65,7 @@ namespace Math
      * @param p_B Interpolation end value.
      * @param p_fT Interpolation point, 0.0 - 1.0. Clamped.
      */
-    template <typename T>
-    static T Interpolate(const T& p_A, const T& p_B, const float32 p_fT)
+    template <typename T> static T Interpolate(const T& p_A, const T& p_B, const float32 p_fT)
     {
         if (p_fT <= 0.0f)
         {
@@ -107,4 +104,4 @@ namespace Math
             .b = (std::sin(s_fT + (2.0f * c_fTwoPi / 3.0f)) + 1.0f) * 0.5f
         };
     }
-};
+}; // namespace Math

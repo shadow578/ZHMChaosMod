@@ -3,7 +3,7 @@
 
 class ZDisableInputsEffect : public IChaosEffect
 {
-public:
+  public:
     void OnModInitialized() override;
     void OnModUnload() override;
     bool Available() const override;
@@ -22,7 +22,7 @@ public:
         return EDuration::Short; // boring if too long
     }
 
-private:
+  private:
     bool m_bEnable = false;
 
     DECLARE_PLUGIN_DETOUR(ZDisableInputsEffect, bool, OnInputActionDigital, ZInputAction* th, int a2);

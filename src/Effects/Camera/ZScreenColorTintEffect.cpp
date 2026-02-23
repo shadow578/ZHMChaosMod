@@ -4,30 +4,36 @@
 
 void ZScreenColorTintEffect::Start()
 {
-	auto& s_Params = GetParameters();
-	s_Params.m_bHDREnabled = true;
-	s_Params.m_HDRColorTint= m_vColor;
+    auto& s_Params = GetParameters();
+    s_Params.m_bHDREnabled = true;
+    s_Params.m_HDRColorTint = m_vColor;
 
-	BlendIn();
+    BlendIn();
 }
 
 void ZScreenColorTintEffect::Stop()
 {
-	BlendOut();
+    BlendOut();
 
-	auto& s_Params = GetParameters();
-	s_Params.m_bHDREnabled = false;
+    auto& s_Params = GetParameters();
+    s_Params.m_bHDREnabled = false;
 }
 
 void ZScreenColorTintEffect::OnDrawDebugUI()
 {
-	if (ImGui::ColorEdit3("Tint Color", &m_vColor.r))
-	{
-		Start();
-	}
+    if (ImGui::ColorEdit3("Tint Color", &m_vColor.r))
+    {
+        Start();
+    }
 
-	ImGui::SeparatorText("ZRenderPostfilterEffectBase");
-	ZRenderPostfilterEffectBase::OnDrawDebugUI();
+    ImGui::SeparatorText("ZRenderPostfilterEffectBase");
+    ZRenderPostfilterEffectBase::OnDrawDebugUI();
 }
 
-REGISTER_CHAOS_EFFECT_PARAM(yellow, ZScreenColorTintEffect, "yellow", "Is this Mexico?", SColorRGB{ .r = 1.0f, .g = 1.0f, .b = 0.7f });
+REGISTER_CHAOS_EFFECT_PARAM(
+    yellow,
+    ZScreenColorTintEffect,
+    "yellow",
+    "Is this Mexico?",
+    SColorRGB{.r = 1.0f, .g = 1.0f, .b = 0.7f}
+);

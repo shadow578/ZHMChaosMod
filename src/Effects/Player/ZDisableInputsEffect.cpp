@@ -3,11 +3,11 @@
 #include <Glacier/ZInput.h>
 
 #include "EffectRegistry.h"
-#include "Helpers/Utils.h"
 #include "Helpers/InputActionNames.h"
+#include "Helpers/Utils.h"
 
-#include "ZInvertControlsEffect.h"
 #include "ZForceForwardMovementEffect.h"
+#include "ZInvertControlsEffect.h"
 
 void ZDisableInputsEffect::OnModInitialized()
 {
@@ -26,23 +26,21 @@ void ZDisableInputsEffect::OnModUnload()
     {
         return;
     }
-    
+
     Hooks::ZInputAction_Digital->RemoveDetour(&ZDisableInputsEffect::OnInputActionDigital);
     Hooks::ZInputAction_Analog->RemoveDetour(&ZDisableInputsEffect::OnInputActionAnalog);
 }
 
 bool ZDisableInputsEffect::Available() const
 {
-    return IChaosEffect::Available() &&
-        Hooks::ZInputAction_Digital != nullptr &&
-        Hooks::ZInputAction_Analog != nullptr;
+    return IChaosEffect::Available() && Hooks::ZInputAction_Digital != nullptr && Hooks::ZInputAction_Analog != nullptr;
 }
 
 bool ZDisableInputsEffect::IsCompatibleWith(const IChaosEffect* p_pOtherEffect) const
 {
-    return IChaosEffect::IsCompatibleWith(p_pOtherEffect)
-        && !Utils::IsInstanceOf<ZInvertControlsEffect>(p_pOtherEffect)
-        && !Utils::IsInstanceOf<ZForceForwardMovementEffect>(p_pOtherEffect);
+    return IChaosEffect::IsCompatibleWith(p_pOtherEffect) &&
+           !Utils::IsInstanceOf<ZInvertControlsEffect>(p_pOtherEffect) &&
+           !Utils::IsInstanceOf<ZForceForwardMovementEffect>(p_pOtherEffect);
 }
 
 void ZDisableInputsEffect::Start()
@@ -61,10 +59,9 @@ DEFINE_PLUGIN_DETOUR(ZDisableInputsEffect, bool, OnInputActionDigital, ZInputAct
     {
         // allow Start key so player can pause / unpause
         const std::string s_sName = th->m_szName;
-        if (s_sName != InputActionNames::Keyboard::c_sStart &&
-            s_sName != InputActionNames::Controller::c_sStart)
+        if (s_sName != InputActionNames::Keyboard::c_sStart && s_sName != InputActionNames::Controller::c_sStart)
         {
-            return { HookAction::Return(), false };
+            return {HookAction::Return(), false};
         }
     }
 
@@ -79,7 +76,7 @@ DEFINE_PLUGIN_DETOUR(ZDisableInputsEffect, double, OnInputActionAnalog, ZInputAc
         // so we need to unpack and repack to/from float32.
         auto s_fValue = 0.0f;
         auto s_fValueReturn = *Utils::CastRaw<float64>(&s_fValue);
-        return { HookAction::Return(), s_fValueReturn };
+        return {HookAction::Return(), s_fValueReturn};
     }
 
     return HookResult<float64>(HookAction::Continue());

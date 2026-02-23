@@ -3,11 +3,9 @@
 
 class ZSpawnRandomItemEffect : public ZSpawnRepositoryItemEffectBase
 {
-public:
+  public:
     ZSpawnRandomItemEffect(const std::string p_sDisplayName, const int p_nCount)
-        : ZSpawnRepositoryItemEffectBase(),
-        m_sDisplayName(p_sDisplayName),
-        m_pCount(p_nCount)
+        : ZSpawnRepositoryItemEffectBase(), m_sDisplayName(p_sDisplayName), m_pCount(p_nCount)
     {
     }
 
@@ -28,7 +26,7 @@ public:
         return EDuration::OneShot;
     }
 
-private:
+  private:
     std::string m_sDisplayName;
     int m_pCount;
 };

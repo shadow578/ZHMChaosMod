@@ -3,21 +3,19 @@
 
 class ZBlurryVisionEffect : public ZRenderPostfilterEffectBase
 {
-public:
-	ZBlurryVisionEffect()
-	{
-	}
+  public:
+    ZBlurryVisionEffect() {}
 
-	void Start() override;
-	void Stop() override;
+    void Start() override;
+    void Stop() override;
 
-	std::string GetDisplayName(const bool p_bVoting) const override
-	{
-		return "Where are my glasses?";
-	}
+    std::string GetDisplayName(const bool p_bVoting) const override
+    {
+        return "Where are my glasses?";
+    }
 
-	EDuration GetDuration() const override
-	{
-		return EDuration::Short; // painful if too long
-	}
+    EDuration GetDuration() const override
+    {
+        return EDuration::Short; // painful if too long
+    }
 };

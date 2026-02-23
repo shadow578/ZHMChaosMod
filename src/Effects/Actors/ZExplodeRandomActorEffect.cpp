@@ -17,7 +17,7 @@ void ZExplodeRandomActorEffect::Start()
         return;
     }
 
-    const auto *s_pActorSpatial = m_rLastTarget.m_entityRef.QueryInterface<ZSpatialEntity>();
+    const auto* s_pActorSpatial = m_rLastTarget.m_entityRef.QueryInterface<ZSpatialEntity>();
     if (!s_pActorSpatial)
     {
         return;

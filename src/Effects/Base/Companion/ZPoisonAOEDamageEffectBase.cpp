@@ -11,7 +11,8 @@
 
 void ZPoisonAOEDamageEffectBase::LoadResources()
 {
-    m_pEffectCloudSpawner = ZTemplateEntitySpawner::Create<"[assembly:/_pro/chaosmod/areaeffect_poison.entitytemplate].pc_entitytype">();
+    m_pEffectCloudSpawner =
+        ZTemplateEntitySpawner::Create<"[assembly:/_pro/chaosmod/areaeffect_poison.entitytemplate].pc_entitytype">();
 }
 
 void ZPoisonAOEDamageEffectBase::OnClearScene()
@@ -21,8 +22,7 @@ void ZPoisonAOEDamageEffectBase::OnClearScene()
 
 bool ZPoisonAOEDamageEffectBase::Available() const
 {
-    return ZCompanionModDependentEffectBase::Available() &&
-           m_pEffectCloudSpawner &&
+    return ZCompanionModDependentEffectBase::Available() && m_pEffectCloudSpawner &&
            m_pEffectCloudSpawner->IsAvailable();
 }
 
@@ -45,9 +45,7 @@ void ZPoisonAOEDamageEffectBase::OnDrawDebugUI()
     {
         for (auto [s_eType, s_sName] : c_mPoisonTypesToNames)
         {
-            if (ImGui::Selectable(
-                    s_sName.c_str(),
-                    s_eType == m_eDebugPoisonType))
+            if (ImGui::Selectable(s_sName.c_str(), s_eType == m_eDebugPoisonType))
             {
                 m_eDebugPoisonType = s_eType;
             }
@@ -68,9 +66,7 @@ void ZPoisonAOEDamageEffectBase::OnDrawDebugUI()
                 const auto s_Forward = (-s_WM.Backward).Normalized();
                 s_WM.Trans += s_Forward * 10.0f;
 
-                SParams s_Params{
-                    .m_Position = s_WM,
-                    .m_eType = m_eDebugPoisonType};
+                SParams s_Params{.m_Position = s_WM, .m_eType = m_eDebugPoisonType};
                 Spawn(s_Params);
             }
         }
@@ -79,7 +75,7 @@ void ZPoisonAOEDamageEffectBase::OnDrawDebugUI()
     ImGui::EndDisabled();
 }
 
-ZEntityRef ZPoisonAOEDamageEffectBase::Spawn(const SParams &p_Params)
+ZEntityRef ZPoisonAOEDamageEffectBase::Spawn(const SParams& p_Params)
 {
     if (!m_pEffectCloudSpawner)
     {
@@ -106,8 +102,16 @@ ZEntityRef ZPoisonAOEDamageEffectBase::Spawn(const SParams &p_Params)
 
     // misc. properties
     Utils::SetProperty<SVector3>(s_RootEntity.m_entityRef, "m_vGlobalSize", p_Params.m_AreaSize);
-    Utils::SetProperty<SColorRGB>(s_RootEntity.m_entityRef, "m_ParticleColorRangeStart", p_Params.m_ParticleColorRangeStart);
-    Utils::SetProperty<SColorRGB>(s_RootEntity.m_entityRef, "m_ParticleColorRangeEnd", p_Params.m_ParticleColorRangeEnd);
+    Utils::SetProperty<SColorRGB>(
+        s_RootEntity.m_entityRef,
+        "m_ParticleColorRangeStart",
+        p_Params.m_ParticleColorRangeStart
+    );
+    Utils::SetProperty<SColorRGB>(
+        s_RootEntity.m_entityRef,
+        "m_ParticleColorRangeEnd",
+        p_Params.m_ParticleColorRangeEnd
+    );
 
     // trigger
     s_RootEntity.m_entityRef.SignalInputPin("Start");
@@ -115,9 +119,13 @@ ZEntityRef ZPoisonAOEDamageEffectBase::Spawn(const SParams &p_Params)
     return s_RootEntity.m_entityRef;
 }
 
-bool ZPoisonAOEDamageEffectBase::GetPoisonKeywordEntity(const EPoisonType p_eType, ZEntityRef p_RootEntity, ZEntityRef &p_KeywordEntity)
+bool ZPoisonAOEDamageEffectBase::GetPoisonKeywordEntity(
+    const EPoisonType p_eType,
+    ZEntityRef p_RootEntity,
+    ZEntityRef& p_KeywordEntity
+)
 {
-    auto *s_pPropRTBpFactory = p_RootEntity.GetBlueprintFactory();
+    auto* s_pPropRTBpFactory = p_RootEntity.GetBlueprintFactory();
     if (!s_pPropRTBpFactory)
     {
         Logger::Debug(TAG "Could not get blueprint factory.");

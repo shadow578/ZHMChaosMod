@@ -16,12 +16,12 @@ void ChaosMod::OnEffectTimerTrigger()
     if (!s_pVotingIntegration)
     {
         // something went very wrong...
-		Logger::Error(TAG "ChaosMod::OnEffectTimerTrigger called but no voting integration is set!");
+        Logger::Error(TAG "ChaosMod::OnEffectTimerTrigger called but no voting integration is set!");
         return;
     }
 
     // select random from current vote
-	// if no vote, skip and prepare next vote
+    // if no vote, skip and prepare next vote
     if (auto s_pSelectedEffect = s_pVotingIntegration->EndVote())
     {
         // fallback to randomly selected effect if selected is unavailable
@@ -29,7 +29,10 @@ void ChaosMod::OnEffectTimerTrigger()
         // this should be fairly rare
         if (!s_pSelectedEffect->Available())
         {
-            Logger::Warn(TAG "Selected effect '{}' is no longer available, selecting random fallback.", s_pSelectedEffect->GetName());
+            Logger::Warn(
+                TAG "Selected effect '{}' is no longer available, selecting random fallback.",
+                s_pSelectedEffect->GetName()
+            );
             const auto s_aFallbacks = GetRandomEffectSelection(1);
             if (!s_aFallbacks.empty())
             {
@@ -69,7 +72,7 @@ void ChaosMod::ActivateEffect(IChaosEffect* p_pEffect, const float32 p_fForcedDu
 
     if (p_fForcedDuration > 0.0f)
     {
-		s_fDuration = p_fForcedDuration;
+        s_fDuration = p_fForcedDuration;
     }
 
     const SActiveEffect s_ActiveEffect{
@@ -87,7 +90,7 @@ void ChaosMod::UpdateEffectExpiration(const float32 p_fDeltaTime)
         if (!s_ActiveEffect.m_pEffect)
         {
             continue;
-		}
+        }
 
         s_ActiveEffect.m_fTimeRemaining -= p_fDeltaTime;
         if (s_ActiveEffect.m_fTimeRemaining > 0.0f)
@@ -104,10 +107,11 @@ void ChaosMod::UpdateEffectExpiration(const float32 p_fDeltaTime)
 
     // remove expired
     m_aActiveEffects.erase(
-        std::remove_if(m_aActiveEffects.begin(), m_aActiveEffects.end(),
-            [](const SActiveEffect& e) {
-                return e.m_fTimeRemaining <= 0.0f;
-            }),
+        std::remove_if(
+            m_aActiveEffects.begin(),
+            m_aActiveEffects.end(),
+            [](const SActiveEffect& e) { return e.m_fTimeRemaining <= 0.0f; }
+        ),
         m_aActiveEffects.end()
     );
 }
@@ -168,8 +172,8 @@ bool ChaosMod::IsCompatibleWithAllActive(const IChaosEffect* p_pEffect)
             continue;
         }
 
-        if (!p_pEffect->IsCompatibleWith(s_ActiveEffect.m_pEffect)
-            || !s_ActiveEffect.m_pEffect->IsCompatibleWith(p_pEffect))
+        if (!p_pEffect->IsCompatibleWith(s_ActiveEffect.m_pEffect) ||
+            !s_ActiveEffect.m_pEffect->IsCompatibleWith(p_pEffect))
         {
             return false;
         }

@@ -12,8 +12,7 @@ SMatrix Math::InterpolateAffine(const SMatrix& p_A, const SMatrix& p_B, const fl
     }
 
     // decompose to DirectX components
-    DirectX::XMVECTOR s_ScaleA, s_RotationA, s_TranslationA,
-        s_ScaleB, s_RotationB, s_TranslationB;
+    DirectX::XMVECTOR s_ScaleA, s_RotationA, s_TranslationA, s_ScaleB, s_RotationB, s_TranslationB;
     DirectX::XMMatrixDecompose(&s_ScaleA, &s_RotationA, &s_TranslationA, p_A.DX());
     DirectX::XMMatrixDecompose(&s_ScaleB, &s_RotationB, &s_TranslationB, p_B.DX());
 
@@ -28,11 +27,7 @@ SMatrix Math::InterpolateAffine(const SMatrix& p_A, const SMatrix& p_B, const fl
     const auto s_RotationO = DirectX::XMQuaternionSlerp(s_RotationA, s_RotationB, p_fT);
 
     // recompose and convert back to SMatrix
-    const auto s_MatrixO = DirectX::XMMatrixAffineTransformation(
-        s_ScaleO,
-        DirectX::XMVectorZero(),
-        s_RotationO,
-        s_TranslationO
-    );
+    const auto s_MatrixO =
+        DirectX::XMMatrixAffineTransformation(s_ScaleO, DirectX::XMVectorZero(), s_RotationO, s_TranslationO);
     return SMatrix(s_MatrixO);
 }

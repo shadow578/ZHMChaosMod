@@ -5,10 +5,8 @@
 
 class ZOverheadCameraEffect : public ZCameraEffectBase, public ZInterpolatingEffectBase
 {
-public:
-    ZOverheadCameraEffect() : ZInterpolatingEffectBase(1.0f)
-    {
-    }
+  public:
+    ZOverheadCameraEffect() : ZInterpolatingEffectBase(1.0f) {}
 
     void Start() override;
     void Stop() override;
@@ -22,6 +20,6 @@ public:
         return "GTA1 Mode";
     }
 
-private:
+  private:
     float32 GetMaxOverheadZAt(const SMatrix& p_Position, const float32 p_fMax);
 };

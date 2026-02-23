@@ -4,10 +4,8 @@
 
 class ZCameraZoomFOVEffect : public ZCameraFOVEffectBase
 {
-public:
-    ZCameraZoomFOVEffect() : ZCameraFOVEffectBase(10.0f)
-    {
-    }
+  public:
+    ZCameraZoomFOVEffect() : ZCameraFOVEffectBase(10.0f) {}
 
     std::string GetDisplayName(const bool p_bVoting) const override
     {
@@ -22,10 +20,8 @@ public:
 
 class ZCameraWideFOVEffect : public ZCameraFOVEffectBase
 {
-public:
-    ZCameraWideFOVEffect() : ZCameraFOVEffectBase(120.0f)
-    {
-    }
+  public:
+    ZCameraWideFOVEffect() : ZCameraFOVEffectBase(120.0f) {}
 
     std::string GetDisplayName(const bool p_bVoting) const override
     {

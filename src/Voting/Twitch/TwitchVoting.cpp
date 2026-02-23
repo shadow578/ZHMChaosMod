@@ -123,7 +123,8 @@ std::vector<int> TwitchVoting::GetWinningOptions() const
     return s_aWinners;
 }
 
-int TwitchVoting::ParseVote(const std::string& p_sMessage) {
+int TwitchVoting::ParseVote(const std::string& p_sMessage)
+{
     // Trim whitespace and look for a single digit 1-9 at the start
     std::string s_sTrimmed = p_sMessage;
 
@@ -152,4 +153,3 @@ int TwitchVoting::ParseVote(const std::string& p_sMessage) {
 
     return 0;
 }
-
