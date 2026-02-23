@@ -8,6 +8,7 @@
 #include "EffectRegistry.h"
 #include "Helpers/ImGuiExtras.h"
 #include "Helpers/CompanionMod.h"
+#include "Helpers/ZPerfCounter.h"
 
 #include "BuildInfo.h"
 
@@ -354,11 +355,20 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
             if (s_Effect)
             {
                 auto s_sEffectName = s_Effect->GetName();
+                const auto s_sEffectDisplayName = s_Effect->GetDisplayName(false);
+
+                const auto s_bHasDisplayName = !s_sEffectDisplayName.empty() && s_sEffectDisplayName != s_sEffectName;
+
                 const auto s_bAvailable = s_Effect->Available();
                 if (!s_bAvailable)
                 {
                     s_sEffectName += "*";
                     ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.75f, 0.0f, 0.0f, 1.0f));
+                }
+                else if (!s_bHasDisplayName)
+                {
+                    s_sEffectName += "?";
+                    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
                 }
 
                 if (ImGui::Selectable(
@@ -370,7 +380,7 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
                     Logger::Debug(TAG "Selected '{}' for debug", s_Effect->GetName());
                 }
 
-                if (!s_bAvailable)
+                if (!s_bAvailable || !s_bHasDisplayName)
                 {
                     ImGui::PopStyleColor();
                 }
@@ -424,8 +434,15 @@ void ChaosMod::DrawEffectDebugPane()
     {
         m_qDeferredFrameUpdateActions.push([this]() {
             Logger::Info(TAG "Calling Start() for '{}'", m_pEffectForDebug->GetName());
-            m_pEffectForDebug->Start();
             m_fDebugEffectRemainingTime = 30.0f;
+
+            ZPerfCounter s_Counter;
+            s_Counter.Start();
+
+            m_pEffectForDebug->Start();
+
+            const auto s_fElapsedUs = s_Counter.Stop();
+            Logger::Debug(TAG "Start() for '{}' took {:.2f} us", m_pEffectForDebug->GetName(), s_fElapsedUs);
         });
     }
 
@@ -433,7 +450,14 @@ void ChaosMod::DrawEffectDebugPane()
     {
         m_qDeferredFrameUpdateActions.push([this]() {
             Logger::Info(TAG "Calling Stop() for '{}'", m_pEffectForDebug->GetName());
+
+            ZPerfCounter s_Counter;
+            s_Counter.Start();
+
             m_pEffectForDebug->Stop();
+
+            const auto s_fElapsedUs = s_Counter.Stop();
+            Logger::Debug(TAG "Stop() for '{}' took {:.2f} us", m_pEffectForDebug->GetName(), s_fElapsedUs);
         });
     }
 

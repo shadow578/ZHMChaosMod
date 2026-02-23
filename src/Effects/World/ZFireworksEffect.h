@@ -14,6 +14,11 @@ class ZFireworksEffect : public IChaosEffect
     void Start() override;
     void Stop() override;
 
+    std::string GetDisplayName(const bool p_bVotingDisplay) const override
+    {
+        return "Fireworks!";
+    }
+
   private:
     std::unique_ptr<ZTemplateEntitySpawner> m_pFireworksSpawner;
     ZEntityRef m_rFireworksEntity;
