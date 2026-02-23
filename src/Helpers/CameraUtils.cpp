@@ -1,14 +1,14 @@
 #include "CameraUtils.h"
 
-#include "Globals.h"
 #include "Functions.h"
+#include "Globals.h"
 #include "Logging.h"
 
 #include "EntityUtils.h"
 
 #define TAG "[CameraUtils] "
 
-bool Utils::GetActiveCamera(ZEntityRef &p_ActiveCameraEntity)
+bool Utils::GetActiveCamera(ZEntityRef& p_ActiveCameraEntity)
 {
     TEntityRef<IRenderDestinationEntity> s_RenderDestination;
     if (!GetRenderDestinationEntity(s_RenderDestination))
@@ -26,7 +26,7 @@ bool Utils::GetActiveCamera(ZEntityRef &p_ActiveCameraEntity)
     return true;
 }
 
-bool Utils::SetActiveCamera(ZEntityRef &p_NewCameraEntity)
+bool Utils::SetActiveCamera(ZEntityRef& p_NewCameraEntity)
 {
     if (!p_NewCameraEntity)
     {
@@ -43,13 +43,12 @@ bool Utils::SetActiveCamera(ZEntityRef &p_NewCameraEntity)
     return true;
 }
 
-bool Utils::IsMainHitmanCamera(ZEntityRef &p_CameraEntity)
+bool Utils::IsMainHitmanCamera(ZEntityRef& p_CameraEntity)
 {
     constexpr uint64_t c_nMainHitmanCameraEntityId = 1520968122659560567;
     constexpr uint64_t c_nMainHitmanCameraOwningEntityId = 5884861939421351664;
 
-    uint64_t s_nCameraEntityId = 0,
-             s_nOwningEntityId = 0;
+    uint64_t s_nCameraEntityId = 0, s_nOwningEntityId = 0;
 
     // TODO: holy f this is ugly
     if (const auto s_pCameraEntity = p_CameraEntity.GetEntity())
@@ -72,8 +71,7 @@ bool Utils::IsMainHitmanCamera(ZEntityRef &p_CameraEntity)
     }
 
     // check by entity IDs
-    if (s_nCameraEntityId != c_nMainHitmanCameraEntityId ||
-        s_nOwningEntityId != c_nMainHitmanCameraOwningEntityId)
+    if (s_nCameraEntityId != c_nMainHitmanCameraEntityId || s_nOwningEntityId != c_nMainHitmanCameraOwningEntityId)
     {
         return false;
     }
@@ -82,11 +80,12 @@ bool Utils::IsMainHitmanCamera(ZEntityRef &p_CameraEntity)
     return Utils::GetEntityTypeName(p_CameraEntity) == "ZHM5MainCamera";
 }
 
-bool Utils::GetRenderDestinationEntity(TEntityRef<IRenderDestinationEntity> &p_RenderDestinationEntity)
+bool Utils::GetRenderDestinationEntity(TEntityRef<IRenderDestinationEntity>& p_RenderDestinationEntity)
 {
     Functions::ZCameraManager_GetActiveRenderDestinationEntity->Call(
         Globals::CameraManager,
-        &p_RenderDestinationEntity);
+        &p_RenderDestinationEntity
+    );
 
     if (!p_RenderDestinationEntity)
     {

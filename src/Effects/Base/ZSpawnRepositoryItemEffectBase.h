@@ -13,77 +13,75 @@
  */
 class ZSpawnRepositoryItemEffectBase : public virtual IChaosEffect
 {
-public:
-    ZSpawnRepositoryItemEffectBase()
-    {
-    }
+  public:
+    ZSpawnRepositoryItemEffectBase() {}
 
     void LoadResources() override;
     void OnClearScene() override;
     bool Available() const override;
     void OnDrawDebugUI() override;
 
-protected:
+  protected:
     struct SRepositoryPropInfo
     {
         /**
-		 * repository id.
+         * repository id.
          */
         ZRepositoryID m_RepositoryID;
 
         /**
-		 * common name, stable for searching across game versions.
+         * common name, stable for searching across game versions.
          */
         std::string m_sCommonName;
 
         /**
-		 * display name, for showing in UI.
+         * display name, for showing in UI.
          */
         std::string m_sDisplayName;
 
         operator bool() const
         {
             return !m_RepositoryID.IsEmpty();
-		}
-	};
+        }
+    };
 
-private:
-	static std::vector<SRepositoryPropInfo> m_aRepositoryProps; // static to share between instances
+  private:
+    static std::vector<SRepositoryPropInfo> m_aRepositoryProps; // static to share between instances
 
     static void PushRepositoryProp(const ZRepositoryID& p_RepositoryId);
 
     std::unique_ptr<ZTemplateEntitySpawner> m_pItemSpawnerSpawner;
-	std::unique_ptr<ZTemplateEntitySpawner> m_pRepositoryKeywordSpawner;
+    std::unique_ptr<ZTemplateEntitySpawner> m_pRepositoryKeywordSpawner;
 
-protected:
+  protected:
     /**
-     * Get a list of all available repository props. 
+     * Get a list of all available repository props.
      */
     const std::vector<SRepositoryPropInfo>& GetRepositoryProps() const
     {
         return m_aRepositoryProps;
-	}
+    }
 
     /**
-	 * Find repository prop by ID.
+     * Find repository prop by ID.
      */
     SRepositoryPropInfo GetRepositoryPropByID(const std::string& p_sID) const;
 
     /**
-	 * Find repository prop by common name.
+     * Find repository prop by common name.
      */
-	SRepositoryPropInfo GetRepositoryPropByCommonName(const std::string& p_sCommonName) const;
+    SRepositoryPropInfo GetRepositoryPropByCommonName(const std::string& p_sCommonName) const;
 
     /**
      * Spawn the given repository prop at the given position.
      * @param p_RepositoryProp Repository prop to spawn.
      * @param s_vPosition World position to spawn at.
-	 * @param p_ePhysicsMode Spawned item physics mode. EPM_DYNAMIC to enable physics.
+     * @param p_ePhysicsMode Spawned item physics mode. EPM_DYNAMIC to enable physics.
      * @return true if spawning succeeded, false otherwise.
-	 */
+     */
     bool SpawnRepositoryPropAt(
-        const SRepositoryPropInfo& p_RepositoryProp, 
-        const float4 s_vPosition, 
+        const SRepositoryPropInfo& p_RepositoryProp,
+        const float4 s_vPosition,
         const ZItemSpawner::EPhysicsMode p_ePhysicsMode = ZItemSpawner::EPhysicsMode::EPM_DYNAMIC
     );
 };

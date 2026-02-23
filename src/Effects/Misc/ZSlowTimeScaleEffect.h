@@ -4,7 +4,7 @@
 
 class ZSlowTimeScaleEffect : public IChaosEffect
 {
-public:
+  public:
     ZSlowTimeScaleEffect(const float32 p_fTargetTimeScale) : m_fTargetTimeScale(p_fTargetTimeScale) {}
 
     void Start() override;
@@ -14,7 +14,7 @@ public:
     std::string GetDisplayName(const bool p_bVoting) const override;
     EDuration GetDuration() const override;
 
-private:
+  private:
     const float32 m_fTargetTimeScale = 0.2f;
     float32 m_fPreviousTimeScale = 1.0f;
 };

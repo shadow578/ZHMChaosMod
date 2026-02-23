@@ -3,7 +3,7 @@
 
 class ZNoHUDEffect : public IChaosEffect
 {
-public:
+  public:
     void Start() override;
     void Stop() override;
 
@@ -12,6 +12,6 @@ public:
         return "Where's my HUD?!";
     }
 
-private:
+  private:
     void SetHUDVisibility(const bool p_bVisible);
 };

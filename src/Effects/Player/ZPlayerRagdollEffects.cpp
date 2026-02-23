@@ -1,6 +1,6 @@
 #include "ZPlayerRagdollEffects.h"
-#include "IPluginInterface.h"
 #include "Functions.h"
+#include "IPluginInterface.h"
 
 #include <Glacier/ZHitman5.h>
 #include <Glacier/ZSpatialEntity.h>
@@ -20,12 +20,8 @@ void ZPlayerRagdollWithImpulseEffect::Start()
     const auto s_HitmanSpatial = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
     auto s_WM = s_HitmanSpatial->GetObjectToWorldMatrix();
 
-    Functions::ZRagdollHandler_ApplyImpulseOnRagdoll->Call(
-        s_Player.m_pInterfaceRef->m_pRagdollHandler,
-        {},
-        (-s_WM.Backward * 220.f) + (s_WM.Up * 550.f),
-        1,
-        false);
+    Functions::ZRagdollHandler_ApplyImpulseOnRagdoll
+        ->Call(s_Player.m_pInterfaceRef->m_pRagdollHandler, {}, (-s_WM.Backward * 220.f) + (s_WM.Up * 550.f), 1, false);
 
     m_VelocityTracker.Reset();
     m_bActive = true;
@@ -39,7 +35,10 @@ void ZPlayerRagdollWithImpulseEffect::Stop()
     m_bActive = false;
 }
 
-void ZPlayerRagdollWithImpulseEffect::OnFrameUpdate(const SGameUpdateEvent &p_UpdateEvent, const float32 p_fEffectTimeRemaining)
+void ZPlayerRagdollWithImpulseEffect::OnFrameUpdate(
+    const SGameUpdateEvent& p_UpdateEvent,
+    const float32 p_fEffectTimeRemaining
+)
 {
     if (!m_bActive)
     {
@@ -62,10 +61,14 @@ void ZPlayerRagdollWithImpulseEffect::OnFrameUpdate(const SGameUpdateEvent &p_Up
 
 void ZPlayerRagdollWithImpulseEffect::OnDrawDebugUI()
 {
-    ImGui::TextUnformatted(fmt::format("Velocity: {:.2f}{}",
-                                       m_VelocityTracker.GetVelocity(),
-                                       m_VelocityTracker.IsVelocityValid() ? "" : " (invalid)")
-                               .c_str());
+    ImGui::TextUnformatted(
+        fmt::format(
+            "Velocity: {:.2f}{}",
+            m_VelocityTracker.GetVelocity(),
+            m_VelocityTracker.IsVelocityValid() ? "" : " (invalid)"
+        )
+            .c_str()
+    );
 }
 
 REGISTER_CHAOS_EFFECT(ZPlayerSimpleRagdollEffect)

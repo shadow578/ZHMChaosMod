@@ -1,0 +1,21 @@
+name: Check Format
+
+on:
+  pull_request:
+
+jobs:
+  clang-format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: |
+          sudo apt update
+          sudo apt install -y clang-format-20
+
+      - name: Check formatting
+        run: |
+          FILES=$(git ls-files '*.c' '*.cpp' '*.h' '*.hpp')
+          clang-format-20 -style=file -n --Werror $FILES

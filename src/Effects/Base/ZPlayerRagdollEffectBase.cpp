@@ -1,7 +1,7 @@
 #include "ZPlayerRagdollEffectBase.h"
 
-#include "IPluginInterface.h"
 #include "Functions.h"
+#include "IPluginInterface.h"
 
 #include <Glacier/ZHitman5.h>
 
@@ -17,14 +17,7 @@ void ZPlayerRagdollEffectBase::Start()
 
     if (m_bPowered)
     {
-        Functions::ZHM5BaseCharacter_ActivatePoweredRagdoll->Call(
-            s_Player.m_pInterfaceRef,
-            0,
-            false,
-            true,
-            0,
-            true
-        );
+        Functions::ZHM5BaseCharacter_ActivatePoweredRagdoll->Call(s_Player.m_pInterfaceRef, 0, false, true, 0, true);
     }
     else
     {
@@ -55,16 +48,14 @@ void ZPlayerRagdollEffectBase::Stop()
 bool ZPlayerRagdollEffectBase::Available() const
 {
 
-    return (m_bPowered ?
-        Functions::ZHM5BaseCharacter_ActivatePoweredRagdoll->Exists() :
-        Functions::ZHM5BaseCharacter_ActivateRagdoll->Exists()
-        ) &&
-        Functions::ZHM5BaseCharacter_DeactivateRagdoll->Exists();
+    return (m_bPowered ? Functions::ZHM5BaseCharacter_ActivatePoweredRagdoll->Exists()
+                       : Functions::ZHM5BaseCharacter_ActivateRagdoll->Exists())
+           && Functions::ZHM5BaseCharacter_DeactivateRagdoll->Exists();
 }
 
 bool ZPlayerRagdollEffectBase::IsCompatibleWith(const IChaosEffect* p_pOther) const
 {
     return IChaosEffect::IsCompatibleWith(p_pOther)
-        // all ragdoll effects are incompatible with each other
-        && !Utils::IsInstanceOf<ZPlayerRagdollEffectBase>(p_pOther);
+           // all ragdoll effects are incompatible with each other
+           && !Utils::IsInstanceOf<ZPlayerRagdollEffectBase>(p_pOther);
 }

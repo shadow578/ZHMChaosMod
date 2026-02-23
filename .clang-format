@@ -1,0 +1,31 @@
+# VS-ish base style
+BasedOnStyle: Microsoft
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+# Indent code inside namespaces
+NamespaceIndentation: All
+
+# Pointer and reference alignment: attach to type (Foo* foo, Foo& bar)
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+# Break long parameter lists
+BinPackParameters: false
+BinPackArguments: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowAllArgumentsOnNextLine: false
+
+# Put each parameter on its own line when wrapping
+PenaltyBreakBeforeFirstCallParameter: 0
+
+# Closing parenthesis on its own line when parameters are wrapped
+AlignAfterOpenBracket: BlockIndent
+
+# Allow empty functions on a single line
+AllowShortFunctionsOnASingleLine: Empty
+
+BreakBeforeBinaryOperators: NonAssignment
+
+ColumnLimit: 0

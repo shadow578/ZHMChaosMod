@@ -3,7 +3,7 @@
 
 class ZMinimapNoActorsEffect : public IChaosEffect
 {
-public:
+  public:
     void Start() override;
     void Stop() override;
 
@@ -12,6 +12,6 @@ public:
         return "No Actors on Minimap";
     }
 
-private:
+  private:
     void SetMinimapType(const EMapType p_eMapType);
 };

@@ -17,14 +17,16 @@ void ZSpawnRandomItemEffect::Start()
             const auto s_Up = s_WM.Up.Normalized();
             s_WM.Trans += s_Forward * 1.2f + s_Up * 1.0f;
 
-			const auto& s_aRepositoryProps = GetRepositoryProps();
+            const auto& s_aRepositoryProps = GetRepositoryProps();
             for (int i = 0; i < m_pCount; i++)
             {
                 // vary spawn position a bit
-                s_WM.Trans += s_Right * Math::GetRandomNumber(-0.2f, 0.2f) + s_Forward * Math::GetRandomNumber(-0.2f, 0.2f) + s_Up * Math::GetRandomNumber(-0.2f, 0.2f);
+                s_WM.Trans += s_Right * Math::GetRandomNumber(-0.2f, 0.2f)
+                              + s_Forward * Math::GetRandomNumber(-0.2f, 0.2f)
+                              + s_Up * Math::GetRandomNumber(-0.2f, 0.2f);
 
                 const auto s_Item = Math::SelectRandomElement(s_aRepositoryProps);
-                SpawnRepositoryPropAt(s_Item, s_WM.Trans );
+                SpawnRepositoryPropAt(s_Item, s_WM.Trans);
             }
         }
     }

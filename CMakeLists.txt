@@ -88,3 +88,21 @@ else ()
   message(WARNING "SMF not found, companion mod will not be deployed automatically.")
 endif ()
 
+# code formatting
+find_program(CLANG_FORMAT_EXE NAMES clang-format)
+
+if (CLANG_FORMAT_EXE)
+  add_custom_target(format
+    COMMAND ${CLANG_FORMAT_EXE}
+    -i
+    -style=file
+    ${SRC_FILES}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    VERBATIM
+  )
+else ()
+  message(WARNING 
+    "clang-format not found, code formatting target will not be available. "
+    "Consider installing clang tools using Visual Studio installer (via the 'C++ Clang tools for Windows' component)"
+  )
+endif ()

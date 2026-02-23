@@ -14,16 +14,17 @@ std::vector<ZSpawnRepositoryItemEffectBase::SRepositoryPropInfo> ZSpawnRepositor
 void ZSpawnRepositoryItemEffectBase::LoadResources()
 {
     m_pItemSpawnerSpawner = ZTemplateEntitySpawner::Create<"[modules:/zitemspawner.class].pc_entitytype">();
-    m_pRepositoryKeywordSpawner = ZTemplateEntitySpawner::Create<"[modules:/zitemrepositorykeyentity.class].pc_entitytype">();
+    m_pRepositoryKeywordSpawner =
+        ZTemplateEntitySpawner::Create<"[modules:/zitemrepositorykeyentity.class].pc_entitytype">();
 
-	m_aRepositoryProps.clear();
+    m_aRepositoryProps.clear();
 
     auto& s_Repo = ZHMRepositoryHelper::GetInstance();
     s_Repo.Initialize();
 
-	for (const auto& s_RepositoryId : s_Repo.GetEntryIdsByType(ZHMRepositoryHelper::EEntryType::Item))
+    for (const auto& s_RepositoryId : s_Repo.GetEntryIdsByType(ZHMRepositoryHelper::EEntryType::Item))
     {
-		PushRepositoryProp(s_RepositoryId);
+        PushRepositoryProp(s_RepositoryId);
     }
 
     for (const auto& s_RepositoryId : s_Repo.GetEntryIdsByType(ZHMRepositoryHelper::EEntryType::Weapon))
@@ -53,11 +54,9 @@ void ZSpawnRepositoryItemEffectBase::PushRepositoryProp(const ZRepositoryID& p_R
         s_sCommonName = s_sCommonNameOpt.value()->c_str();
     }
 
-    m_aRepositoryProps.push_back({
-        .m_RepositoryID = p_RepositoryId,
-        .m_sCommonName = s_sCommonName,
-        .m_sDisplayName = s_sDisplayName
-        });
+    m_aRepositoryProps.push_back(
+        {.m_RepositoryID = p_RepositoryId, .m_sCommonName = s_sCommonName, .m_sDisplayName = s_sDisplayName}
+    );
 }
 
 void ZSpawnRepositoryItemEffectBase::OnClearScene()
@@ -72,10 +71,9 @@ void ZSpawnRepositoryItemEffectBase::OnClearScene()
 
 bool ZSpawnRepositoryItemEffectBase::Available() const
 {
-    return IChaosEffect::Available()
-        && m_pItemSpawnerSpawner && m_pItemSpawnerSpawner->IsAvailable()
-        && m_pRepositoryKeywordSpawner && m_pRepositoryKeywordSpawner->IsAvailable()
-        && m_aRepositoryProps.size() > 0;
+    return IChaosEffect::Available() && m_pItemSpawnerSpawner && m_pItemSpawnerSpawner->IsAvailable()
+           && m_pRepositoryKeywordSpawner && m_pRepositoryKeywordSpawner->IsAvailable()
+           && m_aRepositoryProps.size() > 0;
 }
 
 void ZSpawnRepositoryItemEffectBase::OnDrawDebugUI()
@@ -85,7 +83,11 @@ void ZSpawnRepositoryItemEffectBase::OnDrawDebugUI()
     ImGui::TextUnformatted(fmt::format("# Repository Props Loaded: {}", m_aRepositoryProps.size()).c_str());
 }
 
-bool ZSpawnRepositoryItemEffectBase::SpawnRepositoryPropAt(const SRepositoryPropInfo& p_RepositoryProp, const float4 s_vPosition, const ZItemSpawner::EPhysicsMode p_ePhysicsMode)
+bool ZSpawnRepositoryItemEffectBase::SpawnRepositoryPropAt(
+    const SRepositoryPropInfo& p_RepositoryProp,
+    const float4 s_vPosition,
+    const ZItemSpawner::EPhysicsMode p_ePhysicsMode
+)
 {
     if (!p_RepositoryProp || !m_pItemSpawnerSpawner || !m_pRepositoryKeywordSpawner)
     {
@@ -118,10 +120,11 @@ bool ZSpawnRepositoryItemEffectBase::SpawnRepositoryPropAt(const SRepositoryProp
 
     s_rKeywordEntity.m_pInterfaceRef->m_RepositoryId = p_RepositoryProp.m_RepositoryID;
 
-    //Functions::ZItemSpawner_RequestContentLoad->Call(s_rItemSpawner.m_pInterfaceRef);
+    // Functions::ZItemSpawner_RequestContentLoad->Call(s_rItemSpawner.m_pInterfaceRef);
     s_rItemSpawner.m_entityRef.SignalInputPin("SpawnItem");
 
-    Logger::Debug(TAG "spawned item '{}' [{}] ({}).",
+    Logger::Debug(
+        TAG "spawned item '{}' [{}] ({}).",
         p_RepositoryProp.m_sDisplayName,
         p_RepositoryProp.m_RepositoryID.ToString().c_str(),
         p_RepositoryProp.m_sCommonName
@@ -129,9 +132,11 @@ bool ZSpawnRepositoryItemEffectBase::SpawnRepositoryPropAt(const SRepositoryProp
     return true;
 }
 
-ZSpawnRepositoryItemEffectBase::SRepositoryPropInfo ZSpawnRepositoryItemEffectBase::GetRepositoryPropByID(const std::string& p_sID) const
+ZSpawnRepositoryItemEffectBase::SRepositoryPropInfo ZSpawnRepositoryItemEffectBase::GetRepositoryPropByID(
+    const std::string& p_sID
+) const
 {
-	const auto s_RepositoryID = ZRepositoryID(p_sID);
+    const auto s_RepositoryID = ZRepositoryID(p_sID);
 
     for (const auto& s_Prop : m_aRepositoryProps)
     {
@@ -144,7 +149,9 @@ ZSpawnRepositoryItemEffectBase::SRepositoryPropInfo ZSpawnRepositoryItemEffectBa
     return {};
 }
 
-ZSpawnRepositoryItemEffectBase::SRepositoryPropInfo ZSpawnRepositoryItemEffectBase::GetRepositoryPropByCommonName(const std::string& p_sCommonName) const
+ZSpawnRepositoryItemEffectBase::SRepositoryPropInfo ZSpawnRepositoryItemEffectBase::GetRepositoryPropByCommonName(
+    const std::string& p_sCommonName
+) const
 {
     for (const auto& s_Prop : m_aRepositoryProps)
     {

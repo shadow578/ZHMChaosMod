@@ -1,13 +1,13 @@
 #pragma once
 
-#include <Glacier/ZEntity.h>
 #include <Glacier/EntityFactory.h>
+#include <Glacier/ZEntity.h>
 
 #include <Logging.h>
 
-#include <vector>
-#include <string>
 #include <optional>
+#include <string>
+#include <vector>
 
 #define TAG "[EntityUtils] "
 
@@ -16,14 +16,14 @@ namespace Utils
 
     class ZEntityFinder
     {
-    public:
+      public:
         ZEntityFinder() {}
 
         /**
          * Search for entity with matching id, as per entity template.
          * e.g. 0x859611037148f21b
          */
-        ZEntityFinder &EntityID(const uint64_t p_nEntityId)
+        ZEntityFinder& EntityID(const uint64_t p_nEntityId)
         {
             m_nEntityID = p_nEntityId;
             return *this;
@@ -33,7 +33,7 @@ namespace Utils
          * Search for entity with matching name, as per entity template.
          * e.g. "LD_MapTracker_NPCActor"
          */
-        ZEntityFinder &EntityName(const std::string &p_sEntityName)
+        ZEntityFinder& EntityName(const std::string& p_sEntityName)
         {
             m_sEntityName = p_sEntityName;
             return *this;
@@ -43,7 +43,7 @@ namespace Utils
          * Search for entity with matching (primary) type name.
          * e.g. "ZLightEntity"
          */
-        ZEntityFinder &EntityType(const std::string &p_sEntityType)
+        ZEntityFinder& EntityType(const std::string& p_sEntityType)
         {
             m_sEntityType = p_sEntityType;
             return *this;
@@ -52,15 +52,16 @@ namespace Utils
         /**
          * Search for (sub-) entity with matching blueprint resource id.
          * This refers to a resource id of a .pc_entityblueprint resource, not .pc_entitytype!
-         * e.g. ResId<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_fueltank_a.entitytemplate].pc_entityblueprint">
+         * e.g.
+         * ResId<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_fueltank_a.entitytemplate].pc_entityblueprint">
          */
         template <detail::StringLiteral ResPath>
-        ZEntityFinder &BlueprintResource()
+        ZEntityFinder& BlueprintResource()
         {
             return BlueprintResource(ResId<ResPath>);
         }
 
-        ZEntityFinder &BlueprintResource(const ZRuntimeResourceID &p_ridBlueprint)
+        ZEntityFinder& BlueprintResource(const ZRuntimeResourceID& p_ridBlueprint)
         {
             m_ridBlueprint = p_ridBlueprint;
             return *this;
@@ -82,13 +83,18 @@ namespace Utils
             return {};
         }
 
-    private:
+      private:
         std::optional<uint64_t> m_nEntityID = std::nullopt;
         std::optional<std::string> m_sEntityName = std::nullopt;
         std::optional<std::string> m_sEntityType = std::nullopt;
         std::optional<ZRuntimeResourceID> m_ridBlueprint = std::nullopt;
 
-        bool Evaluate(const ZEntityRef &p_rEntity, ZEntityBlueprintFactoryBase *p_pParentFactory, ZEntityBlueprintFactoryBase *p_pSubFactory, int p_nSubIndex) const;
+        bool Evaluate(
+            const ZEntityRef& p_rEntity,
+            ZEntityBlueprintFactoryBase* p_pParentFactory,
+            ZEntityBlueprintFactoryBase* p_pSubFactory,
+            int p_nSubIndex
+        ) const;
     };
 
     /**
@@ -97,19 +103,23 @@ namespace Utils
      * @param p_pFactory Entity Blueprint pointer. If nullptr, attempt to find from entity ref.
      * @param p_nSubIndex Entity sub-index in blueprint. If -1, attempt to find from entity ref.
      */
-    std::string GetEntityName(const ZEntityRef &p_Entity, ZEntityBlueprintFactoryBase *p_pFactory = nullptr, int p_nSubIndex = -1);
+    std::string GetEntityName(
+        const ZEntityRef& p_Entity,
+        ZEntityBlueprintFactoryBase* p_pFactory = nullptr,
+        int p_nSubIndex = -1
+    );
 
     /**
      * Attempt to get the (primary) type name of an entity.
      * @param p_Entity Entity reference.
      */
-    std::string GetEntityTypeName(const ZEntityRef &p_Entity);
+    std::string GetEntityTypeName(const ZEntityRef& p_Entity);
 
     /**
      * Attempt to get the blueprint factory of an entity, even if it's a sub-entity.
      * @param p_rEntity Entity reference.
      */
-    ZEntityBlueprintFactoryBase *GetEntityBlueprintFactoryFor(ZEntityRef p_rEntity);
+    ZEntityBlueprintFactoryBase* GetEntityBlueprintFactoryFor(ZEntityRef p_rEntity);
 
     /**
      * safely get a property from an entity. Returns std::nullopt if failed or invalid.
@@ -118,7 +128,7 @@ namespace Utils
      * @param p_sProperty The property name. If not found or of wrong type, returns std::nullopt.
      */
     template <typename T>
-    std::optional<T> GetProperty(const ZEntityRef &p_rEntity, const std::string &p_sProperty)
+    std::optional<T> GetProperty(const ZEntityRef& p_rEntity, const std::string& p_sProperty)
     {
         if (!p_rEntity)
         {
@@ -128,9 +138,11 @@ namespace Utils
         auto s_PropValue = p_rEntity.GetProperty<T>(p_sProperty);
         if (!s_PropValue.Is<T>())
         {
-            Logger::Warn(TAG "Failed to get '{}' on EID {:016X}",
-                         p_sProperty,
-                         p_rEntity ? p_rEntity.GetEntity()->GetType()->m_nEntityID : 0);
+            Logger::Warn(
+                TAG "Failed to get '{}' on EID {:016X}",
+                p_sProperty,
+                p_rEntity ? p_rEntity.GetEntity()->GetType()->m_nEntityID : 0
+            );
             return std::nullopt;
         }
 
@@ -146,7 +158,12 @@ namespace Utils
      * @param p_bInvokeChangeHandlers Invoke property change handlers.
      */
     template <typename T>
-    inline bool SetProperty(ZEntityRef &p_rEntity, const std::string &p_sProperty, const T &p_Value, bool p_bInvokeChangeHandlers = true)
+    inline bool SetProperty(
+        ZEntityRef& p_rEntity,
+        const std::string& p_sProperty,
+        const T& p_Value,
+        bool p_bInvokeChangeHandlers = true
+    )
     {
         if (!p_rEntity)
         {
@@ -155,14 +172,16 @@ namespace Utils
 
         if (!p_rEntity.SetProperty<T>(p_sProperty, p_Value, p_bInvokeChangeHandlers))
         {
-            Logger::Warn(TAG "Failed to set '{}' on EID {:016X}",
-                         p_sProperty,
-                         p_rEntity ? p_rEntity.GetEntity()->GetType()->m_nEntityID : 0);
+            Logger::Warn(
+                TAG "Failed to set '{}' on EID {:016X}",
+                p_sProperty,
+                p_rEntity ? p_rEntity.GetEntity()->GetType()->m_nEntityID : 0
+            );
             return false;
         }
 
         return true;
     }
-};
+}; // namespace Utils
 
 #undef TAG

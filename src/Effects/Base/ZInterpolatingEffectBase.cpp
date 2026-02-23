@@ -2,7 +2,6 @@
 
 #include <Glacier/SGameUpdateEvent.h>
 
-
 void ZInterpolatingEffectBase::Start()
 {
     if (m_eState != EState::Idle)
@@ -24,12 +23,14 @@ void ZInterpolatingEffectBase::OnClearScene()
     m_eState = EState::Idle;
 }
 
-void ZInterpolatingEffectBase::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)
+void ZInterpolatingEffectBase::OnFrameUpdate(
+    const SGameUpdateEvent& p_UpdateEvent,
+    const float32 p_fEffectTimeRemaining
+)
 {
     switch (m_eState)
     {
-    case EState::InterpolateIn:
-    {
+    case EState::InterpolateIn: {
         m_fInterpolationPoint += p_UpdateEvent.m_GameTimeDelta.ToSeconds() / m_fInterpolationTime;
 
         if (m_fInterpolationPoint >= 1.0f)
@@ -39,8 +40,7 @@ void ZInterpolatingEffectBase::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEve
         }
         break;
     }
-    case EState::InterpolateOut:
-    {
+    case EState::InterpolateOut: {
         m_fInterpolationPoint -= p_UpdateEvent.m_GameTimeDelta.ToSeconds() / m_fInterpolationTime;
 
         if (m_fInterpolationPoint <= 0.0f)

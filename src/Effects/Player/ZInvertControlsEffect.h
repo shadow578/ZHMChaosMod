@@ -3,7 +3,7 @@
 
 class ZInvertControlsEffect : public IChaosEffect
 {
-public:
+  public:
     void OnModInitialized() override;
     void OnModUnload() override;
     bool Available() const override;
@@ -17,7 +17,7 @@ public:
         return "Inverted Controls";
     }
 
-private:
+  private:
     bool m_bEnable = false;
 
     DECLARE_PLUGIN_DETOUR(ZInvertControlsEffect, double, OnInputActionAnalog, ZInputAction* th, int a2);

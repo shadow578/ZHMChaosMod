@@ -42,5 +42,5 @@ void Utils::OpenBrowser(const std::string& p_sUrl)
 
 uint64_t Utils::GetTimestamp()
 {
-	return GetTickCount64() / 1000; // ms to seconds
+    return GetTickCount64() / 1000; // ms to seconds
 }

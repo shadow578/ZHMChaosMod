@@ -1,10 +1,10 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <unordered_map>
-#include <mutex>
 #include <atomic>
+#include <mutex>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 /**
  * Handles vote tallying for Twitch chat voting.
@@ -12,7 +12,7 @@
  */
 class TwitchVoting
 {
-public:
+  public:
     TwitchVoting() = default;
     ~TwitchVoting() = default;
 
@@ -51,7 +51,7 @@ public:
      */
     std::vector<int> GetWinningOptions() const;
 
-private:
+  private:
     mutable std::recursive_mutex m_Mutex;
     std::atomic<bool> m_bVotingActive{false};
     int m_nOptionCount{0};
@@ -68,4 +68,3 @@ private:
      */
     static int ParseVote(const std::string& p_sMessage);
 };
-

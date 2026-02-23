@@ -1,6 +1,6 @@
 #pragma once
-#include <Glacier/ZEntity.h>
 #include <Glacier/ZCameraEntity.h>
+#include <Glacier/ZEntity.h>
 
 namespace Utils
 {
@@ -23,4 +23,4 @@ namespace Utils
      * Get the IRenderDestinationEntity that is currently active for the main screen.
      */
     bool GetRenderDestinationEntity(TEntityRef<IRenderDestinationEntity>& p_RenderDestinationEntity);
-};
+}; // namespace Utils

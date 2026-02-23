@@ -1,18 +1,21 @@
 #pragma once
-#include <string>
+#include <functional>
 #include <memory>
 #include <mutex>
-#include <functional>
+#include <string>
 #include <thread>
 
 class ZAuthToken;
 
-namespace ix { class HttpServer; }
+namespace ix
+{
+    class HttpServer;
+}
 
 /**
  * Handles authentication and api client creation for YouTube API.
- * 
- * Notice: 
+ *
+ * Notice:
  * This class only supports OAuth2 authorization code flow WITHOUT a client secret.
  * Google doesn't make clear how to create such an OAuth client, so follow these steps:
  * - create a new OAuth client in Google Cloud Console, using the "Universal Windows Platform (UWP)" application type.
@@ -22,83 +25,83 @@ namespace ix { class HttpServer; }
  */
 class ZYoutubeAuthHandler
 {
-public:
-	ZYoutubeAuthHandler(const std::string p_sClientId, const bool p_bReadOnly, const int p_nTokenCapturePort = 6967);
-	~ZYoutubeAuthHandler();
+  public:
+    ZYoutubeAuthHandler(const std::string p_sClientId, const bool p_bReadOnly, const int p_nTokenCapturePort = 6967);
+    ~ZYoutubeAuthHandler();
 
-	ZYoutubeAuthHandler(const ZYoutubeAuthHandler&) = delete;
-	ZYoutubeAuthHandler& operator=(const ZYoutubeAuthHandler&) = delete;
+    ZYoutubeAuthHandler(const ZYoutubeAuthHandler&) = delete;
+    ZYoutubeAuthHandler& operator=(const ZYoutubeAuthHandler&) = delete;
 
-	/**
-	 * Get the YouTube authorization URL to open in the browser.
-	 * This does not start the server or open the browser.
-	 * You must call StartAuthorization to do that.
-	 */
-	std::string GetAuthorizationUrl();
+    /**
+     * Get the YouTube authorization URL to open in the browser.
+     * This does not start the server or open the browser.
+     * You must call StartAuthorization to do that.
+     */
+    std::string GetAuthorizationUrl();
 
-	/**
-	 * Start the OAuth authorization flow.
-	 * A local HTTP server is started to capture the token.
-	 * @param p_bOpenBrowser Whether to open the browser automatically.
-	 */
-	void StartAuthorization(const bool p_bOpenBrowser);
+    /**
+     * Start the OAuth authorization flow.
+     * A local HTTP server is started to capture the token.
+     * @param p_bOpenBrowser Whether to open the browser automatically.
+     */
+    void StartAuthorization(const bool p_bOpenBrowser);
 
-	/**
-	 * Stop the authorization flow and the local HTTP server.
-	 */
-	void StopAuthorization();
+    /**
+     * Stop the authorization flow and the local HTTP server.
+     */
+    void StopAuthorization();
 
-	/**
-	 * Clear the acquired auth token.
-	 */
-	void ClearAuthToken()
-	{
-		std::lock_guard s_Lock(m_AuthTokenMutex);
-		m_pAuthToken = nullptr;
-	}
+    /**
+     * Clear the acquired auth token.
+     */
+    void ClearAuthToken()
+    {
+        std::lock_guard s_Lock(m_AuthTokenMutex);
+        m_pAuthToken = nullptr;
+    }
 
-	/**
-	 * Get the acquired auth token.
-	 * nullptr if no token acquired yet.
-	 */
-	std::shared_ptr<ZAuthToken> GetAuthToken();
+    /**
+     * Get the acquired auth token.
+     * nullptr if no token acquired yet.
+     */
+    std::shared_ptr<ZAuthToken> GetAuthToken();
 
-	/**
-	 * Check if we have acquired an auth token.
-	 */
-	bool IsAuthorized() const
-	{
-		std::lock_guard s_Lock(m_AuthTokenMutex);
-		return m_pAuthToken != nullptr;
-	}
+    /**
+     * Check if we have acquired an auth token.
+     */
+    bool IsAuthorized() const
+    {
+        std::lock_guard s_Lock(m_AuthTokenMutex);
+        return m_pAuthToken != nullptr;
+    }
 
-	void SetOnAuthTokenReceivedCallback(const std::function<void(std::shared_ptr<ZAuthToken>)>& p_Callback)
-	{
-		std::lock_guard s_Lock(m_OnAuthTokenReceivedCallbackMutex);
-		m_OnAuthTokenReceivedCallback = p_Callback;
-	}
+    void SetOnAuthTokenReceivedCallback(const std::function<void(std::shared_ptr<ZAuthToken>)>& p_Callback)
+    {
+        std::lock_guard s_Lock(m_OnAuthTokenReceivedCallbackMutex);
+        m_OnAuthTokenReceivedCallback = p_Callback;
+    }
 
-private:
-	const std::string m_sClientId;
-	const std::string m_sApiScope;
-	const int m_nTokenCapturePort;
+  private:
+    const std::string m_sClientId;
+    const std::string m_sApiScope;
+    const int m_nTokenCapturePort;
 
-	std::string m_sCurrentOAuthState;
+    std::string m_sCurrentOAuthState;
 
-	mutable std::recursive_mutex m_TokenCaptureServerMutex;
-	std::thread m_TokenCaptureServerThread;
-	std::unique_ptr<ix::HttpServer> m_pTokenCaptureServer;
-	std::atomic<bool> m_bTokenReceived{ false };
+    mutable std::recursive_mutex m_TokenCaptureServerMutex;
+    std::thread m_TokenCaptureServerThread;
+    std::unique_ptr<ix::HttpServer> m_pTokenCaptureServer;
+    std::atomic<bool> m_bTokenReceived{false};
 
-	mutable std::recursive_mutex m_AuthTokenMutex;
-	std::shared_ptr<ZAuthToken> m_pAuthToken;
+    mutable std::recursive_mutex m_AuthTokenMutex;
+    std::shared_ptr<ZAuthToken> m_pAuthToken;
 
-	mutable std::recursive_mutex m_OnAuthTokenReceivedCallbackMutex;
-	std::function<void(std::shared_ptr<ZAuthToken>)> m_OnAuthTokenReceivedCallback;
+    mutable std::recursive_mutex m_OnAuthTokenReceivedCallbackMutex;
+    std::function<void(std::shared_ptr<ZAuthToken>)> m_OnAuthTokenReceivedCallback;
 
-	void StartTokenCaptureServer();
-	void StopTokenCaptureServer();
-	void RunTokenCaptureServer();
+    void StartTokenCaptureServer();
+    void StopTokenCaptureServer();
+    void RunTokenCaptureServer();
 
-	void SetAuthToken(std::shared_ptr<ZAuthToken> p_pToken);
+    void SetAuthToken(std::shared_ptr<ZAuthToken> p_pToken);
 };

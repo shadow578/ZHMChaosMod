@@ -5,14 +5,12 @@
 #include "IPluginInterface.h"
 
 #include "EffectRegistry.h"
-#include "Helpers/Utils.h"
 #include "Helpers/EntityUtils.h"
+#include "Helpers/Utils.h"
 
 void ZFixPlayerPositionUnlocker::Start()
 {
-    const auto &s_StartingLocation = Utils::ZEntityFinder()
-                                         .EntityType("ZHeroSpawn")
-                                         .FindFirst();
+    const auto& s_StartingLocation = Utils::ZEntityFinder().EntityType("ZHeroSpawn").FindFirst();
 
     if (!s_StartingLocation)
     {

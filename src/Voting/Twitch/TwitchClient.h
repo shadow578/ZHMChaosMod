@@ -1,16 +1,19 @@
 #pragma once
 
-#include <string>
-#include <thread>
 #include <functional>
 #include <memory>
-#include <vector>
 #include <mutex>
+#include <string>
+#include <thread>
+#include <vector>
 
 #include "TwitchEventSub.h"
 #include "TwitchVoting.h"
 
-namespace ix { class HttpServer; }
+namespace ix
+{
+    class HttpServer;
+}
 
 /**
  * Handles Twitch OAuth authorization and integration.
@@ -19,7 +22,7 @@ namespace ix { class HttpServer; }
  */
 class TwitchClient
 {
-public:
+  public:
     TwitchClient(const std::string p_sClientId, const int p_nServerPort = 6969);
     ~TwitchClient();
 
@@ -30,15 +33,15 @@ public:
      * Start the OAuth authorization flow.
      * Opens the Twitch authorization URL in the user's browser and starts
      * a local HTTP server to capture the token.
-	 * @param p_bOpenBrowser Whether to open the browser automatically.
+     * @param p_bOpenBrowser Whether to open the browser automatically.
      */
     void StartAuthorization(const bool p_bOpenBrowser);
 
     /**
      * Get the Twitch authorization URL to open in the browser.
      * This does not start the server or open the browser.
-	 */
-	std::string GetAuthorizationUrl() const;
+     */
+    std::string GetAuthorizationUrl() const;
 
     /**
      * Stop the HTTP server if running.
@@ -66,8 +69,14 @@ public:
     std::string GetUsername() const;
 
     // Voting interface
-    TwitchVoting& GetVoting() { return m_Voting; }
-    const TwitchVoting& GetVoting() const { return m_Voting; }
+    TwitchVoting& GetVoting()
+    {
+        return m_Voting;
+    }
+    const TwitchVoting& GetVoting() const
+    {
+        return m_Voting;
+    }
 
     /**
      * Start a new voting round.
@@ -84,9 +93,9 @@ public:
      */
     bool IsVotingActive() const;
 
-private:
+  private:
     const std::string m_sClientId;
-	const int m_nServerPort;
+    const int m_nServerPort;
 
     mutable std::recursive_mutex m_Mutex;
     std::string m_sAccessToken;
@@ -130,4 +139,3 @@ private:
      */
     static std::string GetSuccessPage();
 };
-

@@ -1,14 +1,14 @@
 #pragma once
 #include "Effects/Base/Companion/ZExplosionEffectBase.h"
 
-#include <Glacier/ZMath.h>
 #include <Glacier/ZActor.h>
+#include <Glacier/ZMath.h>
 
 #include <vector>
 
 class ZExplodeNearbyActorsEffect : public ZExplosionEffectBase
 {
-public:
+  public:
     void Start() override;
 
     std::string GetDisplayName(const bool p_bVoting) const override

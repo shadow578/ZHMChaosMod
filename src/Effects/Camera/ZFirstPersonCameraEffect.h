@@ -6,12 +6,8 @@ class ZSpatialEntity;
 
 class ZFirstPersonCameraEffect : public ZCameraEffectBase, public ZInterpolatingEffectBase
 {
-public:
-    ZFirstPersonCameraEffect() :
-        ZCameraEffectBase(),
-        ZInterpolatingEffectBase(1.0f)
-    {
-    }
+  public:
+    ZFirstPersonCameraEffect() : ZCameraEffectBase(), ZInterpolatingEffectBase(1.0f) {}
 
     void OnClearScene() override;
     void OnDrawDebugUI() override;
@@ -31,6 +27,6 @@ public:
         return EDuration::Short;
     }
 
-private:
+  private:
     TEntityRef<ZSpatialEntity> m_rPlayerHeadAttachEntity;
 };

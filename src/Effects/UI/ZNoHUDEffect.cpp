@@ -28,14 +28,12 @@ void ZNoHUDEffect::Stop()
 
 void ZNoHUDEffect::SetHUDVisibility(const bool p_bVisible)
 {
-    auto s_HUDRoot = Utils::ZEntityFinder()
-        .EntityID(c_nHUDRootId)
-        .FindFirst();
+    auto s_HUDRoot = Utils::ZEntityFinder().EntityID(c_nHUDRootId).FindFirst();
 
     if (!s_HUDRoot)
     {
         return;
-	}
+    }
 
     if (!Utils::SetProperty<bool>(s_HUDRoot, c_sHudVisibilityPropertyName, p_bVisible))
     {
