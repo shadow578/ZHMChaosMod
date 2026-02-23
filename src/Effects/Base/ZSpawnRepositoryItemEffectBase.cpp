@@ -71,9 +71,8 @@ void ZSpawnRepositoryItemEffectBase::OnClearScene()
 
 bool ZSpawnRepositoryItemEffectBase::Available() const
 {
-    return IChaosEffect::Available() && m_pItemSpawnerSpawner && m_pItemSpawnerSpawner->IsAvailable()
-           && m_pRepositoryKeywordSpawner && m_pRepositoryKeywordSpawner->IsAvailable()
-           && m_aRepositoryProps.size() > 0;
+    return IChaosEffect::Available() && m_pItemSpawnerSpawner && m_pItemSpawnerSpawner->IsAvailable() &&
+           m_pRepositoryKeywordSpawner && m_pRepositoryKeywordSpawner->IsAvailable() && m_aRepositoryProps.size() > 0;
 }
 
 void ZSpawnRepositoryItemEffectBase::OnDrawDebugUI()

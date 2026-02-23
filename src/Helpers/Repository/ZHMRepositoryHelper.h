@@ -82,9 +82,9 @@ class ZHMRepositoryHelper
      */
     auto GetEntryIdsByType(const EEntryType p_eType) const
     {
-        return m_mRepositoryKeyToType
-               | std::views::filter([p_eType](const auto& pair) { return pair.second == p_eType; })
-               | std::views::transform([](const auto& pair) -> const ZRepositoryID& { return pair.first; });
+        return m_mRepositoryKeyToType |
+               std::views::filter([p_eType](const auto& pair) { return pair.second == p_eType; }) |
+               std::views::transform([](const auto& pair) -> const ZRepositoryID& { return pair.first; });
     }
 
   private:

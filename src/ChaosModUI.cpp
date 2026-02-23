@@ -212,8 +212,8 @@ void ChaosMod::DrawOverlayUI(const bool p_bHasFocus)
     }
 
     // configure overlay window to auto-size and have transparent background
-    ImGuiWindowFlags s_OverlayFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize
-                                      | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
+    ImGuiWindowFlags s_OverlayFlags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_AlwaysAutoResize |
+                                      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
     if (!p_bHasFocus)
     {
         s_OverlayFlags |= ImGuiWindowFlags_NoBackground;

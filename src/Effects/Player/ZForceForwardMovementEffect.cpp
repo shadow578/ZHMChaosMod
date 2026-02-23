@@ -36,8 +36,9 @@ bool ZForceForwardMovementEffect::Available() const
 
 bool ZForceForwardMovementEffect::IsCompatibleWith(const IChaosEffect* p_pOtherEffect) const
 {
-    return IChaosEffect::IsCompatibleWith(p_pOtherEffect) && !Utils::IsInstanceOf<ZInvertControlsEffect>(p_pOtherEffect)
-           && !Utils::IsInstanceOf<ZDisableInputsEffect>(p_pOtherEffect);
+    return IChaosEffect::IsCompatibleWith(p_pOtherEffect) &&
+           !Utils::IsInstanceOf<ZInvertControlsEffect>(p_pOtherEffect) &&
+           !Utils::IsInstanceOf<ZDisableInputsEffect>(p_pOtherEffect);
 }
 
 void ZForceForwardMovementEffect::Start()
@@ -55,8 +56,8 @@ DEFINE_PLUGIN_DETOUR(ZForceForwardMovementEffect, double, OnInputActionAnalog, Z
     if (m_bEnable)
     {
         const std::string s_sName = th->m_szName;
-        if (s_sName == InputActionNames::Keyboard::c_sVertical
-            || s_sName == InputActionNames::Controller::c_sLeftStickVertical)
+        if (s_sName == InputActionNames::Keyboard::c_sVertical ||
+            s_sName == InputActionNames::Controller::c_sLeftStickVertical)
         {
             // note: hook uses float32, but typed as float64.
             // so we need to unpack and repack to/from float32.

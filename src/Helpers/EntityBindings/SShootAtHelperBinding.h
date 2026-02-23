@@ -24,10 +24,10 @@ struct SShootAtHelperBinding
     PROPERTY(float32, m_fMinTime); // in continuous fire mode, minimum time between shots.
     PROPERTY(float32, m_fMaxTime); // in continuous fire mode, maximum time between shots.
 
-    INPUT_PIN(Holster);             // Holster the weapon.
-    INPUT_PIN(Unholster);           // Unholster the weapon.
-    INPUT_PIN(Fire);                // Unholster and fire the weapon. There may be some delay before firing the shot, as unholstering
-                                    // takes some time.
+    INPUT_PIN(Holster);   // Holster the weapon.
+    INPUT_PIN(Unholster); // Unholster the weapon.
+    INPUT_PIN(Fire); // Unholster and fire the weapon. There may be some delay before firing the shot, as unholstering
+                     // takes some time.
     INPUT_PIN(StartFireContinuous); // Unholster and start firing the weapon continuously.
     INPUT_PIN(StopFireContinuous);  // Stop firing the weapon and holster it.
 };

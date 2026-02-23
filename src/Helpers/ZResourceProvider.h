@@ -19,8 +19,7 @@
 class ZResourceProvider
 {
   public:
-    template <detail::StringLiteral ResPath>
-    static std::unique_ptr<ZResourceProvider> Create()
+    template <detail::StringLiteral ResPath> static std::unique_ptr<ZResourceProvider> Create()
     {
         return std::make_unique<ZResourceProvider>(ResPath.Value, ResId<ResPath>);
     }
@@ -55,8 +54,7 @@ class ZResourceProvider
     /**
      * Get the resource pointer as a specific pointer type, if IsAvailable()==true.
      */
-    template <typename T>
-    const TResourcePtr<T>& GetResourceAs() const
+    template <typename T> const TResourcePtr<T>& GetResourceAs() const
     {
         return static_cast<const TResourcePtr<T>&>(m_ResourcePtr);
     }

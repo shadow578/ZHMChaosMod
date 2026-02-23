@@ -172,8 +172,8 @@ bool ChaosMod::IsCompatibleWithAllActive(const IChaosEffect* p_pEffect)
             continue;
         }
 
-        if (!p_pEffect->IsCompatibleWith(s_ActiveEffect.m_pEffect)
-            || !s_ActiveEffect.m_pEffect->IsCompatibleWith(p_pEffect))
+        if (!p_pEffect->IsCompatibleWith(s_ActiveEffect.m_pEffect) ||
+            !s_ActiveEffect.m_pEffect->IsCompatibleWith(p_pEffect))
         {
             return false;
         }

@@ -22,8 +22,8 @@ void ZSoundFXEffectBase::OnClearScene()
 
 bool ZSoundFXEffectBase::Available() const
 {
-    return ZCompanionModDependentEffectBase::Available() && m_pSoundPlayerSpawner
-           && m_pSoundPlayerSpawner->IsAvailable();
+    return ZCompanionModDependentEffectBase::Available() && m_pSoundPlayerSpawner &&
+           m_pSoundPlayerSpawner->IsAvailable();
 }
 
 void ZSoundFXEffectBase::OnDrawDebugUI()

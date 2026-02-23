@@ -22,8 +22,7 @@ class ZRepositoryEntryPatcher
         return m_pEntry->HasKey(p_sKey);
     }
 
-    template <typename T>
-    std::optional<T*> Get(const std::string& p_sKey) const
+    template <typename T> std::optional<T*> Get(const std::string& p_sKey) const
     {
         return m_pEntry->Get<T>(p_sKey);
     }

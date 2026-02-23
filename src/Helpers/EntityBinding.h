@@ -26,12 +26,12 @@
 
 #include <optional>
 
-#define BINDING_CONSTRUCTOR(NAME)                             \
-    ZEntityRef m_rEntity;                                     \
-    NAME(ZEntityRef p_rEntity = {}) : m_rEntity(p_rEntity) {} \
-    operator bool() const                                     \
-    {                                                         \
-        return !!m_rEntity;                                   \
+#define BINDING_CONSTRUCTOR(NAME)                                                                                      \
+    ZEntityRef m_rEntity;                                                                                              \
+    NAME(ZEntityRef p_rEntity = {}) : m_rEntity(p_rEntity) {}                                                          \
+    operator bool() const                                                                                              \
+    {                                                                                                                  \
+        return !!m_rEntity;                                                                                            \
     }
 
 // intellisense struggles with the PROPERTY macros, so simplify them
@@ -46,45 +46,45 @@
 
 #else // !__INTELLISENSE__
 
-#define PROPERTY(TYPE, NAME)                               \
-    inline std::optional<TYPE> __##NAME##_Get() const      \
-    {                                                      \
-        return Utils::GetProperty<TYPE>(m_rEntity, #NAME); \
-    }                                                      \
-    inline void __##NAME##_Set(const TYPE& value)          \
-    {                                                      \
-        Utils::SetProperty<TYPE>(m_rEntity, #NAME, value); \
-    }                                                      \
+#define PROPERTY(TYPE, NAME)                                                                                           \
+    inline std::optional<TYPE> __##NAME##_Get() const                                                                  \
+    {                                                                                                                  \
+        return Utils::GetProperty<TYPE>(m_rEntity, #NAME);                                                             \
+    }                                                                                                                  \
+    inline void __##NAME##_Set(const TYPE& value)                                                                      \
+    {                                                                                                                  \
+        Utils::SetProperty<TYPE>(m_rEntity, #NAME, value);                                                             \
+    }                                                                                                                  \
     __declspec(property(get = __##NAME##_Get, put = __##NAME##_Set)) std::optional<TYPE> NAME;
 
-#define PROPERTY_RO(TYPE, NAME)                            \
-    inline std::optional<TYPE> __##NAME##_Get() const      \
-    {                                                      \
-        return Utils::GetProperty<TYPE>(m_rEntity, #NAME); \
-    }                                                      \
+#define PROPERTY_RO(TYPE, NAME)                                                                                        \
+    inline std::optional<TYPE> __##NAME##_Get() const                                                                  \
+    {                                                                                                                  \
+        return Utils::GetProperty<TYPE>(m_rEntity, #NAME);                                                             \
+    }                                                                                                                  \
     __declspec(property(get = __##NAME##_Get)) std::optional<TYPE> NAME;
 
-#define MEMBER_BINDING(BINDING_TYPE, BINDING_NAME, BOUND_MEMBER)      \
-    inline BINDING_TYPE __##BINDING_NAME##_Get() const                \
-    {                                                                 \
-        if (auto s_rBoundOpt = BOUND_MEMBER; s_rBoundOpt.has_value()) \
-        {                                                             \
-            return BINDING_TYPE(s_rBoundOpt.value());                 \
-        }                                                             \
-        return {};                                                    \
-    }                                                                 \
+#define MEMBER_BINDING(BINDING_TYPE, BINDING_NAME, BOUND_MEMBER)                                                       \
+    inline BINDING_TYPE __##BINDING_NAME##_Get() const                                                                 \
+    {                                                                                                                  \
+        if (auto s_rBoundOpt = BOUND_MEMBER; s_rBoundOpt.has_value())                                                  \
+        {                                                                                                              \
+            return BINDING_TYPE(s_rBoundOpt.value());                                                                  \
+        }                                                                                                              \
+        return {};                                                                                                     \
+    }                                                                                                                  \
     __declspec(property(get = __##BINDING_NAME##_Get)) BINDING_TYPE BINDING_NAME;
 
 #endif // __INTELLISENSE__
 
-#define INPUT_PIN(NAME)                  \
-    inline void NAME()                   \
-    {                                    \
-        m_rEntity.SignalInputPin(#NAME); \
+#define INPUT_PIN(NAME)                                                                                                \
+    inline void NAME()                                                                                                 \
+    {                                                                                                                  \
+        m_rEntity.SignalInputPin(#NAME);                                                                               \
     }
 
-#define OUTPUT_PIN(NAME)                 \
-    inline void NAME##_Out()             \
-    {                                    \
-        m_rEntity.SignalInputPin(#NAME); \
+#define OUTPUT_PIN(NAME)                                                                                               \
+    inline void NAME##_Out()                                                                                           \
+    {                                                                                                                  \
+        m_rEntity.SignalInputPin(#NAME);                                                                               \
     }

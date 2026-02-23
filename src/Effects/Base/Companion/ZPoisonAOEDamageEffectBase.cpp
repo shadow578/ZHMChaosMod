@@ -22,8 +22,8 @@ void ZPoisonAOEDamageEffectBase::OnClearScene()
 
 bool ZPoisonAOEDamageEffectBase::Available() const
 {
-    return ZCompanionModDependentEffectBase::Available() && m_pEffectCloudSpawner
-           && m_pEffectCloudSpawner->IsAvailable();
+    return ZCompanionModDependentEffectBase::Available() && m_pEffectCloudSpawner &&
+           m_pEffectCloudSpawner->IsAvailable();
 }
 
 void ZPoisonAOEDamageEffectBase::OnDrawDebugUI()
