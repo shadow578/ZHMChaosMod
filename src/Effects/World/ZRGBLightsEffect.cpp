@@ -18,8 +18,8 @@ void ZRGBLightsEffect::OnEnterScene()
     {
         // exclude environmental and area lights
         const auto s_eType = Utils::GetProperty<ILightEntity_ELightType>(s_rLightEntity, "m_eLightType");
-        if (s_eType == ILightEntity_ELightType::LT_DIRECTIONAL || s_eType == ILightEntity_ELightType::LT_OMNI ||
-            s_eType == ILightEntity_ELightType::LT_SPOT || s_eType == ILightEntity_ELightType::LT_SQUARESPOT)
+        if (s_eType == ILightEntity_ELightType::LT_DIRECTIONAL || s_eType == ILightEntity_ELightType::LT_OMNI
+            || s_eType == ILightEntity_ELightType::LT_SPOT || s_eType == ILightEntity_ELightType::LT_SQUARESPOT)
         {
             m_aLights.push_back(SLightEntityInfo(s_rLightEntity));
         }

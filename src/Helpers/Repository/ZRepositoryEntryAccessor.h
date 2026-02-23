@@ -20,7 +20,8 @@ class ZRepositoryEntryAccessor
         return GetPair(p_sKey) != nullptr;
     }
 
-    template <typename T> std::optional<T*> Get(const std::string& p_sKey) const
+    template <typename T>
+    std::optional<T*> Get(const std::string& p_sKey) const
     {
         const auto& s_pPair = GetPair(p_sKey);
         if (!s_pPair)

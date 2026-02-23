@@ -20,7 +20,7 @@ struct SPIPCameraCustomEventBindingBinding
     PROPERTY(
         ZRuntimeResourceID,
         m_rHUDMessagepip
-    ); // HUD message shown below the camera view. if not set, only the camera feed is shown without the message box
+    );                                          // HUD message shown below the camera view. if not set, only the camera feed is shown without the message box
     PROPERTY(ZPIPMessageEntity_EIcon, m_eIcon); // icon shown in the HUD message. only used if m_rHUDMessagepip is set
 
     PROPERTY(bool, m_bAllowAutoCameraCuts);

@@ -21,8 +21,8 @@ std::vector<TEntityRef<ZActor>> Utils::GetActors(const bool p_bIncludeDead, cons
             continue;
         }
 
-        if ((!p_bIncludeDead && s_rActor.m_pInterfaceRef->IsDead()) ||
-            (!p_bIncludePacified && s_rActor.m_pInterfaceRef->IsPacified()))
+        if ((!p_bIncludeDead && s_rActor.m_pInterfaceRef->IsDead())
+            || (!p_bIncludePacified && s_rActor.m_pInterfaceRef->IsPacified()))
         {
             continue;
         }

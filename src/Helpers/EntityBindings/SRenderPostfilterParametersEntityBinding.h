@@ -34,14 +34,14 @@ struct SRenderPostfilterParametersEntityBinding
     PROPERTY(
         float32,
         m_fVignetteGradientLightSize
-    ); // how far down the light gradient reaches. 0.0 - 1.0, where 1.0 is full screen height
+    );                                                  // how far down the light gradient reaches. 0.0 - 1.0, where 1.0 is full screen height
     PROPERTY(SColorRGB, m_vVignetteGradientLightColor); // color of the light gradient
 
     PROPERTY(bool, m_bDistortionWobbleEnabled); // enable distortion wobble effect
     PROPERTY(
         float32,
         m_fDistortionWobbleScale
-    ); // strength of wobble. 0.0 - 1.0, but can go higher with distortion issues
+    );                                                 // strength of wobble. 0.0 - 1.0, but can go higher with distortion issues
     PROPERTY(SVector2, m_vDistortionWobbleWaveLength); // "wavelength" of the wobble effects, both axis. 0.0 - 1.0,
                                                        // at 1.0 there's only a single "wave" across the screen
     PROPERTY(SVector2, m_vDistortionWobbleSpeed);      // speed of the "waves" in both axis
@@ -54,7 +54,7 @@ struct SRenderPostfilterParametersEntityBinding
     PROPERTY(
         float32,
         m_fDistortionBarrelScale
-    ); // scale of barrel distortion. 0.0 - 1.0, but can go higher with distortion issues
+    );                                       // scale of barrel distortion. 0.0 - 1.0, but can go higher with distortion issues
     PROPERTY(SVector2, m_vDistortionBarrel); // x/y distortion amounts. 0.0 - 1.0
 
     PROPERTY(bool, m_bGaussianBlurEnabled);   // enable gaussian blur over the whole screen

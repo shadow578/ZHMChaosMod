@@ -14,7 +14,8 @@ namespace Math
      * @param p_Min Minimum value, inclusive.
      * @param p_Max Maximum value, inclusive.
      */
-    template <typename T> static T GetRandomNumber(const T p_Min, const T p_Max)
+    template <typename T>
+    static T GetRandomNumber(const T p_Min, const T p_Max)
     {
         static_assert(std::is_arithmetic<T>::value, "GetRandomNumber only supports arithmetic types.");
 
@@ -37,7 +38,8 @@ namespace Math
      * @template T Element type.
      * @param p_aElements List to select from.
      */
-    template <typename T> static T SelectRandomElement(const std::vector<T>& p_aElements)
+    template <typename T>
+    static T SelectRandomElement(const std::vector<T>& p_aElements)
     {
         if (p_aElements.empty())
         {
@@ -65,7 +67,8 @@ namespace Math
      * @param p_B Interpolation end value.
      * @param p_fT Interpolation point, 0.0 - 1.0. Clamped.
      */
-    template <typename T> static T Interpolate(const T& p_A, const T& p_B, const float32 p_fT)
+    template <typename T>
+    static T Interpolate(const T& p_A, const T& p_B, const float32 p_fT)
     {
         if (p_fT <= 0.0f)
         {

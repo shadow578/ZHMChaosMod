@@ -49,8 +49,8 @@ bool ZPlayerRagdollEffectBase::Available() const
 {
 
     return (m_bPowered ? Functions::ZHM5BaseCharacter_ActivatePoweredRagdoll->Exists()
-                       : Functions::ZHM5BaseCharacter_ActivateRagdoll->Exists()) &&
-           Functions::ZHM5BaseCharacter_DeactivateRagdoll->Exists();
+                       : Functions::ZHM5BaseCharacter_ActivateRagdoll->Exists())
+           && Functions::ZHM5BaseCharacter_DeactivateRagdoll->Exists();
 }
 
 bool ZPlayerRagdollEffectBase::IsCompatibleWith(const IChaosEffect* p_pOther) const

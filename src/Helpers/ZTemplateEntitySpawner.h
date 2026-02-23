@@ -14,7 +14,8 @@
 class ZTemplateEntitySpawner : public ZResourceProvider
 {
   public:
-    template <detail::StringLiteral ResPath> static std::unique_ptr<ZTemplateEntitySpawner> Create()
+    template <detail::StringLiteral ResPath>
+    static std::unique_ptr<ZTemplateEntitySpawner> Create()
     {
         return std::make_unique<ZTemplateEntitySpawner>(ResPath.Value, ResId<ResPath>);
     }
@@ -35,7 +36,8 @@ class ZTemplateEntitySpawner : public ZResourceProvider
      * Spawn entity from resource and query interface T.
      * @template T entity interface to query
      */
-    template <typename T> TEntityRef<T> SpawnAs()
+    template <typename T>
+    TEntityRef<T> SpawnAs()
     {
         if (const auto s_EntityRef = Spawn())
         {

@@ -38,9 +38,8 @@ bool ZDisableInputsEffect::Available() const
 
 bool ZDisableInputsEffect::IsCompatibleWith(const IChaosEffect* p_pOtherEffect) const
 {
-    return IChaosEffect::IsCompatibleWith(p_pOtherEffect) &&
-           !Utils::IsInstanceOf<ZInvertControlsEffect>(p_pOtherEffect) &&
-           !Utils::IsInstanceOf<ZForceForwardMovementEffect>(p_pOtherEffect);
+    return IChaosEffect::IsCompatibleWith(p_pOtherEffect) && !Utils::IsInstanceOf<ZInvertControlsEffect>(p_pOtherEffect)
+           && !Utils::IsInstanceOf<ZForceForwardMovementEffect>(p_pOtherEffect);
 }
 
 void ZDisableInputsEffect::Start()

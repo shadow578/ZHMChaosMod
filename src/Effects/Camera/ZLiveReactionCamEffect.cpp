@@ -36,8 +36,8 @@ void ZLiveReactionCamEffect::OnClearScene()
 
 bool ZLiveReactionCamEffect::Available() const
 {
-    return IChaosEffect::Available() && m_pPIPCameraSpawner && m_pPIPCameraSpawner->IsAvailable() &&
-           m_pHudMessageResource && m_pHudMessageResource->IsAvailable();
+    return IChaosEffect::Available() && m_pPIPCameraSpawner && m_pPIPCameraSpawner->IsAvailable()
+           && m_pHudMessageResource && m_pHudMessageResource->IsAvailable();
 }
 
 void ZLiveReactionCamEffect::OnDrawDebugUI()

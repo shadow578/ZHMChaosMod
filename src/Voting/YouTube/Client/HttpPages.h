@@ -68,7 +68,8 @@ constexpr std::string GetTokenErrorPage(const std::string s_sError = "")
 <h1>Sign-in Failed!</h1>
 <p>You may want to retry.</p>
 <p class="notice"> 
-)html" + s_sError +
+)html" + s_sError
+        +
         R"html(
 </p>
 )html"

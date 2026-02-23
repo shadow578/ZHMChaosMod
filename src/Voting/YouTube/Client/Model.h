@@ -51,8 +51,8 @@ namespace YT
 
         operator bool() const
         {
-            return !m_sId.empty() && !m_sLiveChatId.empty() && !m_sAuthorId.empty() && !m_sAuthorName.empty() &&
-                   !m_sMessageText.empty();
+            return !m_sId.empty() && !m_sLiveChatId.empty() && !m_sAuthorId.empty() && !m_sAuthorName.empty()
+                   && !m_sMessageText.empty();
         }
 
         static SLiveChatMessage FromJson(const json& p_Json);

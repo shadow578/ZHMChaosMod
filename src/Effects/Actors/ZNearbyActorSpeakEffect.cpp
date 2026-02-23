@@ -36,8 +36,8 @@ void ZNearbyActorSpeakEffect::OnDrawDebugUI()
 
 bool ZNearbyActorSpeakEffect::IsCompatibleWith(const IChaosEffect* p_pOtherEffect) const
 {
-    return ZSpeakEntityEffectBase::IsCompatibleWith(p_pOtherEffect) &&
-           !Utils::IsInstanceOf<ZSpeakEntityEffectBase>(p_pOtherEffect);
+    return ZSpeakEntityEffectBase::IsCompatibleWith(p_pOtherEffect)
+           && !Utils::IsInstanceOf<ZSpeakEntityEffectBase>(p_pOtherEffect);
 }
 
 void ZNearbyActorSpeakEffect::Start()

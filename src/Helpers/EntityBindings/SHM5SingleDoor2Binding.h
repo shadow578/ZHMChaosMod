@@ -16,7 +16,7 @@ struct SHM5SingleDoor2Binding
     PROPERTY(float32, m_fRotAngle);                      // rotation angle when door is opened
     PROPERTY(TEntityRef<ZValueBool>, m_rAutoClose);      // auto close enabled?
     PROPERTY(TEntityRef<ZValueBool>, m_rManualClose);    // manual close allowed?
-    PROPERTY(float32, m_fCloseTime); // how many seconds to auto-close. (seems to reset on auto-close!)
+    PROPERTY(float32, m_fCloseTime);                     // how many seconds to auto-close. (seems to reset on auto-close!)
     PROPERTY(IHM5Door_EOpenMode, m_OpenMode);
     PROPERTY(bool, m_bNPCUseEnable); // doesn't work?
     PROPERTY(bool, m_bNeverCloseGate);

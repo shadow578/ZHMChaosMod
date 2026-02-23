@@ -55,7 +55,8 @@ namespace Utils
          * e.g.
          * ResId<"[assembly:/_pro/vehicles/templates/vehicle_logic.template?/vehicle_fueltank_a.entitytemplate].pc_entityblueprint">
          */
-        template <detail::StringLiteral ResPath> ZEntityFinder& BlueprintResource()
+        template <detail::StringLiteral ResPath>
+        ZEntityFinder& BlueprintResource()
         {
             return BlueprintResource(ResId<ResPath>);
         }
@@ -126,7 +127,8 @@ namespace Utils
      * @param p_rEntity The entity to get the property from. if invalid, returns std::nullopt.
      * @param p_sProperty The property name. If not found or of wrong type, returns std::nullopt.
      */
-    template <typename T> std::optional<T> GetProperty(const ZEntityRef& p_rEntity, const std::string& p_sProperty)
+    template <typename T>
+    std::optional<T> GetProperty(const ZEntityRef& p_rEntity, const std::string& p_sProperty)
     {
         if (!p_rEntity)
         {
