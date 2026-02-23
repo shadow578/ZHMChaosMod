@@ -7,8 +7,8 @@ void ZPerfCounter::Start()
     LARGE_INTEGER s_nFrequency = {0};
     LARGE_INTEGER s_nStartTicks = {0};
 
-	QueryPerformanceFrequency(&s_nFrequency);
-	QueryPerformanceCounter(&s_nStartTicks);
+    QueryPerformanceFrequency(&s_nFrequency);
+    QueryPerformanceCounter(&s_nStartTicks);
 
     m_nFrequency = s_nFrequency.QuadPart;
     m_nStartTicks = s_nStartTicks.QuadPart;

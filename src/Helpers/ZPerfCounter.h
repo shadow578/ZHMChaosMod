@@ -2,7 +2,7 @@
 #include <cstdint>
 
 /**
- * simple performance counter to measure code execution time with microsecond precision. 
+ * simple performance counter to measure code execution time with microsecond precision.
  */
 class ZPerfCounter
 {
@@ -13,7 +13,7 @@ class ZPerfCounter
     void Start();
 
     /**
-     * Stop the counter and return the elapsed time in microseconds 
+     * Stop the counter and return the elapsed time in microseconds
      */
     double Stop();
 
