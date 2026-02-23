@@ -8,6 +8,7 @@
 #include "EffectRegistry.h"
 #include "Helpers/ImGuiExtras.h"
 #include "Helpers/CompanionMod.h"
+#include "Helpers/ZPerfCounter.h"
 
 #include "BuildInfo.h"
 
@@ -433,8 +434,15 @@ void ChaosMod::DrawEffectDebugPane()
     {
         m_qDeferredFrameUpdateActions.push([this]() {
             Logger::Info(TAG "Calling Start() for '{}'", m_pEffectForDebug->GetName());
-            m_pEffectForDebug->Start();
             m_fDebugEffectRemainingTime = 30.0f;
+
+            ZPerfCounter s_Counter;
+            s_Counter.Start();
+
+            m_pEffectForDebug->Start();
+
+            const auto s_fElapsedUs = s_Counter.Stop();
+            Logger::Debug(TAG "Start() for '{}' took {:.2f} us", m_pEffectForDebug->GetName(), s_fElapsedUs);
         });
     }
 
@@ -442,7 +450,14 @@ void ChaosMod::DrawEffectDebugPane()
     {
         m_qDeferredFrameUpdateActions.push([this]() {
             Logger::Info(TAG "Calling Stop() for '{}'", m_pEffectForDebug->GetName());
+
+            ZPerfCounter s_Counter;
+            s_Counter.Start();
+
             m_pEffectForDebug->Stop();
+
+            const auto s_fElapsedUs = s_Counter.Stop();
+            Logger::Debug(TAG "Stop() for '{}' took {:.2f} us", m_pEffectForDebug->GetName(), s_fElapsedUs);
         });
     }
 
