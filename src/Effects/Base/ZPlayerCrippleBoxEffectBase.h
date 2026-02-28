@@ -12,6 +12,9 @@
  * The effect must however call ActivateCrippleBox() to apply any properties set on the cripple box.
  * Spawning / Despawning and resource management is handled automatically.
  * @note for documentation on what the flags do, see tools/ZHM5CrippleBox_flags.md
+ * @note this base effect does NOT define `IsCompatibleWith` to block activation with other effects using a cripple box.
+ * Multiple cripple boxes can be active at the same time. As long as they don't modify the same flags, they work fine together.
+ * Effects must ensure that they implement `IsCompatibleWith` to block any effects modifying the same flags.
  */
 class ZPlayerCrippleBoxEffectBase : public virtual IChaosEffect
 {
