@@ -11,6 +11,7 @@
  * Assignment of the player entity and deactivation is handled automatically.
  * The effect must however call ActivateCrippleBox() to apply any properties set on the cripple box.
  * Spawning / Despawning and resource management is handled automatically.
+ * @note for documentation on what the flags do, see tools/ZHM5CrippleBox_flags.md
  */
 class ZPlayerCrippleBoxEffectBase : public virtual IChaosEffect
 {
@@ -35,11 +36,26 @@ class ZPlayerCrippleBoxEffectBase : public virtual IChaosEffect
     }
 
     /**
-     * Activate the cripple box with the currently set configuration. 
+     * Activate the cripple box with the currently set configuration.
      */
     void ActivateCrippleBox();
 
   private:
     std::unique_ptr<ZTemplateEntitySpawner> m_pCrippleBoxSpawner;
     TEntityRef<ZHM5CrippleBox> m_rCrippleBox;
+};
+
+/**
+ * Helper effect for testing Cripple Box flags.
+ * NOT INTENDED FOR USE IN ACTUAL EFFECTS.
+ */
+class ZPlayerCrippleBoxDbgEffect final : public virtual ZPlayerCrippleBoxEffectBase
+{
+  public:
+    void Start() override {}
+
+    void OnDrawDebugUI() override;
+
+  private:
+    bool m_bReapplyOnChange = true;
 };
