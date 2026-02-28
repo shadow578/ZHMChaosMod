@@ -45,7 +45,7 @@ class ZPlayerSlowMovementEffect : public ZPlayerCrippleBoxEffectBase
 
     std::string GetDisplayName(const bool p_bVoting) const
     {
-        return "Arthritis Mode";
+        return "Captain Slow";
     }
 };
 
