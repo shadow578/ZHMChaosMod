@@ -7,3 +7,10 @@ class ZPlayerInvincibleEffect : public ZPlayerAICrippleEffectBase
     void Start() override;
     void Stop() override;
 };
+
+class ZPlayerHiddenEffect : public ZPlayerAICrippleEffectBase
+{
+  public:
+    void Start() override;
+    void Stop() override;
+};
