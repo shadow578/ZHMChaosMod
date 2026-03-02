@@ -72,4 +72,3 @@ class ZPlayerNoTurnEffect : public ZPlayerCrippleBoxEffectBase
         return "Linear Gameplay";
     }
 };
-
