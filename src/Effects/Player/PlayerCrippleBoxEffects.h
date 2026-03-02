@@ -54,6 +54,8 @@ class ZPlayerNoInventoryEffect : public ZPlayerCrippleBoxEffectBase
   public:
     void Start() override;
 
+    bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
+
     std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "No Pockets";
