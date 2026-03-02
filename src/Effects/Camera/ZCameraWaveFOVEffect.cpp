@@ -75,7 +75,7 @@ float32 ZCameraWaveFOVEffect::GetTargetFOV() const
 
     float32 fTargetFOV = s_fCenterFOV + (s_fAmplitude * fWave);
     fTargetFOV = std::clamp(fTargetFOV, m_fMinFOV, m_fMaxFOV);
-    
+
     return fTargetFOV;
 }
 
