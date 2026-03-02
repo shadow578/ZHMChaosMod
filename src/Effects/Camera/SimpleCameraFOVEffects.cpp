@@ -1,4 +1,4 @@
-#include "ZCameraFOVEffects.h"
+#include "SimpleCameraFOVEffects.h"
 #include "EffectRegistry.h"
 
 REGISTER_CHAOS_EFFECT(ZCameraZoomFOVEffect);
