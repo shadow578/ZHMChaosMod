@@ -44,13 +44,14 @@ void ZPlayerPacifistEffect::Start()
     s_rCripple.m_pInterfaceRef->m_bThrowBodyOverRail = false;
     s_rCripple.m_pInterfaceRef->m_bDragBody = false;
 
-    // no littering (or thowing stuff at people)
+    // no littering (or throwing stuff at people)
     s_rCripple.m_pInterfaceRef->m_bThrowItem = false;
+    s_rCripple.m_pInterfaceRef->m_bDropItem = false;
 
     // no disguising (bc that's weird)
     s_rCripple.m_pInterfaceRef->m_bTakeClothes = false;
 
-    // no interactions causing schenanigans
+    // no interactions causing shenanigans
     s_rCripple.m_pInterfaceRef->m_bInteractions = false;
 
     ActivateCrippleBox();
@@ -110,6 +111,12 @@ void ZPlayerNoInventoryEffect::Start()
     s_rCripple.m_pInterfaceRef->m_bDropItem = false;
 
     ActivateCrippleBox();
+}
+
+bool ZPlayerNoInventoryEffect::IsCompatibleWith(const IChaosEffect* p_pOther) const
+{
+    return IChaosEffect::IsCompatibleWith(p_pOther)
+           && !Utils::IsInstanceOf<ZPlayerPacifistEffect>(p_pOther); // also uses m_bDropItem
 }
 
 REGISTER_CHAOS_EFFECT(ZPlayerNoInventoryEffect);

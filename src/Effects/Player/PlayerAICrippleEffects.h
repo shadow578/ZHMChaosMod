@@ -7,7 +7,7 @@ class ZPlayerInvincibleEffect : public ZPlayerAICrippleEffectBase
     void Start() override;
     void Stop() override;
 
-    std::string GetDisplayName(const bool p_bVoting) const
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "God Mode";
     }
@@ -19,7 +19,7 @@ class ZPlayerHiddenEffect : public ZPlayerAICrippleEffectBase
     void Start() override;
     void Stop() override;
 
-    std::string GetDisplayName(const bool p_bVoting) const
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "Now You See Me";
     }
