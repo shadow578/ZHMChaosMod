@@ -4,6 +4,8 @@
 
 #include <Glacier/ZHM5CrippleBox.h>
 
+#define TAG "[ZPlayerCrippleBoxEffectBase] "
+
 void ZPlayerCrippleBoxEffectBase::LoadResources()
 {
     m_pCrippleBoxSpawner = ZTemplateEntitySpawner::Create<"[modules:/zhm5cripplebox.class].pc_entitytype">();
@@ -52,7 +54,7 @@ void ZPlayerCrippleBoxEffectBase::ActivateCrippleBox()
     }
     else
     {
-        m_bIsAvailable = false;
+        Logger::Warn(TAG "::ActivateCrippleBox() could not activate, failed to get player reference.");
     }
 }
 
