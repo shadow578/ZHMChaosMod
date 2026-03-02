@@ -10,7 +10,7 @@ class ZCameraWaveFOVEffect : public ZCameraEffectBase
 
     void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining) override;
 
-    std::string GetDisplayName() const override
+    std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "Zoom Zoom Cam";
     }
