@@ -46,6 +46,7 @@ void ZPlayerPacifistEffect::Start()
 
     // no littering (or throwing stuff at people)
     s_rCripple.m_pInterfaceRef->m_bThrowItem = false;
+    s_rCripple.m_pInterfaceRef->m_bVRThrow = false; // i assume this is ~= m_bThrowItem
     s_rCripple.m_pInterfaceRef->m_bDropItem = false;
 
     // no disguising (bc that's weird)
@@ -120,3 +121,16 @@ bool ZPlayerNoInventoryEffect::IsCompatibleWith(const IChaosEffect* p_pOther) co
 }
 
 REGISTER_CHAOS_EFFECT(ZPlayerNoInventoryEffect);
+
+void ZPlayerNoTurnEffect::Start()
+{
+    auto s_rCripple = GetCrippleBox();
+
+    // no turning, only move in a straight line.
+    s_rCripple.m_pInterfaceRef->m_bTurn = false;
+    s_rCripple.m_pInterfaceRef->m_bVRTurn = false; // i assume this is ~= m_bTurn
+
+    ActivateCrippleBox();
+}
+
+REGISTER_CHAOS_EFFECT(ZPlayerNoTurnEffect);
