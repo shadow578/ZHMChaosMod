@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include <Glacier/SGameUpdateEvent.h>
+#include <Glacier/ZSpatialEntity.h>
 
 #include "EffectRegistry.h"
 #include "Helpers/EntityUtils.h"
@@ -12,7 +13,6 @@ const std::string c_sCameraFOVPropertyName = "m_fFovYDeg";
 void ZCameraWaveFOVEffect::Start()
 {
     ZCameraEffectBase::Start();
-    m_fOriginalFOV = -1.0f;
     m_fTimeSinceStart = 0.0f;
 }
 
@@ -22,7 +22,6 @@ void ZCameraWaveFOVEffect::OnDrawDebugUI()
     ImGui::DragFloat("Min FOV", &m_fMinFOV, 1.0f, 1.0f, m_fMaxFOV - 1.0f);
     ImGui::DragFloat("Max FOV", &m_fMaxFOV, 1.0f, m_fMinFOV + 1.0f, 179.0f);
 
-    ImGui::TextUnformatted(fmt::format("Original FOV: {:.2f}", m_fOriginalFOV).c_str());
     ImGui::TextUnformatted(fmt::format("Time Since Start(): {:.2f}", m_fTimeSinceStart).c_str());
     ImGui::TextUnformatted(fmt::format("Current Target FOV: {:.2f}", GetTargetFOV()).c_str());
 
@@ -49,12 +48,6 @@ void ZCameraWaveFOVEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, 
     // copy stock camera spatial to effect cam
     s_pCameraSpatial->SetObjectToWorldMatrixFromEditor(s_pOriginalCameraSpatial->GetObjectToWorldMatrix());
 
-    // get original FOV once
-    if (m_fOriginalFOV <= 0.0f)
-    {
-        m_fOriginalFOV = Utils::GetProperty<float32>(GetOriginalCameraEntity(), c_sCameraFOVPropertyName).value_or(45.0f);
-    }
-
     // apply FOV
     auto s_rEffectCamera = GetEffectCameraEntity();
     Utils::SetProperty<float32>(s_rEffectCamera, c_sCameraFOVPropertyName, GetTargetFOV());
@@ -65,8 +58,6 @@ void ZCameraWaveFOVEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, 
 
 float32 ZCameraWaveFOVEffect::GetTargetFOV() const
 {
-    // Simple sinusoidal FOV wave around the original value.
-    // Kept self-contained to avoid relying on external tuning data.
     const float32 s_fCenterFOV = 0.5f * (m_fMinFOV + m_fMaxFOV);
     const float32 s_fAmplitude = 0.5f * (m_fMaxFOV - m_fMinFOV);
 

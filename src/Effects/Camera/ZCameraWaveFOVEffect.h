@@ -16,7 +16,6 @@ class ZCameraWaveFOVEffect : public ZCameraEffectBase
     }
 
   private:
-    float32 m_fOriginalFOV = -1.0f;
     float32 m_fTimeSinceStart = 0.0f;
 
     float32 m_fFrequency = 0.2f;
