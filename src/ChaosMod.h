@@ -79,6 +79,7 @@ class ChaosMod : public IPluginInterface
     bool m_bModEnabled = false;  // mod determined chaos may be enabled?
 
     ZTimer m_EffectTimer;
+    bool m_bEffectTimersUseRealtime;
     float32 m_fFullEffectDuration;
     int m_nVoteOptions;
 

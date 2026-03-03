@@ -132,6 +132,11 @@ void ChaosMod::DrawConfigurationContents()
         UpdateEffectTimerEnabled();
     }
 
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip("Enable the Chaos Mod.");
+    }
+
     ImGui::TextUnformatted("Chaos Interval");
     ImGui::SameLine();
     ImGuiEx::DragFloat(
@@ -141,6 +146,11 @@ void ChaosMod::DrawConfigurationContents()
         120.0f
     );
 
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip("At which interval effects trigger.");
+    }
+
     ImGui::TextUnformatted("Effect Duration");
     ImGui::SameLine();
     ImGuiEx::DragFloat(
@@ -149,6 +159,21 @@ void ChaosMod::DrawConfigurationContents()
         5.0,
         120.0
     );
+
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip("How long a full-time effect lasts. Short effects use half of this.");
+    }
+
+    if (ImGui::Checkbox("Use Real-Time Timer", &m_bEffectTimersUseRealtime))
+    {
+        m_EffectTimer.m_eTimeMode = m_bEffectTimersUseRealtime ? ZTimer::ETimeMode::RealTime : ZTimer::ETimeMode::GameTime;
+    }
+
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip("Should the effect timer use realtime or in-game time?");
+    }
 
     ImGui::SeparatorText("Voting");
 
@@ -175,11 +200,16 @@ void ChaosMod::DrawConfigurationContents()
                 m_pVotingIntegration = s_pVoting;
                 m_pVotingIntegration->Activate();
 
-                Logger::Debug(TAG "Selected voting option {}", s_pVoting->GetName());
+                Logger::Debug(TAG "Selected voting option {}", s_pVoting ? s_pVoting->GetName() : "<null>");
             }
         }
 
         ImGui::EndCombo();
+    }
+
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip("Select how new effects should be selected.");
     }
 
     if (s_pVoting)
