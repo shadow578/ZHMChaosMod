@@ -111,7 +111,7 @@ void ZPlayerNoSlowdownEffect::OnDrawUI(const bool p_bHasFocus)
     std::string s_sText = fmt::format("{:.1f} km/h", s_fSpeed);
     if (m_eState == EState::ActivationGrace)
     {
-        s_sText = fmt::format("Get Running! {:.1f} Seconds remaining!", m_fGraceTimeRemaining);
+        s_sText = fmt::format("Get Ready! {:.1f} Seconds Remaining!", m_fGraceTimeRemaining);
     }
 
     ImU32 s_TextColor = IM_COL32(0, 255, 0, 255); // green
