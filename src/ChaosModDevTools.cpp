@@ -2,6 +2,12 @@
 
 #include <fstream>
 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <Windows.h>
+#include <shellapi.h>
+
 #include <Logging.h>
 
 #include "EffectRegistry.h"
@@ -41,8 +47,14 @@ void ChaosMod::GenerateAndOpenCompatibilityMatrix()
 {
     // generate compatibility matrix as csv
     constexpr const char* c_sSeparator = ",";
+    constexpr const char* c_sFilename = "Effect_Compatibility_Matrix.csv";
 
-    std::ofstream s_File("Effect_Compatibility_Matrix.csv", std::ios::trunc);
+    std::ofstream s_File(c_sFilename, std::ios::trunc);
+    if (!s_File.is_open())
+    {
+        Logger::Error(TAG "Failed to open '{}' for writing compatibility", c_sFilename);
+        return;
+    }
 
     s_File << "'Effect Compatibility'" << c_sSeparator;
     for (const auto& s_pEffectA : EffectRegistry::GetInstance().GetEffects())
@@ -65,5 +77,5 @@ void ChaosMod::GenerateAndOpenCompatibilityMatrix()
     s_File.close();
 
     // open with default program
-    ShellExecuteA(nullptr, "open", "Effect_Compatibility_Matrix.csv", nullptr, nullptr, SW_SHOW);
+    ShellExecuteA(nullptr, "open", c_sFilename, nullptr, nullptr, SW_SHOW);
 }
