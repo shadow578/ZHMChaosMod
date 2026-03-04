@@ -59,13 +59,14 @@ class ChaosMod : public IPluginInterface
     void DrawDebugUI(const bool p_bHasFocus);
     void DrawEffectDebugPane();
 
-  private: // Test Mode
+  private: // Dev Tools
     bool m_bTestmodeEnabled = false;
     size_t m_nTestmodeEffectIndex = 0;
     float32 m_fTestmodeInterval = 10.0f;
     float32 m_fTestmodeTimeToNextEffect = 0.0f;
 
     void UpdateTestMode(const float32 p_fDeltaTime);
+    void GenerateAndOpenCompatibilityMatrix();
 
   private: // Selection & Countdown logic
     struct SActiveEffect
