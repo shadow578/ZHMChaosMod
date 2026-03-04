@@ -60,7 +60,7 @@ class ChaosMod : public IPluginInterface
     void DrawUnlockersContents();
 
     void DrawEffectConfigUI(const bool p_bHasFocus);
-    void DrawEffectConfigPane(const IChaosEffect* p_pEffect);
+    void DrawEffectConfigPane();
 
     void DrawDebugUI(const bool p_bHasFocus);
     void DrawEffectDebugPane();

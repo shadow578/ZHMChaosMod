@@ -135,8 +135,8 @@ std::vector<IChaosEffect*> ChaosMod::GetRandomEffectSelection(const int p_nCount
 
     for (auto* p_pEffect : s_aShuffeled)
     {
-        // skip unavailable
-        if (!p_pEffect->Available())
+        // exclude disabled or unavailable
+        if (!p_pEffect->IsEnabled() || !p_pEffect->Available())
         {
             continue;
         }

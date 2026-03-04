@@ -13,6 +13,7 @@
 #include "Helpers/Repository/ZHMRepositoryHelper.h"
 
 #include "EffectRegistry.h"
+#include "ZEffectConfigurationAccessor.h"
 #include "BuildInfo.h"
 
 #define TAG "[ChaosMod] "
@@ -53,9 +54,13 @@ void ChaosMod::Init()
 
     InitAuthorNames();
 
-    ForeachEffect(true, [](IChaosEffect* p_pEffect) {
+    ForeachEffect(true, [this](IChaosEffect* p_pEffect) {
         Logger::Debug(TAG "Forwarding OnModInitialized to '{}'", p_pEffect->GetName());
         p_pEffect->OnModInitialized();
+
+        Logger::Debug(TAG "Calling LoadConfiguration for '{}'", p_pEffect->GetName());
+        ZEffectConfigurationAccessor s_ConfigAccessor(this, p_pEffect->GetName());
+        p_pEffect->LoadConfiguration(&s_ConfigAccessor);
     });
 
     for (auto& s_pVotingIntegation : EffectRegistry::GetInstance().GetVotingIntegrations())

@@ -41,4 +41,9 @@ namespace Utils
      * the timestamp is guranteed to be monotonic increasing, but may not represent wall-clock time.
      */
     uint64_t GetTimestamp();
+
+    /**
+     * Convert a string to lowercase, without modifying the input string. 
+     */
+    std::string ToLower(const std::string& p_sInput);
 }; // namespace Utils

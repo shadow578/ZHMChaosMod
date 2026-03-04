@@ -1,4 +1,4 @@
-#include "ZDisableInputsEffect.h";
+#include "ZDisableInputsEffect.h"
 
 #include <Glacier/ZInput.h>
 

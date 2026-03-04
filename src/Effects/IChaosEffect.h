@@ -5,6 +5,8 @@
 #include <string>
 #include <set>
 
+class ZEffectConfigurationAccessor;
+
 /**
  * Interface for all chaos effects.
  * Effects must - at minimum - implement Start() for one-shot effects.
@@ -117,7 +119,7 @@ class IChaosEffect
      * Check whether the effect is available to be used.
      * Unavailable effects will not be selected by the ChaosMod.
      * When unavailable, *effect logic* methods will not be called.
-     * *lifecycle* and *metadata* methods are unaffected.
+     * *lifecycle*, *metadata* and *configuration* methods are unaffected.
      */
     virtual bool Available() const
     {
@@ -164,6 +166,36 @@ class IChaosEffect
         return {};
     }
 
+  public: // Configuration
+    /**
+     * Load the configuration for this effect using the given accessor.
+     * @param p_pConfiguration Accessor for the configuration data.
+     * @note This will be called early in the mod's lifecycle. Keep logic here minimal.
+     * @note This method may be called multiple times to reload configuration.
+     */
+    virtual void LoadConfiguration(const ZEffectConfigurationAccessor* p_pConfiguration);
+
+    /**
+     * Draw the configuration UI for this effect, allowing configuration write-back via the given accessor.
+     * You should NOT load the configuration here, as this is called every time the UI is drawn.
+     * Only use the accessor to write back changes, and only in a
+     * ImGui event (e.g. button click, checkbox toggle, etc.) to avoid performance issues.
+     * Note that this method is called from within an existing window, so you only need to draw ImGui controls.
+     * Also note that the default implementation draws the "Enabled" checkbox.
+     * Thus, you MUST call the base implementation to allow enabling/disabling the effect.
+     * @param p_pConfiguration Accessor for the configuration data.
+     */
+    virtual void DrawConfigUI(ZEffectConfigurationAccessor* p_pConfiguration);
+
+    /**
+     * Is this effect enabled (via config)?
+     */
+    bool IsEnabled() const
+    {
+        return m_bIsEnabled;
+    }
+
   protected:
     bool m_bIsAvailable = true;
+    bool m_bIsEnabled = true;
 };

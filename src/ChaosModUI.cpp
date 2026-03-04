@@ -6,6 +6,7 @@
 #include <imgui.h>
 
 #include "EffectRegistry.h"
+#include "ZEffectConfigurationAccessor.h"
 #include "Helpers/ImGuiExtras.h"
 #include "Helpers/CompanionMod.h"
 #include "Helpers/ZPerfCounter.h"
@@ -297,11 +298,11 @@ void ChaosMod::DrawEffectConfigUI(const bool p_bHasFocus)
 
         if (m_pEffectForConfig)
         {
-            DrawEffectConfigPane(m_pEffectForConfig);
+            DrawEffectConfigPane();
         }
         else
         {
-            ImGui::TextUnformatted("No effect selected.");
+            ImGui::TextUnformatted("Select an effect to configure it.");
         }
 
         ImGui::EndChild();
@@ -313,10 +314,13 @@ void ChaosMod::DrawEffectConfigUI(const bool p_bHasFocus)
     ImGui::PopFont();
 }
 
-void ChaosMod::DrawEffectConfigPane(const IChaosEffect* p_pEffect)
+void ChaosMod::DrawEffectConfigPane()
 {
+    if (!m_pEffectForConfig)
+        return;
+
     std::string s_sAttribution = "";
-    for (const auto& s_sName : p_pEffect->GetAttribution())
+    for (const auto& s_sName : m_pEffectForConfig->GetAttribution())
     {
         if (!s_sAttribution.empty())
         {
@@ -330,7 +334,7 @@ void ChaosMod::DrawEffectConfigPane(const IChaosEffect* p_pEffect)
     }
 
     // center title horizontally in content pane
-    const auto s_sTitle = fmt::format("Configuring '{}'", p_pEffect->GetDisplayName(false));
+    const auto s_sTitle = fmt::format("Configuring '{}'", m_pEffectForConfig->GetDisplayName(false));
     const auto s_nContentWidth = ImGui::GetContentRegionAvail().x;
     const auto s_nTitleWidth = ImGui::CalcTextSize(s_sTitle.c_str()).x;
 
@@ -346,10 +350,8 @@ void ChaosMod::DrawEffectConfigPane(const IChaosEffect* p_pEffect)
 
     ImGui::Separator();
 
-    static bool s_bDummyEnabled = false;
-    if (ImGui::Checkbox("Enabled", &s_bDummyEnabled))
-    {
-    }
+    ZEffectConfigurationAccessor s_ConfigAccessor(this, m_pEffectForConfig->GetName());
+    m_pEffectForConfig->DrawConfigUI(&s_ConfigAccessor);
 }
 #pragma endregion
 

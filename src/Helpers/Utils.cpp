@@ -4,6 +4,8 @@
 #include <Windows.h>
 #include <shellapi.h>
 
+#include <algorithm>
+
 void Utils::CopyToClipboard(const std::string& p_sData)
 {
     if (!OpenClipboard(nullptr))
@@ -43,4 +45,11 @@ void Utils::OpenBrowser(const std::string& p_sUrl)
 uint64_t Utils::GetTimestamp()
 {
     return GetTickCount64() / 1000; // ms to seconds
+}
+
+std::string Utils::ToLower(const std::string& p_sInput)
+{
+    std::string s_Result = p_sInput;
+    std::transform(s_Result.begin(), s_Result.end(), s_Result.begin(), [](unsigned char c) { return std::tolower(c); });
+    return s_Result;
 }
