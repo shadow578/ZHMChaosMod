@@ -95,7 +95,7 @@ void ZNearbyActorSpeakEffect::FindAndRemoveSpeakersNearby()
                 m_aActiveSpeakers.begin(),
                 m_aActiveSpeakers.end(),
                 [&s_rActor](const SActiveSpeakerEntry& p_Entry) {
-                    return p_Entry.m_rActor == s_rActor;
+                    return p_Entry.m_rActor == s_rActor.m_entityRef;
                 }
             );
             m_aActiveSpeakers.erase(s_nIt, m_aActiveSpeakers.end());
@@ -107,7 +107,7 @@ void ZNearbyActorSpeakEffect::FindAndRemoveSpeakersNearby()
             m_aActiveSpeakers.begin(),
             m_aActiveSpeakers.end(),
             [&s_rActor](const SActiveSpeakerEntry& p_Entry) {
-                return p_Entry.m_rActor == s_rActor;
+                return p_Entry.m_rActor == s_rActor.m_entityRef;
             }
         );
         if (s_bExists)
