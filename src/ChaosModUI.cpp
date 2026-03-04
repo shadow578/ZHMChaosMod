@@ -83,6 +83,7 @@ void ChaosMod::OnDrawUI(const bool p_HasFocus)
     });
 
     DrawMainUI(p_HasFocus);
+    DrawEffectConfigUI(p_HasFocus);
     DrawOverlayUI(p_HasFocus);
     DrawDebugUI(p_HasFocus);
 }
@@ -175,6 +176,16 @@ void ChaosMod::DrawConfigurationContents()
         ImGui::SetTooltip("Should the effect timer use realtime or in-game time?");
     }
 
+    if (ImGui::Button("Open Effects Configuration"))
+    {
+        m_bEffectConfigOpen = true;
+    }
+
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip("Configure which effects should be enabled during gameplay");
+    }
+
     ImGui::SeparatorText("Voting");
 
     auto* s_pVoting = GetCurrentVotingIntegration();
@@ -238,6 +249,106 @@ void ChaosMod::DrawUnlockersContents()
         }
 
         ImGui::EndDisabled();
+    }
+}
+#pragma endregion
+
+#pragma region Effect Config UI
+void ChaosMod::DrawEffectConfigUI(const bool p_bHasFocus)
+{
+    if (!m_bEffectConfigOpen || !p_bHasFocus)
+    {
+        return;
+    }
+
+    // start at a sensible size
+    ImGui::SetNextWindowSize({450.0f, 500.0f}, ImGuiCond_FirstUseEver);
+
+    ImGui::PushFont(SDK()->GetImGuiBlackFont());
+    const auto s_ConfigShowing = ImGui::Begin(ICON_MD_SETTINGS "CHAOS MOD EFFECTS CONFIGURATION", &m_bEffectConfigOpen);
+    ImGui::PushFont(SDK()->GetImGuiRegularFont());
+
+    if (s_ConfigShowing)
+    {
+        ImGui::Separator();
+
+        ImGui::BeginChild("##effect_cfg_list_pane", ImVec2(300, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
+
+        for (auto& s_pEffect : EffectRegistry::GetInstance().GetEffects())
+        {
+            if (!s_pEffect)
+                continue;
+
+            if (ImGui::Selectable(
+                    s_pEffect->GetDisplayName(false).c_str(),
+                    m_pEffectForConfig == s_pEffect.get()
+                ))
+            {
+                m_pEffectForConfig = s_pEffect.get();
+                Logger::Debug(TAG "Selected '{}' for config", s_pEffect->GetName());
+            }
+        }
+
+        ImGui::EndChild();
+
+        ImGui::SameLine();
+        ImGui::BeginGroup();
+        ImGui::BeginChild("##effect_cfg_pane", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
+
+        if (m_pEffectForConfig)
+        {
+            DrawEffectConfigPane(m_pEffectForConfig);
+        }
+        else
+        {
+            ImGui::TextUnformatted("No effect selected.");
+        }
+
+        ImGui::EndChild();
+        ImGui::EndGroup();
+    }
+
+    ImGui::PopFont();
+    ImGui::End();
+    ImGui::PopFont();
+}
+
+void ChaosMod::DrawEffectConfigPane(const IChaosEffect* p_pEffect)
+{
+    std::string s_sAttribution = "";
+    for (const auto& s_sName : p_pEffect->GetAttribution())
+    {
+        if (!s_sAttribution.empty())
+        {
+            s_sAttribution += ", ";
+        }
+        s_sAttribution += s_sName;
+    }
+    if (s_sAttribution.empty())
+    {
+        s_sAttribution = "The Chaos Mod Team";
+    }
+
+    // center title horizontally in content pane
+    const auto s_sTitle = fmt::format("Configuring '{}'", p_pEffect->GetDisplayName(false));
+    const auto s_nContentWidth = ImGui::GetContentRegionAvail().x;
+    const auto s_nTitleWidth = ImGui::CalcTextSize(s_sTitle.c_str()).x;
+
+    ImGui::SetCursorPosX((s_nContentWidth - s_nTitleWidth) * 0.5f);
+    ImGui::TextUnformatted(s_sTitle.c_str());
+
+    // sub-title with attribution
+    const auto s_sSubtitle = fmt::format("by {}", s_sAttribution);
+    const auto s_nSubtitleWidth = ImGui::CalcTextSize(s_sSubtitle.c_str()).x;
+
+    ImGui::SetCursorPosX((s_nContentWidth - s_nSubtitleWidth) * 0.5f);
+    ImGui::TextDisabled(s_sSubtitle.c_str());
+
+    ImGui::Separator();
+
+    static bool s_bDummyEnabled = false;
+    if (ImGui::Checkbox("Enabled", &s_bDummyEnabled))
+    {
     }
 }
 #pragma endregion

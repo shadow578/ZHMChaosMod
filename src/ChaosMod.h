@@ -41,11 +41,14 @@ class ChaosMod : public IPluginInterface
 
   private: // UI & Debug
     bool m_bMenuActive = false;
+    bool m_bEffectConfigOpen = false;
+    IChaosEffect* m_pEffectForConfig = nullptr;
+    std::string m_sAuthorNames;
+
     bool m_bDebugMenuActive = false;
     bool m_bDebugMenuAlwaysVisible = false;
     float32 m_fDebugEffectRemainingTime = 30.0f;
     IChaosEffect* m_pEffectForDebug = nullptr;
-    std::string m_sAuthorNames;
 
     void InitAuthorNames();
 
@@ -55,6 +58,9 @@ class ChaosMod : public IPluginInterface
     void DrawConfigurationContents();
     void DrawOverlayContents();
     void DrawUnlockersContents();
+
+    void DrawEffectConfigUI(const bool p_bHasFocus);
+    void DrawEffectConfigPane(const IChaosEffect* p_pEffect);
 
     void DrawDebugUI(const bool p_bHasFocus);
     void DrawEffectDebugPane();
