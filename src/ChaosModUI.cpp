@@ -374,6 +374,12 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
             ImGui::TextUnformatted(fmt::format("Next Effect in {:.1f} seconds. Last effect: '{}' (#{})", m_fTestmodeTimeToNextEffect, m_pEffectForDebug ? m_pEffectForDebug->GetName() : "<none>", m_nTestmodeEffectIndex).c_str());
         }
 
+        ImGui::Separator();
+
+        if (ImGui::Button("Generate Compatibility Matrix"))
+        {
+            GenerateAndOpenCompatibilityMatrix();
+        }
 #endif // _DEBUG
 
         ImGui::Separator();
@@ -510,28 +516,6 @@ void ChaosMod::DrawEffectDebugPane()
         m_qDeferredFrameUpdateActions.push([this]() {
             ActivateEffect(m_pEffectForDebug);
         });
-    }
-
-    if (ImGui::Button("Print Compatibility"))
-    {
-        Logger::Info(TAG "Compatibility for A='{}':", m_pEffectForDebug->GetName());
-        for (const auto& s_pOtherEffect : EffectRegistry::GetInstance().GetEffects())
-        {
-            constexpr int c_nNamePadding = 30;
-
-            auto s_sOtherName = s_pOtherEffect->GetName();
-            s_sOtherName.resize(c_nNamePadding, ' ');
-
-            const auto s_bCompatibleA = m_pEffectForDebug->IsCompatibleWith(s_pOtherEffect.get());
-            const auto s_bCompatibleB = s_pOtherEffect->IsCompatibleWith(m_pEffectForDebug);
-
-            Logger::Info(
-                TAG " - with B='{}': A>B={} \t| B>A={}",
-                s_sOtherName,
-                s_bCompatibleA ? "Compatible" : "Incompatible",
-                s_bCompatibleB ? "Compatible" : "Incompatible"
-            );
-        }
     }
 
     ImGui::EndDisabled();
