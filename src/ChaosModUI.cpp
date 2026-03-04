@@ -141,12 +141,15 @@ void ChaosMod::DrawConfigurationContents()
 
     ImGui::TextUnformatted("Chaos Interval");
     ImGui::SameLine();
-    ImGuiEx::DragFloat(
+    if (ImGuiEx::DragFloat(
         "##Chaos Interval",
         &m_EffectTimer.m_fIntervalSeconds,
         5.0f,
         120.0f
-    );
+        ))
+    {
+        m_pConfiguration->SetDouble("EffectInterval", m_EffectTimer.m_fIntervalSeconds);
+    }
 
     if (ImGui::IsItemHovered())
     {
@@ -155,12 +158,15 @@ void ChaosMod::DrawConfigurationContents()
 
     ImGui::TextUnformatted("Effect Duration");
     ImGui::SameLine();
-    ImGuiEx::DragFloat(
+    if(ImGuiEx::DragFloat(
         "##Effect Duration",
         &m_fFullEffectDuration,
         5.0,
         120.0
-    );
+        ))
+    {
+        m_pConfiguration->SetDouble("FullEffectDuration", m_fFullEffectDuration);
+    }
 
     if (ImGui::IsItemHovered())
     {
@@ -170,6 +176,7 @@ void ChaosMod::DrawConfigurationContents()
     if (ImGui::Checkbox("Use Real-Time Timer", &m_bEffectTimersUseRealtime))
     {
         m_EffectTimer.m_eTimeMode = m_bEffectTimersUseRealtime ? ZTimer::ETimeMode::RealTime : ZTimer::ETimeMode::GameTime;
+        m_pConfiguration->SetBool("EffectTimersUseRealtime", m_bEffectTimersUseRealtime);
     }
 
     if (ImGui::IsItemHovered())

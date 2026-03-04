@@ -22,7 +22,8 @@ ChaosMod::ChaosMod() : m_fFullEffectDuration(60.0f),
                        m_nVoteOptions(4),
                        m_EffectTimer(std::bind(&ChaosMod::OnEffectTimerTrigger, this), 30.0),
                        m_bEffectTimersUseRealtime(false),
-                       m_SlowUpdateTimer(std::bind(&ChaosMod::OnEffectSlowUpdate, this), 0.2, ZTimer::ETimeMode::RealTime, true) // ~5 FPS
+                       m_SlowUpdateTimer(std::bind(&ChaosMod::OnEffectSlowUpdate, this), 0.2, ZTimer::ETimeMode::RealTime, true), // ~5 FPS
+                       m_pConfiguration(std::make_unique<ZEffectConfigurationAccessor>(this, "ChaosMod"))
 {
 }
 
@@ -53,6 +54,8 @@ void ChaosMod::Init()
     EffectRegistry::GetInstance().Sort();
 
     InitAuthorNames();
+
+    LoadConfiguration();
 
     ForeachEffect(true, [this](IChaosEffect* p_pEffect) {
         Logger::Debug(TAG "Forwarding OnModInitialized to '{}'", p_pEffect->GetName());
@@ -160,6 +163,15 @@ void ChaosMod::OnLoadOrClearScene()
     }
 }
 
+void ChaosMod::LoadConfiguration()
+{
+    m_EffectTimer.m_fIntervalSeconds = m_pConfiguration->GetDouble("EffectInterval", 30.0);
+    m_fFullEffectDuration = m_pConfiguration->GetDouble("FullEffectDuration", 60.0);
+    m_bEffectTimersUseRealtime = m_pConfiguration->GetBool("EffectTimersUseRealtime", false);
+
+    m_EffectTimer.m_eTimeMode = m_bEffectTimersUseRealtime ? ZTimer::ETimeMode::RealTime : ZTimer::ETimeMode::GameTime;
+}
+
 void ChaosMod::UpdateEffectTimerEnabled()
 {
     const auto s_bEnable = m_bUserEnabled && m_bModEnabled;
@@ -212,7 +224,7 @@ IVotingIntegration* ChaosMod::GetDefaultVotingIntegration()
         }
     }
 
-    std::runtime_error("Failed to find default voting integration!");
+    throw std::runtime_error("Failed to find default voting integration!");
     return nullptr;
 }
 

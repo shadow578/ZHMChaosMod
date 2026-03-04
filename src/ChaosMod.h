@@ -13,6 +13,8 @@
 #include <functional>
 #include <memory>
 
+class ZEffectConfigurationAccessor;
+
 class ChaosMod : public IPluginInterface
 {
   public: // Plugin Interface
@@ -38,6 +40,11 @@ class ChaosMod : public IPluginInterface
 
     void OnEffectSlowUpdate();
     void OnLoadOrClearScene();
+
+  private: // Config
+    std::unique_ptr<ZEffectConfigurationAccessor> m_pConfiguration;
+
+    void LoadConfiguration();
 
   private: // UI & Debug
     bool m_bMenuActive = false;
