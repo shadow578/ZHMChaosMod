@@ -48,6 +48,19 @@ class EffectRegistry
         return m_aEffects;
     }
 
+    const std::unique_ptr<IChaosEffect>& GetEffectByName(const std::string& p_sName) const
+    {
+        for (const auto& s_pEffect : m_aEffects)
+        {
+            if (s_pEffect->GetName() == p_sName)
+            {
+                return s_pEffect;
+            }
+        }
+
+        return nullptr;
+    }
+
     const std::vector<std::unique_ptr<IUnlocker>>& GetUnlockers() const
     {
         return m_aUnlockers;
@@ -56,6 +69,19 @@ class EffectRegistry
     const std::vector<std::unique_ptr<IVotingIntegration>>& GetVotingIntegrations() const
     {
         return m_aVotingIntegrations;
+    }
+
+    const std::unique_ptr<IVotingIntegration>& GetVotingIntegrationByName(const std::string& p_sName) const
+    {
+        for (const auto& s_pIntegration : m_aVotingIntegrations)
+        {
+            if (s_pIntegration->GetName() == p_sName)
+            {
+                return s_pIntegration;
+            }
+        }
+
+        return nullptr;
     }
 
     void Sort()

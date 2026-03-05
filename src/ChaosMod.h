@@ -42,14 +42,42 @@ class ChaosMod : public IPluginInterface
     void OnLoadOrClearScene();
 
   private: // Config
-    std::unique_ptr<ZEffectConfigurationAccessor> m_pConfiguration;
+    struct SEffectEnableTemplate
+    {
+        std::string m_sName;
+        std::string m_sDescription;
 
+        /// default enable state for effects not listed in m_mEffectEnableStates
+        bool m_bDefaultEnabled;
+
+        /// map of effect name to whether it's enabled in this template
+        std::map<std::string, bool> m_mEffectEnableStates;
+    };
+
+    std::unique_ptr<ZEffectConfigurationAccessor> m_pConfiguration;
+    static std::vector<SEffectEnableTemplate> g_aEffectEnableTemplates;
+
+    /// Load (or reload) mod and effects configuration from disk and apply it.
     void LoadConfiguration();
+
+    /// Enable or disable all effects. 
+    /// A configuration reload is required for this to take effect.
+    void SetAllEffectsEnabled(const bool p_bEnabled);
+
+    /// Enable or disable the given effect. 
+    /// A configuration reload is required for this to take effect.
+    void SetEffectEnabled(const IChaosEffect* p_pEffect, const bool p_bEnabled);
+
+    /// Apply the given effect enable template, enabling or disabling effects as specified by the template.
+    /// A configuration reload is required for this to take effect.
+    void ApplyEffectEnableTemplate(const SEffectEnableTemplate& p_Template);
 
   private: // UI & Debug
     bool m_bMenuActive = false;
     bool m_bEffectConfigOpen = false;
     IChaosEffect* m_pEffectForConfig = nullptr;
+    int m_nSelectedConfigTemplate = 0;
+    float32 m_fEffectConfigUIButtonsWidth = 250.0f;
     std::string m_sAuthorNames;
 
     bool m_bDebugMenuActive = false;

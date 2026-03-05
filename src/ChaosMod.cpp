@@ -55,15 +55,9 @@ void ChaosMod::Init()
 
     InitAuthorNames();
 
-    LoadConfiguration();
-
     ForeachEffect(true, [this](IChaosEffect* p_pEffect) {
         Logger::Debug(TAG "Forwarding OnModInitialized to '{}'", p_pEffect->GetName());
         p_pEffect->OnModInitialized();
-
-        Logger::Debug(TAG "Calling LoadConfiguration for '{}'", p_pEffect->GetName());
-        ZEffectConfigurationAccessor s_ConfigAccessor(this, p_pEffect->GetName());
-        p_pEffect->LoadConfiguration(&s_ConfigAccessor);
     });
 
     for (auto& s_pVotingIntegation : EffectRegistry::GetInstance().GetVotingIntegrations())
@@ -76,6 +70,8 @@ void ChaosMod::Init()
     }
 
     m_pVotingIntegration = GetDefaultVotingIntegration();
+
+    LoadConfiguration();
 }
 
 void ChaosMod::OnEngineInitialized()
@@ -165,11 +161,42 @@ void ChaosMod::OnLoadOrClearScene()
 
 void ChaosMod::LoadConfiguration()
 {
+    // load and apply mod configuration
     m_EffectTimer.m_fIntervalSeconds = m_pConfiguration->GetDouble("EffectInterval", 30.0);
     m_fFullEffectDuration = m_pConfiguration->GetDouble("FullEffectDuration", 60.0);
     m_bEffectTimersUseRealtime = m_pConfiguration->GetBool("EffectTimersUseRealtime", false);
 
     m_EffectTimer.m_eTimeMode = m_bEffectTimersUseRealtime ? ZTimer::ETimeMode::RealTime : ZTimer::ETimeMode::GameTime;
+
+    // load effect configurations
+    ForeachEffect(true, [this](IChaosEffect* p_pEffect) {
+        Logger::Debug(TAG "Loading configuration for '{}'", p_pEffect->GetName());
+        ZEffectConfigurationAccessor s_ConfigAccessor(this, p_pEffect->GetName());
+        p_pEffect->LoadConfiguration(&s_ConfigAccessor);
+    });
+}
+
+void ChaosMod::SetAllEffectsEnabled(const bool p_bEnabled)
+{
+    ForeachEffect(true, [this, p_bEnabled](IChaosEffect* p_pEffect) {
+        SetEffectEnabled(p_pEffect, p_bEnabled);
+    });
+}
+
+void ChaosMod::SetEffectEnabled(const IChaosEffect* p_pEffect, const bool p_bEnabled)
+{
+    ZEffectConfigurationAccessor s_ConfigAccessor(this, p_pEffect->GetName());
+    s_ConfigAccessor.SetBool("enabled", p_bEnabled);
+}
+
+void ChaosMod::ApplyEffectEnableTemplate(const SEffectEnableTemplate& p_Template)
+{
+    Logger::Info(TAG "Applying Effect Enable Template '{}'", p_Template.m_sName);
+    ForeachEffect(true, [this, p_Template](IChaosEffect* p_pEffect) {
+        const auto& s_It = p_Template.m_mEffectEnableStates.find(p_pEffect->GetName());
+        const auto s_bEnabled = s_It != p_Template.m_mEffectEnableStates.end() ? s_It->second : p_Template.m_bDefaultEnabled;
+        SetEffectEnabled(p_pEffect, s_bEnabled);
+    });
 }
 
 void ChaosMod::UpdateEffectTimerEnabled()
@@ -216,12 +243,9 @@ IVotingIntegration* ChaosMod::GetCurrentVotingIntegration()
 
 IVotingIntegration* ChaosMod::GetDefaultVotingIntegration()
 {
-    for (const auto& s_pIntegration : EffectRegistry::GetInstance().GetVotingIntegrations())
+    if (const auto& s_pOfflineVoting = EffectRegistry::GetInstance().GetVotingIntegrationByName("ZOfflineVoting"))
     {
-        if (s_pIntegration->GetName() == "ZOfflineVoting")
-        {
-            return s_pIntegration.get();
-        }
+        return s_pOfflineVoting.get();
     }
 
     throw std::runtime_error("Failed to find default voting integration!");

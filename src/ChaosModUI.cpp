@@ -10,6 +10,7 @@
 #include "Helpers/ImGuiExtras.h"
 #include "Helpers/CompanionMod.h"
 #include "Helpers/ZPerfCounter.h"
+#include "Helpers/Utils.h"
 
 #include "BuildInfo.h"
 
@@ -142,10 +143,10 @@ void ChaosMod::DrawConfigurationContents()
     ImGui::TextUnformatted("Chaos Interval");
     ImGui::SameLine();
     if (ImGuiEx::DragFloat(
-        "##Chaos Interval",
-        &m_EffectTimer.m_fIntervalSeconds,
-        5.0f,
-        120.0f
+            "##Chaos Interval",
+            &m_EffectTimer.m_fIntervalSeconds,
+            5.0f,
+            120.0f
         ))
     {
         m_pConfiguration->SetDouble("EffectInterval", m_EffectTimer.m_fIntervalSeconds);
@@ -158,11 +159,11 @@ void ChaosMod::DrawConfigurationContents()
 
     ImGui::TextUnformatted("Effect Duration");
     ImGui::SameLine();
-    if(ImGuiEx::DragFloat(
-        "##Effect Duration",
-        &m_fFullEffectDuration,
-        5.0,
-        120.0
+    if (ImGuiEx::DragFloat(
+            "##Effect Duration",
+            &m_fFullEffectDuration,
+            5.0,
+            120.0
         ))
     {
         m_pConfiguration->SetDouble("FullEffectDuration", m_fFullEffectDuration);
@@ -181,10 +182,10 @@ void ChaosMod::DrawConfigurationContents()
 
     if (ImGui::IsItemHovered())
     {
-        ImGui::SetTooltip("Should the effect timer use realtime or in-game time?");
+        ImGui::SetTooltip("Should the effect timer and duration use realtime or in-game time?");
     }
 
-    if (ImGui::Button("Open Effects Configuration"))
+    if (ImGui::Button("Configure Effects"))
     {
         m_bEffectConfigOpen = true;
     }
@@ -270,7 +271,7 @@ void ChaosMod::DrawEffectConfigUI(const bool p_bHasFocus)
     }
 
     // start at a sensible size
-    ImGui::SetNextWindowSize({450.0f, 500.0f}, ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize({600.0f, 700.0f}, ImGuiCond_FirstUseEver);
 
     ImGui::PushFont(SDK()->GetImGuiBlackFont());
     const auto s_ConfigShowing = ImGui::Begin(ICON_MD_SETTINGS "CHAOS MOD EFFECTS CONFIGURATION", &m_bEffectConfigOpen);
@@ -278,17 +279,152 @@ void ChaosMod::DrawEffectConfigUI(const bool p_bHasFocus)
 
     if (s_ConfigShowing)
     {
+        if (g_aEffectEnableTemplates.size() > 0)
+        {
+            const auto& s_CurrentTemplate = g_aEffectEnableTemplates[m_nSelectedConfigTemplate % g_aEffectEnableTemplates.size()];
+
+            if (ImGui::BeginCombo("##cfg_template", s_CurrentTemplate.m_sName.c_str(), ImGuiComboFlags_WidthFitPreview))
+            {
+                for (int i = 0; i < g_aEffectEnableTemplates.size(); i++)
+                {
+                    const auto& s_Template = g_aEffectEnableTemplates[i];
+                    if (ImGui::Selectable(
+                            s_Template.m_sName.c_str(),
+                            i == m_nSelectedConfigTemplate
+                        ))
+                    {
+                        m_nSelectedConfigTemplate = i;
+                        ApplyEffectEnableTemplate(s_Template);
+                        Logger::Debug(TAG "Applied effect enable template '{}'", s_Template.m_sName);
+                    }
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::SetTooltip(s_Template.m_sDescription.c_str());
+                    }
+                }
+
+                ImGui::EndCombo();
+            }
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip(s_CurrentTemplate.m_sDescription.c_str());
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Apply"))
+            {
+                ApplyEffectEnableTemplate(s_CurrentTemplate);
+                LoadConfiguration();
+            }
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Apply the selected template.");
+            }
+        }
+
+        // align buttons to the right
+        // m_fEffectConfigUIButtonsWidth initially contains a guess for the width of the buttons,
+        // wich is then updated after the first frame renders to contain the actual width.
+        // after each element drawn, s_fButtonsWidth is updated to reflect the total width.
+        ImGui::SameLine(ImGui::GetWindowWidth() - m_fEffectConfigUIButtonsWidth);
+        const auto s_fItemSpacing = ImGui::GetStyle().ItemSpacing.x;
+        float32 s_fButtonsWidth = 0.f;
+
+        if (ImGui::Button(ICON_MD_SELECT_ALL))
+        {
+            SetAllEffectsEnabled(true);
+            LoadConfiguration();
+        }
+        s_fButtonsWidth += ImGui::GetItemRectSize().x + s_fItemSpacing;
+
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Enable all effects.");
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button(ICON_MD_DESELECT))
+        {
+            SetAllEffectsEnabled(false);
+            LoadConfiguration();
+        }
+        s_fButtonsWidth += ImGui::GetItemRectSize().x + s_fItemSpacing;
+
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Disable all effects.");
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button(ICON_MD_REFRESH))
+        {
+            LoadConfiguration();
+        }
+        s_fButtonsWidth += ImGui::GetItemRectSize().x + s_fItemSpacing;
+
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Reload Configuration.");
+        }
+
+#ifdef _DEBUG
+        ImGui::SameLine();
+
+        if (ImGui::Button("Copy Template"))
+        {
+            std::string s_TemplateCode = "{\n"
+                                         ".m_sName = \"\";\n"
+                                         ".m_sDescription = \"\";\n"
+                                         ".m_bDefaultEnabled = true;\n"
+                                         ".m_mEffectEnableStates = {\n";
+
+            ForeachEffect(true, [&s_TemplateCode](IChaosEffect* p_pEffect) {
+                // only include effects that differ from the default enabled state
+                if (p_pEffect->IsEnabled())
+                    return;
+
+                s_TemplateCode += fmt::format(
+                    "{{ \"{}\", {} }},\n",
+                    p_pEffect->GetName(),
+                    p_pEffect->IsEnabled() ? "true" : "false"
+                );
+            });
+
+            s_TemplateCode += "}\n};";
+            
+            Utils::CopyToClipboard(s_TemplateCode);
+        }
+        s_fButtonsWidth += ImGui::GetItemRectSize().x + s_fItemSpacing;
+#endif // _DEBUG
+
+        m_fEffectConfigUIButtonsWidth = s_fButtonsWidth;
+
         ImGui::Separator();
 
-        ImGui::BeginChild("##effect_cfg_list_pane", ImVec2(300, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
+        ImGui::BeginChild("##effect_cfg_list_pane", ImVec2(250, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
 
         for (auto& s_pEffect : EffectRegistry::GetInstance().GetEffects())
         {
             if (!s_pEffect)
                 continue;
 
+            std::string s_sLabel = "";
+            if (s_pEffect->IsEnabled())
+            {
+                s_sLabel = ICON_MD_CHECK_BOX " ";
+            }
+            else
+            {
+                s_sLabel = ICON_MD_CHECK_BOX_OUTLINE_BLANK " ";
+            }
+
+            s_sLabel += s_pEffect->GetDisplayName(false);
+
             if (ImGui::Selectable(
-                    s_pEffect->GetDisplayName(false).c_str(),
+                    s_sLabel.c_str(),
                     m_pEffectForConfig == s_pEffect.get()
                 ))
             {
@@ -341,7 +477,7 @@ void ChaosMod::DrawEffectConfigPane()
     }
 
     // center title horizontally in content pane
-    const auto s_sTitle = fmt::format("Configuring '{}'", m_pEffectForConfig->GetDisplayName(false));
+    const auto s_sTitle = fmt::format("Configuration for '{}'", m_pEffectForConfig->GetDisplayName(false));
     const auto s_nContentWidth = ImGui::GetContentRegionAvail().x;
     const auto s_nTitleWidth = ImGui::CalcTextSize(s_sTitle.c_str()).x;
 
