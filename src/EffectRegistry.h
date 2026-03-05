@@ -13,7 +13,7 @@ class EffectRegistry
 {
   private:
     EffectRegistry() = default;
-    std::vector<std::unique_ptr<IChaosEffect>> m_aEffects;
+    std::vector<std::shared_ptr<IChaosEffect>> m_aEffects;
     std::vector<std::unique_ptr<IUnlocker>> m_aUnlockers;
     std::vector<std::unique_ptr<IVotingIntegration>> m_aVotingIntegrations;
 
@@ -25,7 +25,7 @@ class EffectRegistry
         return *g_Registry;
     }
 
-    void RegisterEffect(std::unique_ptr<IChaosEffect> p_Effect)
+    void RegisterEffect(std::shared_ptr<IChaosEffect> p_Effect)
     {
         Logger::Debug("[EffectRegistry] Registered effect '{}'", p_Effect->GetName());
         m_aEffects.push_back(std::move(p_Effect));
@@ -43,12 +43,12 @@ class EffectRegistry
         m_aVotingIntegrations.push_back(std::move(p_Integration));
     }
 
-    const std::vector<std::unique_ptr<IChaosEffect>>& GetEffects() const
+    const std::vector<std::shared_ptr<IChaosEffect>>& GetEffects() const
     {
         return m_aEffects;
     }
 
-    const std::unique_ptr<IChaosEffect>& GetEffectByName(const std::string& p_sName) const
+    const std::shared_ptr<IChaosEffect>& GetEffectByName(const std::string& p_sName) const
     {
         for (const auto& s_pEffect : m_aEffects)
         {
@@ -89,7 +89,7 @@ class EffectRegistry
         std::sort(
             m_aEffects.begin(),
             m_aEffects.end(),
-            [](const std::unique_ptr<IChaosEffect>& a, const std::unique_ptr<IChaosEffect>& b) {
+            [](const std::shared_ptr<IChaosEffect>& a, const std::shared_ptr<IChaosEffect>& b) {
                 return a->GetName() < b->GetName();
             }
         );
@@ -114,7 +114,7 @@ class EffectRegistry
 
 struct EffectRegistrar
 {
-    explicit EffectRegistrar(std::unique_ptr<IChaosEffect> p_Effect)
+    explicit EffectRegistrar(std::shared_ptr<IChaosEffect> p_Effect)
     {
         EffectRegistry::GetInstance().RegisterEffect(std::move(p_Effect));
     }
@@ -145,12 +145,12 @@ struct VotingIntegrationRegistrar
  */
 #define REGISTER_CHAOS_EFFECT(EFFECT_CLASS)                  \
     static EffectRegistrar g_EffectRegistrar_##EFFECT_CLASS( \
-        std::make_unique<EFFECT_CLASS>()                     \
+        std::make_shared<EFFECT_CLASS>()                     \
     );
 
 #define REGISTER_CHAOS_EFFECT_PARAM(NAME, EFFECT_CLASS, ...)       \
     static EffectRegistrar g_EffectRegistrar_##EFFECT_CLASS##NAME( \
-        std::make_unique<EFFECT_CLASS>(__VA_ARGS__)                \
+        std::make_shared<EFFECT_CLASS>(__VA_ARGS__)                \
     );
 
 /**

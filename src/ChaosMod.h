@@ -74,11 +74,12 @@ class ChaosMod : public IPluginInterface
 
   private: // UI & Debug
     bool m_bMenuActive = false;
+    std::string m_sAuthorNames;
+
     bool m_bEffectConfigOpen = false;
     IChaosEffect* m_pEffectForConfig = nullptr;
     int m_nSelectedConfigTemplate = 0;
     float32 m_fEffectConfigUIButtonsWidth = 250.0f;
-    std::string m_sAuthorNames;
 
     bool m_bDebugMenuActive = false;
     bool m_bDebugMenuAlwaysVisible = false;

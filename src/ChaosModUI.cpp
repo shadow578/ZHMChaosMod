@@ -407,7 +407,16 @@ void ChaosMod::DrawEffectConfigUI(const bool p_bHasFocus)
 
         ImGui::BeginChild("##effect_cfg_list_pane", ImVec2(250, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
 
-        for (auto& s_pEffect : EffectRegistry::GetInstance().GetEffects())
+        auto s_aEffects = EffectRegistry::GetInstance().GetEffects();
+        std::sort(
+            s_aEffects.begin(),
+            s_aEffects.end(),
+            [](const std::shared_ptr<IChaosEffect>& a, const std::shared_ptr<IChaosEffect>& b) {
+                return a->GetDisplayName(false) < b->GetDisplayName(false);
+            }
+        );
+
+        for (auto& s_pEffect : s_aEffects)
         {
             if (!s_pEffect)
                 continue;
