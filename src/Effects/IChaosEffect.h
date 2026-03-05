@@ -5,7 +5,7 @@
 #include <string>
 #include <set>
 
-class ZEffectConfigurationAccessor;
+class ZConfigurationAccessor;
 
 /**
  * Interface for all chaos effects.
@@ -173,7 +173,7 @@ class IChaosEffect
      * @note This will be called early in the mod's lifecycle. Keep logic here minimal.
      * @note This method may be called multiple times to reload configuration.
      */
-    virtual void LoadConfiguration(const ZEffectConfigurationAccessor* p_pConfiguration);
+    virtual void LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration);
 
     /**
      * Draw the configuration UI for this effect, allowing configuration write-back via the given accessor.
@@ -185,7 +185,7 @@ class IChaosEffect
      * Thus, you MUST call the base implementation to allow enabling/disabling the effect.
      * @param p_pConfiguration Accessor for the configuration data.
      */
-    virtual void DrawConfigUI(ZEffectConfigurationAccessor* p_pConfiguration);
+    virtual void DrawConfigUI(ZConfigurationAccessor* p_pConfiguration);
 
     /**
      * Is this effect enabled (via config)?

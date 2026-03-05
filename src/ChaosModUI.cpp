@@ -6,7 +6,7 @@
 #include <imgui.h>
 
 #include "EffectRegistry.h"
-#include "ZEffectConfigurationAccessor.h"
+#include "ZConfigurationAccessor.h"
 #include "Helpers/ImGuiExtras.h"
 #include "Helpers/CompanionMod.h"
 #include "Helpers/ZPerfCounter.h"
@@ -494,7 +494,7 @@ void ChaosMod::DrawEffectConfigPane()
 
     ImGui::Separator();
 
-    ZEffectConfigurationAccessor s_ConfigAccessor(this, m_pEffectForConfig->GetName());
+    ZConfigurationAccessor s_ConfigAccessor(this, m_pEffectForConfig->GetName());
     m_pEffectForConfig->DrawConfigUI(&s_ConfigAccessor);
 }
 #pragma endregion

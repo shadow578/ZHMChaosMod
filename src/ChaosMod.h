@@ -54,7 +54,7 @@ class ChaosMod : public IPluginInterface
         std::map<std::string, bool> m_mEffectEnableStates;
     };
 
-    std::unique_ptr<ZEffectConfigurationAccessor> m_pConfiguration;
+    std::unique_ptr<ZConfigurationAccessor> m_pConfiguration;
     static std::vector<SEffectEnableTemplate> g_aEffectEnableTemplates;
 
     /// Load (or reload) mod and effects configuration from disk and apply it.

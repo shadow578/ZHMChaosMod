@@ -13,7 +13,7 @@
 #include "Helpers/Repository/ZHMRepositoryHelper.h"
 
 #include "EffectRegistry.h"
-#include "ZEffectConfigurationAccessor.h"
+#include "ZConfigurationAccessor.h"
 #include "BuildInfo.h"
 
 #define TAG "[ChaosMod] "
@@ -23,7 +23,7 @@ ChaosMod::ChaosMod() : m_fFullEffectDuration(60.0f),
                        m_EffectTimer(std::bind(&ChaosMod::OnEffectTimerTrigger, this), 30.0),
                        m_bEffectTimersUseRealtime(false),
                        m_SlowUpdateTimer(std::bind(&ChaosMod::OnEffectSlowUpdate, this), 0.2, ZTimer::ETimeMode::RealTime, true), // ~5 FPS
-                       m_pConfiguration(std::make_unique<ZEffectConfigurationAccessor>(this, "ChaosMod"))
+                       m_pConfiguration(std::make_unique<ZConfigurationAccessor>(this, "ChaosMod"))
 {
 }
 
@@ -171,7 +171,7 @@ void ChaosMod::LoadConfiguration()
     // load effect configurations
     ForeachEffect(true, [this](IChaosEffect* p_pEffect) {
         Logger::Debug(TAG "Loading configuration for '{}'", p_pEffect->GetName());
-        ZEffectConfigurationAccessor s_ConfigAccessor(this, p_pEffect->GetName());
+        ZConfigurationAccessor s_ConfigAccessor(this, p_pEffect->GetName());
         p_pEffect->LoadConfiguration(&s_ConfigAccessor);
     });
 }
@@ -185,7 +185,7 @@ void ChaosMod::SetAllEffectsEnabled(const bool p_bEnabled)
 
 void ChaosMod::SetEffectEnabled(const IChaosEffect* p_pEffect, const bool p_bEnabled)
 {
-    ZEffectConfigurationAccessor s_ConfigAccessor(this, p_pEffect->GetName());
+    ZConfigurationAccessor s_ConfigAccessor(this, p_pEffect->GetName());
     s_ConfigAccessor.SetBool("enabled", p_bEnabled);
 }
 

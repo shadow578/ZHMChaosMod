@@ -3,10 +3,10 @@
 
 class IPluginInterface;
 
-class ZEffectConfigurationAccessor
+class ZConfigurationAccessor
 {
   public:
-    ZEffectConfigurationAccessor(IPluginInterface* p_pPlugin, const std::string p_sSection);
+    ZConfigurationAccessor(IPluginInterface* p_pPlugin, const std::string p_sSection);
 
     bool HasSetting(const std::string& p_sName) const;
 

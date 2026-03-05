@@ -2,7 +2,7 @@
 
 #include <typeinfo>
 
-#include "ZEffectConfigurationAccessor.h"
+#include "ZConfigurationAccessor.h"
 
 std::string IChaosEffect::GetName() const
 {
@@ -16,12 +16,12 @@ std::string IChaosEffect::GetName() const
     return s_Name;
 }
 
-void IChaosEffect::LoadConfiguration(const ZEffectConfigurationAccessor* p_pConfig)
+void IChaosEffect::LoadConfiguration(const ZConfigurationAccessor* p_pConfig)
 {
     m_bIsEnabled = p_pConfig->GetBool("Enabled", true);
 }
 
-void IChaosEffect::DrawConfigUI(ZEffectConfigurationAccessor* p_pConfig)
+void IChaosEffect::DrawConfigUI(ZConfigurationAccessor* p_pConfig)
 {
     if (ImGui::Checkbox("Enabled", &m_bIsEnabled))
     {
