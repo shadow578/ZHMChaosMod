@@ -294,8 +294,6 @@ void ChaosMod::DrawEffectConfigUI(const bool p_bHasFocus)
                         ))
                     {
                         m_nSelectedConfigTemplate = i;
-                        ApplyEffectEnableTemplate(s_Template);
-                        Logger::Debug(TAG "Applied effect enable template '{}'", s_Template.m_sName);
                     }
                     if (ImGui::IsItemHovered())
                     {
@@ -370,15 +368,14 @@ void ChaosMod::DrawEffectConfigUI(const bool p_bHasFocus)
             ImGui::SetTooltip("Reload Configuration.");
         }
 
-#ifdef _DEBUG
         ImGui::SameLine();
 
-        if (ImGui::Button("Copy Template"))
+        if (ImGui::Button(ICON_MD_COPY_ALL))
         {
             std::string s_TemplateCode = "{\n"
-                                         ".m_sName = \"\";\n"
-                                         ".m_sDescription = \"\";\n"
-                                         ".m_bDefaultEnabled = true;\n"
+                                         ".m_sName = \"\",\n"
+                                         ".m_sDescription = \"\",\n"
+                                         ".m_bDefaultEnabled = true,\n"
                                          ".m_mEffectEnableStates = {\n";
 
             ForeachEffect(true, [&s_TemplateCode](IChaosEffect* p_pEffect) {
@@ -393,12 +390,16 @@ void ChaosMod::DrawEffectConfigUI(const bool p_bHasFocus)
                 );
             });
 
-            s_TemplateCode += "}\n};";
-            
+            s_TemplateCode += "}\n}";
+
             Utils::CopyToClipboard(s_TemplateCode);
         }
         s_fButtonsWidth += ImGui::GetItemRectSize().x + s_fItemSpacing;
-#endif // _DEBUG
+
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Copy currently enabled/disabled effects (for PR).");
+        }
 
         m_fEffectConfigUIButtonsWidth = s_fButtonsWidth;
 
