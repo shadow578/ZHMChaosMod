@@ -25,6 +25,9 @@ class ZRGBLightsEffect : public IChaosEffect
         return "Party Lights";
     }
 
+    void LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration) override;
+    void DrawConfigUI(ZConfigurationAccessor* p_pConfiguration) override;
+
   private:
     struct SLightEntityInfo
     {
@@ -67,4 +70,5 @@ class ZRGBLightsEffect : public IChaosEffect
     bool m_bActive = false;
     float32 m_fTimeElapsed = 0.0f;
     float32 m_fTimeToNextChange = 0.0f;
+    bool m_bReducedBrightness = false;
 };

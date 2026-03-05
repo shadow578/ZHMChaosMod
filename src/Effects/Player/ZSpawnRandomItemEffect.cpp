@@ -1,6 +1,6 @@
 #include "ZSpawnRandomItemEffect.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/Math.h"
 
 void ZSpawnRandomItemEffect::Start()

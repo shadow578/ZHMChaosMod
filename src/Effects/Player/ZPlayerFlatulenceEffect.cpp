@@ -5,7 +5,7 @@
 #include <Glacier/ZEntity.h>
 #include <Glacier/ZSpatialEntity.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/EntityUtils.h"
 
 constexpr auto c_ridSFXFallback = ResId<"[assembly:/sound/wwise/exportedwwisedata/events/props_events/play_sfx_inflatable_deflate_01.wwiseevent].pc_wwisebank">;

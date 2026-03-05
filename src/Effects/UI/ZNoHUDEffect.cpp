@@ -3,7 +3,7 @@
 #include "IPluginInterface.h"
 #include "Logging.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/EntityUtils.h"
 
 #define TAG "[ZNoHUDEffect] "

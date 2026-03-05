@@ -16,6 +16,11 @@ class ZFakeCrashEffect : public IChaosEffect
         return EDuration::OneShot;
     }
 
+    void LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration) override;
+    void DrawConfigUI(ZConfigurationAccessor* p_pConfiguration) override;
+
   private:
+    float32 m_fDuration = 10.f; // seconds
+
     void SuspendAllThreads();
 };

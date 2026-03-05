@@ -1,21 +1,21 @@
 #include "ZOfflineVoting.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/Math.h"
 
-void ZOfflineVoting::StartVote(const std::vector<IChaosEffect*>& p_aOptions)
+void ZOfflineVoting::StartVote(const std::vector<std::shared_ptr<IChaosEffect>>& p_aOptions)
 {
     m_aActiveVote = p_aOptions;
 }
 
-IChaosEffect* ZOfflineVoting::EndVote()
+std::shared_ptr<IChaosEffect> ZOfflineVoting::EndVote()
 {
     if (m_aActiveVote.empty())
     {
         return nullptr;
     }
 
-    auto* s_pResult = Math::SelectRandomElement(m_aActiveVote);
+    auto s_pResult = Math::SelectRandomElement(m_aActiveVote);
     m_aActiveVote.clear();
 
     return s_pResult;

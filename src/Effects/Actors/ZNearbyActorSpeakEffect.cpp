@@ -2,7 +2,7 @@
 
 #include <Glacier/ZSpatialEntity.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/ActorUtils.h"
 #include "Helpers/Math.h"
 #include "Helpers/Utils.h"

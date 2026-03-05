@@ -5,10 +5,13 @@
 #include <IconsMaterialDesign.h>
 #include <imgui.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
+#include "IUnlocker.h"
+#include "ZConfigurationAccessor.h"
 #include "Helpers/ImGuiExtras.h"
 #include "Helpers/CompanionMod.h"
 #include "Helpers/ZPerfCounter.h"
+#include "Helpers/Utils.h"
 
 #include "BuildInfo.h"
 
@@ -40,7 +43,7 @@ void ChaosMod::InitAuthorNames()
     s_AuthorNames.insert("OrfeasZ");
 
     // gather effect authors
-    for (const auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
+    for (const auto& s_Effect : Registry::GetInstance().GetEffects())
     {
         if (s_Effect)
         {
@@ -78,11 +81,12 @@ void ChaosMod::OnDrawMenu()
 
 void ChaosMod::OnDrawUI(const bool p_HasFocus)
 {
-    ForeachEffect(false, [p_HasFocus](IChaosEffect* p_pEffect) {
+    ForeachEffect(false, [p_HasFocus](std::shared_ptr<IChaosEffect> p_pEffect) {
         p_pEffect->OnDrawUI(p_HasFocus);
     });
 
     DrawMainUI(p_HasFocus);
+    DrawEffectConfigUI(p_HasFocus);
     DrawOverlayUI(p_HasFocus);
     DrawDebugUI(p_HasFocus);
 }
@@ -139,12 +143,15 @@ void ChaosMod::DrawConfigurationContents()
 
     ImGui::TextUnformatted("Chaos Interval");
     ImGui::SameLine();
-    ImGuiEx::DragFloat(
-        "##Chaos Interval",
-        &m_EffectTimer.m_fIntervalSeconds,
-        5.0f,
-        120.0f
-    );
+    if (ImGuiEx::DragFloat(
+            "##Chaos Interval",
+            &m_EffectTimer.m_fIntervalSeconds,
+            5.0f,
+            120.0f
+        ))
+    {
+        m_pConfiguration->SetDouble("EffectInterval", m_EffectTimer.m_fIntervalSeconds);
+    }
 
     if (ImGui::IsItemHovered())
     {
@@ -153,12 +160,15 @@ void ChaosMod::DrawConfigurationContents()
 
     ImGui::TextUnformatted("Effect Duration");
     ImGui::SameLine();
-    ImGuiEx::DragFloat(
-        "##Effect Duration",
-        &m_fFullEffectDuration,
-        5.0,
-        120.0
-    );
+    if (ImGuiEx::DragFloat(
+            "##Effect Duration",
+            &m_fFullEffectDuration,
+            5.0,
+            120.0
+        ))
+    {
+        m_pConfiguration->SetDouble("FullEffectDuration", m_fFullEffectDuration);
+    }
 
     if (ImGui::IsItemHovered())
     {
@@ -168,26 +178,37 @@ void ChaosMod::DrawConfigurationContents()
     if (ImGui::Checkbox("Use Real-Time Timer", &m_bEffectTimersUseRealtime))
     {
         m_EffectTimer.m_eTimeMode = m_bEffectTimersUseRealtime ? ZTimer::ETimeMode::RealTime : ZTimer::ETimeMode::GameTime;
+        m_pConfiguration->SetBool("EffectTimersUseRealtime", m_bEffectTimersUseRealtime);
     }
 
     if (ImGui::IsItemHovered())
     {
-        ImGui::SetTooltip("Should the effect timer use realtime or in-game time?");
+        ImGui::SetTooltip("Should the effect timer and duration use realtime or in-game time?");
+    }
+
+    if (ImGui::Button("Configure Effects"))
+    {
+        m_bEffectConfigOpen = true;
+    }
+
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip("Configure which effects should be enabled during gameplay");
     }
 
     ImGui::SeparatorText("Voting");
 
-    auto* s_pVoting = GetCurrentVotingIntegration();
+    auto s_pVoting = GetCurrentVotingIntegration();
 
     ImGui::TextUnformatted("Voting Mode");
     ImGui::SameLine();
     if (ImGui::BeginCombo("##Voting Mode", s_pVoting ? s_pVoting->GetDisplayName().c_str() : ""))
     {
-        for (auto& s_pOption : EffectRegistry::GetInstance().GetVotingIntegrations())
+        for (auto& s_pOption : Registry::GetInstance().GetVotingIntegrations())
         {
             if (ImGui::Selectable(
                     s_pOption->GetDisplayName().c_str(),
-                    s_pVoting == s_pOption.get()
+                    s_pVoting == s_pOption
                 ))
             {
                 if (s_pVoting)
@@ -195,7 +216,7 @@ void ChaosMod::DrawConfigurationContents()
                     s_pVoting->Deactivate();
                 }
 
-                s_pVoting = s_pOption.get();
+                s_pVoting = s_pOption;
 
                 m_pVotingIntegration = s_pVoting;
                 m_pVotingIntegration->Activate();
@@ -220,7 +241,7 @@ void ChaosMod::DrawConfigurationContents()
 
 void ChaosMod::DrawUnlockersContents()
 {
-    for (auto& s_Unlocker : EffectRegistry::GetInstance().GetUnlockers())
+    for (auto& s_Unlocker : Registry::GetInstance().GetUnlockers())
     {
         ImGui::BeginDisabled(!s_Unlocker->Available());
 
@@ -239,6 +260,252 @@ void ChaosMod::DrawUnlockersContents()
 
         ImGui::EndDisabled();
     }
+}
+#pragma endregion
+
+#pragma region Effect Config UI
+void ChaosMod::DrawEffectConfigUI(const bool p_bHasFocus)
+{
+    if (!m_bEffectConfigOpen || !p_bHasFocus)
+    {
+        return;
+    }
+
+    // start at a sensible size
+    ImGui::SetNextWindowSize({600.0f, 700.0f}, ImGuiCond_FirstUseEver);
+
+    ImGui::PushFont(SDK()->GetImGuiBlackFont());
+    const auto s_ConfigShowing = ImGui::Begin(ICON_MD_SETTINGS "CHAOS MOD EFFECTS CONFIGURATION", &m_bEffectConfigOpen);
+    ImGui::PushFont(SDK()->GetImGuiRegularFont());
+
+    if (s_ConfigShowing)
+    {
+        if (g_aEffectEnableTemplates.size() > 0)
+        {
+            const auto& s_CurrentTemplate = g_aEffectEnableTemplates[m_nSelectedConfigTemplate % g_aEffectEnableTemplates.size()];
+
+            if (ImGui::BeginCombo("##cfg_template", s_CurrentTemplate.m_sName.c_str(), ImGuiComboFlags_WidthFitPreview))
+            {
+                for (int i = 0; i < g_aEffectEnableTemplates.size(); i++)
+                {
+                    const auto& s_Template = g_aEffectEnableTemplates[i];
+                    if (ImGui::Selectable(
+                            s_Template.m_sName.c_str(),
+                            i == m_nSelectedConfigTemplate
+                        ))
+                    {
+                        m_nSelectedConfigTemplate = i;
+                    }
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::SetTooltip(s_Template.m_sDescription.c_str());
+                    }
+                }
+
+                ImGui::EndCombo();
+            }
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip(s_CurrentTemplate.m_sDescription.c_str());
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Apply"))
+            {
+                ApplyEffectEnableTemplate(s_CurrentTemplate);
+                LoadConfiguration();
+            }
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::SetTooltip("Apply the selected template.");
+            }
+        }
+
+        // align buttons to the right
+        // m_fEffectConfigUIButtonsWidth initially contains a guess for the width of the buttons,
+        // wich is then updated after the first frame renders to contain the actual width.
+        // after each element drawn, s_fButtonsWidth is updated to reflect the total width.
+        ImGui::SameLine(ImGui::GetWindowWidth() - m_fEffectConfigUIButtonsWidth);
+        const auto s_fItemSpacing = ImGui::GetStyle().ItemSpacing.x;
+        float32 s_fButtonsWidth = 0.f;
+
+        if (ImGui::Button(ICON_MD_SELECT_ALL))
+        {
+            SetAllEffectsEnabled(true);
+            LoadConfiguration();
+        }
+        s_fButtonsWidth += ImGui::GetItemRectSize().x + s_fItemSpacing;
+
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Enable all effects.");
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button(ICON_MD_DESELECT))
+        {
+            SetAllEffectsEnabled(false);
+            LoadConfiguration();
+        }
+        s_fButtonsWidth += ImGui::GetItemRectSize().x + s_fItemSpacing;
+
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Disable all effects.");
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button(ICON_MD_REFRESH))
+        {
+            LoadConfiguration();
+        }
+        s_fButtonsWidth += ImGui::GetItemRectSize().x + s_fItemSpacing;
+
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Reload Configuration.");
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button(ICON_MD_COPY_ALL))
+        {
+            std::string s_TemplateCode = "{\n"
+                                         ".m_sName = \"\",\n"
+                                         ".m_sDescription = \"\",\n"
+                                         ".m_bDefaultEnabled = true,\n"
+                                         ".m_mEffectEnableStates = {\n";
+
+            ForeachEffect(true, [&s_TemplateCode](std::shared_ptr<IChaosEffect> p_pEffect) {
+                // only include effects that differ from the default enabled state
+                if (p_pEffect->IsEnabled())
+                    return;
+
+                s_TemplateCode += fmt::format(
+                    "{{ \"{}\", {} }},\n",
+                    p_pEffect->GetName(),
+                    p_pEffect->IsEnabled() ? "true" : "false"
+                );
+            });
+
+            s_TemplateCode += "}\n}";
+
+            Utils::CopyToClipboard(s_TemplateCode);
+        }
+        s_fButtonsWidth += ImGui::GetItemRectSize().x + s_fItemSpacing;
+
+        if (ImGui::IsItemHovered())
+        {
+            ImGui::SetTooltip("Copy currently enabled/disabled effects (for PR).");
+        }
+
+        m_fEffectConfigUIButtonsWidth = s_fButtonsWidth;
+
+        ImGui::Separator();
+
+        ImGui::BeginChild("##effect_cfg_list_pane", ImVec2(250, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
+
+        auto s_aEffects = Registry::GetInstance().GetEffects();
+        std::sort(
+            s_aEffects.begin(),
+            s_aEffects.end(),
+            [](const std::shared_ptr<IChaosEffect>& a, const std::shared_ptr<IChaosEffect>& b) {
+                return a->GetDisplayName(false) < b->GetDisplayName(false);
+            }
+        );
+
+        for (auto& s_pEffect : s_aEffects)
+        {
+            if (!s_pEffect)
+                continue;
+
+            std::string s_sLabel = "";
+            if (s_pEffect->IsEnabled())
+            {
+                s_sLabel = ICON_MD_CHECK_BOX " ";
+            }
+            else
+            {
+                s_sLabel = ICON_MD_CHECK_BOX_OUTLINE_BLANK " ";
+            }
+
+            s_sLabel += s_pEffect->GetDisplayName(false);
+
+            if (ImGui::Selectable(
+                    s_sLabel.c_str(),
+                    m_pEffectForConfig == s_pEffect
+                ))
+            {
+                m_pEffectForConfig = s_pEffect;
+                Logger::Debug(TAG "Selected '{}' for config", s_pEffect->GetName());
+            }
+        }
+
+        ImGui::EndChild();
+
+        ImGui::SameLine();
+        ImGui::BeginGroup();
+        ImGui::BeginChild("##effect_cfg_pane", ImVec2(0, -ImGui::GetFrameHeightWithSpacing()));
+
+        if (m_pEffectForConfig)
+        {
+            DrawEffectConfigPane();
+        }
+        else
+        {
+            ImGui::TextUnformatted("Select an effect to configure it.");
+        }
+
+        ImGui::EndChild();
+        ImGui::EndGroup();
+    }
+
+    ImGui::PopFont();
+    ImGui::End();
+    ImGui::PopFont();
+}
+
+void ChaosMod::DrawEffectConfigPane()
+{
+    if (!m_pEffectForConfig)
+        return;
+
+    std::string s_sAttribution = "";
+    for (const auto& s_sName : m_pEffectForConfig->GetAttribution())
+    {
+        if (!s_sAttribution.empty())
+        {
+            s_sAttribution += ", ";
+        }
+        s_sAttribution += s_sName;
+    }
+    if (s_sAttribution.empty())
+    {
+        s_sAttribution = "The Chaos Mod Team";
+    }
+
+    // center title horizontally in content pane
+    const auto s_sTitle = fmt::format("Configuration for '{}'", m_pEffectForConfig->GetDisplayName(false));
+    const auto s_nContentWidth = ImGui::GetContentRegionAvail().x;
+    const auto s_nTitleWidth = ImGui::CalcTextSize(s_sTitle.c_str()).x;
+
+    ImGui::SetCursorPosX((s_nContentWidth - s_nTitleWidth) * 0.5f);
+    ImGui::TextUnformatted(s_sTitle.c_str());
+
+    // sub-title with attribution
+    const auto s_sSubtitle = fmt::format("by {}", s_sAttribution);
+    const auto s_nSubtitleWidth = ImGui::CalcTextSize(s_sSubtitle.c_str()).x;
+
+    ImGui::SetCursorPosX((s_nContentWidth - s_nSubtitleWidth) * 0.5f);
+    ImGui::TextDisabled(s_sSubtitle.c_str());
+
+    ImGui::Separator();
+
+    ZConfigurationAccessor s_ConfigAccessor(this, m_pEffectForConfig->GetName());
+    m_pEffectForConfig->DrawConfigUI(&s_ConfigAccessor);
 }
 #pragma endregion
 
@@ -333,7 +600,7 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 
     if (s_Showing)
     {
-        const auto& s_aEffects = EffectRegistry::GetInstance().GetEffects();
+        const auto& s_aEffects = Registry::GetInstance().GetEffects();
         size_t s_nAvailableEffects = 0;
         for (const auto& s_Effect : s_aEffects)
         {
@@ -357,7 +624,7 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 
         ImGui::TextUnformatted(fmt::format("Enable States: MOD={}, USER={}, TIMER={}", m_bModEnabled ? "True" : "False", m_bUserEnabled ? "True" : "False", m_EffectTimer.m_bEnable ? "True" : "False").c_str());
 
-        auto* s_pVoting = GetCurrentVotingIntegration();
+        auto s_pVoting = GetCurrentVotingIntegration();
         ImGui::TextUnformatted(fmt::format("Using Voting Integration: {}", s_pVoting ? s_pVoting->GetName() : "<null>").c_str());
 
         ImGui::Checkbox("Menu Always Visible", &m_bDebugMenuAlwaysVisible);
@@ -409,10 +676,10 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 
                 if (ImGui::Selectable(
                         s_sEffectName.c_str(),
-                        m_pEffectForDebug == s_Effect.get()
+                        m_pEffectForDebug == s_Effect
                     ))
                 {
-                    m_pEffectForDebug = s_Effect.get();
+                    m_pEffectForDebug = s_Effect;
                     Logger::Debug(TAG "Selected '{}' for debug", s_Effect->GetName());
                 }
 

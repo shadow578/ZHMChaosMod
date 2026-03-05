@@ -3,7 +3,9 @@
 #include "Client/ZYoutubeAuthHandler.h"
 #include "Client/ZYoutubeBroadcastConnection.h"
 
-#include "EffectRegistry.h"
+#include <Logging.h>
+
+#include "Registry.h"
 #include "Helpers/Math.h"
 #include "Helpers/ImGuiExtras.h"
 #include "Helpers/Voting/ZChatVoting.h"
@@ -51,7 +53,7 @@ void ZYoutubeChatVotingIntegration::StartVoteImpl()
     {
         std::vector<ZChatVoting::SVoteOption> s_nOptions;
         s_nOptions.reserve(m_aActiveVote.size());
-        for (const auto* s_pEffect : m_aActiveVote)
+        for (const auto s_pEffect : m_aActiveVote)
         {
             s_nOptions.push_back({s_pEffect->GetName()});
         }
@@ -61,7 +63,7 @@ void ZYoutubeChatVotingIntegration::StartVoteImpl()
     }
 }
 
-IChaosEffect* ZYoutubeChatVotingIntegration::EndVoteImpl()
+std::shared_ptr<IChaosEffect> ZYoutubeChatVotingIntegration::EndVoteImpl()
 {
     if (!m_pVoting->IsVotingActive())
     {

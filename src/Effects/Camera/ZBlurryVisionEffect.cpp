@@ -1,6 +1,6 @@
 #include "ZBlurryVisionEffect.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 
 void ZBlurryVisionEffect::Start()
 {

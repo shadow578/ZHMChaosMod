@@ -4,7 +4,7 @@
 
 #include <Logging.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/Math.h"
 
 #define TAG "[ZPlayerNoSlowdownEffect] "

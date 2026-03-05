@@ -1,6 +1,6 @@
 #include "ZOpenCloseDoorsEffect.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/ImGuiExtras.h"
 #include "Helpers/Math.h"
 

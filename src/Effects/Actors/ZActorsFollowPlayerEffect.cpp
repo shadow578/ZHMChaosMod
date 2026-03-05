@@ -1,6 +1,6 @@
 #include "ZActorsFollowPlayerEffect.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/ActorUtils.h"
 
 void ZActorsFollowPlayerEffect::Start()

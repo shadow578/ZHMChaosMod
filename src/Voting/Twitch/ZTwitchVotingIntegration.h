@@ -8,8 +8,8 @@ class ZTwitchVotingIntegration : public IVotingIntegration
   public:
     ZTwitchVotingIntegration();
 
-    void StartVote(const std::vector<IChaosEffect*>& p_aOptions) override;
-    IChaosEffect* EndVote() override;
+    void StartVote(const std::vector<std::shared_ptr<IChaosEffect>>& p_aOptions) override;
+    std::shared_ptr<IChaosEffect> EndVote() override;
 
     void DrawConfigUI() override;
     void DrawOverlayUI() override;
@@ -21,7 +21,7 @@ class ZTwitchVotingIntegration : public IVotingIntegration
 
   private:
     std::unique_ptr<TwitchClient> m_pTwitch;
-    std::vector<IChaosEffect*> m_aActiveVote;
+    std::vector<std::shared_ptr<IChaosEffect>> m_aActiveVote;
 
-    IChaosEffect* EndVoteTwitch();
+    std::shared_ptr<IChaosEffect> EndVoteTwitch();
 };

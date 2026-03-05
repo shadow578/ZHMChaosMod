@@ -2,6 +2,8 @@
 
 #include <typeinfo>
 
+#include "ZConfigurationAccessor.h"
+
 std::string IChaosEffect::GetName() const
 {
     std::string s_Name = typeid(*this).name();
@@ -12,4 +14,17 @@ std::string IChaosEffect::GetName() const
     }
 
     return s_Name;
+}
+
+void IChaosEffect::LoadConfiguration(const ZConfigurationAccessor* p_pConfig)
+{
+    m_bIsEnabled = p_pConfig->GetBool("Enabled", true);
+}
+
+void IChaosEffect::DrawConfigUI(ZConfigurationAccessor* p_pConfig)
+{
+    if (ImGui::Checkbox("Enabled", &m_bIsEnabled))
+    {
+        p_pConfig->SetBool("Enabled", m_bIsEnabled);
+    }
 }

@@ -4,7 +4,7 @@
 #include <Glacier/ZSpatialEntity.h>
 #include <Glacier/ZCollision.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/Math.h"
 
 constexpr float32 c_fOverheadMinDistance = 2.0f; // at least 47's height

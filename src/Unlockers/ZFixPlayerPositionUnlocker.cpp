@@ -4,7 +4,7 @@
 
 #include "IPluginInterface.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/Utils.h"
 #include "Helpers/EntityUtils.h"
 

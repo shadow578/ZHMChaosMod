@@ -2,7 +2,8 @@
 
 #include <Glacier/SGameUpdateEvent.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
+#include "ZConfigurationAccessor.h"
 #include "Helpers/ImGuiExtras.h"
 
 void ZLagEffect::Start()
@@ -45,6 +46,23 @@ void ZLagEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const floa
 void ZLagEffect::OnDrawDebugUI()
 {
     ImGui::DragFloat("Target FPS", &m_fTargetFPS, 1.0f, 30.0f);
+}
+
+void ZLagEffect::LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration)
+{
+    IChaosEffect::LoadConfiguration(p_pConfiguration);
+
+    m_fTargetFPS = p_pConfiguration->GetDouble("TargetFPS", m_fTargetFPS);
+}
+
+void ZLagEffect::DrawConfigUI(ZConfigurationAccessor* p_pConfiguration)
+{
+    IChaosEffect::DrawConfigUI(p_pConfiguration);
+
+    if (ImGui::DragFloat("Target FPS", &m_fTargetFPS, 1.f, 5.f, 30.f))
+    {
+        p_pConfiguration->SetDouble("TargetFPS", m_fTargetFPS);
+    }
 }
 
 REGISTER_CHAOS_EFFECT_PARAM(FPS5, ZLagEffect, 5.0f)

@@ -1,6 +1,6 @@
 #include "ZScreenColorTintEffect.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 
 void ZScreenColorTintEffect::Start()
 {

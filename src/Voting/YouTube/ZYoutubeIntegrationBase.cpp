@@ -105,15 +105,15 @@ void ZYoutubeIntegrationBase::DrawConfigUI()
     }
 }
 
-void ZYoutubeIntegrationBase::StartVote(const std::vector<IChaosEffect*>& p_aOptions)
+void ZYoutubeIntegrationBase::StartVote(const std::vector<std::shared_ptr<IChaosEffect>>& p_aOptions)
 {
     m_aActiveVote = p_aOptions;
     StartVoteImpl();
 }
 
-IChaosEffect* ZYoutubeIntegrationBase::EndVote()
+std::shared_ptr<IChaosEffect> ZYoutubeIntegrationBase::EndVote()
 {
-    if (auto* s_pEffect = EndVoteImpl())
+    if (auto s_pEffect = EndVoteImpl())
     {
         m_aActiveVote.clear();
         return s_pEffect;
@@ -126,7 +126,7 @@ IChaosEffect* ZYoutubeIntegrationBase::EndVote()
         return nullptr;
     }
 
-    auto* s_pEffect = Math::SelectRandomElement(m_aActiveVote);
+    auto s_pEffect = Math::SelectRandomElement(m_aActiveVote);
     m_aActiveVote.clear();
     return s_pEffect;
 }

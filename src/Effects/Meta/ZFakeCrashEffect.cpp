@@ -4,9 +4,8 @@
 #include <Windows.h>
 #include <TlHelp32.h>
 
-#include "EffectRegistry.h"
-
-constexpr DWORD c_THREAD_SUSPEND_MILLIS = 10000; // 10 seconds
+#include "Registry.h"
+#include "ZConfigurationAccessor.h"
 
 void ZFakeCrashEffect::Start()
 {
@@ -47,7 +46,8 @@ void ZFakeCrashEffect::SuspendAllThreads()
         SuspendThread(s_hThread);
     }
 
-    Sleep(c_THREAD_SUSPEND_MILLIS);
+    DWORD s_nDurationMillis = static_cast<DWORD>(m_fDuration * 1000);
+    Sleep(s_nDurationMillis);
 
     for (auto s_hThread : s_vThreadHandles)
     {
@@ -56,6 +56,23 @@ void ZFakeCrashEffect::SuspendAllThreads()
     }
 
     CloseHandle(s_hSnapshot);
+}
+
+void ZFakeCrashEffect::LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration)
+{
+    IChaosEffect::LoadConfiguration(p_pConfiguration);
+
+    m_fDuration = p_pConfiguration->GetDouble("Duration", m_fDuration);
+}
+
+void ZFakeCrashEffect::DrawConfigUI(ZConfigurationAccessor* p_pConfiguration)
+{
+    IChaosEffect::DrawConfigUI(p_pConfiguration);
+
+    if (ImGui::DragFloat("Crash Duration", &m_fDuration, 1.f, 5.f, 30.f))
+    {
+        p_pConfiguration->SetDouble("Duration", m_fDuration);
+    }
 }
 
 REGISTER_CHAOS_EFFECT(ZFakeCrashEffect)

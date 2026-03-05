@@ -1,8 +1,8 @@
-#include "ZDisableInputsEffect.h";
+#include "ZDisableInputsEffect.h"
 
 #include <Glacier/ZInput.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/Utils.h"
 #include "Helpers/InputActionNames.h"
 

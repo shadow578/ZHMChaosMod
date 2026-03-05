@@ -145,7 +145,7 @@ void ZPlayerCrippleBoxDbgEffect::OnDrawDebugUI()
 }
 
 #ifdef _DEBUG
-#include "EffectRegistry.h"
+#include "Registry.h"
 
 REGISTER_CHAOS_EFFECT(ZPlayerCrippleBoxDbgEffect);
 #endif

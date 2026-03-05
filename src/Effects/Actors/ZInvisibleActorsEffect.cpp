@@ -1,6 +1,6 @@
 #include "ZInvisibleActorsEffect.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/ActorUtils.h"
 #include "Helpers/EntityUtils.h"
 
