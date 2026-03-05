@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <random>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/Math.h"
 
 #define TAG "[ChaosMod] "
@@ -113,7 +113,7 @@ void ChaosMod::UpdateEffectExpiration(const float32 p_fDeltaTime)
 
 std::vector<std::shared_ptr<IChaosEffect>> ChaosMod::GetRandomEffectSelection(const int p_nCount)
 {
-    const auto& s_aAllEffects = EffectRegistry::GetInstance().GetEffects();
+    const auto& s_aAllEffects = Registry::GetInstance().GetEffects();
     std::vector<std::shared_ptr<IChaosEffect>> s_aSelection;
 
     if (s_aAllEffects.empty() || p_nCount <= 0)

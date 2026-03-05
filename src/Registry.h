@@ -9,37 +9,39 @@
 
 #include <Logging.h>
 
-class EffectRegistry
+#define TAG "[Registry] "
+
+class Registry
 {
   private:
-    EffectRegistry() = default;
+    Registry() = default;
     std::vector<std::shared_ptr<IChaosEffect>> m_aEffects;
     std::vector<std::shared_ptr<IUnlocker>> m_aUnlockers;
     std::vector<std::shared_ptr<IVotingIntegration>> m_aVotingIntegrations;
 
   public:
-    static EffectRegistry& GetInstance()
+    static Registry& GetInstance()
     {
-        // Note: g_Registry is *intentionally* leaked to avoid static deinitialization order issues.
-        static EffectRegistry* g_Registry = new EffectRegistry();
-        return *g_Registry;
+        // Note: g_pRegistry is *intentionally* leaked to avoid static deinitialization order issues.
+        static Registry* g_pRegistry = new Registry();
+        return *g_pRegistry;
     }
 
     void RegisterEffect(std::shared_ptr<IChaosEffect> p_Effect)
     {
-        Logger::Debug("[EffectRegistry] Registered effect '{}'", p_Effect->GetName());
+        Logger::Debug(TAG "Registered effect '{}'", p_Effect->GetName());
         m_aEffects.push_back(std::move(p_Effect));
     }
 
     void RegisterUnlocker(std::shared_ptr<IUnlocker> p_Unlocker)
     {
-        Logger::Debug("[EffectRegistry] Registered unlocker '{}'", p_Unlocker->GetName());
+        Logger::Debug(TAG "Registered unlocker '{}'", p_Unlocker->GetName());
         m_aUnlockers.push_back(std::move(p_Unlocker));
     }
 
     void RegisterVotingIntegration(std::shared_ptr<IVotingIntegration> p_Integration)
     {
-        Logger::Debug("[EffectRegistry] Registered voting integration '{}'", p_Integration->GetName());
+        Logger::Debug(TAG "Registered voting integration '{}'", p_Integration->GetName());
         m_aVotingIntegrations.push_back(std::move(p_Integration));
     }
 
@@ -112,11 +114,13 @@ class EffectRegistry
     }
 };
 
+#undef TAG
+
 struct EffectRegistrar
 {
     explicit EffectRegistrar(std::shared_ptr<IChaosEffect> p_Effect)
     {
-        EffectRegistry::GetInstance().RegisterEffect(std::move(p_Effect));
+        Registry::GetInstance().RegisterEffect(std::move(p_Effect));
     }
 };
 
@@ -124,7 +128,7 @@ struct UnlockerRegistrar
 {
     explicit UnlockerRegistrar(std::shared_ptr<IUnlocker> p_Unlocker)
     {
-        EffectRegistry::GetInstance().RegisterUnlocker(std::move(p_Unlocker));
+        Registry::GetInstance().RegisterUnlocker(std::move(p_Unlocker));
     }
 };
 
@@ -132,7 +136,7 @@ struct VotingIntegrationRegistrar
 {
     explicit VotingIntegrationRegistrar(std::shared_ptr<IVotingIntegration> p_Integration)
     {
-        EffectRegistry::GetInstance().RegisterVotingIntegration(std::move(p_Integration));
+        Registry::GetInstance().RegisterVotingIntegration(std::move(p_Integration));
     }
 };
 

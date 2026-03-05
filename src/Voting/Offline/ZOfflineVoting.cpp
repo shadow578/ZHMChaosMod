@@ -1,6 +1,6 @@
 #include "ZOfflineVoting.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/Math.h"
 
 void ZOfflineVoting::StartVote(const std::vector<std::shared_ptr<IChaosEffect>>& p_aOptions)

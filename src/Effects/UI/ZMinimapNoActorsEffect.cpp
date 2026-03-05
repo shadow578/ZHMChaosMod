@@ -2,7 +2,7 @@
 
 #include "IPluginInterface.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/EntityUtils.h"
 
 #define TAG "[ZMinimapNoActorsEffect] "

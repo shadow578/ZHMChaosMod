@@ -1,6 +1,6 @@
 #include "PlayerAICrippleEffects.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 
 void ZPlayerInvincibleEffect::Start()
 {

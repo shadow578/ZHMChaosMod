@@ -4,7 +4,7 @@
 #include <Windows.h>
 #include <TlHelp32.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "ZConfigurationAccessor.h"
 
 void ZFakeCrashEffect::Start()

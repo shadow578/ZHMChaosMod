@@ -10,7 +10,7 @@
 
 #include <Logging.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 
 #define TAG "[ChaosModDevTools] "
 
@@ -24,7 +24,7 @@ void ChaosMod::UpdateTestMode(const float32 p_fDeltaTime)
     m_fTestmodeTimeToNextEffect -= p_fDeltaTime;
     if (m_fTestmodeTimeToNextEffect <= 0.0f)
     {
-        const auto& s_aEffects = EffectRegistry::GetInstance().GetEffects();
+        const auto& s_aEffects = Registry::GetInstance().GetEffects();
         if (s_aEffects.empty())
         {
             return;
@@ -57,16 +57,16 @@ void ChaosMod::GenerateAndOpenCompatibilityMatrix()
     }
 
     s_File << "'Effect Compatibility'" << c_sSeparator;
-    for (const auto& s_pEffectA : EffectRegistry::GetInstance().GetEffects())
+    for (const auto& s_pEffectA : Registry::GetInstance().GetEffects())
     {
         s_File << "'" << s_pEffectA->GetName() << "'" << c_sSeparator;
     }
     s_File << std::endl;
 
-    for (const auto& s_pEffectA : EffectRegistry::GetInstance().GetEffects())
+    for (const auto& s_pEffectA : Registry::GetInstance().GetEffects())
     {
         s_File << "'" << s_pEffectA->GetName() << "'" << c_sSeparator;
-        for (const auto& s_pEffectB : EffectRegistry::GetInstance().GetEffects())
+        for (const auto& s_pEffectB : Registry::GetInstance().GetEffects())
         {
             const auto s_bCompatible = s_pEffectA->IsCompatibleWith(s_pEffectB.get());
             s_File << (s_bCompatible ? "X" : "-") << c_sSeparator;

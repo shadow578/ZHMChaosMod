@@ -2,7 +2,7 @@
 
 #include <Logging.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/Repository/ZHMRepositoryHelper.h"
 
 #define TAG "[ZTitaniumBulletsEffect] "

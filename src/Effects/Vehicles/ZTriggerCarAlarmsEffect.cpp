@@ -1,6 +1,6 @@
 #include "ZTriggerCarAlarmsEffect.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/EntityUtils.h"
 
 void ZTriggerCarAlarmsEffect::OnEnterScene()

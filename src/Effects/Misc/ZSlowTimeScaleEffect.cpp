@@ -4,7 +4,7 @@
 
 #include "Glacier/ZGameTime.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 
 void ZSlowTimeScaleEffect::Start()
 {

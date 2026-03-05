@@ -1,6 +1,6 @@
 #include "ZFixCameraUnlocker.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/EntityUtils.h"
 #include "Helpers/CameraUtils.h"
 

@@ -1,6 +1,6 @@
 #include "ZSimpleGravityModifierEffect.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 
 void ZSimpleGravityModifierEffect::Start()
 {

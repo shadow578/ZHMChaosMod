@@ -2,7 +2,7 @@
 
 #include <Glacier/SGameUpdateEvent.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "ZConfigurationAccessor.h"
 #include "Helpers/ImGuiExtras.h"
 

@@ -3,7 +3,7 @@
 #include "Client/ZYoutubeAuthHandler.h"
 #include "Client/ZYoutubeBroadcastConnection.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/Math.h"
 #include "Helpers/ImGuiExtras.h"
 #include "Helpers/Voting/ZChatVoting.h"

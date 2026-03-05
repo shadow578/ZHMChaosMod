@@ -2,7 +2,7 @@
 
 #include <Logging.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "ZConfigurationAccessor.h"
 #include "Helpers/EntityUtils.h"
 #include "Helpers/Math.h"

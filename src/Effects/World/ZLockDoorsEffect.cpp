@@ -1,6 +1,6 @@
 #include "ZLockDoorsEffect.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 
 void ZLockDoorsEffect::OnSlowUpdate(const float32 p_fDeltaTime, const float32 p_fEffectTimeRemaining)
 {

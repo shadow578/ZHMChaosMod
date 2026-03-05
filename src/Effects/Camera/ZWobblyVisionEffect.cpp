@@ -1,6 +1,6 @@
 #include "ZWobblyVisionEffect.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 
 void ZWobblyVisionEffect::Start()
 {

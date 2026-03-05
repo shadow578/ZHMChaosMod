@@ -2,7 +2,7 @@
 
 #include <Glacier/ZActor.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/EntityUtils.h"
 #include "Helpers/PlayerUtils.h"
 

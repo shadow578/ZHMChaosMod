@@ -5,7 +5,7 @@
 #include <Glacier/ZHitman5.h>
 #include <Glacier/ZSpatialEntity.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 
 void ZPlayerRagdollWithImpulseEffect::Start()
 {

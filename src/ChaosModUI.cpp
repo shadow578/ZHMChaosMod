@@ -5,7 +5,7 @@
 #include <IconsMaterialDesign.h>
 #include <imgui.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "ZConfigurationAccessor.h"
 #include "Helpers/ImGuiExtras.h"
 #include "Helpers/CompanionMod.h"
@@ -42,7 +42,7 @@ void ChaosMod::InitAuthorNames()
     s_AuthorNames.insert("OrfeasZ");
 
     // gather effect authors
-    for (const auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
+    for (const auto& s_Effect : Registry::GetInstance().GetEffects())
     {
         if (s_Effect)
         {
@@ -203,7 +203,7 @@ void ChaosMod::DrawConfigurationContents()
     ImGui::SameLine();
     if (ImGui::BeginCombo("##Voting Mode", s_pVoting ? s_pVoting->GetDisplayName().c_str() : ""))
     {
-        for (auto& s_pOption : EffectRegistry::GetInstance().GetVotingIntegrations())
+        for (auto& s_pOption : Registry::GetInstance().GetVotingIntegrations())
         {
             if (ImGui::Selectable(
                     s_pOption->GetDisplayName().c_str(),
@@ -240,7 +240,7 @@ void ChaosMod::DrawConfigurationContents()
 
 void ChaosMod::DrawUnlockersContents()
 {
-    for (auto& s_Unlocker : EffectRegistry::GetInstance().GetUnlockers())
+    for (auto& s_Unlocker : Registry::GetInstance().GetUnlockers())
     {
         ImGui::BeginDisabled(!s_Unlocker->Available());
 
@@ -407,7 +407,7 @@ void ChaosMod::DrawEffectConfigUI(const bool p_bHasFocus)
 
         ImGui::BeginChild("##effect_cfg_list_pane", ImVec2(250, 0), true, ImGuiWindowFlags_HorizontalScrollbar);
 
-        auto s_aEffects = EffectRegistry::GetInstance().GetEffects();
+        auto s_aEffects = Registry::GetInstance().GetEffects();
         std::sort(
             s_aEffects.begin(),
             s_aEffects.end(),
@@ -599,7 +599,7 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 
     if (s_Showing)
     {
-        const auto& s_aEffects = EffectRegistry::GetInstance().GetEffects();
+        const auto& s_aEffects = Registry::GetInstance().GetEffects();
         size_t s_nAvailableEffects = 0;
         for (const auto& s_Effect : s_aEffects)
         {

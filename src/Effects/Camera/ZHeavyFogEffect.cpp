@@ -1,6 +1,6 @@
 #include "ZHeavyFogEffect.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 
 void ZHeavyFogEffect::Start()
 {

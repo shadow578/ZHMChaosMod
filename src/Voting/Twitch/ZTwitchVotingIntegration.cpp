@@ -5,7 +5,7 @@
 
 #include <numeric>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/Math.h"
 #include "Helpers/Utils.h"
 #include "Helpers/ImGuiExtras.h"

@@ -7,7 +7,7 @@
 #include <Glacier/ZGameTime.h>
 #include <Glacier/SGameUpdateEvent.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/Utils.h"
 #include "Helpers/ImGuiExtras.h"
 

@@ -1,6 +1,6 @@
 #include "ZExplodeAllVehiclesEffect.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/EntityUtils.h"
 
 void ZExplodeAllVehiclesEffect::OnEnterScene()

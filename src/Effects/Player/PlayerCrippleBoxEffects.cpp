@@ -1,6 +1,6 @@
 #include "PlayerCrippleBoxEffects.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/Utils.h"
 
 void ZUnlimitedAmmoEffect::Start()

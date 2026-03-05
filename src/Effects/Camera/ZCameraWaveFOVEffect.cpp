@@ -5,7 +5,7 @@
 #include <Glacier/SGameUpdateEvent.h>
 #include <Glacier/ZSpatialEntity.h>
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "Helpers/EntityUtils.h"
 
 const std::string c_sCameraFOVPropertyName = "m_fFovYDeg";

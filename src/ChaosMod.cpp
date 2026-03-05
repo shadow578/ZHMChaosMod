@@ -12,7 +12,7 @@
 #include "Helpers/CompanionMod.h"
 #include "Helpers/Repository/ZHMRepositoryHelper.h"
 
-#include "EffectRegistry.h"
+#include "Registry.h"
 #include "ZConfigurationAccessor.h"
 #include "BuildInfo.h"
 
@@ -51,7 +51,7 @@ void ChaosMod::Init()
     Hooks::ZEntitySceneContext_SetLoadingStage->AddDetour(this, &ChaosMod::OnSetLoadingStage);
 
     // sort effect registry to make it more pleasing in debug ui
-    EffectRegistry::GetInstance().Sort();
+    Registry::GetInstance().Sort();
 
     InitAuthorNames();
 
@@ -60,7 +60,7 @@ void ChaosMod::Init()
         p_pEffect->OnModInitialized();
     });
 
-    for (auto& s_pVotingIntegation : EffectRegistry::GetInstance().GetVotingIntegrations())
+    for (auto& s_pVotingIntegation : Registry::GetInstance().GetVotingIntegrations())
     {
         if (s_pVotingIntegation)
         {
@@ -113,7 +113,7 @@ void ChaosMod::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent)
 
 void ChaosMod::ForeachEffect(const bool p_bIsLifecycleCall, std::function<void(std::shared_ptr<IChaosEffect> p_pEffect)> p_Callback)
 {
-    for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
+    for (auto& s_Effect : Registry::GetInstance().GetEffects())
     {
         if (!s_Effect)
         {
@@ -243,7 +243,7 @@ std::shared_ptr<IVotingIntegration> ChaosMod::GetCurrentVotingIntegration()
 
 std::shared_ptr<IVotingIntegration> ChaosMod::GetDefaultVotingIntegration()
 {
-    if (const auto& s_pOfflineVoting = EffectRegistry::GetInstance().GetVotingIntegrationByName("ZOfflineVoting"))
+    if (const auto& s_pOfflineVoting = Registry::GetInstance().GetVotingIntegrationByName("ZOfflineVoting"))
     {
         return s_pOfflineVoting;
     }
