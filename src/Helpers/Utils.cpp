@@ -5,6 +5,7 @@
 #include <shellapi.h>
 
 #include <algorithm>
+#include <cctype>
 
 void Utils::CopyToClipboard(const std::string& p_sData)
 {

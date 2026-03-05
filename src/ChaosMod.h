@@ -9,11 +9,12 @@
 #include "IVotingIntegration.h"
 
 #include <vector>
+#include <map>
 #include <queue>
 #include <functional>
 #include <memory>
 
-class ZEffectConfigurationAccessor;
+class ZConfigurationAccessor;
 
 class ChaosMod : public IPluginInterface
 {

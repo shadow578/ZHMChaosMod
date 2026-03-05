@@ -2,6 +2,8 @@
 
 #include <Logging.h>
 
+#include <algorithm>
+
 #include "IChaosEffect.h"
 #include "IUnlocker.h"
 #include "IVotingIntegration.h"
@@ -62,7 +64,7 @@ void Registry::RegisterVotingIntegration(std::shared_ptr<IVotingIntegration> p_I
     m_aVotingIntegrations.push_back(std::move(p_Integration));
 }
 
-const std::shared_ptr<IChaosEffect>& Registry::GetEffectByName(const std::string& p_sName) const
+const std::shared_ptr<IChaosEffect> Registry::GetEffectByName(const std::string& p_sName) const
 {
     for (const auto& s_pEffect : m_aEffects)
     {
@@ -75,7 +77,7 @@ const std::shared_ptr<IChaosEffect>& Registry::GetEffectByName(const std::string
     return nullptr; // FIXME: returning address of local variable or temporary
 }
 
-const std::shared_ptr<IVotingIntegration>& Registry::GetVotingIntegrationByName(const std::string& p_sName) const
+const std::shared_ptr<IVotingIntegration> Registry::GetVotingIntegrationByName(const std::string& p_sName) const
 {
     for (const auto& s_pIntegration : m_aVotingIntegrations)
     {

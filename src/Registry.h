@@ -42,8 +42,8 @@ class Registry
         return m_aVotingIntegrations;
     }
 
-    const std::shared_ptr<IChaosEffect>& GetEffectByName(const std::string& p_sName) const;
-    const std::shared_ptr<IVotingIntegration>& GetVotingIntegrationByName(const std::string& p_sName) const;
+    const std::shared_ptr<IChaosEffect> GetEffectByName(const std::string& p_sName) const;
+    const std::shared_ptr<IVotingIntegration> GetVotingIntegrationByName(const std::string& p_sName) const;
 
     void Sort();
 };
@@ -77,7 +77,7 @@ struct VotingIntegrationRegistrar
  * Effecs should be registered in the global scope of the Effect's .cpp file.
  * Examples:
  * REGISTER_CHAOS_EFFECT(MySimpleEffect);
- * REGISTER_CHAOS_EFFECT_PARAM(MyParameterizedEffect, constructor_arg1, constructor_arg2);
+ * REGISTER_CHAOS_EFFECT_PARAM(myparameffect1, MyParameterizedEffect, constructor_arg1, constructor_arg2);
  */
 #define REGISTER_CHAOS_EFFECT(EFFECT_CLASS)                  \
     static EffectRegistrar g_EffectRegistrar_##EFFECT_CLASS( \
