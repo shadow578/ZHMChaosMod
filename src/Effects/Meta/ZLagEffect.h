@@ -25,6 +25,9 @@ class ZLagEffect : public IChaosEffect
         return EDuration::Short; // painful!
     }
 
+    void LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration) override;
+    void DrawConfigUI(ZConfigurationAccessor* p_pConfiguration) override;
+
   private:
     float32 m_fTargetFPS;
     bool m_bEnabled = false;

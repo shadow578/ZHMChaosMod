@@ -20,4 +20,11 @@ class ZExplodeNearbyActorsEffect : public ZExplosionEffectBase
     {
         return EDuration::OneShot;
     }
+
+    void LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration) override;
+    void DrawConfigUI(ZConfigurationAccessor* p_pConfiguration) override;
+
+  private:
+    float32 m_fRadius = 10.0f;
+    float32 m_fTargetStrength = 10.0f;
 };

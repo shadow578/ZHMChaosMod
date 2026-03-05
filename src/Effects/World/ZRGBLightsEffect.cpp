@@ -3,6 +3,7 @@
 #include <Logging.h>
 
 #include "EffectRegistry.h"
+#include "ZConfigurationAccessor.h"
 #include "Helpers/EntityUtils.h"
 #include "Helpers/Math.h"
 
@@ -74,11 +75,29 @@ void ZRGBLightsEffect::OnSlowUpdate(const float32 p_fDeltaTime, const float32 p_
     const SColorRGB s_Color = Math::GetRainbowColor(m_fTimeElapsed, 0.0f);
     for (auto& s_LightInfo : m_aLights)
     {
-        const float32 s_Brightness = Math::GetRandomNumber(400.0f, 1500.0f);
+        const float32 s_Brightness = m_bReducedBrightness ? Math::GetRandomNumber(100.0f, 600.0f)
+                                                          : Math::GetRandomNumber(400.0f, 1500.0f);
         s_LightInfo.Apply(true, s_Brightness, s_Color);
     }
 
     m_fTimeToNextChange = Math::GetRandomNumber(0.1f, 0.3f);
+}
+
+void ZRGBLightsEffect::LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration)
+{
+    IChaosEffect::LoadConfiguration(p_pConfiguration);
+
+    m_bReducedBrightness = p_pConfiguration->GetBool("ReduceBrightness", m_bReducedBrightness);
+}
+
+void ZRGBLightsEffect::DrawConfigUI(ZConfigurationAccessor* p_pConfiguration)
+{
+    IChaosEffect::DrawConfigUI(p_pConfiguration);
+
+    if (ImGui::Checkbox("Reduce Brightness", &m_bReducedBrightness))
+    {
+        p_pConfiguration->SetBool("ReduceBrightness", m_bReducedBrightness);
+    }
 }
 
 REGISTER_CHAOS_EFFECT(ZRGBLightsEffect)
