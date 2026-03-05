@@ -16,7 +16,7 @@ class ZFakeCrashEffect : public IChaosEffect
         return EDuration::OneShot;
     }
 
-        void LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration) override;
+    void LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration) override;
     void DrawConfigUI(ZConfigurationAccessor* p_pConfiguration) override;
 
   private:
