@@ -44,7 +44,7 @@ void ChaosMod::OnEffectTimerTrigger()
     s_pVotingIntegration->StartVote(GetRandomEffectSelection(m_nVoteOptions));
 }
 
-void ChaosMod::ActivateEffect(std::shared_ptr<IChaosEffect> p_pEffect, const float32 p_fForcedDuration)
+void ChaosMod::ActivateEffect(std::shared_ptr<IChaosEffect>& p_pEffect, const float32 p_fForcedDuration)
 {
     if (!p_pEffect || !p_pEffect->Available())
     {
@@ -133,7 +133,7 @@ std::vector<std::shared_ptr<IChaosEffect>> ChaosMod::GetRandomEffectSelection(co
     static std::mt19937 rng(rd());
     std::shuffle(s_aShuffeled.begin(), s_aShuffeled.end(), rng);
 
-    for (auto p_pEffect : s_aShuffeled)
+    for (auto& p_pEffect : s_aShuffeled)
     {
         // exclude disabled or unavailable
         if (!p_pEffect->IsEnabled() || !p_pEffect->Available())
@@ -158,7 +158,7 @@ std::vector<std::shared_ptr<IChaosEffect>> ChaosMod::GetRandomEffectSelection(co
     return s_aSelection;
 }
 
-bool ChaosMod::IsCompatibleWithAllActive(const std::shared_ptr<IChaosEffect> p_pEffect)
+bool ChaosMod::IsCompatibleWithAllActive(const std::shared_ptr<IChaosEffect>& p_pEffect)
 {
     for (const auto& s_ActiveEffect : m_aActiveEffects)
     {
@@ -177,7 +177,7 @@ bool ChaosMod::IsCompatibleWithAllActive(const std::shared_ptr<IChaosEffect> p_p
     return true;
 }
 
-float32 ChaosMod::GetEffectRemainingTime(const std::shared_ptr<IChaosEffect> p_pEffect) const
+float32 ChaosMod::GetEffectRemainingTime(const std::shared_ptr<IChaosEffect>& p_pEffect) const
 {
     // debug takes precedence
     if (p_pEffect == m_pEffectForDebug)

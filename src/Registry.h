@@ -42,8 +42,8 @@ class Registry
         return m_aVotingIntegrations;
     }
 
-    const std::shared_ptr<IChaosEffect> GetEffectByName(const std::string& p_sName) const;
-    const std::shared_ptr<IVotingIntegration> GetVotingIntegrationByName(const std::string& p_sName) const;
+    std::shared_ptr<IChaosEffect> GetEffectByName(const std::string& p_sName) const;
+    std::shared_ptr<IVotingIntegration> GetVotingIntegrationByName(const std::string& p_sName) const;
 
     void Sort();
 };

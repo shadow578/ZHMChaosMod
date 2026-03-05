@@ -37,7 +37,7 @@ class ChaosMod : public IPluginInterface
     ZTimer m_SlowUpdateTimer;
     std::queue<std::function<void()>> m_qDeferredFrameUpdateActions;
 
-    void ForeachEffect(const bool m_bIsLifecycleCall, std::function<void(std::shared_ptr<IChaosEffect> p_pEffect)> p_Callback);
+    void ForeachEffect(const bool p_bIsLifecycleCall, std::function<void(std::shared_ptr<IChaosEffect> p_pEffect)> p_Callback);
 
     void OnEffectSlowUpdate();
     void OnLoadOrClearScene();
@@ -135,11 +135,11 @@ class ChaosMod : public IPluginInterface
 
     void UpdateEffectTimerEnabled();
     void OnEffectTimerTrigger();
-    void ActivateEffect(std::shared_ptr<IChaosEffect> p_pEffect, const float32 p_fForcedDuration = -1.0f);
+    void ActivateEffect(std::shared_ptr<IChaosEffect>& p_pEffect, const float32 p_fForcedDuration = -1.0f);
     void UpdateEffectExpiration(const float32 p_fDeltaTime);
     std::vector<std::shared_ptr<IChaosEffect>> GetRandomEffectSelection(const int p_nCount);
-    bool IsCompatibleWithAllActive(const std::shared_ptr<IChaosEffect> p_pEffect);
-    float32 GetEffectRemainingTime(const std::shared_ptr<IChaosEffect> p_pEffect) const;
+    bool IsCompatibleWithAllActive(const std::shared_ptr<IChaosEffect>& p_pEffect);
+    float32 GetEffectRemainingTime(const std::shared_ptr<IChaosEffect>& p_pEffect) const;
 };
 
 DECLARE_ZHM_PLUGIN(ChaosMod)

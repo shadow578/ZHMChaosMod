@@ -2,7 +2,7 @@
 
 std::vector<ChaosMod::SEffectEnableTemplate> ChaosMod::g_aEffectEnableTemplates = {
     {.m_sName = "SA/SO Compatible", //
-     .m_sDescription = "Disables all effects that could ruin Silent Asassin or Suit Only runs.",
+     .m_sDescription = "Disables all effects that could ruin Silent Assassin or Suit Only runs.",
      .m_bDefaultEnabled = true,
      .m_mEffectEnableStates = {
          {"ZActorsFireRandomlyEffect", false},
