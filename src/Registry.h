@@ -1,15 +1,11 @@
 #pragma once
-
 #include <memory>
 #include <vector>
+#include <string>
 
-#include "IChaosEffect.h"
-#include "IUnlocker.h"
-#include "IVotingIntegration.h"
-
-#include <Logging.h>
-
-#define TAG "[Registry] "
+class IChaosEffect;
+class IUnlocker;
+class IVotingIntegration;
 
 class Registry
 {
@@ -27,40 +23,13 @@ class Registry
         return *g_pRegistry;
     }
 
-    void RegisterEffect(std::shared_ptr<IChaosEffect> p_Effect)
-    {
-        Logger::Debug(TAG "Registered effect '{}'", p_Effect->GetName());
-        m_aEffects.push_back(std::move(p_Effect));
-    }
-
-    void RegisterUnlocker(std::shared_ptr<IUnlocker> p_Unlocker)
-    {
-        Logger::Debug(TAG "Registered unlocker '{}'", p_Unlocker->GetName());
-        m_aUnlockers.push_back(std::move(p_Unlocker));
-    }
-
-    void RegisterVotingIntegration(std::shared_ptr<IVotingIntegration> p_Integration)
-    {
-        Logger::Debug(TAG "Registered voting integration '{}'", p_Integration->GetName());
-        m_aVotingIntegrations.push_back(std::move(p_Integration));
-    }
+    void RegisterEffect(std::shared_ptr<IChaosEffect> p_Effect);
+    void RegisterUnlocker(std::shared_ptr<IUnlocker> p_Unlocker);
+    void RegisterVotingIntegration(std::shared_ptr<IVotingIntegration> p_Integration);
 
     const std::vector<std::shared_ptr<IChaosEffect>>& GetEffects() const
     {
         return m_aEffects;
-    }
-
-    const std::shared_ptr<IChaosEffect>& GetEffectByName(const std::string& p_sName) const
-    {
-        for (const auto& s_pEffect : m_aEffects)
-        {
-            if (s_pEffect->GetName() == p_sName)
-            {
-                return s_pEffect;
-            }
-        }
-
-        return nullptr;
     }
 
     const std::vector<std::shared_ptr<IUnlocker>>& GetUnlockers() const
@@ -73,48 +42,11 @@ class Registry
         return m_aVotingIntegrations;
     }
 
-    const std::shared_ptr<IVotingIntegration>& GetVotingIntegrationByName(const std::string& p_sName) const
-    {
-        for (const auto& s_pIntegration : m_aVotingIntegrations)
-        {
-            if (s_pIntegration->GetName() == p_sName)
-            {
-                return s_pIntegration;
-            }
-        }
+    const std::shared_ptr<IChaosEffect>& GetEffectByName(const std::string& p_sName) const;
+    const std::shared_ptr<IVotingIntegration>& GetVotingIntegrationByName(const std::string& p_sName) const;
 
-        return nullptr;
-    }
-
-    void Sort()
-    {
-        std::sort(
-            m_aEffects.begin(),
-            m_aEffects.end(),
-            [](const std::shared_ptr<IChaosEffect>& a, const std::shared_ptr<IChaosEffect>& b) {
-                return a->GetName() < b->GetName();
-            }
-        );
-
-        std::sort(
-            m_aUnlockers.begin(),
-            m_aUnlockers.end(),
-            [](const std::shared_ptr<IUnlocker>& a, const std::shared_ptr<IUnlocker>& b) {
-                return a->GetName() < b->GetName();
-            }
-        );
-
-        std::sort(
-            m_aVotingIntegrations.begin(),
-            m_aVotingIntegrations.end(),
-            [](const std::shared_ptr<IVotingIntegration>& a, const std::shared_ptr<IVotingIntegration>& b) {
-                return a->GetName() < b->GetName();
-            }
-        );
-    }
+    void Sort();
 };
-
-#undef TAG
 
 struct EffectRegistrar
 {

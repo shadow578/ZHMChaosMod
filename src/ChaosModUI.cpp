@@ -6,6 +6,7 @@
 #include <imgui.h>
 
 #include "Registry.h"
+#include "IUnlocker.h"
 #include "ZConfigurationAccessor.h"
 #include "Helpers/ImGuiExtras.h"
 #include "Helpers/CompanionMod.h"

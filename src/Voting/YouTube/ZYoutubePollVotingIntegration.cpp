@@ -3,6 +3,8 @@
 #include "Client/ZYoutubeAuthHandler.h"
 #include "Client/ZYoutubeBroadcastConnection.h"
 
+#include <Logging.h>
+
 #include "Registry.h"
 #include "Helpers/Math.h"
 #include "Helpers/ImGuiExtras.h"

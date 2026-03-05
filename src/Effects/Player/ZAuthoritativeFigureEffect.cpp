@@ -1,6 +1,7 @@
 #include "ZAuthoritativeFigureEffect.h"
 
-#include "Globals.h"
+#include <Globals.h>
+#include <Logging.h>
 
 #include "Registry.h"
 #include "Helpers/Math.h"
