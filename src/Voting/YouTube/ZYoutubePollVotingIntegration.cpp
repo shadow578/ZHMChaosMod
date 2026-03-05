@@ -67,7 +67,7 @@ void ZYoutubePollVotingIntegration::StartVoteImpl()
 
             s_Poll.m_aOptions.clear();
             s_Poll.m_aOptions.reserve(m_aActiveVote.size());
-            for (const auto* s_pEffect : m_aActiveVote)
+            for (const auto s_pEffect : m_aActiveVote)
             {
                 s_Poll.m_aOptions.push_back({s_pEffect->GetDisplayName(true)});
 
@@ -96,7 +96,7 @@ void ZYoutubePollVotingIntegration::StartVoteImpl()
     );
 }
 
-IChaosEffect* ZYoutubePollVotingIntegration::EndVoteImpl()
+std::shared_ptr<IChaosEffect> ZYoutubePollVotingIntegration::EndVoteImpl()
 {
     // capture whatever the last known poll details were
     YT::SLivePollDetails s_FinalPollDetails;

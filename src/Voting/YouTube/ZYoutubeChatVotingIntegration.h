@@ -20,7 +20,7 @@ class ZYoutubeChatVotingIntegration : public ZYoutubeIntegrationBase
     void OnBroadcastConnected() override;
 
     void StartVoteImpl() override;
-    IChaosEffect* EndVoteImpl() override;
+    std::shared_ptr<IChaosEffect> EndVoteImpl() override;
 
   private:
     std::unique_ptr<ZChatVoting> m_pVoting;

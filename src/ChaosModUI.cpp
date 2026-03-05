@@ -80,7 +80,7 @@ void ChaosMod::OnDrawMenu()
 
 void ChaosMod::OnDrawUI(const bool p_HasFocus)
 {
-    ForeachEffect(false, [p_HasFocus](IChaosEffect* p_pEffect) {
+    ForeachEffect(false, [p_HasFocus](std::shared_ptr<IChaosEffect> p_pEffect) {
         p_pEffect->OnDrawUI(p_HasFocus);
     });
 
@@ -197,7 +197,7 @@ void ChaosMod::DrawConfigurationContents()
 
     ImGui::SeparatorText("Voting");
 
-    auto* s_pVoting = GetCurrentVotingIntegration();
+    auto s_pVoting = GetCurrentVotingIntegration();
 
     ImGui::TextUnformatted("Voting Mode");
     ImGui::SameLine();
@@ -207,7 +207,7 @@ void ChaosMod::DrawConfigurationContents()
         {
             if (ImGui::Selectable(
                     s_pOption->GetDisplayName().c_str(),
-                    s_pVoting == s_pOption.get()
+                    s_pVoting == s_pOption
                 ))
             {
                 if (s_pVoting)
@@ -215,7 +215,7 @@ void ChaosMod::DrawConfigurationContents()
                     s_pVoting->Deactivate();
                 }
 
-                s_pVoting = s_pOption.get();
+                s_pVoting = s_pOption;
 
                 m_pVotingIntegration = s_pVoting;
                 m_pVotingIntegration->Activate();
@@ -378,7 +378,7 @@ void ChaosMod::DrawEffectConfigUI(const bool p_bHasFocus)
                                          ".m_bDefaultEnabled = true,\n"
                                          ".m_mEffectEnableStates = {\n";
 
-            ForeachEffect(true, [&s_TemplateCode](IChaosEffect* p_pEffect) {
+            ForeachEffect(true, [&s_TemplateCode](std::shared_ptr<IChaosEffect> p_pEffect) {
                 // only include effects that differ from the default enabled state
                 if (p_pEffect->IsEnabled())
                     return;
@@ -435,10 +435,10 @@ void ChaosMod::DrawEffectConfigUI(const bool p_bHasFocus)
 
             if (ImGui::Selectable(
                     s_sLabel.c_str(),
-                    m_pEffectForConfig == s_pEffect.get()
+                    m_pEffectForConfig == s_pEffect
                 ))
             {
-                m_pEffectForConfig = s_pEffect.get();
+                m_pEffectForConfig = s_pEffect;
                 Logger::Debug(TAG "Selected '{}' for config", s_pEffect->GetName());
             }
         }
@@ -623,7 +623,7 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 
         ImGui::TextUnformatted(fmt::format("Enable States: MOD={}, USER={}, TIMER={}", m_bModEnabled ? "True" : "False", m_bUserEnabled ? "True" : "False", m_EffectTimer.m_bEnable ? "True" : "False").c_str());
 
-        auto* s_pVoting = GetCurrentVotingIntegration();
+        auto s_pVoting = GetCurrentVotingIntegration();
         ImGui::TextUnformatted(fmt::format("Using Voting Integration: {}", s_pVoting ? s_pVoting->GetName() : "<null>").c_str());
 
         ImGui::Checkbox("Menu Always Visible", &m_bDebugMenuAlwaysVisible);
@@ -675,10 +675,10 @@ void ChaosMod::DrawDebugUI(const bool p_bHasFocus)
 
                 if (ImGui::Selectable(
                         s_sEffectName.c_str(),
-                        m_pEffectForDebug == s_Effect.get()
+                        m_pEffectForDebug == s_Effect
                     ))
                 {
-                    m_pEffectForDebug = s_Effect.get();
+                    m_pEffectForDebug = s_Effect;
                     Logger::Debug(TAG "Selected '{}' for debug", s_Effect->GetName());
                 }
 

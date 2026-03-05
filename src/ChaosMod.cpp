@@ -33,7 +33,7 @@ ChaosMod::~ChaosMod()
     Hooks::ZEntitySceneContext_ClearScene->RemoveDetour(&ChaosMod::OnClearScene);
     Hooks::ZEntitySceneContext_SetLoadingStage->RemoveDetour(&ChaosMod::OnSetLoadingStage);
 
-    ForeachEffect(true, [](IChaosEffect* p_pEffect) {
+    ForeachEffect(true, [](std::shared_ptr<IChaosEffect> p_pEffect) {
         Logger::Debug(TAG "Forwarding OnModUnload to '{}'", p_pEffect->GetName());
         p_pEffect->OnModUnload();
     });
@@ -55,7 +55,7 @@ void ChaosMod::Init()
 
     InitAuthorNames();
 
-    ForeachEffect(true, [this](IChaosEffect* p_pEffect) {
+    ForeachEffect(true, [this](std::shared_ptr<IChaosEffect> p_pEffect) {
         Logger::Debug(TAG "Forwarding OnModInitialized to '{}'", p_pEffect->GetName());
         p_pEffect->OnModInitialized();
     });
@@ -82,7 +82,7 @@ void ChaosMod::OnEngineInitialized()
     const ZMemberDelegate<ChaosMod, void(const SGameUpdateEvent&)> s_Delegate(this, &ChaosMod::OnFrameUpdate);
     Globals::GameLoopManager->RegisterFrameUpdate(s_Delegate, 1, EUpdateMode::eUpdatePlayMode);
 
-    ForeachEffect(true, [](IChaosEffect* p_pEffect) {
+    ForeachEffect(true, [](std::shared_ptr<IChaosEffect> p_pEffect) {
         Logger::Debug(TAG "Forwarding OnEngineInitialized to '{}'", p_pEffect->GetName());
         p_pEffect->OnEngineInitialized();
     });
@@ -90,7 +90,7 @@ void ChaosMod::OnEngineInitialized()
 
 void ChaosMod::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent)
 {
-    ForeachEffect(false, [this, p_UpdateEvent](IChaosEffect* p_pEffect) {
+    ForeachEffect(false, [this, p_UpdateEvent](std::shared_ptr<IChaosEffect> p_pEffect) {
         p_pEffect->OnFrameUpdate(p_UpdateEvent, GetEffectRemainingTime(p_pEffect));
     });
 
@@ -111,7 +111,7 @@ void ChaosMod::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent)
     UpdateTestMode(p_UpdateEvent.m_GameTimeDelta.ToSeconds());
 }
 
-void ChaosMod::ForeachEffect(const bool p_bIsLifecycleCall, std::function<void(IChaosEffect* p_pEffect)> p_Callback)
+void ChaosMod::ForeachEffect(const bool p_bIsLifecycleCall, std::function<void(std::shared_ptr<IChaosEffect> p_pEffect)> p_Callback)
 {
     for (auto& s_Effect : EffectRegistry::GetInstance().GetEffects())
     {
@@ -125,13 +125,13 @@ void ChaosMod::ForeachEffect(const bool p_bIsLifecycleCall, std::function<void(I
             continue;
         }
 
-        p_Callback(s_Effect.get());
+        p_Callback(s_Effect);
     }
 }
 
 void ChaosMod::OnEffectSlowUpdate()
 {
-    ForeachEffect(false, [this](IChaosEffect* p_pEffect) {
+    ForeachEffect(false, [this](std::shared_ptr<IChaosEffect> p_pEffect) {
         p_pEffect->OnSlowUpdate(m_SlowUpdateTimer.GetElapsedSeconds(), GetEffectRemainingTime(p_pEffect));
     });
 }
@@ -153,7 +153,7 @@ void ChaosMod::OnLoadOrClearScene()
 
     m_aActiveEffects.clear();
 
-    if (auto* s_pVoting = GetCurrentVotingIntegration())
+    if (auto s_pVoting = GetCurrentVotingIntegration())
     {
         s_pVoting->EndVote();
     }
@@ -169,7 +169,7 @@ void ChaosMod::LoadConfiguration()
     m_EffectTimer.m_eTimeMode = m_bEffectTimersUseRealtime ? ZTimer::ETimeMode::RealTime : ZTimer::ETimeMode::GameTime;
 
     // load effect configurations
-    ForeachEffect(true, [this](IChaosEffect* p_pEffect) {
+    ForeachEffect(true, [this](std::shared_ptr<IChaosEffect> p_pEffect) {
         Logger::Debug(TAG "Loading configuration for '{}'", p_pEffect->GetName());
         ZConfigurationAccessor s_ConfigAccessor(this, p_pEffect->GetName());
         p_pEffect->LoadConfiguration(&s_ConfigAccessor);
@@ -178,12 +178,12 @@ void ChaosMod::LoadConfiguration()
 
 void ChaosMod::SetAllEffectsEnabled(const bool p_bEnabled)
 {
-    ForeachEffect(true, [this, p_bEnabled](IChaosEffect* p_pEffect) {
+    ForeachEffect(true, [this, p_bEnabled](std::shared_ptr<IChaosEffect> p_pEffect) {
         SetEffectEnabled(p_pEffect, p_bEnabled);
     });
 }
 
-void ChaosMod::SetEffectEnabled(const IChaosEffect* p_pEffect, const bool p_bEnabled)
+void ChaosMod::SetEffectEnabled(const std::shared_ptr<IChaosEffect> p_pEffect, const bool p_bEnabled)
 {
     ZConfigurationAccessor s_ConfigAccessor(this, p_pEffect->GetName());
     s_ConfigAccessor.SetBool("enabled", p_bEnabled);
@@ -192,7 +192,7 @@ void ChaosMod::SetEffectEnabled(const IChaosEffect* p_pEffect, const bool p_bEna
 void ChaosMod::ApplyEffectEnableTemplate(const SEffectEnableTemplate& p_Template)
 {
     Logger::Info(TAG "Applying Effect Enable Template '{}'", p_Template.m_sName);
-    ForeachEffect(true, [this, p_Template](IChaosEffect* p_pEffect) {
+    ForeachEffect(true, [this, p_Template](std::shared_ptr<IChaosEffect> p_pEffect) {
         const auto& s_It = p_Template.m_mEffectEnableStates.find(p_pEffect->GetName());
         const auto s_bEnabled = s_It != p_Template.m_mEffectEnableStates.end() ? s_It->second : p_Template.m_bDefaultEnabled;
         SetEffectEnabled(p_pEffect, s_bEnabled);
@@ -221,7 +221,7 @@ void ChaosMod::UpdateEffectTimerEnabled()
 
         m_aActiveEffects.clear();
 
-        if (auto* s_pVoting = GetCurrentVotingIntegration())
+        if (auto s_pVoting = GetCurrentVotingIntegration())
         {
             s_pVoting->EndVote();
         }
@@ -230,7 +230,7 @@ void ChaosMod::UpdateEffectTimerEnabled()
     m_EffectTimer.m_bEnable = s_bEnable;
 }
 
-IVotingIntegration* ChaosMod::GetCurrentVotingIntegration()
+std::shared_ptr<IVotingIntegration> ChaosMod::GetCurrentVotingIntegration()
 {
     if (!m_pVotingIntegration)
     {
@@ -241,11 +241,11 @@ IVotingIntegration* ChaosMod::GetCurrentVotingIntegration()
     return m_pVotingIntegration;
 }
 
-IVotingIntegration* ChaosMod::GetDefaultVotingIntegration()
+std::shared_ptr<IVotingIntegration> ChaosMod::GetDefaultVotingIntegration()
 {
     if (const auto& s_pOfflineVoting = EffectRegistry::GetInstance().GetVotingIntegrationByName("ZOfflineVoting"))
     {
-        return s_pOfflineVoting.get();
+        return s_pOfflineVoting;
     }
 
     throw std::runtime_error("Failed to find default voting integration!");
@@ -262,7 +262,7 @@ DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnClearScene, ZEntitySceneContext* th, bool
 {
     OnLoadOrClearScene();
 
-    ForeachEffect(true, [](IChaosEffect* p_pEffect) {
+    ForeachEffect(true, [](std::shared_ptr<IChaosEffect> p_pEffect) {
         Logger::Debug(TAG "Forwarding OnClearScene to '{}'", p_pEffect->GetName());
         p_pEffect->OnClearScene();
     });
@@ -293,7 +293,7 @@ DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th,
         // thus, we need the extra check here.
         if (!s_bIsMainMenu)
         {
-            ForeachEffect(true, [](IChaosEffect* p_pEffect) {
+            ForeachEffect(true, [](std::shared_ptr<IChaosEffect> p_pEffect) {
                 Logger::Debug(TAG "Loading Resources for '{}'", p_pEffect->GetName());
                 p_pEffect->LoadResources();
             });
@@ -302,7 +302,7 @@ DEFINE_PLUGIN_DETOUR(ChaosMod, void, OnSetLoadingStage, ZEntitySceneContext* th,
 
     if (!s_bIsBoot && !s_bIsMainMenu && stage == ESceneLoadingStage::eLoading_ScenePlaying)
     {
-        ForeachEffect(true, [](IChaosEffect* p_pEffect) {
+        ForeachEffect(true, [](std::shared_ptr<IChaosEffect> p_pEffect) {
             Logger::Debug(TAG "Forwarding OnEnterScene to '{}'", p_pEffect->GetName());
             p_pEffect->OnEnterScene();
         });

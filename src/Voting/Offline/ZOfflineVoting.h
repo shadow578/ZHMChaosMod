@@ -4,8 +4,8 @@
 class ZOfflineVoting : public IVotingIntegration
 {
   public:
-    void StartVote(const std::vector<IChaosEffect*>& p_aOptions) override;
-    IChaosEffect* EndVote() override;
+    void StartVote(const std::vector<std::shared_ptr<IChaosEffect>>& p_aOptions) override;
+    std::shared_ptr<IChaosEffect> EndVote() override;
 
     void DrawOverlayUI() override;
 
@@ -15,5 +15,5 @@ class ZOfflineVoting : public IVotingIntegration
     }
 
   private:
-    std::vector<IChaosEffect*> m_aActiveVote;
+    std::vector<std::shared_ptr<IChaosEffect>> m_aActiveVote;
 };

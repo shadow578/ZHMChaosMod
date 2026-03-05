@@ -36,7 +36,7 @@ class ChaosMod : public IPluginInterface
     ZTimer m_SlowUpdateTimer;
     std::queue<std::function<void()>> m_qDeferredFrameUpdateActions;
 
-    void ForeachEffect(const bool m_bIsLifecycleCall, std::function<void(IChaosEffect* p_pEffect)> p_Callback);
+    void ForeachEffect(const bool m_bIsLifecycleCall, std::function<void(std::shared_ptr<IChaosEffect> p_pEffect)> p_Callback);
 
     void OnEffectSlowUpdate();
     void OnLoadOrClearScene();
@@ -60,13 +60,13 @@ class ChaosMod : public IPluginInterface
     /// Load (or reload) mod and effects configuration from disk and apply it.
     void LoadConfiguration();
 
-    /// Enable or disable all effects. 
+    /// Enable or disable all effects.
     /// A configuration reload is required for this to take effect.
     void SetAllEffectsEnabled(const bool p_bEnabled);
 
-    /// Enable or disable the given effect. 
+    /// Enable or disable the given effect.
     /// A configuration reload is required for this to take effect.
-    void SetEffectEnabled(const IChaosEffect* p_pEffect, const bool p_bEnabled);
+    void SetEffectEnabled(const std::shared_ptr<IChaosEffect> p_pEffect, const bool p_bEnabled);
 
     /// Apply the given effect enable template, enabling or disabling effects as specified by the template.
     /// A configuration reload is required for this to take effect.
@@ -77,14 +77,14 @@ class ChaosMod : public IPluginInterface
     std::string m_sAuthorNames;
 
     bool m_bEffectConfigOpen = false;
-    IChaosEffect* m_pEffectForConfig = nullptr;
+    std::shared_ptr<IChaosEffect> m_pEffectForConfig = nullptr;
     int m_nSelectedConfigTemplate = 0;
     float32 m_fEffectConfigUIButtonsWidth = 250.0f;
 
     bool m_bDebugMenuActive = false;
     bool m_bDebugMenuAlwaysVisible = false;
     float32 m_fDebugEffectRemainingTime = 30.0f;
-    IChaosEffect* m_pEffectForDebug = nullptr;
+    std::shared_ptr<IChaosEffect> m_pEffectForDebug = nullptr;
 
     void InitAuthorNames();
 
@@ -113,7 +113,7 @@ class ChaosMod : public IPluginInterface
   private: // Selection & Countdown logic
     struct SActiveEffect
     {
-        IChaosEffect* m_pEffect;
+        std::shared_ptr<IChaosEffect> m_pEffect;
         float32 m_fDuration;
         float32 m_fTimeRemaining;
     };
@@ -126,19 +126,19 @@ class ChaosMod : public IPluginInterface
     float32 m_fFullEffectDuration;
     int m_nVoteOptions;
 
-    IVotingIntegration* m_pVotingIntegration = nullptr;
+    std::shared_ptr<IVotingIntegration> m_pVotingIntegration = nullptr;
     std::vector<SActiveEffect> m_aActiveEffects;
 
-    IVotingIntegration* GetCurrentVotingIntegration();
-    IVotingIntegration* GetDefaultVotingIntegration();
+    std::shared_ptr<IVotingIntegration> GetCurrentVotingIntegration();
+    std::shared_ptr<IVotingIntegration> GetDefaultVotingIntegration();
 
     void UpdateEffectTimerEnabled();
     void OnEffectTimerTrigger();
-    void ActivateEffect(IChaosEffect* p_pEffect, const float32 p_fForcedDuration = -1.0f);
+    void ActivateEffect(std::shared_ptr<IChaosEffect> p_pEffect, const float32 p_fForcedDuration = -1.0f);
     void UpdateEffectExpiration(const float32 p_fDeltaTime);
-    std::vector<IChaosEffect*> GetRandomEffectSelection(const int p_nCount);
-    bool IsCompatibleWithAllActive(const IChaosEffect* p_pEffect);
-    float32 GetEffectRemainingTime(const IChaosEffect* p_pEffect) const;
+    std::vector<std::shared_ptr<IChaosEffect>> GetRandomEffectSelection(const int p_nCount);
+    bool IsCompatibleWithAllActive(const std::shared_ptr<IChaosEffect> p_pEffect);
+    float32 GetEffectRemainingTime(const std::shared_ptr<IChaosEffect> p_pEffect) const;
 };
 
 DECLARE_ZHM_PLUGIN(ChaosMod)

@@ -14,8 +14,8 @@ class EffectRegistry
   private:
     EffectRegistry() = default;
     std::vector<std::shared_ptr<IChaosEffect>> m_aEffects;
-    std::vector<std::unique_ptr<IUnlocker>> m_aUnlockers;
-    std::vector<std::unique_ptr<IVotingIntegration>> m_aVotingIntegrations;
+    std::vector<std::shared_ptr<IUnlocker>> m_aUnlockers;
+    std::vector<std::shared_ptr<IVotingIntegration>> m_aVotingIntegrations;
 
   public:
     static EffectRegistry& GetInstance()
@@ -31,13 +31,13 @@ class EffectRegistry
         m_aEffects.push_back(std::move(p_Effect));
     }
 
-    void RegisterUnlocker(std::unique_ptr<IUnlocker> p_Unlocker)
+    void RegisterUnlocker(std::shared_ptr<IUnlocker> p_Unlocker)
     {
         Logger::Debug("[EffectRegistry] Registered unlocker '{}'", p_Unlocker->GetName());
         m_aUnlockers.push_back(std::move(p_Unlocker));
     }
 
-    void RegisterVotingIntegration(std::unique_ptr<IVotingIntegration> p_Integration)
+    void RegisterVotingIntegration(std::shared_ptr<IVotingIntegration> p_Integration)
     {
         Logger::Debug("[EffectRegistry] Registered voting integration '{}'", p_Integration->GetName());
         m_aVotingIntegrations.push_back(std::move(p_Integration));
@@ -61,17 +61,17 @@ class EffectRegistry
         return nullptr;
     }
 
-    const std::vector<std::unique_ptr<IUnlocker>>& GetUnlockers() const
+    const std::vector<std::shared_ptr<IUnlocker>>& GetUnlockers() const
     {
         return m_aUnlockers;
     }
 
-    const std::vector<std::unique_ptr<IVotingIntegration>>& GetVotingIntegrations() const
+    const std::vector<std::shared_ptr<IVotingIntegration>>& GetVotingIntegrations() const
     {
         return m_aVotingIntegrations;
     }
 
-    const std::unique_ptr<IVotingIntegration>& GetVotingIntegrationByName(const std::string& p_sName) const
+    const std::shared_ptr<IVotingIntegration>& GetVotingIntegrationByName(const std::string& p_sName) const
     {
         for (const auto& s_pIntegration : m_aVotingIntegrations)
         {
@@ -97,7 +97,7 @@ class EffectRegistry
         std::sort(
             m_aUnlockers.begin(),
             m_aUnlockers.end(),
-            [](const std::unique_ptr<IUnlocker>& a, const std::unique_ptr<IUnlocker>& b) {
+            [](const std::shared_ptr<IUnlocker>& a, const std::shared_ptr<IUnlocker>& b) {
                 return a->GetName() < b->GetName();
             }
         );
@@ -105,7 +105,7 @@ class EffectRegistry
         std::sort(
             m_aVotingIntegrations.begin(),
             m_aVotingIntegrations.end(),
-            [](const std::unique_ptr<IVotingIntegration>& a, const std::unique_ptr<IVotingIntegration>& b) {
+            [](const std::shared_ptr<IVotingIntegration>& a, const std::shared_ptr<IVotingIntegration>& b) {
                 return a->GetName() < b->GetName();
             }
         );
@@ -122,7 +122,7 @@ struct EffectRegistrar
 
 struct UnlockerRegistrar
 {
-    explicit UnlockerRegistrar(std::unique_ptr<IUnlocker> p_Unlocker)
+    explicit UnlockerRegistrar(std::shared_ptr<IUnlocker> p_Unlocker)
     {
         EffectRegistry::GetInstance().RegisterUnlocker(std::move(p_Unlocker));
     }
@@ -130,7 +130,7 @@ struct UnlockerRegistrar
 
 struct VotingIntegrationRegistrar
 {
-    explicit VotingIntegrationRegistrar(std::unique_ptr<IVotingIntegration> p_Integration)
+    explicit VotingIntegrationRegistrar(std::shared_ptr<IVotingIntegration> p_Integration)
     {
         EffectRegistry::GetInstance().RegisterVotingIntegration(std::move(p_Integration));
     }
@@ -159,7 +159,7 @@ struct VotingIntegrationRegistrar
  */
 #define REGISTER_CHAOS_UNLOCKER(UNLOCKER_CLASS)                    \
     static UnlockerRegistrar g_UnlockerRegistrar_##UNLOCKER_CLASS( \
-        std::make_unique<UNLOCKER_CLASS>()                         \
+        std::make_shared<UNLOCKER_CLASS>()                         \
     );
 
 /**
@@ -168,5 +168,5 @@ struct VotingIntegrationRegistrar
  */
 #define REGISTER_VOTING_INTEGRATION(INTEGRATION_CLASS)                                  \
     static VotingIntegrationRegistrar g_VotingIntegrationRegistrar_##INTEGRATION_CLASS( \
-        std::make_unique<INTEGRATION_CLASS>()                                           \
+        std::make_shared<INTEGRATION_CLASS>()                                           \
     );

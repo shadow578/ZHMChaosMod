@@ -30,7 +30,7 @@ void ChaosMod::UpdateTestMode(const float32 p_fDeltaTime)
             return;
         }
 
-        const auto s_pEffect = s_aEffects[m_nTestmodeEffectIndex].get();
+        const auto s_pEffect = s_aEffects[m_nTestmodeEffectIndex];
         if (s_pEffect)
         {
             Logger::Info(TAG "[TM] Activating effect '{}'", s_pEffect->GetName());

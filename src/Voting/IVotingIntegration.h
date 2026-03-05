@@ -36,7 +36,7 @@ class IVotingIntegration
      * The voting integration shall assume that the options in the vector are valid and compatible with one another.
      * @param p_aOptions The options to be voted on.
      */
-    virtual void StartVote(const std::vector<IChaosEffect*>& p_aOptions) = 0;
+    virtual void StartVote(const std::vector<std::shared_ptr<IChaosEffect>>& p_aOptions) = 0;
 
     /**
      * End the current vote and return the winning option.
@@ -45,7 +45,7 @@ class IVotingIntegration
      * No vote options shall be shown in the Overlay UI after End().
      * @return The winning option. If no vote was active, nullptr shall be returned.
      */
-    virtual IChaosEffect* EndVote() = 0;
+    virtual std::shared_ptr<IChaosEffect> EndVote() = 0;
 
     /**
      * Draw the configuration UI for the integration.

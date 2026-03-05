@@ -17,7 +17,7 @@ ZTwitchVotingIntegration::ZTwitchVotingIntegration()
 {
 }
 
-void ZTwitchVotingIntegration::StartVote(const std::vector<IChaosEffect*>& p_aOptions)
+void ZTwitchVotingIntegration::StartVote(const std::vector<std::shared_ptr<IChaosEffect>>& p_aOptions)
 {
     m_aActiveVote = p_aOptions;
 
@@ -28,9 +28,9 @@ void ZTwitchVotingIntegration::StartVote(const std::vector<IChaosEffect*>& p_aOp
     }
 }
 
-IChaosEffect* ZTwitchVotingIntegration::EndVote()
+std::shared_ptr<IChaosEffect> ZTwitchVotingIntegration::EndVote()
 {
-    if (auto* s_pEffect = EndVoteTwitch())
+    if (auto s_pEffect = EndVoteTwitch())
     {
         m_aActiveVote.clear();
         return s_pEffect;
@@ -43,12 +43,12 @@ IChaosEffect* ZTwitchVotingIntegration::EndVote()
         return nullptr;
     }
 
-    auto* s_pEffect = Math::SelectRandomElement(m_aActiveVote);
+    auto s_pEffect = Math::SelectRandomElement(m_aActiveVote);
     m_aActiveVote.clear();
     return s_pEffect;
 }
 
-IChaosEffect* ZTwitchVotingIntegration::EndVoteTwitch()
+std::shared_ptr<IChaosEffect> ZTwitchVotingIntegration::EndVoteTwitch()
 {
     if (!m_pTwitch || !m_pTwitch->IsConnectedForVoting() || !m_pTwitch->IsVotingActive())
     {
@@ -74,7 +74,7 @@ IChaosEffect* ZTwitchVotingIntegration::EndVoteTwitch()
         return nullptr;
     }
 
-    auto* s_pEffect = m_aActiveVote[s_nWinner];
+    auto s_pEffect = m_aActiveVote[s_nWinner];
     Logger::Debug(TAG "Twitch chat voted for option #{} ({})", s_nWinner, s_pEffect->GetName());
 
     return s_pEffect;
