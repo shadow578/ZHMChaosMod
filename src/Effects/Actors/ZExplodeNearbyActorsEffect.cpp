@@ -62,8 +62,8 @@ void ZExplodeNearbyActorsEffect::LoadConfiguration(const ZConfigurationAccessor*
 {
     IChaosEffect::LoadConfiguration(p_pConfiguration);
 
-    m_fRadius = p_pConfiguration->GetDouble("Radius", m_fRadius);
-    m_fTargetStrength = p_pConfiguration->GetDouble("TargetStrength", m_fTargetStrength);
+    m_fRadius = p_pConfiguration->GetFloat("Radius", m_fRadius);
+    m_fTargetStrength = p_pConfiguration->GetFloat("TargetStrength", m_fTargetStrength);
 }
 
 void ZExplodeNearbyActorsEffect::DrawConfigUI(ZConfigurationAccessor* p_pConfiguration)

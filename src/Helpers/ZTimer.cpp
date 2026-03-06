@@ -24,11 +24,11 @@ void ZTimer::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent)
 
     if (m_eTimeMode == ETimeMode::RealTime)
     {
-        m_fElapsedSeconds += p_UpdateEvent.m_RealTimeDelta.ToSeconds();
+        m_fElapsedSeconds += static_cast<float32>(p_UpdateEvent.m_RealTimeDelta.ToSeconds());
     }
     else
     {
-        m_fElapsedSeconds += p_UpdateEvent.m_GameTimeDelta.ToSeconds();
+        m_fElapsedSeconds += static_cast<float32>(p_UpdateEvent.m_GameTimeDelta.ToSeconds());
     }
 
     if (m_fElapsedSeconds >= m_fIntervalSeconds)

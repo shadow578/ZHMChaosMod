@@ -62,7 +62,7 @@ void ZFakeCrashEffect::LoadConfiguration(const ZConfigurationAccessor* p_pConfig
 {
     IChaosEffect::LoadConfiguration(p_pConfiguration);
 
-    m_fDuration = p_pConfiguration->GetDouble("Duration", m_fDuration);
+    m_fDuration = p_pConfiguration->GetFloat("Duration", m_fDuration);
 }
 
 void ZFakeCrashEffect::DrawConfigUI(ZConfigurationAccessor* p_pConfiguration)

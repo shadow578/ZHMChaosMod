@@ -20,9 +20,9 @@
 
 ChaosMod::ChaosMod() : m_fFullEffectDuration(60.0f),
                        m_nVoteOptions(4),
-                       m_EffectTimer(std::bind(&ChaosMod::OnEffectTimerTrigger, this), 30.0),
+                       m_EffectTimer(std::bind(&ChaosMod::OnEffectTimerTrigger, this), 30.0f),
                        m_bEffectTimersUseRealtime(false),
-                       m_SlowUpdateTimer(std::bind(&ChaosMod::OnEffectSlowUpdate, this), 0.2, ZTimer::ETimeMode::RealTime, true), // ~5 FPS
+                       m_SlowUpdateTimer(std::bind(&ChaosMod::OnEffectSlowUpdate, this), 0.2f, ZTimer::ETimeMode::RealTime, true), // ~5 FPS
                        m_pConfiguration(std::make_unique<ZConfigurationAccessor>(this, "ChaosMod"))
 {
 }
@@ -95,9 +95,11 @@ void ChaosMod::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent)
     });
 
     UpdateEffectExpiration(
-        m_bEffectTimersUseRealtime
-            ? p_UpdateEvent.m_RealTimeDelta.ToSeconds()
-            : p_UpdateEvent.m_GameTimeDelta.ToSeconds()
+        static_cast<float32>(
+            m_bEffectTimersUseRealtime
+                ? p_UpdateEvent.m_RealTimeDelta.ToSeconds()
+                : p_UpdateEvent.m_GameTimeDelta.ToSeconds()
+        )
     );
 
     while (!m_qDeferredFrameUpdateActions.empty())
@@ -108,7 +110,7 @@ void ChaosMod::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent)
         m_qDeferredFrameUpdateActions.pop();
     }
 
-    UpdateTestMode(p_UpdateEvent.m_GameTimeDelta.ToSeconds());
+    UpdateTestMode(static_cast<float32>(p_UpdateEvent.m_GameTimeDelta.ToSeconds()));
 }
 
 void ChaosMod::ForeachEffect(const bool p_bIsLifecycleCall, std::function<void(std::shared_ptr<IChaosEffect> p_pEffect)> p_Callback)
@@ -162,8 +164,8 @@ void ChaosMod::OnLoadOrClearScene()
 void ChaosMod::LoadConfiguration()
 {
     // load and apply mod configuration
-    m_EffectTimer.m_fIntervalSeconds = m_pConfiguration->GetDouble("EffectInterval", 30.0);
-    m_fFullEffectDuration = m_pConfiguration->GetDouble("FullEffectDuration", 60.0);
+    m_EffectTimer.m_fIntervalSeconds = m_pConfiguration->GetFloat("EffectInterval", 30.0);
+    m_fFullEffectDuration = m_pConfiguration->GetFloat("FullEffectDuration", 60.0);
     m_bEffectTimersUseRealtime = m_pConfiguration->GetBool("EffectTimersUseRealtime", false);
 
     m_EffectTimer.m_eTimeMode = m_bEffectTimersUseRealtime ? ZTimer::ETimeMode::RealTime : ZTimer::ETimeMode::GameTime;

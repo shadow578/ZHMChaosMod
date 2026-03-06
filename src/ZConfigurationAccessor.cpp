@@ -55,6 +55,16 @@ double ZConfigurationAccessor::GetDouble(const std::string& p_sName, double p_fD
     return SDK()->GetPluginSettingDouble(m_pPlugin, m_sSection, Utils::ToLower(p_sName), p_fDefaultValue);
 }
 
+void ZConfigurationAccessor::SetFloat(const std::string& p_sName, float p_fValue)
+{
+    SetDouble(p_sName, static_cast<float32>(p_fValue));
+}
+
+float ZConfigurationAccessor::GetFloat(const std::string& p_sName, float p_fDefaultValue) const
+{
+    return static_cast<float>(GetDouble(p_sName, p_fDefaultValue));
+}
+
 void ZConfigurationAccessor::SetBool(const std::string& p_sName, bool p_bValue)
 {
     SDK()->SetPluginSettingBool(m_pPlugin, m_sSection, Utils::ToLower(p_sName), p_bValue);

@@ -24,7 +24,7 @@ void ZLagEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const floa
     }
 
     const float32 s_fTargetFrameTime = 1.0f / m_fTargetFPS;
-    const float32 s_fTimeToWaste = s_fTargetFrameTime - p_UpdateEvent.m_RealTimeDelta.ToSeconds();
+    const float32 s_fTimeToWaste = s_fTargetFrameTime - static_cast<float32>(p_UpdateEvent.m_RealTimeDelta.ToSeconds());
     if (s_fTimeToWaste <= 0.0f)
     {
         return;
@@ -52,7 +52,7 @@ void ZLagEffect::LoadConfiguration(const ZConfigurationAccessor* p_pConfiguratio
 {
     IChaosEffect::LoadConfiguration(p_pConfiguration);
 
-    m_fTargetFPS = p_pConfiguration->GetDouble("TargetFPS", m_fTargetFPS);
+    m_fTargetFPS = p_pConfiguration->GetFloat("TargetFPS", m_fTargetFPS);
 }
 
 void ZLagEffect::DrawConfigUI(ZConfigurationAccessor* p_pConfiguration)

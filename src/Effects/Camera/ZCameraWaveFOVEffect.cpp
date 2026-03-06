@@ -53,7 +53,7 @@ void ZCameraWaveFOVEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, 
     Utils::SetProperty<float32>(s_rEffectCamera, c_sCameraFOVPropertyName, GetTargetFOV());
 
     // advance time
-    m_fTimeSinceStart += p_UpdateEvent.m_GameTimeDelta.ToSeconds();
+    m_fTimeSinceStart += static_cast<float32>(p_UpdateEvent.m_GameTimeDelta.ToSeconds());
 }
 
 float32 ZCameraWaveFOVEffect::GetTargetFOV() const

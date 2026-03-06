@@ -25,10 +25,12 @@ void ZInterpolatingEffectBase::OnClearScene()
 
 void ZInterpolatingEffectBase::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)
 {
+    const auto s_fDeltaTime = static_cast<float32>(p_UpdateEvent.m_GameTimeDelta.ToSeconds());
+
     switch (m_eState)
     {
     case EState::InterpolateIn: {
-        m_fInterpolationPoint += p_UpdateEvent.m_GameTimeDelta.ToSeconds() / m_fInterpolationTime;
+        m_fInterpolationPoint += s_fDeltaTime / m_fInterpolationTime;
 
         if (m_fInterpolationPoint >= 1.0f)
         {
@@ -38,7 +40,7 @@ void ZInterpolatingEffectBase::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEve
         break;
     }
     case EState::InterpolateOut: {
-        m_fInterpolationPoint -= p_UpdateEvent.m_GameTimeDelta.ToSeconds() / m_fInterpolationTime;
+        m_fInterpolationPoint -= s_fDeltaTime / m_fInterpolationTime;
 
         if (m_fInterpolationPoint <= 0.0f)
         {

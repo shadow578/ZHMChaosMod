@@ -23,7 +23,14 @@ void ZTwitchVotingIntegration::StartVote(const std::vector<std::shared_ptr<IChao
 
     if (m_pTwitch && m_pTwitch->IsConnectedForVoting())
     {
-        m_pTwitch->StartVoting(m_aActiveVote.size());
+        auto s_nOptionCount = m_aActiveVote.size();
+        if (s_nOptionCount > 16)
+        {
+            Logger::Warn(TAG "Too many options ({}), truncating to 16", s_nOptionCount);
+            s_nOptionCount = 16;
+        }
+
+        m_pTwitch->StartVoting(static_cast<int>(s_nOptionCount));
         Logger::Debug(TAG "Started twitch voting with {} options", m_aActiveVote.size());
     }
 }

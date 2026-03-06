@@ -34,7 +34,7 @@ void ZVelocityTracker::Update(const SGameUpdateEvent& p_UpdateEvent, const float
 
     const STimeDistancePair s_NewPair{
         s_fDistance,
-        p_UpdateEvent.m_GameTimeDelta.ToSeconds()
+        static_cast<float32>(p_UpdateEvent.m_GameTimeDelta.ToSeconds())
     };
     m_qSamples.push(s_NewPair);
 
