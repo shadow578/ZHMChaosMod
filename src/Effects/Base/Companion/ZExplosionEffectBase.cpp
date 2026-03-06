@@ -1,10 +1,11 @@
 #include "ZExplosionEffectBase.h"
 
-#include "IPluginInterface.h"
+#include <imgui.h>
 
 #include <Glacier/ZSpatialEntity.h>
 
 #include "Helpers/EntityUtils.h"
+#include "Helpers/PlayerUtils.h"
 
 #define TAG "[ZExplosionEffectBase] "
 
@@ -31,7 +32,7 @@ void ZExplosionEffectBase::OnDrawDebugUI()
 
     if (ImGui::Button("Spawn Nearby"))
     {
-        if (const auto s_Player = SDK()->GetLocalPlayer())
+        if (const auto s_Player = Utils::GetLocalPlayer())
         {
             if (const auto s_PlayerSpatial = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>())
             {

@@ -1,11 +1,14 @@
 #include "ZOverheadCameraEffect.h"
 
+#include <imgui.h>
+
 #include <Glacier/ZEntity.h>
 #include <Glacier/ZSpatialEntity.h>
 #include <Glacier/ZCollision.h>
 
 #include "Registry.h"
 #include "Helpers/Math.h"
+#include "Helpers/PlayerUtils.h"
 
 constexpr float32 c_fOverheadMinDistance = 2.0f; // at least 47's height
 constexpr float32 c_fOverheadMaxDistance = 15.0f;
@@ -66,7 +69,7 @@ void ZOverheadCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent,
     auto s_OriginalCameraSpatialEntity = GetOriginalCameraEntity().QueryInterface<ZSpatialEntity>();
     auto s_CameraSpatialEntity = GetEffectCameraEntity().QueryInterface<ZSpatialEntity>();
 
-    auto s_Player = SDK()->GetLocalPlayer();
+    auto s_Player = Utils::GetLocalPlayer();
     auto s_PlayerSpatialEntity = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
     if (!s_OriginalCameraSpatialEntity || !s_CameraSpatialEntity || !s_PlayerSpatialEntity)
     {

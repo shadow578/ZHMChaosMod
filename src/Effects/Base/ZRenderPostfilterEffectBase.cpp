@@ -1,6 +1,7 @@
 #include "ZRenderPostfilterEffectBase.h"
 
 #include <Logging.h>
+#include <imgui.h>
 
 #include "Registry.h"
 

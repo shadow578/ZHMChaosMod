@@ -1,6 +1,8 @@
 #pragma once
 #include "Effects/Base/ZSingleTimeEffectBase.h"
 
+#include <Glacier/ZEntity.h>
+
 #include <vector>
 
 class ZExplodeAllVehiclesEffect : public ZSingleTimeEffectBase

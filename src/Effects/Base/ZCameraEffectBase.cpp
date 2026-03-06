@@ -1,11 +1,12 @@
 #include "ZCameraEffectBase.h"
 
+#include <imgui.h>
+#include <Logging.h>
 #include <Globals.h>
+
 #include <Glacier/ZModule.h>
 #include <Glacier/ZScene.h>
 #include <Glacier/SExternalReferences.h>
-
-#include "Logging.h"
 
 #include "Helpers/Utils.h"
 #include "Helpers/CameraUtils.h"

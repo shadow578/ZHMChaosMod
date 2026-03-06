@@ -1,17 +1,20 @@
 #include "ZExplodeNearbyActorsEffect.h"
 
+#include <imgui.h>
+
 #include <Glacier/ZSpatialEntity.h>
 
 #include "Registry.h"
 #include "ZConfigurationAccessor.h"
 #include "Helpers/ActorUtils.h"
+#include "Helpers/PlayerUtils.h"
 
 #define TAG "[ZExplodeNearbyActorsEffect] "
 
 void ZExplodeNearbyActorsEffect::Start()
 {
     // get player pos
-    const auto s_rPlayer = SDK()->GetLocalPlayer();
+    const auto s_rPlayer = Utils::GetLocalPlayer();
     if (!s_rPlayer)
     {
         return;

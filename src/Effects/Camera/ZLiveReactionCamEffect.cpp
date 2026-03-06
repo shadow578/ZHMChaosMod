@@ -1,5 +1,7 @@
 #include "ZLiveReactionCamEffect.h"
 
+#include <imgui.h>
+
 #include <Glacier/ZResourceID.h>
 #include <Glacier/CompileReflection.h>
 
@@ -99,7 +101,7 @@ TEntityRef<ZSpatialEntity> ZLiveReactionCamEffect::GetRandomActorHeadAttachEntit
 
 TEntityRef<ZSpatialEntity> ZLiveReactionCamEffect::GetPlayerHeadAttachEntity()
 {
-    const auto s_rPlayer = SDK()->GetLocalPlayer();
+    const auto s_rPlayer = Utils::GetLocalPlayer();
     if (!s_rPlayer)
     {
         return {};

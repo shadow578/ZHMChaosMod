@@ -1,5 +1,7 @@
 #include "ZSwapTargetsEffect.h"
 
+#include <imgui.h>
+
 #include <Glacier/ZActor.h>
 
 #include "Registry.h"

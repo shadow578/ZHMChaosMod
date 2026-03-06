@@ -6,10 +6,11 @@
 #include <Glacier/ZHitman5.h>
 
 #include "Helpers/Utils.h"
+#include "Helpers/PlayerUtils.h"
 
 void ZPlayerRagdollEffectBase::Start()
 {
-    auto s_Player = SDK()->GetLocalPlayer();
+    auto s_Player = Utils::GetLocalPlayer();
     if (!s_Player.m_pInterfaceRef)
     {
         return;
@@ -34,7 +35,7 @@ void ZPlayerRagdollEffectBase::Start()
 
 void ZPlayerRagdollEffectBase::Stop()
 {
-    auto s_Player = SDK()->GetLocalPlayer();
+    auto s_Player = Utils::GetLocalPlayer();
     if (!s_Player.m_pInterfaceRef)
     {
         return;

@@ -4,6 +4,7 @@
 
 #include "Registry.h"
 #include "Helpers/EntityUtils.h"
+#include "Helpers/PlayerUtils.h"
 #include "Helpers/Math.h"
 
 #define TAG "[ZTriggerInteractionEffect] "
@@ -41,7 +42,7 @@ bool ZTriggerInteractionEffect::Available() const
 
 void ZTriggerInteractionEffect::Start()
 {
-    const auto s_rPlayer = SDK()->GetLocalPlayer();
+    const auto s_rPlayer = Utils::GetLocalPlayer();
     if (!s_rPlayer)
     {
         return;

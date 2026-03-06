@@ -1,5 +1,7 @@
 #include "ZPlayerAICrippleEffectBase.h"
 
+#include <imgui.h>
+
 void ZPlayerAICrippleEffectBase::LoadResources()
 {
     m_pAICrippleSpawner = ZTemplateEntitySpawner::Create<"[modules:/zaicrippleentity.class].pc_entitytype">();

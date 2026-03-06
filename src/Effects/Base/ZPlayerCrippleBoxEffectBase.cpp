@@ -1,8 +1,11 @@
 #include "ZPlayerCrippleBoxEffectBase.h"
 
 #include <Logging.h>
+#include <imgui.h>
 
 #include <Glacier/ZHM5CrippleBox.h>
+
+#include "Helpers/PlayerUtils.h"
 
 #define TAG "[ZPlayerCrippleBoxEffectBase] "
 
@@ -45,7 +48,7 @@ void ZPlayerCrippleBoxEffectBase::Stop()
 
 void ZPlayerCrippleBoxEffectBase::ActivateCrippleBox()
 {
-    if (const auto s_rPlayer = SDK()->GetLocalPlayer())
+    if (const auto s_rPlayer = Utils::GetLocalPlayer())
     {
         m_rCrippleBox.m_pInterfaceRef->m_bActivateOnStart = true;
         m_rCrippleBox.m_pInterfaceRef->m_rHitmanCharacter = s_rPlayer;

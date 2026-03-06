@@ -10,6 +10,12 @@ class ZHitman5;
 namespace Utils
 {
     /**
+     * Get the local player entity.
+     * Equivalent to Utils::GetLocalPlayer().
+     */
+    TEntityRef<ZHitman5> GetLocalPlayer();
+
+    /**
      * Teleport the player.
      * @param p_Position Target transform to set.
      */

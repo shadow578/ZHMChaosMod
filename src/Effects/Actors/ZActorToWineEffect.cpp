@@ -4,7 +4,8 @@
 #include <Glacier/ZActor.h>
 #include <Glacier/ZSpatialEntity.h>
 
-#include "Logging.h"
+#include <Logging.h>
+#include <imgui.h>
 
 #include "Registry.h"
 #include "Helpers/EntityUtils.h"

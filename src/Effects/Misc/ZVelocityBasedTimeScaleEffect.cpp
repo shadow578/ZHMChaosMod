@@ -9,6 +9,7 @@
 
 #include "Registry.h"
 #include "Helpers/Utils.h"
+#include "Helpers/PlayerUtils.h"
 #include "Helpers/ImGuiExtras.h"
 
 ZVelocityBasedTimeScaleEffect::ZVelocityBasedTimeScaleEffect()
@@ -37,7 +38,7 @@ void ZVelocityBasedTimeScaleEffect::OnFrameUpdate(const SGameUpdateEvent& p_Upda
         return;
     }
 
-    auto s_Player = SDK()->GetLocalPlayer();
+    auto s_Player = Utils::GetLocalPlayer();
     if (!s_Player)
     {
         return;

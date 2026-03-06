@@ -1,5 +1,7 @@
 #include "ZCameraFOVEffectBase.h"
 
+#include <imgui.h>
+
 #include <Glacier/ZEntity.h>
 #include <Glacier/ZSpatialEntity.h>
 

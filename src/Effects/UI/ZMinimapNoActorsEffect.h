@@ -1,6 +1,8 @@
 #pragma once
 #include "IChaosEffect.h"
 
+#include <Glacier/Enums.h>
+
 class ZMinimapNoActorsEffect : public IChaosEffect
 {
   public:

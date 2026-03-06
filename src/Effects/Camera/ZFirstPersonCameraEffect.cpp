@@ -1,5 +1,7 @@
 #include "ZFirstPersonCameraEffect.h"
 
+#include <imgui.h>
+
 #include <Glacier/ZEntity.h>
 #include <Glacier/ZSpatialEntity.h>
 
@@ -25,7 +27,7 @@ bool ZFirstPersonCameraEffect::IsCompatibleWith(const IChaosEffect* p_pOther) co
 
 void ZFirstPersonCameraEffect::Start()
 {
-    const auto s_rPlayer = SDK()->GetLocalPlayer();
+    const auto s_rPlayer = Utils::GetLocalPlayer();
     if (!s_rPlayer)
     {
         return;

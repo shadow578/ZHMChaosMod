@@ -1,5 +1,7 @@
 #include "ZDoorsEffectBase.h"
 
+#include <imgui.h>
+
 #include "Helpers/EntityUtils.h"
 
 #define TAG "[ZDoorsEffectBase] "

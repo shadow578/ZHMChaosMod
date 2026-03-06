@@ -2,10 +2,11 @@
 
 #include "Registry.h"
 #include "Helpers/Math.h"
+#include "Helpers/PlayerUtils.h"
 
 void ZSpawnRandomItemEffect::Start()
 {
-    if (const auto s_Player = SDK()->GetLocalPlayer())
+    if (const auto s_Player = Utils::GetLocalPlayer())
     {
         if (const auto s_SpatialEntity = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>())
         {

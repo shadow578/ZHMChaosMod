@@ -1,6 +1,7 @@
 #pragma once
 #include "IChaosEffect.h"
 
+#include <Glacier/Enums.h> // needed by ZOutfit.h
 #include <Glacier/ZOutfit.h>
 
 #include <vector>

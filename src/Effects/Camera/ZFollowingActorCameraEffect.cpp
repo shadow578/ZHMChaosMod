@@ -1,9 +1,11 @@
 #include "ZFollowingActorCameraEffect.h"
 
 #include <Logging.h>
+#include <imgui.h>
 
 #include "Registry.h"
 #include "Helpers/ActorUtils.h"
+#include "Helpers/PlayerUtils.h"
 #include "Helpers/EntityUtils.h"
 
 #define TAG "[ZFollowingActorCameraEffect] "
@@ -51,7 +53,7 @@ void ZFollowingActorCameraEffect::Start()
     }
 
     // get player location
-    if (const auto s_rPlayer = SDK()->GetLocalPlayer())
+    if (const auto s_rPlayer = Utils::GetLocalPlayer())
     {
         if (const auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_rPlayer.m_entityRef))
         {

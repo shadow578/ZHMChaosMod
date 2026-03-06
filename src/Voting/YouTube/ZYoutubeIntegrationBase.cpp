@@ -1,6 +1,7 @@
 #include "ZYoutubeIntegrationBase.h"
 
 #include <Logging.h>
+#include <imgui.h>
 #include <IconsMaterialDesign.h>
 
 #include "Client/ZYoutubeAuthHandler.h"

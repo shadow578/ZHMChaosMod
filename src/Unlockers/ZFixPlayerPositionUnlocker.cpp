@@ -7,6 +7,7 @@
 #include "Registry.h"
 #include "Helpers/Utils.h"
 #include "Helpers/EntityUtils.h"
+#include "Helpers/PlayerUtils.h"
 
 void ZFixPlayerPositionUnlocker::Start()
 {
@@ -25,7 +26,7 @@ void ZFixPlayerPositionUnlocker::Start()
         return;
     }
 
-    if (const auto s_Player = SDK()->GetLocalPlayer())
+    if (const auto s_Player = Utils::GetLocalPlayer())
     {
         if (const auto s_SpatialEntity = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>())
         {
@@ -37,7 +38,7 @@ void ZFixPlayerPositionUnlocker::Start()
 
     /*
     auto s_Actor = Utils::GetRandomActor(true);
-    auto s_Player = SDK()->GetLocalPlayer();
+    auto s_Player = Utils::GetLocalPlayer();
     if (!s_Actor || !s_Player)
     {
         return;

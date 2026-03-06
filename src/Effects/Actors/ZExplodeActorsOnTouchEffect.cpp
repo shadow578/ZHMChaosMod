@@ -1,9 +1,12 @@
 #include "ZExplodeActorsOnTouchEffect.h"
 
+#include <imgui.h>
+
 #include <Glacier/ZSpatialEntity.h>
 
 #include "Registry.h"
 #include "Helpers/ActorUtils.h"
+#include "Helpers/PlayerUtils.h"
 
 #define TAG "[ZExplodeActorsOnTouchEffect] "
 
@@ -17,7 +20,7 @@ void ZExplodeActorsOnTouchEffect::OnSlowUpdate(const float32 p_fDeltaTime, const
     }
 
     // get player pos
-    const auto s_Player = SDK()->GetLocalPlayer();
+    const auto s_Player = Utils::GetLocalPlayer();
     if (!s_Player)
     {
         return;

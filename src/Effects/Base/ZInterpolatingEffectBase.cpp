@@ -1,5 +1,7 @@
 #include "ZInterpolatingEffectBase.h"
 
+#include <imgui.h>
+
 #include <Glacier/SGameUpdateEvent.h>
 
 void ZInterpolatingEffectBase::Start()

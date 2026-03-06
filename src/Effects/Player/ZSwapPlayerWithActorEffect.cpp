@@ -1,5 +1,7 @@
 #include "ZSwapPlayerWithActorEffect.h"
 
+#include <imgui.h>
+
 #include "Glacier/ZSpatialEntity.h"
 
 #include "Registry.h"
@@ -11,7 +13,7 @@
 void ZSwapPlayerWithActorEffect::Start()
 {
     auto s_rActor = Utils::GetRandomActor(false);
-    auto s_Player = SDK()->GetLocalPlayer();
+    auto s_Player = Utils::GetLocalPlayer();
     if (!s_rActor || !s_Player.m_entityRef)
     {
         return;

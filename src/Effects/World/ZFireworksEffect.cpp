@@ -1,9 +1,12 @@
 #include "ZFireworksEffect.h"
 
+#include <imgui.h>
+
 #include <Glacier/ZSpatialEntity.h>
 
 #include "Registry.h"
-#include <Helpers/EntityUtils.h>
+#include "Helpers/EntityUtils.h"
+#include "Helpers/PlayerUtils.h"
 
 void ZFireworksEffect::LoadResources()
 {
@@ -146,7 +149,7 @@ void ZFireworksEffect::Start()
     // move FX to player
     if (auto s_rFireworksFXSpatial = TEntityRef<ZSpatialEntity>(s_rFireworksFXEntity))
     {
-        if (auto s_rPlayer = SDK()->GetLocalPlayer())
+        if (auto s_rPlayer = Utils::GetLocalPlayer())
         {
             if (auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_rPlayer.m_entityRef))
             {

@@ -1,8 +1,11 @@
 #include "ZNearbyActorSpeakEffect.h"
 
+#include <imgui.h>
+
 #include <Glacier/ZSpatialEntity.h>
 
 #include "Registry.h"
+#include "Helpers/PlayerUtils.h"
 #include "Helpers/ActorUtils.h"
 #include "Helpers/Math.h"
 #include "Helpers/Utils.h"
@@ -72,7 +75,7 @@ void ZNearbyActorSpeakEffect::OnSlowUpdate(const float32 p_fDeltaTime, const flo
 
 void ZNearbyActorSpeakEffect::FindAndRemoveSpeakersNearby()
 {
-    const auto s_rPlayer = SDK()->GetLocalPlayer();
+    const auto s_rPlayer = Utils::GetLocalPlayer();
     if (!s_rPlayer)
     {
         return;

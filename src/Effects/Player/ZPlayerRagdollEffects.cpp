@@ -1,15 +1,17 @@
 #include "ZPlayerRagdollEffects.h"
-#include "IPluginInterface.h"
-#include "Functions.h"
+
+#include <Functions.h>
+#include <imgui.h>
 
 #include <Glacier/ZHitman5.h>
 #include <Glacier/ZSpatialEntity.h>
 
 #include "Registry.h"
+#include "Helpers/PlayerUtils.h"
 
 void ZPlayerRagdollWithImpulseEffect::Start()
 {
-    auto s_Player = SDK()->GetLocalPlayer();
+    auto s_Player = Utils::GetLocalPlayer();
     if (!s_Player)
     {
         return;
@@ -47,7 +49,7 @@ void ZPlayerRagdollWithImpulseEffect::OnFrameUpdate(const SGameUpdateEvent& p_Up
         return;
     }
 
-    auto s_Player = SDK()->GetLocalPlayer();
+    auto s_Player = Utils::GetLocalPlayer();
     if (!s_Player)
     {
         return;

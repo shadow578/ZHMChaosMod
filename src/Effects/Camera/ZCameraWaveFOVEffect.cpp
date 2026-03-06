@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include <imgui.h>
+
 #include <Glacier/SGameUpdateEvent.h>
 #include <Glacier/ZSpatialEntity.h>
 

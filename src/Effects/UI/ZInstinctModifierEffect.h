@@ -2,6 +2,7 @@
 #include "IChaosEffect.h"
 
 #include <Glacier/Enums.h>
+#include <Glacier/ZActor.h>
 
 #include <map>
 

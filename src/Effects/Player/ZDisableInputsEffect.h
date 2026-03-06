@@ -1,6 +1,8 @@
 #pragma once
 #include "IChaosEffect.h"
 
+#include <IPluginInterface.h> // DECLARE_PLUGIN_DETOUR
+
 class ZDisableInputsEffect : public IChaosEffect
 {
   public:

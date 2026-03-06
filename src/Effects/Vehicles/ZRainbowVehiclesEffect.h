@@ -1,6 +1,7 @@
 #pragma once
 #include "IChaosEffect.h"
 
+#include <Glacier/ZEntity.h>
 #include <Glacier/SColorRGB.h>
 
 #include <vector>
