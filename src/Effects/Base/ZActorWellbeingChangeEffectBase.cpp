@@ -24,7 +24,7 @@ void ZActorWellbeingChangeEffectBase::OnSlowUpdate(const float32 p_fDeltaTime, c
 
     for (auto& s_rActor : Utils::GetActors(true, true))
     {
-        const auto s_CurrentState = GetActorState(s_rActor.m_pInterfaceRef);
+        const auto s_CurrentState = GetActorState(s_rActor);
 
         auto s_it = m_mLastActorStates.find(s_rActor.m_pInterfaceRef);
         if (s_it == m_mLastActorStates.end())
@@ -41,11 +41,11 @@ void ZActorWellbeingChangeEffectBase::OnSlowUpdate(const float32 p_fDeltaTime, c
 
         m_mLastActorStates[s_rActor.m_pInterfaceRef] = s_CurrentState;
 
-        OnActorWellbeingChanged(s_rActor.m_pInterfaceRef, s_LastState, s_CurrentState);
+        OnActorWellbeingChanged(s_rActor, s_LastState, s_CurrentState);
     }
 }
 
-ZActorWellbeingChangeEffectBase::SActorState ZActorWellbeingChangeEffectBase::GetActorState(ZActor* p_pActor)
+ZActorWellbeingChangeEffectBase::SActorState ZActorWellbeingChangeEffectBase::GetActorState(TEntityRef<ZActor> p_rActor)
 {
     // ZActor's methods for detecting the state of actors are quite unintuitive:
     // - when Pacified: IsDead() = true, IsAlive = false, IsPacified() = true, m_bAlive = false
@@ -55,8 +55,8 @@ ZActorWellbeingChangeEffectBase::SActorState ZActorWellbeingChangeEffectBase::Ge
     // for our purposes, we'd want a clear distinction between dead and pacified actors.
     // thus, this method does some additional checks to determine the actual state of the actor, which is then used for comparison in the effect logic.
 
-    const auto s_bIsPacified = p_pActor->IsPacified();
-    const auto s_bIsDead = p_pActor->IsDead();
+    const auto s_bIsPacified = p_rActor.m_pInterfaceRef->IsPacified();
+    const auto s_bIsDead = p_rActor.m_pInterfaceRef->IsDead();
 
     return {
         .m_bDead = s_bIsDead && !s_bIsPacified, // only consider dead when not pacified

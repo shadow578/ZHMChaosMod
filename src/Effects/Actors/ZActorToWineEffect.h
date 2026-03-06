@@ -20,11 +20,11 @@ class ZActorToWineEffect : public ZActorWellbeingChangeEffectBase, public ZSpawn
     }
 
   protected:
-    void OnActorWellbeingChanged(ZActor* p_pActor, const SActorState& p_OldState, const SActorState& p_NewState) override;
+    void OnActorWellbeingChanged(TEntityRef<ZActor> p_rActor, const SActorState& p_OldState, const SActorState& p_NewState) override;
 
   private:
     SRepositoryPropInfo m_WineBottleProp;
     bool m_bTeleportBodies = true;
 
-    void OnActorPerished(ZActor* p_pActor);
+    void OnActorPerished(TEntityRef<ZActor> p_rActor);
 };

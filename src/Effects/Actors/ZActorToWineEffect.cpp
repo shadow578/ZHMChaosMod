@@ -62,26 +62,19 @@ void ZActorToWineEffect::OnSlowUpdate(const float32 p_fDeltaTime, const float32 
     ZSpawnRepositoryItemEffectBase::OnSlowUpdate(p_fDeltaTime, p_fEffectTimeRemaining);
 }
 
-void ZActorToWineEffect::OnActorWellbeingChanged(ZActor* p_pActor, const SActorState& p_OldState, const SActorState& p_NewState)
+void ZActorToWineEffect::OnActorWellbeingChanged(TEntityRef<ZActor> p_rActor, const SActorState& p_OldState, const SActorState& p_NewState)
 {
-    if (!p_OldState.m_bDead && p_NewState.m_bDead && !p_pActor->m_bBodyHidden)
+    if (!p_OldState.m_bDead && p_NewState.m_bDead && !p_rActor.m_pInterfaceRef->m_bBodyHidden)
     {
-        Logger::Debug(TAG "Actor '{}' died", p_pActor->m_sActorName);
-        OnActorPerished(p_pActor);
+        Logger::Debug(TAG "Actor '{}' died", p_rActor.m_pInterfaceRef->m_sActorName);
+        OnActorPerished(p_rActor);
         return;
     }
 }
 
-void ZActorToWineEffect::OnActorPerished(ZActor* p_pActor)
+void ZActorToWineEffect::OnActorPerished(TEntityRef<ZActor> p_rActor)
 {
-    ZEntityRef s_rActor;
-    p_pActor->GetID(s_rActor);
-    if (!s_rActor)
-    {
-        return;
-    }
-
-    if (auto* s_pActorSpatial = s_rActor.QueryInterface<ZSpatialEntity>())
+    if (auto* s_pActorSpatial = p_rActor.m_entityRef.QueryInterface<ZSpatialEntity>())
     {
         auto s_mActorTransform = s_pActorSpatial->GetObjectToWorldMatrix();
 
@@ -93,10 +86,10 @@ void ZActorToWineEffect::OnActorPerished(ZActor* p_pActor)
 
         // mark body hidden
         // idk if this works...
-        p_pActor->m_bBodyHidden = true;
+        p_rActor.m_pInterfaceRef->m_bBodyHidden = true;
 
         // make the actor invisible
-        s_rActor.SetProperty("m_bVisible", false);
+        p_rActor.m_entityRef.SetProperty("m_bVisible", false);
 
         if (!m_bTeleportBodies)
         {
@@ -105,13 +98,13 @@ void ZActorToWineEffect::OnActorPerished(ZActor* p_pActor)
 
         // aquire ref to physics entity
         ZEntityRef s_rPhysicsSystem;
-        if (auto* s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(s_rActor))
+        if (auto* s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(p_rActor.m_entityRef))
         {
             // [assembly:/templates/gameplay/ai2/actors.template?/npcactor.entitytemplate].pc_entitytype
             // sub-entity "PhysicsSystem" of "NPCActor"
             if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x66aaaad61b6a51a5); s_nIdx != -1)
             {
-                if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rActor.m_pObj, s_nIdx))
+                if (auto* s_pEntity = s_pBlueprint->GetSubEntity(p_rActor.m_entityRef.m_pObj, s_nIdx))
                 {
                     s_rPhysicsSystem = ZEntityRef(s_pEntity);
                 }
@@ -125,7 +118,7 @@ void ZActorToWineEffect::OnActorPerished(ZActor* p_pActor)
         }
         else
         {
-            Logger::Debug(TAG "could not get PhysicsSystem sub-entity of NPCActor {}", p_pActor->GetActorName());
+            Logger::Debug(TAG "could not get PhysicsSystem sub-entity of NPCActor {}", p_rActor.m_pInterfaceRef->GetActorName());
         }
 
         // setting the body invisible does NOT prevent interactions, so teleport out of the way

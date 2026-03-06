@@ -20,8 +20,8 @@ class ZExplosiveKnockoutEffect : public ZActorWellbeingChangeEffectBase, public 
     }
 
   protected:
-    void OnActorWellbeingChanged(ZActor* p_pActor, const SActorState& p_OldState, const SActorState& p_NewState) override;
+    void OnActorWellbeingChanged(TEntityRef<ZActor> p_rActor, const SActorState& p_OldState, const SActorState& p_NewState) override;
 
   private:
-    void SpawnExplosionAtActor(ZActor* p_pActor, const float32 p_fStrength);
+    void SpawnExplosionAtActor(TEntityRef<ZActor> p_rActor, const float32 p_fStrength);
 };

@@ -46,33 +46,26 @@ void ZExplosiveKnockoutEffect::OnSlowUpdate(const float32 p_fDeltaTime, const fl
     ZActorWellbeingChangeEffectBase::OnSlowUpdate(p_fDeltaTime, p_fEffectTimeRemaining);
 }
 
-void ZExplosiveKnockoutEffect::OnActorWellbeingChanged(ZActor* p_pActor, const SActorState& p_OldState, const SActorState& p_NewState)
+void ZExplosiveKnockoutEffect::OnActorWellbeingChanged(TEntityRef<ZActor> p_rActor, const SActorState& p_OldState, const SActorState& p_NewState)
 {
     if (!p_OldState.m_bDead && p_NewState.m_bDead)
     {
-        Logger::Debug(TAG "Actor '{}' died", p_pActor->m_sActorName.c_str());
-        SpawnExplosionAtActor(p_pActor, c_fDeathExplosionStrength);
+        Logger::Debug(TAG "Actor '{}' died", p_rActor.m_pInterfaceRef->m_sActorName.c_str());
+        SpawnExplosionAtActor(p_rActor, c_fDeathExplosionStrength);
         return;
     }
 
     if (!p_OldState.m_bPacified && p_NewState.m_bPacified)
     {
-        Logger::Debug(TAG "Actor '{}' pacified", p_pActor->m_sActorName.c_str());
-        SpawnExplosionAtActor(p_pActor, c_fPacifyExplosionStrength);
+        Logger::Debug(TAG "Actor '{}' pacified", p_rActor.m_pInterfaceRef->m_sActorName.c_str());
+        SpawnExplosionAtActor(p_rActor, c_fPacifyExplosionStrength);
         return;
     }
 }
 
-void ZExplosiveKnockoutEffect::SpawnExplosionAtActor(ZActor* p_pActor, const float32 p_fStrength)
+void ZExplosiveKnockoutEffect::SpawnExplosionAtActor(TEntityRef<ZActor> p_rActor, const float32 p_fStrength)
 {
-    ZEntityRef s_Ref;
-    p_pActor->GetID(s_Ref);
-    if (!s_Ref)
-    {
-        return;
-    }
-
-    const auto* s_pActorSpatial = s_Ref.QueryInterface<ZSpatialEntity>();
+    const auto* s_pActorSpatial = p_rActor.m_entityRef.QueryInterface<ZSpatialEntity>();
     if (!s_pActorSpatial)
     {
         return;
