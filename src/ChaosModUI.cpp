@@ -1,6 +1,6 @@
 #include "ChaosMod.h"
 
-#include "Logging.h"
+#include <Logging.h>
 
 #include <IconsMaterialDesign.h>
 #include <imgui.h>

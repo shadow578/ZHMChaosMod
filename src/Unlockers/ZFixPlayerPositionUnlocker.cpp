@@ -1,8 +1,6 @@
 #include "ZFixPlayerPositionUnlocker.h"
 
-#include "Glacier/ZSpatialEntity.h"
-
-#include "IPluginInterface.h"
+#include <Glacier/ZSpatialEntity.h>
 
 #include "Registry.h"
 #include "Helpers/Utils.h"

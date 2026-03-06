@@ -2,7 +2,7 @@
 
 #include "IChaosEffect.h"
 
-#include "Glacier/ZMath.h"
+#include <Glacier/ZMath.h>
 
 class ZTeleportEffect : public IChaosEffect
 {

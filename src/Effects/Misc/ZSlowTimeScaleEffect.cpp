@@ -1,8 +1,8 @@
 #include "ZSlowTimeScaleEffect.h"
 
-#include "Globals.h"
+#include <Globals.h>
 
-#include "Glacier/ZGameTime.h"
+#include <Glacier/ZGameTime.h>
 
 #include "Registry.h"
 

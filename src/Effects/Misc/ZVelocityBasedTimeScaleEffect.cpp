@@ -1,8 +1,7 @@
 #include "ZVelocityBasedTimeScaleEffect.h"
 #include "ZSlowTimeScaleEffect.h"
 
-#include "Globals.h"
-#include "IPluginInterface.h"
+#include <Globals.h>
 
 #include <Glacier/ZGameTime.h>
 #include <Glacier/SGameUpdateEvent.h>

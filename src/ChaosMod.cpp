@@ -1,6 +1,6 @@
 #include "ChaosMod.h"
 
-#include "Logging.h"
+#include <Logging.h>
 
 #include <Glacier/ZGameTime.h>
 #include <Glacier/ZGameLoopManager.h>

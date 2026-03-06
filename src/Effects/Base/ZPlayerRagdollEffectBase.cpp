@@ -1,7 +1,6 @@
 #include "ZPlayerRagdollEffectBase.h"
 
-#include "IPluginInterface.h"
-#include "Functions.h"
+#include <Functions.h>
 
 #include <Glacier/ZHitman5.h>
 

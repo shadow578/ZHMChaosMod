@@ -1,6 +1,6 @@
 #include "TwitchVoting.h"
 
-#include "Logging.h"
+#include <Logging.h>
 
 #include <algorithm>
 #include <numeric>

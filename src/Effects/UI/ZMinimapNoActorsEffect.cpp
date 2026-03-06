@@ -1,7 +1,5 @@
 #include "ZMinimapNoActorsEffect.h"
 
-#include "IPluginInterface.h"
-
 #include "Registry.h"
 #include "Helpers/EntityUtils.h"
 

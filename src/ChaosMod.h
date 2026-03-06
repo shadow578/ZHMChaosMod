@@ -1,6 +1,5 @@
 #pragma once
-
-#include "IPluginInterface.h"
+#include "IPluginInterface.h" // for IPluginInterface etc.
 
 #include <Glacier/ZScene.h>
 

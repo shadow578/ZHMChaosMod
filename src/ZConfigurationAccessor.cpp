@@ -1,6 +1,6 @@
 #include "ZConfigurationAccessor.h"
 
-#include <IPluginInterface.h>
+#include <IPluginInterface.h> // for SDK()
 
 #include "Helpers/Utils.h"
 

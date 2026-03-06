@@ -1,7 +1,6 @@
 #include "ZNoHUDEffect.h"
 
-#include "IPluginInterface.h"
-#include "Logging.h"
+#include <Logging.h>
 
 #include "Registry.h"
 #include "Helpers/EntityUtils.h"

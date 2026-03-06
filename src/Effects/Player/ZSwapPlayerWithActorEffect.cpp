@@ -2,7 +2,7 @@
 
 #include <imgui.h>
 
-#include "Glacier/ZSpatialEntity.h"
+#include <Glacier/ZSpatialEntity.h>
 
 #include "Registry.h"
 #include "Helpers/ActorUtils.h"

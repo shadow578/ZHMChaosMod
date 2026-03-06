@@ -1,6 +1,6 @@
 #include "ZPlayerNoSlowdownEffect.h"
 
-#include <IPluginInterface.h> // window creation
+#include <IPluginInterface.h> // for window creation
 #include <Logging.h>
 #include <imgui.h>
 

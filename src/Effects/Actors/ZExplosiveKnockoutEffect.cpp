@@ -2,7 +2,7 @@
 
 #include <Glacier/ZSpatialEntity.h>
 
-#include "Logging.h"
+#include <Logging.h>
 
 #include "Registry.h"
 
