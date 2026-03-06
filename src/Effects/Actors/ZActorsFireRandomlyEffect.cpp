@@ -1,8 +1,14 @@
 #include "ZActorsFireRandomlyEffect.h"
 
+#include <Logging.h>
+#include <imgui.h>
+
 #include "Registry.h"
+#include "ZConfigurationAccessor.h"
 #include "Helpers/ActorUtils.h"
 #include "Helpers/EntityUtils.h"
+
+#define TAG "[ZActorsFireRandomlyEffect] "
 
 void ZActorsFireRandomlyEffect::Start()
 {
@@ -18,6 +24,29 @@ void ZActorsFireRandomlyEffect::SetAllActorsShootingContinuous(const bool p_bSho
 {
     for (const auto& s_rActor : Utils::GetActors(false, false))
     {
+        if (!Utils::IsArmed(s_rActor))
+        {
+            if (m_bArmAllActors)
+            {
+                // not armed? let's change that
+                // use a EL Matador here, as it caused the least issues during limited testing.
+                // other guns can crash the game, esp. when equipping two-handed weapons on female actors (idk why).
+                // even if a actor has a weapon, their animations will still be somewhat broken tho.
+                ZRepositoryID s_ridMatador("77ecaad6-652f-480d-b365-cdf90820a5ec");
+                if (!Utils::AddAndEquipWeapon(s_rActor, s_ridMatador))
+                {
+                    continue;
+                }
+
+                Logger::Debug(TAG "Armed previously unarmed actor {}", s_rActor.m_pInterfaceRef->GetActorName());
+            }
+            else
+            {
+                // skip unarmed actors, as it breaks their animations and they cant shoot anyway
+                continue;
+            }
+        }
+
         if (auto s_Helper = GetShootAtHelperFor(s_rActor))
         {
             if (p_bShooting)
@@ -59,6 +88,23 @@ void ZActorsFireRandomlyEffect::SetAllActorsShootingContinuous(const bool p_bSho
                 s_Helper.StopFireContinuous();
             }
         }
+    }
+}
+
+void ZActorsFireRandomlyEffect::LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration)
+{
+    m_bArmAllActors = p_pConfiguration->GetBool("ArmAllActors", m_bArmAllActors);
+}
+
+void ZActorsFireRandomlyEffect::DrawConfigUI(ZConfigurationAccessor* p_pConfiguration)
+{
+    if (ImGui::Checkbox("Arm all Actors (experimental)", &m_bArmAllActors))
+    {
+        p_pConfiguration->SetBool("ArmAllActors", m_bArmAllActors);
+    }
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip("Gives all Actors a weapon. Note that this is experimental and could cause issues from animations being broken to full-on game crashes.");
     }
 }
 

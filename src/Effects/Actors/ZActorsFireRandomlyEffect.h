@@ -12,6 +12,11 @@ class ZActorsFireRandomlyEffect : public ZActorWeaponCustomControlEffectBase
         return "This Is America";
     }
 
+    void LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration) override;
+    void DrawConfigUI(ZConfigurationAccessor* p_pConfiguration) override;
+
   private:
+    bool m_bArmAllActors = false;
+
     void SetAllActorsShootingContinuous(const bool p_bShooting);
 };
