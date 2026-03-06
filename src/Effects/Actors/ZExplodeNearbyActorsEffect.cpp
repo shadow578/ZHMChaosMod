@@ -1,17 +1,20 @@
 #include "ZExplodeNearbyActorsEffect.h"
 
+#include <imgui.h>
+
 #include <Glacier/ZSpatialEntity.h>
 
 #include "Registry.h"
 #include "ZConfigurationAccessor.h"
 #include "Helpers/ActorUtils.h"
+#include "Helpers/PlayerUtils.h"
 
 #define TAG "[ZExplodeNearbyActorsEffect] "
 
 void ZExplodeNearbyActorsEffect::Start()
 {
     // get player pos
-    const auto s_rPlayer = SDK()->GetLocalPlayer();
+    const auto s_rPlayer = Utils::GetLocalPlayer();
     if (!s_rPlayer)
     {
         return;
@@ -62,8 +65,8 @@ void ZExplodeNearbyActorsEffect::LoadConfiguration(const ZConfigurationAccessor*
 {
     IChaosEffect::LoadConfiguration(p_pConfiguration);
 
-    m_fRadius = p_pConfiguration->GetDouble("Radius", m_fRadius);
-    m_fTargetStrength = p_pConfiguration->GetDouble("TargetStrength", m_fTargetStrength);
+    m_fRadius = p_pConfiguration->GetFloat("Radius", m_fRadius);
+    m_fTargetStrength = p_pConfiguration->GetFloat("TargetStrength", m_fTargetStrength);
 }
 
 void ZExplodeNearbyActorsEffect::DrawConfigUI(ZConfigurationAccessor* p_pConfiguration)

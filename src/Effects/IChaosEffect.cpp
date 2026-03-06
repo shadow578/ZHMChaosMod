@@ -1,5 +1,7 @@
 #include "IChaosEffect.h"
 
+#include <imgui.h>
+
 #include <typeinfo>
 
 #include "ZConfigurationAccessor.h"

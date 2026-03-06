@@ -1,5 +1,7 @@
 #include "ZScreenColorTintEffect.h"
 
+#include <imgui.h>
+
 #include "Registry.h"
 
 void ZScreenColorTintEffect::Start()

@@ -11,7 +11,10 @@ class ZFollowingActorCameraEffect : public ZCameraEffectBase,
     {
     }
 
+    void LoadResources() override;
+    void OnClearScene() override;
     bool Available() const override;
+    bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
     void OnDrawDebugUI() override;
 
     void Start() override;

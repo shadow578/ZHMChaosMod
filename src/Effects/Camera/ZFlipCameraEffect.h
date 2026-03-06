@@ -12,8 +12,12 @@ class ZFlipCameraEffect : public ZCameraEffectBase, public ZInterpolatingEffectB
 
     void Start() override;
     void Stop() override;
+
+    void LoadResources() override;
     void OnClearScene() override;
     void OnDrawDebugUI() override;
+    bool Available() const override;
+    bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
 
     void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining) override;
 

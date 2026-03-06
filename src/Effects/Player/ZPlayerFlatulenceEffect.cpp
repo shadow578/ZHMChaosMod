@@ -1,12 +1,13 @@
 #include "ZPlayerFlatulenceEffect.h"
 
-#include "IPluginInterface.h"
+#include <imgui.h>
 
 #include <Glacier/ZEntity.h>
 #include <Glacier/ZSpatialEntity.h>
 
 #include "Registry.h"
 #include "Helpers/EntityUtils.h"
+#include "Helpers/PlayerUtils.h"
 
 constexpr auto c_ridSFXFallback = ResId<"[assembly:/sound/wwise/exportedwwisedata/events/props_events/play_sfx_inflatable_deflate_01.wwiseevent].pc_wwisebank">;
 
@@ -44,7 +45,7 @@ bool ZPlayerFlatulenceEffect::Available() const
 
 void ZPlayerFlatulenceEffect::Start()
 {
-    if (const auto s_Player = SDK()->GetLocalPlayer())
+    if (const auto s_Player = Utils::GetLocalPlayer())
     {
         if (auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_Player.m_entityRef))
         {

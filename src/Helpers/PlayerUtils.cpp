@@ -1,17 +1,21 @@
 #include "PlayerUtils.h"
 
-#include "IPluginInterface.h"
+#include <IPluginInterface.h> // for SDK()
+#include <Logging.h>
 
 #include <Glacier/ZSpatialEntity.h>
 #include <Glacier/ZContentKitManager.h>
 
-#include <Logging.h>
-
 #include "Helpers/EntityUtils.h"
+
+TEntityRef<ZHitman5> Utils::GetLocalPlayer()
+{
+    return SDK()->GetLocalPlayer();
+}
 
 bool Utils::TeleportPlayerTo(const SMatrix p_Position)
 {
-    auto s_Player = SDK()->GetLocalPlayer();
+    auto s_Player = Utils::GetLocalPlayer();
     if (!s_Player.m_entityRef)
     {
         return false;
@@ -29,7 +33,7 @@ bool Utils::TeleportPlayerTo(const SMatrix p_Position)
 
 bool Utils::SetPlayerOutfit(const std::string& p_sCommonName, TEntityRef<ZGlobalOutfitKit>& p_OutfitOut)
 {
-    const auto s_Player = SDK()->GetLocalPlayer();
+    const auto s_Player = Utils::GetLocalPlayer();
     if (!s_Player)
     {
         return false;

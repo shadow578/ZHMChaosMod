@@ -1,6 +1,9 @@
 #pragma once
 #include "IChaosEffect.h"
 
+#include <Glacier/ZMath.h>
+#include <Glacier/Enums.h>
+
 #include "Helpers/ZTemplateEntitySpawner.h"
 
 #include "Effects/Base/Companion/ZCompanionModDependentEffectBase.h"

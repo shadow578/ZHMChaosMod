@@ -1,9 +1,12 @@
 #include "ZTeleportEffect.h"
 
-#include "Glacier/ZSpatialEntity.h"
+#include <imgui.h>
+
+#include <Glacier/ZSpatialEntity.h>
 
 #include "Registry.h"
 #include "Helpers/Math.h"
+#include "Helpers/PlayerUtils.h"
 
 void ZTeleportEffect::Start()
 {
@@ -29,7 +32,7 @@ void ZTeleportEffect::OnDrawDebugUI()
 
 void ZTeleportEffect::DoTeleport(const ETeleportDirection p_eDirection)
 {
-    auto s_Player = SDK()->GetLocalPlayer();
+    auto s_Player = Utils::GetLocalPlayer();
     if (!s_Player.m_entityRef)
     {
         return;

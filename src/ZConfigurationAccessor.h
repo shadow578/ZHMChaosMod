@@ -23,6 +23,9 @@ class ZConfigurationAccessor
     void SetDouble(const std::string& p_sName, double p_fValue);
     double GetDouble(const std::string& p_sName, double p_fDefaultValue) const;
 
+    void SetFloat(const std::string& p_sName, float p_fValue);
+    float GetFloat(const std::string& p_sName, float p_fDefaultValue) const;
+
     void SetBool(const std::string& p_sName, bool p_bValue);
     bool GetBool(const std::string& p_sName, bool p_bDefaultValue) const;
 

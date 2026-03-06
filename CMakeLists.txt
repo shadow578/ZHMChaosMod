@@ -31,8 +31,8 @@ target_include_directories(ChaosMod PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Voting
 )
 
-# Set UTF-8 flag.
-set_target_properties(ChaosMod PROPERTIES COMPILE_FLAGS "/utf-8")
+# Set UTF-8 flag, make warnings errors, and configure MSVC to be more strict.
+set_target_properties(ChaosMod PROPERTIES COMPILE_FLAGS "/utf-8 /WX /W3 /permissive-")
 
 # Add SDK and DX headers dependencies.
 find_package(directx-headers CONFIG REQUIRED)

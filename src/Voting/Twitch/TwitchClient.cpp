@@ -1,6 +1,6 @@
 #include "TwitchClient.h"
 
-#include "Logging.h"
+#include <Logging.h>
 
 #include <ixwebsocket/IXHttpServer.h>
 #include <ixwebsocket/IXHttpClient.h>

@@ -37,9 +37,9 @@ class ZActorWellbeingChangeEffectBase : public virtual IChaosEffect
         }
     };
 
-    static SActorState GetActorState(ZActor* p_pActor);
+    static SActorState GetActorState(TEntityRef<ZActor> p_rActor);
 
-    virtual void OnActorWellbeingChanged(ZActor* p_pActor, const SActorState& p_OldState, const SActorState& p_NewState) = 0;
+    virtual void OnActorWellbeingChanged(TEntityRef<ZActor> p_rActor, const SActorState& p_OldState, const SActorState& p_NewState) = 0;
 
   private:
     bool m_bMonitorChanges = false;

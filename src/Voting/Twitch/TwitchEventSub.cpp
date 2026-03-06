@@ -1,6 +1,6 @@
 #include "TwitchEventSub.h"
 
-#include "Logging.h"
+#include <Logging.h>
 
 #include <nlohmann/json.hpp>
 #include <ixwebsocket/IXHttpClient.h>

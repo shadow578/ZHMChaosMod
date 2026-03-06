@@ -1,8 +1,7 @@
 #pragma once
-
 #include "IChaosEffect.h"
 
-#include "Glacier/ZMath.h"
+#include <Glacier/ZMath.h>
 
 class ZSwapPlayerWithActorEffect : public IChaosEffect
 {

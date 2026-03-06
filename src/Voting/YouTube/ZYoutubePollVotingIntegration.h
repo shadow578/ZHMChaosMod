@@ -3,6 +3,9 @@
 
 #include "Client/Model.h"
 
+#include <atomic>
+#include <mutex>
+
 class ZBackgroundWorker;
 
 class ZYoutubePollVotingIntegration : public ZYoutubeIntegrationBase

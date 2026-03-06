@@ -1,5 +1,7 @@
 #include "ZExplodeRandomActorEffect.h"
 
+#include <imgui.h>
+
 #include <Glacier/ZSpatialEntity.h>
 
 #include "Registry.h"

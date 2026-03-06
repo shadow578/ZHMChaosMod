@@ -4,6 +4,7 @@
 #include "Client/ZYoutubeBroadcastConnection.h"
 
 #include <Logging.h>
+#include <imgui.h>
 
 #include "Registry.h"
 #include "Helpers/Math.h"

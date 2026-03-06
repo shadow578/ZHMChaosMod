@@ -1,8 +1,8 @@
 #include "CameraUtils.h"
 
-#include "Globals.h"
-#include "Functions.h"
-#include "Logging.h"
+#include <Globals.h>
+#include <Functions.h>
+#include <Logging.h>
 
 #include "EntityUtils.h"
 

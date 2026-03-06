@@ -1,5 +1,7 @@
 #include "ZOfflineVoting.h"
 
+#include <imgui.h>
+
 #include "Registry.h"
 #include "Helpers/Math.h"
 

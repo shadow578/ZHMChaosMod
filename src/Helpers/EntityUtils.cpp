@@ -3,8 +3,8 @@
 #include <Glacier/ZModule.h>
 #include <Glacier/ZScene.h>
 
-#include "Globals.h"
-#include "Logging.h"
+#include <Globals.h>
+#include <Logging.h>
 
 #include <queue>
 

@@ -1,11 +1,14 @@
 #include "ZPlayerNoSlowdownEffect.h"
 
-#include <Glacier/ZSpatialEntity.h>
-
+#include <IPluginInterface.h> // for window creation
 #include <Logging.h>
+#include <imgui.h>
+
+#include <Glacier/ZSpatialEntity.h>
 
 #include "Registry.h"
 #include "Helpers/Math.h"
+#include "Helpers/PlayerUtils.h"
 
 #define TAG "[ZPlayerNoSlowdownEffect] "
 
@@ -27,7 +30,7 @@ void ZPlayerNoSlowdownEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEven
         return;
     }
 
-    if (const auto s_rPlayer = SDK()->GetLocalPlayer())
+    if (const auto s_rPlayer = Utils::GetLocalPlayer())
     {
         m_VelocityTracker.Update(p_UpdateEvent, s_rPlayer.m_entityRef);
     }
@@ -180,7 +183,7 @@ bool ZPlayerNoSlowdownEffect::IsBelowTargetVelocity() const
 
 void ZPlayerNoSlowdownEffect::Explode()
 {
-    if (const auto s_rPlayer = SDK()->GetLocalPlayer())
+    if (const auto s_rPlayer = Utils::GetLocalPlayer())
     {
         if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
         {

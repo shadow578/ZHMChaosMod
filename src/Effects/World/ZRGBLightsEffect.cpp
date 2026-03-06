@@ -1,6 +1,7 @@
 #include "ZRGBLightsEffect.h"
 
 #include <Logging.h>
+#include <imgui.h>
 
 #include "Registry.h"
 #include "ZConfigurationAccessor.h"

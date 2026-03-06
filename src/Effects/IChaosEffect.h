@@ -1,10 +1,10 @@
 #pragma once
-
-#include "IPluginInterface.h"
+#include <Glacier/ZPrimitives.h>
 
 #include <string>
 #include <set>
 
+class SGameUpdateEvent;
 class ZConfigurationAccessor;
 
 /**

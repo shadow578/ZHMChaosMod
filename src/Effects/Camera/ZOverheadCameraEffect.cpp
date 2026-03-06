@@ -1,11 +1,14 @@
 #include "ZOverheadCameraEffect.h"
 
+#include <imgui.h>
+
 #include <Glacier/ZEntity.h>
 #include <Glacier/ZSpatialEntity.h>
 #include <Glacier/ZCollision.h>
 
 #include "Registry.h"
 #include "Helpers/Math.h"
+#include "Helpers/PlayerUtils.h"
 
 constexpr float32 c_fOverheadMinDistance = 2.0f; // at least 47's height
 constexpr float32 c_fOverheadMaxDistance = 15.0f;
@@ -20,6 +23,12 @@ void ZOverheadCameraEffect::Stop()
 {
     ZCameraEffectBase::Stop();
     ZInterpolatingEffectBase::Stop();
+}
+
+void ZOverheadCameraEffect::LoadResources()
+{
+    ZCameraEffectBase::LoadResources();
+    ZInterpolatingEffectBase::LoadResources();
 }
 
 void ZOverheadCameraEffect::OnClearScene()
@@ -37,6 +46,16 @@ void ZOverheadCameraEffect::OnDrawDebugUI()
     ZInterpolatingEffectBase::OnDrawDebugUI();
 }
 
+bool ZOverheadCameraEffect::Available() const
+{
+    return ZCameraEffectBase::Available() && ZInterpolatingEffectBase::Available();
+}
+
+bool ZOverheadCameraEffect::IsCompatibleWith(const IChaosEffect* p_pOther) const
+{
+    return ZCameraEffectBase::IsCompatibleWith(p_pOther) && ZInterpolatingEffectBase::IsCompatibleWith(p_pOther);
+}
+
 void ZOverheadCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)
 {
     ZInterpolatingEffectBase::OnFrameUpdate(p_UpdateEvent, p_fEffectTimeRemaining);
@@ -50,7 +69,7 @@ void ZOverheadCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent,
     auto s_OriginalCameraSpatialEntity = GetOriginalCameraEntity().QueryInterface<ZSpatialEntity>();
     auto s_CameraSpatialEntity = GetEffectCameraEntity().QueryInterface<ZSpatialEntity>();
 
-    auto s_Player = SDK()->GetLocalPlayer();
+    auto s_Player = Utils::GetLocalPlayer();
     auto s_PlayerSpatialEntity = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
     if (!s_OriginalCameraSpatialEntity || !s_CameraSpatialEntity || !s_PlayerSpatialEntity)
     {

@@ -1,6 +1,8 @@
 #pragma once
 #include "IChaosEffect.h"
 
+#include <Glacier/ZEntity.h>
+
 #include <vector>
 
 class ZTriggerCarAlarmsEffect : public IChaosEffect

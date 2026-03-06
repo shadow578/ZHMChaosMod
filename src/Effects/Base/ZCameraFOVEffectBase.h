@@ -22,6 +22,10 @@ class ZCameraFOVEffectBase : public ZCameraEffectBase, public ZInterpolatingEffe
 
     void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining) override;
 
+    void LoadResources() override;
+    bool Available() const override;
+    bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
+
   private:
     float32 m_fTargetFOV;
     float32 m_fOriginalFOV = -1.0f;

@@ -1,8 +1,11 @@
 #include "ZSpeakEntityEffectBase.h"
 
+#include <imgui.h>
+
 #include <Glacier/ZSpatialEntity.h>
 
 #include "Helpers/ActorUtils.h"
+#include "Helpers/PlayerUtils.h"
 
 #pragma region Debug Combo Maps
 // list of all EActorSoundDefs values and their string names
@@ -512,7 +515,7 @@ void ZSpeakEntityEffectBase::OnDrawDebugUI()
 
 void ZSpeakEntityEffectBase::DebugSpeakAtNearestActor()
 {
-    if (const auto s_rPlayer = SDK()->GetLocalPlayer())
+    if (const auto s_rPlayer = Utils::GetLocalPlayer())
     {
         if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
         {

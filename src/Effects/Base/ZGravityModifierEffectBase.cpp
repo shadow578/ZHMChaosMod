@@ -1,7 +1,6 @@
 #include "ZGravityModifierEffectBase.h"
 
-#include "IPluginInterface.h"
-#include "Logging.h"
+#include <Logging.h>
 
 #include "Helpers/Utils.h"
 #include "Helpers/EntityUtils.h"
