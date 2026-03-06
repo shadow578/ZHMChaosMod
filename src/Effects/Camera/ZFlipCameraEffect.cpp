@@ -18,6 +18,12 @@ void ZFlipCameraEffect::Stop()
     ZInterpolatingEffectBase::Stop();
 }
 
+void ZFlipCameraEffect::LoadResources()
+{
+    ZCameraEffectBase::LoadResources();
+    ZInterpolatingEffectBase::LoadResources();
+}
+
 void ZFlipCameraEffect::OnClearScene()
 {
     ZCameraEffectBase::OnClearScene();
@@ -31,6 +37,16 @@ void ZFlipCameraEffect::OnDrawDebugUI()
 
     ImGui::SeparatorText("ZInterpolatingEffectBase");
     ZInterpolatingEffectBase::OnDrawDebugUI();
+}
+
+bool ZFlipCameraEffect::Available() const
+{
+    return ZCameraEffectBase::Available() && ZInterpolatingEffectBase::Available();
+}
+
+bool ZFlipCameraEffect::IsCompatibleWith(const IChaosEffect* p_pOther) const
+{
+    return ZCameraEffectBase::IsCompatibleWith(p_pOther) && ZInterpolatingEffectBase::IsCompatibleWith(p_pOther);
 }
 
 void ZFlipCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)

@@ -26,9 +26,39 @@ void ZActorToWineEffect::LoadResources()
     }
 }
 
+void ZActorToWineEffect::OnClearScene()
+{
+    ZActorWellbeingChangeEffectBase::OnClearScene();
+    ZSpawnRepositoryItemEffectBase::OnClearScene();
+    m_WineBottleProp = {};
+}
+
 void ZActorToWineEffect::OnDrawDebugUI()
 {
     ImGui::Checkbox("Teleport Bodies", &m_bTeleportBodies);
+}
+
+bool ZActorToWineEffect::Available() const
+{
+    return ZActorWellbeingChangeEffectBase::Available()
+           && ZSpawnRepositoryItemEffectBase::Available()
+           && m_WineBottleProp;
+}
+
+void ZActorToWineEffect::Start()
+{
+    ZActorWellbeingChangeEffectBase::Start();
+}
+
+void ZActorToWineEffect::Stop()
+{
+    ZActorWellbeingChangeEffectBase::Stop();
+}
+
+void ZActorToWineEffect::OnSlowUpdate(const float32 p_fDeltaTime, const float32 p_fEffectTimeRemaining)
+{
+    ZActorWellbeingChangeEffectBase::OnSlowUpdate(p_fDeltaTime, p_fEffectTimeRemaining);
+    ZSpawnRepositoryItemEffectBase::OnSlowUpdate(p_fDeltaTime, p_fEffectTimeRemaining);
 }
 
 void ZActorToWineEffect::OnActorWellbeingChanged(ZActor* p_pActor, const SActorState& p_OldState, const SActorState& p_NewState)

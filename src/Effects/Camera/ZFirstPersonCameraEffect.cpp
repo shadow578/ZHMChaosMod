@@ -8,6 +8,21 @@
 #include "Helpers/PlayerUtils.h"
 #include "Helpers/EntityUtils.h"
 
+void ZFirstPersonCameraEffect::LoadResources()
+{
+    ZCameraEffectBase::LoadResources();
+}
+
+bool ZFirstPersonCameraEffect::Available() const
+{
+    return ZCameraEffectBase::Available();
+}
+
+bool ZFirstPersonCameraEffect::IsCompatibleWith(const IChaosEffect* p_pOther) const
+{
+    return ZCameraEffectBase::IsCompatibleWith(p_pOther);
+}
+
 void ZFirstPersonCameraEffect::Start()
 {
     const auto s_rPlayer = SDK()->GetLocalPlayer();

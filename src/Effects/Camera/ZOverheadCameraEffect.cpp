@@ -22,6 +22,12 @@ void ZOverheadCameraEffect::Stop()
     ZInterpolatingEffectBase::Stop();
 }
 
+void ZOverheadCameraEffect::LoadResources()
+{
+    ZCameraEffectBase::LoadResources();
+    ZInterpolatingEffectBase::LoadResources();
+}
+
 void ZOverheadCameraEffect::OnClearScene()
 {
     ZCameraEffectBase::OnClearScene();
@@ -35,6 +41,16 @@ void ZOverheadCameraEffect::OnDrawDebugUI()
 
     ImGui::SeparatorText("ZInterpolatingEffectBase");
     ZInterpolatingEffectBase::OnDrawDebugUI();
+}
+
+bool ZOverheadCameraEffect::Available() const
+{
+    return ZCameraEffectBase::Available() && ZInterpolatingEffectBase::Available();
+}
+
+bool ZOverheadCameraEffect::IsCompatibleWith(const IChaosEffect* p_pOther) const
+{
+    return ZCameraEffectBase::IsCompatibleWith(p_pOther) && ZInterpolatingEffectBase::IsCompatibleWith(p_pOther);
 }
 
 void ZOverheadCameraEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)

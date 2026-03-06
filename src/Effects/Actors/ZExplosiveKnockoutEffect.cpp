@@ -11,6 +11,41 @@
 constexpr float32 c_fDeathExplosionStrength = 500.0f;
 constexpr float32 c_fPacifyExplosionStrength = 50.0f;
 
+void ZExplosiveKnockoutEffect::LoadResources()
+{
+    ZExplosionEffectBase::LoadResources();
+}
+
+void ZExplosiveKnockoutEffect::OnClearScene()
+{
+    ZExplosionEffectBase::OnClearScene();
+}
+
+void ZExplosiveKnockoutEffect::OnDrawDebugUI()
+{
+    ZExplosionEffectBase::OnDrawDebugUI();
+}
+
+bool ZExplosiveKnockoutEffect::Available() const
+{
+    return ZExplosionEffectBase::Available();
+}
+
+void ZExplosiveKnockoutEffect::Start()
+{
+    ZActorWellbeingChangeEffectBase::Start();
+}
+
+void ZExplosiveKnockoutEffect::Stop()
+{
+    ZActorWellbeingChangeEffectBase::Stop();
+}
+
+void ZExplosiveKnockoutEffect::OnSlowUpdate(const float32 p_fDeltaTime, const float32 p_fEffectTimeRemaining)
+{
+    ZActorWellbeingChangeEffectBase::OnSlowUpdate(p_fDeltaTime, p_fEffectTimeRemaining);
+}
+
 void ZExplosiveKnockoutEffect::OnActorWellbeingChanged(ZActor* p_pActor, const SActorState& p_OldState, const SActorState& p_NewState)
 {
     if (!p_OldState.m_bDead && p_NewState.m_bDead)

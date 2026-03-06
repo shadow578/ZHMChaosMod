@@ -8,10 +8,30 @@
 
 #define TAG "[ZFollowingActorCameraEffect] "
 
+void ZFollowingActorCameraEffect::LoadResources()
+{
+    ZCameraEffectBase::LoadResources();
+    ZActorFollowPlayerHelperEffectBase::LoadResources();
+}
+
+void ZFollowingActorCameraEffect::OnClearScene()
+{
+    ZCameraEffectBase::OnClearScene();
+    ZActorFollowPlayerHelperEffectBase::OnClearScene();
+    m_rFollowingActor = {};
+    m_rFollowingActorHeadAttach = {};
+}
+
 bool ZFollowingActorCameraEffect::Available() const
 {
     return ZCameraEffectBase::Available()
            && ZActorFollowPlayerHelperEffectBase::Available();
+}
+
+bool ZFollowingActorCameraEffect::IsCompatibleWith(const IChaosEffect* p_pOther) const
+{
+    return ZCameraEffectBase::IsCompatibleWith(p_pOther)
+           && ZActorFollowPlayerHelperEffectBase::IsCompatibleWith(p_pOther);
 }
 
 void ZFollowingActorCameraEffect::OnDrawDebugUI()

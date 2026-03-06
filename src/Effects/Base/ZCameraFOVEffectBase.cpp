@@ -75,3 +75,19 @@ void ZCameraFOVEffectBase::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, 
     auto s_rEffectCamera = GetEffectCameraEntity();
     Utils::SetProperty<float32>(s_rEffectCamera, c_CameraFOVPropertyName, s_fTargetFOV);
 }
+
+void ZCameraFOVEffectBase::LoadResources()
+{
+    ZCameraEffectBase::LoadResources();
+    ZInterpolatingEffectBase::LoadResources();
+}
+
+bool ZCameraFOVEffectBase::Available() const
+{
+    return ZCameraEffectBase::Available() && ZInterpolatingEffectBase::Available();
+}
+
+bool ZCameraFOVEffectBase::IsCompatibleWith(const IChaosEffect* p_pOther) const
+{
+    return ZCameraEffectBase::IsCompatibleWith(p_pOther) && ZInterpolatingEffectBase::IsCompatibleWith(p_pOther);
+}

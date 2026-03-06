@@ -12,8 +12,11 @@ class ZFirstPersonCameraEffect : public ZCameraEffectBase, public ZInterpolating
     {
     }
 
+    void LoadResources() override;
     void OnClearScene() override;
     void OnDrawDebugUI() override;
+    bool Available() const override;
+    bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
 
     void Start() override;
     void Stop() override;
