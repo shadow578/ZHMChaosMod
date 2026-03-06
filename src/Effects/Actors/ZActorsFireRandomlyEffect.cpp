@@ -26,7 +26,7 @@ void ZActorsFireRandomlyEffect::SetAllActorsShootingContinuous(const bool p_bSho
     {
         if (!Utils::IsArmed(s_rActor))
         {
-            if (m_bArmAllActors)
+            if (m_bArmAllActors && p_bShooting)
             {
                 // not armed? let's change that
                 // use a EL Matador here, as it caused the least issues during limited testing.
@@ -93,11 +93,15 @@ void ZActorsFireRandomlyEffect::SetAllActorsShootingContinuous(const bool p_bSho
 
 void ZActorsFireRandomlyEffect::LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration)
 {
+    IChaosEffect::LoadConfiguration(p_pConfiguration);
+
     m_bArmAllActors = p_pConfiguration->GetBool("ArmAllActors", m_bArmAllActors);
 }
 
 void ZActorsFireRandomlyEffect::DrawConfigUI(ZConfigurationAccessor* p_pConfiguration)
 {
+    IChaosEffect::DrawConfigUI(p_pConfiguration);
+
     if (ImGui::Checkbox("Arm all Actors (experimental)", &m_bArmAllActors))
     {
         p_pConfiguration->SetBool("ArmAllActors", m_bArmAllActors);

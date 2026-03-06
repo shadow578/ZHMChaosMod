@@ -156,32 +156,30 @@ class ZAddItemToActorInventoryHelper
 
     void ItemCreatedHandler(const uint32 p_nTicket, const TEntityRef<IItemBase> p_rItem)
     {
-        if (!p_rItem || !m_rActor || !m_rActor.m_pInterfaceRef->m_pInventoryHandler)
+        if (p_rItem && m_rActor && m_rActor.m_pInterfaceRef->m_pInventoryHandler)
         {
-            return;
-        }
-
-        for (auto& s_PendingItem : m_rActor.m_pInterfaceRef->m_pInventoryHandler->m_aPendingItems)
-        {
-            if (s_PendingItem.m_nTicket == p_nTicket)
+            for (auto& s_PendingItem : m_rActor.m_pInterfaceRef->m_pInventoryHandler->m_aPendingItems)
             {
-                const auto s_rIItem = TEntityRef<IItem>(p_rItem.m_entityRef);
-                const auto* s_pZHMItem = p_rItem.m_entityRef.QueryInterface<ZHM5Item>();
-                if (s_rIItem && s_pZHMItem && s_pZHMItem->m_pItemConfigDescriptor)
+                if (s_PendingItem.m_nTicket == p_nTicket)
                 {
-                    s_PendingItem.m_rItem = s_rIItem;
-                    s_PendingItem.m_eAttachLocation = s_pZHMItem->m_pItemConfigDescriptor->m_ItemConfig.m_ItemHandsIdle == eItemHands::IH_TWOHANDED
-                                                          ? EAttachLocation::eALRifle
-                                                          : EAttachLocation::eALRightHand;
+                    const auto s_rIItem = TEntityRef<IItem>(p_rItem.m_entityRef);
+                    const auto* s_pZHMItem = p_rItem.m_entityRef.QueryInterface<ZHM5Item>();
+                    if (s_rIItem && s_pZHMItem && s_pZHMItem->m_pItemConfigDescriptor)
+                    {
+                        s_PendingItem.m_rItem = s_rIItem;
+                        s_PendingItem.m_eAttachLocation = s_pZHMItem->m_pItemConfigDescriptor->m_ItemConfig.m_ItemHandsIdle == eItemHands::IH_TWOHANDED
+                                                              ? EAttachLocation::eALRifle
+                                                              : EAttachLocation::eALRightHand;
+                    }
+
+                    break;
                 }
-
-                break;
             }
+
+            Functions::ZActorInventoryHandler_FinalizePendingItems->Call(m_rActor.m_pInterfaceRef->m_pInventoryHandler);
+
+            Logger::Debug(TAG "[ZAddItemToActorInventoryHelper] Finalized Item add Ticket#{}", p_nTicket);
         }
-
-        Functions::ZActorInventoryHandler_FinalizePendingItems->Call(m_rActor.m_pInterfaceRef->m_pInventoryHandler);
-
-        Logger::Debug(TAG "[ZAddItemToActorInventoryHelper] Finalized Item add Ticket#{}", p_nTicket);
 
         // this is somewhat hacky, as the delegate remains
         // however, the engine normally doesn't call the delegate more than once, so we should be fine.
@@ -191,7 +189,13 @@ class ZAddItemToActorInventoryHelper
 
 bool Utils::AddAndEquipWeapon(TEntityRef<ZActor> p_rActor, const ZRepositoryID& p_ridWeapon, bool p_bReplaceMainWeapon)
 {
-    if (!p_rActor
+    if (!p_bReplaceMainWeapon && IsArmed(p_rActor))
+    {
+        Logger::Warn(TAG "Actor {} already has a main weapon, and replacement is not allowed.", p_rActor.m_pInterfaceRef->GetActorName());
+        return false;
+    }
+
+    if (!p_rActor || !p_rActor.m_pInterfaceRef->m_pInventoryHandler
         || !Globals::EntityManager || !Functions::ZEntityManager_GenerateDynamicObjectID
         || !Globals::WorldInventory || !Functions::ZWorldInventory_RequestNewItem
         || !Globals::WorldInventory_InvalidTicket
@@ -209,7 +213,7 @@ bool Utils::AddAndEquipWeapon(TEntityRef<ZActor> p_rActor, const ZRepositoryID& 
         0
     );
 
-    // NOTE: s_pInventoryAddHelper freed in ItemCreateHandler
+    // NOTE: s_pInventoryAddHelper freed in ItemCreatedHandler
     auto* s_pInventoryAddHelper = new ZAddItemToActorInventoryHelper(p_rActor);
     const ZMemberDelegate<ZAddItemToActorInventoryHelper, void(uint32, TEntityRef<IItemBase>)> s_Delegate(
         s_pInventoryAddHelper,
@@ -230,6 +234,7 @@ bool Utils::AddAndEquipWeapon(TEntityRef<ZActor> p_rActor, const ZRepositoryID& 
 
     if (s_nTicket == *Globals::WorldInventory_InvalidTicket)
     {
+        delete s_pInventoryAddHelper;
         return false;
     }
 
