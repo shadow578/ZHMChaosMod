@@ -787,7 +787,7 @@ void ChaosMod::DrawEffectDebugPane()
 
     ImGui::EndDisabled();
 
-    ImGui::Separator();
+    ImGui::SeparatorText("Debug");
 
     if (m_pEffectForDebug->Available())
     {
@@ -797,5 +797,10 @@ void ChaosMod::DrawEffectDebugPane()
     {
         ImGui::TextUnformatted("Effect Debug UI not drawn, as effect is not available.");
     }
+
+    ImGui::SeparatorText("Config");
+
+    ZConfigurationAccessor s_ConfigAccessor(this, m_pEffectForDebug->GetName());
+    m_pEffectForDebug->DrawConfigUI(&s_ConfigAccessor);
 }
 #pragma endregion
