@@ -191,7 +191,6 @@ bool Utils::AddAndEquipWeapon(TEntityRef<ZActor> p_rActor, const ZRepositoryID& 
 {
     if (!p_bReplaceMainWeapon && IsArmed(p_rActor))
     {
-        Logger::Warn(TAG "Actor {} already has a main weapon, and replacement is not allowed.", p_rActor.m_pInterfaceRef->GetActorName());
         return false;
     }
 
@@ -234,6 +233,8 @@ bool Utils::AddAndEquipWeapon(TEntityRef<ZActor> p_rActor, const ZRepositoryID& 
 
     if (s_nTicket == *Globals::WorldInventory_InvalidTicket)
     {
+        // note: RequestNewItem should NEVER call the delegate if it fails, so we can
+        // safely free the helper here.
         delete s_pInventoryAddHelper;
         return false;
     }

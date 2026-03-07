@@ -67,7 +67,9 @@ namespace Utils
      * @param p_rActor Actor to add weapon to.
      * @param p_ridWeapon Repository ID of the weapon to add. Requires EEntryType::Weapon.
      * @param p_bReplaceMainWeapon Replace the currently equipped main weapon. if false, the weapon will only be equipped if the actor doesn't have a main weapon already.
+     * @return Was the weapon successfully queued for equipping?
      * @note Depending on the actor, actually trying to use the weapon (e.g. via WeaponCustomControl) may crash the game.
+     * @note When a weapon is already equipped and p_bReplaceMainWeapon is false, this function will return false.
      */
     bool AddAndEquipWeapon(TEntityRef<ZActor> p_rActor, const ZRepositoryID& p_ridWeapon, bool p_bReplaceMainWeapon = true);
 }; // namespace Utils

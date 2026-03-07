@@ -60,11 +60,11 @@ void ZWeaponUtilsDbgEffect::OnDrawDebugUI()
         }
 
         const auto s_ridRandomWeapon = Math::SelectRandomElement(s_aWeaponIds);
-        Logger::Info(TAG, "Giving weapon RID= {}", s_ridRandomWeapon.ToString().c_str());
+        Logger::Info(TAG "Giving weapon RID= {}", s_ridRandomWeapon.ToString().c_str());
 
         if (!Utils::AddAndEquipWeapon(m_rTargetActor, s_ridRandomWeapon))
         {
-            Logger::Error(TAG, "Failed to give weapon");
+            Logger::Error(TAG "Failed to give weapon");
         }
     }
 
@@ -73,7 +73,7 @@ void ZWeaponUtilsDbgEffect::OnDrawDebugUI()
         ZRepositoryID s_ridMatador("77ecaad6-652f-480d-b365-cdf90820a5ec");
         if (!Utils::AddAndEquipWeapon(m_rTargetActor, s_ridMatador))
         {
-            Logger::Error(TAG, "Failed to give Matador");
+            Logger::Error(TAG "Failed to give Matador");
         }
     }
 
