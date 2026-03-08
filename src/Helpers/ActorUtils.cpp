@@ -1,9 +1,13 @@
 #include "ActorUtils.h"
 #include "Math.h"
 
+#include <Logging.h>
+
 #include <Glacier/ZSpatialEntity.h>
 
 #include "Helpers/EntityUtils.h"
+
+#define TAG "[ActorUtils] "
 
 std::vector<TEntityRef<ZActor>> Utils::GetActors(const bool p_bIncludeDead, const bool p_bIncludePacified)
 {
@@ -128,4 +132,122 @@ TEntityRef<ZSpatialEntity> Utils::GetActorHeadAttachEntity(const TEntityRef<ZAct
     }
 
     return {};
+}
+
+TEntityRef<ZHM5ItemWeapon> Utils::GetMainWeapon(const TEntityRef<ZActor> p_rActor)
+{
+    if (!p_rActor || !p_rActor.m_pInterfaceRef->m_pInventoryHandler)
+    {
+        return {};
+    }
+
+    return p_rActor.m_pInterfaceRef->m_pInventoryHandler->m_rMainWeapon;
+}
+
+class ZAddItemToActorInventoryHelper
+{
+  private:
+    TEntityRef<ZActor> m_rActor;
+
+  public:
+    ZAddItemToActorInventoryHelper(TEntityRef<ZActor> p_rActor) : m_rActor(p_rActor)
+    {
+    }
+
+    void ItemCreatedHandler(const uint32 p_nTicket, const TEntityRef<IItemBase> p_rItem)
+    {
+        if (p_rItem && m_rActor && m_rActor.m_pInterfaceRef->m_pInventoryHandler)
+        {
+            for (auto& s_PendingItem : m_rActor.m_pInterfaceRef->m_pInventoryHandler->m_aPendingItems)
+            {
+                if (s_PendingItem.m_nTicket == p_nTicket)
+                {
+                    const auto s_rIItem = TEntityRef<IItem>(p_rItem.m_entityRef);
+                    const auto* s_pZHMItem = p_rItem.m_entityRef.QueryInterface<ZHM5Item>();
+                    if (s_rIItem && s_pZHMItem && s_pZHMItem->m_pItemConfigDescriptor)
+                    {
+                        s_PendingItem.m_rItem = s_rIItem;
+                        s_PendingItem.m_eAttachLocation = s_pZHMItem->m_pItemConfigDescriptor->m_ItemConfig.m_ItemHandsIdle == eItemHands::IH_TWOHANDED
+                                                              ? EAttachLocation::eALRifle
+                                                              : EAttachLocation::eALRightHand;
+                    }
+
+                    break;
+                }
+            }
+
+            Functions::ZActorInventoryHandler_FinalizePendingItems->Call(m_rActor.m_pInterfaceRef->m_pInventoryHandler);
+
+            Logger::Debug(TAG "[ZAddItemToActorInventoryHelper] Finalized Item add Ticket#{}", p_nTicket);
+        }
+
+        // this is somewhat hacky, as the delegate remains
+        // however, the engine normally doesn't call the delegate more than once, so we should be fine.
+        delete this;
+    }
+};
+
+bool Utils::AddAndEquipWeapon(TEntityRef<ZActor> p_rActor, const ZRepositoryID& p_ridWeapon, bool p_bReplaceMainWeapon)
+{
+    if (!p_bReplaceMainWeapon && IsArmed(p_rActor))
+    {
+        return false;
+    }
+
+    if (!p_rActor || !p_rActor.m_pInterfaceRef->m_pInventoryHandler
+        || !Globals::EntityManager || !Functions::ZEntityManager_GenerateDynamicObjectID
+        || !Globals::WorldInventory || !Functions::ZWorldInventory_RequestNewItem
+        || !Globals::WorldInventory_InvalidTicket
+        || !Functions::ZActorInventoryHandler_FinalizePendingItems)
+    {
+        return false;
+    }
+
+    // make a copy of the actor ref bc for some reason GenerateDynamicObjectID clears it.
+    auto s_rActorCopy = p_rActor.m_entityRef;
+    const auto s_nNewObjectId = Functions::ZEntityManager_GenerateDynamicObjectID->Call(
+        Globals::EntityManager,
+        s_rActorCopy,
+        EDynamicEntityType::eDET_CharacterInventoryItem,
+        0
+    );
+
+    // NOTE: s_pInventoryAddHelper freed in ItemCreatedHandler
+    auto* s_pInventoryAddHelper = new ZAddItemToActorInventoryHelper(p_rActor);
+    const ZMemberDelegate<ZAddItemToActorInventoryHelper, void(uint32, TEntityRef<IItemBase>)> s_Delegate(
+        s_pInventoryAddHelper,
+        &ZAddItemToActorInventoryHelper::ItemCreatedHandler
+    );
+
+    // RequestNewItem also clears the actor ref for some reason
+    s_rActorCopy = p_rActor.m_entityRef;
+    const auto s_nTicket = Functions::ZWorldInventory_RequestNewItem->Call(
+        Globals::WorldInventory,
+        p_ridWeapon,
+        s_Delegate,
+        s_nNewObjectId,
+        false,
+        {},
+        s_rActorCopy
+    );
+
+    if (s_nTicket == *Globals::WorldInventory_InvalidTicket)
+    {
+        // note: RequestNewItem should NEVER call the delegate if it fails, so we can
+        // safely free the helper here.
+        delete s_pInventoryAddHelper;
+        return false;
+    }
+
+    // add pending item
+    // ZAddItemToActorInventoryHelper will handle finalizing the item add
+    ZActorInventoryHandler::SPendingItemInfo s_PendingItem{
+        .m_nTicket = s_nTicket,
+        .m_eAttachLocation = EAttachLocation::eALUndefined,
+        .m_eMaxTension = EGameTension::EGT_Undefined,
+        .m_bLeftHand = false,
+        .m_bWeapon = true
+    };
+    p_rActor.m_pInterfaceRef->m_pInventoryHandler->m_aPendingItems.push_back(s_PendingItem);
+    return true;
 }

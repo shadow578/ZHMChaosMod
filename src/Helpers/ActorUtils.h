@@ -45,4 +45,31 @@ namespace Utils
      * @return Entity ref of head attach, or empty if not found.
      */
     TEntityRef<ZSpatialEntity> GetActorHeadAttachEntity(const TEntityRef<ZActor> p_rActor);
+
+    /**
+     * Get the main weapon of an actor.
+     * @param p_rActor Actor to get main weapon for.
+     * @return Entity ref of main weapon, or empty if not found.
+     */
+    TEntityRef<ZHM5ItemWeapon> GetMainWeapon(const TEntityRef<ZActor> p_rActor);
+
+    /**
+     * Check if an actor is armed (has a main weapon equipped).
+     * @param p_rActor Actor to check.
+     */
+    inline bool IsArmed(const TEntityRef<ZActor> p_rActor)
+    {
+        return !!GetMainWeapon(p_rActor);
+    }
+
+    /**
+     * Add a weapon to the actor's inventory and equip it.
+     * @param p_rActor Actor to add weapon to.
+     * @param p_ridWeapon Repository ID of the weapon to add. Requires EEntryType::Weapon.
+     * @param p_bReplaceMainWeapon Replace the currently equipped main weapon. if false, the weapon will only be equipped if the actor doesn't have a main weapon already.
+     * @return Was the weapon successfully queued for equipping?
+     * @note Depending on the actor, actually trying to use the weapon (e.g. via WeaponCustomControl) may crash the game.
+     * @note When a weapon is already equipped and p_bReplaceMainWeapon is false, this function will return false.
+     */
+    bool AddAndEquipWeapon(TEntityRef<ZActor> p_rActor, const ZRepositoryID& p_ridWeapon, bool p_bReplaceMainWeapon = true);
 }; // namespace Utils

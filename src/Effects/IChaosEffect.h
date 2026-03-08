@@ -172,6 +172,7 @@ class IChaosEffect
      * @param p_pConfiguration Accessor for the configuration data.
      * @note This will be called early in the mod's lifecycle. Keep logic here minimal.
      * @note This method may be called multiple times to reload configuration.
+     * @note When overriding, you MUST call the base implementation.
      */
     virtual void LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration);
 
@@ -184,13 +185,16 @@ class IChaosEffect
      * Also note that the default implementation draws the "Enabled" checkbox.
      * Thus, you MUST call the base implementation to allow enabling/disabling the effect.
      * @param p_pConfiguration Accessor for the configuration data.
+     * @note When overriding, you MUST call the base implementation.
      */
     virtual void DrawConfigUI(ZConfigurationAccessor* p_pConfiguration);
 
     /**
      * Is this effect enabled (via config)?
+     * @note Normally, you should not override this method.
+     *       The ONLY exception are debugging effects that should never be selected by the mod, even when available.
      */
-    bool IsEnabled() const
+    virtual bool IsEnabled() const
     {
         return m_bIsEnabled;
     }

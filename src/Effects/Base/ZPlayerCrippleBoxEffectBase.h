@@ -47,18 +47,3 @@ class ZPlayerCrippleBoxEffectBase : public virtual IChaosEffect
     std::unique_ptr<ZTemplateEntitySpawner> m_pCrippleBoxSpawner;
     TEntityRef<ZHM5CrippleBox> m_rCrippleBox;
 };
-
-/**
- * Helper effect for testing Cripple Box flags.
- * NOT INTENDED FOR USE IN ACTUAL EFFECTS.
- */
-class ZPlayerCrippleBoxDbgEffect final : public virtual ZPlayerCrippleBoxEffectBase
-{
-  public:
-    void Start() override {}
-
-    void OnDrawDebugUI() override;
-
-  private:
-    bool m_bReapplyOnChange = true;
-};
