@@ -244,3 +244,24 @@ ZEntityBlueprintFactoryBase* Utils::GetEntityBlueprintFactoryFor(ZEntityRef p_rE
     // no luck :(
     return nullptr;
 }
+
+ZEntityRef Utils::GetSubEntity(const ZEntityRef p_rParent, const uint64_t p_nEntityId)
+{
+    if (!p_rParent)
+    {
+        return {};
+    }
+
+    if (auto* s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(p_rParent))
+    {
+        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(p_nEntityId); s_nIdx != -1)
+        {
+            if (auto* s_pSubEntity = s_pBlueprint->GetSubEntity(p_rParent.m_pObj, s_nIdx); s_pSubEntity != nullptr)
+            {
+                return ZEntityRef(s_pSubEntity);
+            }
+        }
+    }
+
+    return {};
+}

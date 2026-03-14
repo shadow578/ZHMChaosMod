@@ -159,6 +159,14 @@ namespace Utils
 
         return true;
     }
+
+    /**
+     * Get a sub-entity of an entity by its id.
+     * @param p_rParent The parent entity reference.
+     * @param p_nEntityId The entity id of the sub-entity to get, as per entity template.
+     * @return The sub-entity reference, or invalid if not found.
+     */
+    ZEntityRef GetSubEntity(const ZEntityRef p_rParent, const uint64_t p_nEntityId);
 }; // namespace Utils
 
 #undef TAG

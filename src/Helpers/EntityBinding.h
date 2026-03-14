@@ -47,6 +47,12 @@
 #define MEMBER_BINDING(BINDING_TYPE, BINDING_NAME, BOUND_MEMBER) \
     BINDING_TYPE BINDING_NAME;
 
+#define SUB_ENTITY(NAME, ID) \
+    ZEntityRef NAME;
+
+#define SUB_ENTITY_BINDING(BINDING_TYPE, NAME, ID) \
+    BINDING_TYPE NAME;
+
 #else // !__INTELLISENSE__
 
 #define PROPERTY(TYPE, NAME)                               \
@@ -77,6 +83,20 @@
         return {};                                                    \
     }                                                                 \
     __declspec(property(get = __##BINDING_NAME##_Get)) BINDING_TYPE BINDING_NAME;
+
+#define SUB_ENTITY(NAME, ID)                       \
+    inline ZEntityRef __##NAME##_Get() const       \
+    {                                              \
+        return Utils::GetSubEntity(m_rEntity, ID); \
+    }                                              \
+    __declspec(property(get = __##NAME##_Get)) ZEntityRef NAME;
+
+#define SUB_ENTITY_BINDING(BINDING_TYPE, NAME, ID)               \
+    inline BINDING_TYPE __##NAME##_Get() const                   \
+    {                                                            \
+        return BINDING_TYPE(Utils::GetSubEntity(m_rEntity, ID)); \
+    }                                                            \
+    __declspec(property(get = __##NAME##_Get)) BINDING_TYPE NAME;
 
 #endif // __INTELLISENSE__
 

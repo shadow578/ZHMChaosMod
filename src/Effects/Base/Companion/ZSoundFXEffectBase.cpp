@@ -68,7 +68,7 @@ ZEntityRef ZSoundFXEffectBase::PlayAt(const SMatrix& p_Position, const ZRuntimeR
     s_RootEntity.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(p_Position);
     Utils::SetProperty<ZRuntimeResourceID>(s_RootEntity.m_entityRef, "m_pMainEvent", p_SoundResource);
 
-    s_RootEntity.m_entityRef.SignalInputPin("Start");
+    s_RootEntity.m_entityRef.SignalInputPin("StartMusic");
 
     return s_RootEntity.m_entityRef;
 }
