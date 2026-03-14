@@ -1,5 +1,5 @@
 #pragma once
-#include "Helpers/EntityBinding.h"
+#include "Entity/Bindings/EntityBinding.h"
 
 // [modules:/zaicrippleentity.class].pc_entitytype
 struct SAICrippleEntityBinding

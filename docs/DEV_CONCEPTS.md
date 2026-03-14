@@ -26,7 +26,7 @@ const auto& s_rFirstEntity = Utils::ZEntityFinder()
 
 ## Entity Bindings
 
-`Helpers/EntityBinding.h` provides some helpers for creating so-called entity bindings. 
+`Entity/Bindings/EntityBinding.h` provides some helpers for creating so-called entity bindings. 
 entity bindings provide a easy-to-use api for accessing properties and pins on entities, without having to reverse-engineer the memory layout of the entities.
 this is done via the Glacier2 engine's reflection system.
 

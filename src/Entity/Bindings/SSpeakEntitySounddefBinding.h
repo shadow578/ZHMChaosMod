@@ -1,5 +1,5 @@
 #pragma once
-#include "Helpers/EntityBinding.h"
+#include "Entity/Bindings/EntityBinding.h"
 
 // [modules:/zspeakentity_sounddef.class].pc_entitytype
 struct SSpeakEntitySounddefBinding

@@ -1,5 +1,5 @@
 #pragma once
-#include "Helpers/EntityBinding.h"
+#include "Entity/Bindings/EntityBinding.h"
 
 // [assembly:/_pro/design/gamecore/interactionbase.template?/interaction_subaction_noinvestigate.entitytemplate].pc_entityblueprint (partial)
 struct SInteractionSubactionEntityBinding

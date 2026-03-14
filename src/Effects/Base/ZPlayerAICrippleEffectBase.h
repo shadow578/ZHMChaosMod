@@ -2,7 +2,7 @@
 #include "IChaosEffect.h"
 
 #include "Helpers/ZTemplateEntitySpawner.h"
-#include "Helpers/EntityBindings/SAICrippleEntityBinding.h"
+#include "Entity/Bindings/SAICrippleEntityBinding.h"
 
 /**
  * Base effect for applying a ZAICrippleEntity to the player.

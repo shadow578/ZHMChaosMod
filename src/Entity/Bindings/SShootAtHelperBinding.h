@@ -1,5 +1,5 @@
 #pragma once
-#include "Helpers/EntityBinding.h"
+#include "Entity/Bindings/EntityBinding.h"
 
 #include <Glacier/ZSpatialEntity.h>
 #include <Glacier/Enums.h>

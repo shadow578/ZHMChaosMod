@@ -10,7 +10,7 @@
 #include "Helpers/PlayerUtils.h"
 #include "Helpers/EntityUtils.h"
 
-#include "Helpers/EntityBindings/SPIPCameraCustomEventBinding.h"
+#include "Entity/Bindings/SPIPCameraCustomEventBinding.h"
 
 void ZLiveReactionCamEffect::LoadResources()
 {

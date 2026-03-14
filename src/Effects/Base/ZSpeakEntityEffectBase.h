@@ -4,7 +4,7 @@
 #include <Glacier/ZActor.h>
 
 #include "Helpers/ZTemplateEntitySpawner.h"
-#include "Helpers/EntityBindings/SSpeakEntitySounddefBinding.h"
+#include "Entity/Bindings/SSpeakEntitySounddefBinding.h"
 
 /**
  * Reusable base for playing voicelines on actors.
