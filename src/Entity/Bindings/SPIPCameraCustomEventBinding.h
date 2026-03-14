@@ -4,10 +4,8 @@
 #include <Glacier/Enums.h>
 
 // [assembly:/_pro/design/templates/camera/pictureinpicture.template?/pip_camera_custom_event.entitytemplate].pc_entitytype
-struct SPIPCameraCustomEventBindingBinding
+struct SPIPCameraCustomEventBindingBinding : SEntityBinding
 {
-    BINDING_CONSTRUCTOR(SPIPCameraCustomEventBindingBinding);
-
     // ZSpatialEntity
     PROPERTY(TEntityRef<ZSpatialEntity>, m_eidParent); // Camera spatial parent
     PROPERTY(SMatrix43, m_mTransform);                 // Camera spatial local transform

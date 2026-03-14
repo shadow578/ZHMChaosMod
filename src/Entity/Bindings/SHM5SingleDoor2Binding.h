@@ -7,10 +7,8 @@ class ZValueBool;
 
 // [modules:/zhm5singledoor2.class].pc_entitytype
 // compatible with [modules:/zhm5doubledoor2.class].pc_entitytype
-struct SHM5SingleDoor2Binding
+struct SHM5SingleDoor2Binding : SEntityBinding
 {
-    BINDING_CONSTRUCTOR(SHM5SingleDoor2Binding);
-
     PROPERTY_RO(IHM5Door_EInitialState, m_InitialState); // initial state of the door on scene load
     PROPERTY(IHM5Door_EOpenDir, m_OpenDir);              // what direction the door opens when activated
     PROPERTY(float32, m_fRotAngle);                      // rotation angle when door is opened

@@ -26,13 +26,20 @@
 
 #include <optional>
 
-#define BINDING_CONSTRUCTOR(NAME)                             \
-    ZEntityRef m_rEntity;                                     \
-    NAME(ZEntityRef p_rEntity = {}) : m_rEntity(p_rEntity) {} \
-    operator bool() const                                     \
-    {                                                         \
-        return !!m_rEntity;                                   \
+/**
+ * Base for all entity bindings.
+ * Access the bound entity using the m_rEntity member.
+ */
+struct SEntityBinding
+{
+    ZEntityRef m_rEntity;
+    SEntityBinding(ZEntityRef p_rEntity = {}) : m_rEntity(p_rEntity) {}
+
+    operator bool() const
+    {
+        return !!m_rEntity;
     }
+};
 
 // intellisense struggles with the PROPERTY macros, so simplify them
 // for intellisense pass.
@@ -90,4 +97,10 @@
     inline void NAME##_Out()             \
     {                                    \
         m_rEntity.SignalInputPin(#NAME); \
+    }
+
+#define EXPOSE_INTERFACE(INTERFACE, NAME)            \
+    inline TEntityRef<INTERFACE> Query##NAME() const \
+    {                                                \
+        return TEntityRef<INTERFACE>(m_rEntity);     \
     }

@@ -7,10 +7,8 @@
 // [assembly:/templates/gameplay/ai2/actors.template?/npcactor.entitytemplate].pc_entitytype
 // Sub-entity _ChaosMod_ShootAtHelper of NPCActor, introduced by patch
 // NPCActor_ShootAtHelper.entity.patch.json in version 1.3.0 of Companion Mod.
-struct SShootAtHelperBinding
+struct SShootAtHelperBinding : SEntityBinding
 {
-    BINDING_CONSTRUCTOR(SShootAtHelperBinding);
-
     PROPERTY_RO(TEntityRef<ZSpatialEntity>, m_rTarget); // Target spatial to shoot at. A ray will be cast from the weapon to this spatial. Note that by default, the spatial is parented to the actor.
 
     PROPERTY(bool, m_bAllowActorHitActor);    // if true, allows hitting other actors. if false, only hitman can be hit.

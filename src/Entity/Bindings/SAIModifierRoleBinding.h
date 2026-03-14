@@ -3,10 +3,8 @@
 
 #include <Glacier/Enums.h>
 
-struct SAIModifierRoleBinding
+struct SAIModifierRoleBinding : SEntityBinding
 {
-    BINDING_CONSTRUCTOR(SAIModifierRoleBinding);
-
     PROPERTY(bool, m_bIgnoreLowNoise);
     PROPERTY(bool, m_bIgnoreSillyHitman);
     PROPERTY(bool, m_bIgnoreAnnoyingHitman);
