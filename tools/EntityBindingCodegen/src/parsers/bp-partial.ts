@@ -22,5 +22,6 @@ export const parse: EntityParserFunction = (data) => {
     },
     properties: parsed.properties,
     pins: parsed.pins,
+    exposedInterfaces: parsed.exposedInterfaces,
   };
 };

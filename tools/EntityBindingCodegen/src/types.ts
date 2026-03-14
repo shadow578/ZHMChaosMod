@@ -18,6 +18,7 @@ export interface EntityInfo {
   };
   properties: EntityProperty[];
   pins: EntityPin[];
+  exposedInterfaces: string[];
 }
 
 export type EntityParserFunction = (data: object) => EntityInfo | undefined;

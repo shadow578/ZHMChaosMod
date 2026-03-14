@@ -36,5 +36,6 @@ export const parse: EntityParserFunction = (data) => {
     },
     properties,
     pins: [],
+    exposedInterfaces: [],
   };
 };

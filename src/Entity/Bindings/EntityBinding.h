@@ -99,7 +99,7 @@ struct SEntityBinding
         m_rEntity.SignalInputPin(#NAME); \
     }
 
-#define EXPOSE_INTERFACE(INTERFACE, NAME)            \
+#define EXPOSED_INTERFACE(INTERFACE, NAME)            \
     inline TEntityRef<INTERFACE> Query##NAME() const \
     {                                                \
         return TEntityRef<INTERFACE>(m_rEntity);     \

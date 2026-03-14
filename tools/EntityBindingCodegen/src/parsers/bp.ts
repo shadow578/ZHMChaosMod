@@ -8,11 +8,13 @@ export function parseEntity(
       name?: string;
       properties: EntityProperty[];
       pins: EntityPin[];
+      exposedInterfaces: string[];
     }
   | undefined {
-  let name = undefined;
+  let name: string | undefined = undefined;
   let properties: EntityProperty[] = [];
   let pins: EntityPin[] = [];
+  let exposedInterfaces: string[] = [];
 
   if ("name" in data && typeof data.name === "string") {
     name = data.name;
@@ -110,16 +112,26 @@ export function parseEntity(
     }
   }
 
+  if (
+    "exposedInterfaces" in data &&
+    typeof data.exposedInterfaces === "object" &&
+    data.exposedInterfaces
+  ) {
+    for (const [iface, _] of Object.entries(data.exposedInterfaces)) {
+      exposedInterfaces.push(iface);
+    }
+  }
+
   return {
     name,
     properties,
     pins,
+    exposedInterfaces,
   };
 }
 
 /**
- * Entity Parser for partial blueprint entity definitions
- * (as copied from GlacierKit entity template editor).
+ * Entity Parser for full quick entity blueprint entities.
  */
 export const parse: EntityParserFunction = (data) => {
   if (
@@ -157,5 +169,6 @@ export const parse: EntityParserFunction = (data) => {
     },
     properties: parsed.properties,
     pins: parsed.pins,
+    exposedInterfaces: parsed.exposedInterfaces,
   };
 };
