@@ -43,32 +43,48 @@ void ZSoundFXEffectBase::OnDrawDebugUI()
                 s_WM.Trans += s_Forward * 5.0f;
 
                 const auto s_RuntimeResourceId = ResId<"[assembly:/sound/wwise/exportedwwisedata/events/item_events/sfx_explosives/proximityexplosive_rubberduck/play_duckarmed.wwiseevent].pc_wwisebank">;
-                PlayAt(s_WM, s_RuntimeResourceId);
+                PlayAt(s_WM, s_RuntimeResourceId, m_bDebugAsMusic);
             }
         }
     }
 
+    ImGui::Checkbox("DBG Plays as Music", &m_bDebugAsMusic);
+
     ImGui::EndDisabled();
 }
 
-ZEntityRef ZSoundFXEffectBase::PlayAt(const SMatrix& p_Position, const ZRuntimeResourceID& p_SoundResource)
+SSoundFXPlayerEntityBinding ZSoundFXEffectBase::PlayAt(const SMatrix& p_mPosition, const ZRuntimeResourceID& p_ridSound, const bool p_bMusic)
+{
+    auto s_Player = CreatePlayer(p_ridSound);
+
+    s_Player.QuerySpatial().m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(p_mPosition);
+
+    if (p_bMusic)
+    {
+        s_Player.StartMusic();
+    }
+    else
+    {
+        s_Player.StartSFX();
+    }
+
+    return s_Player;
+}
+
+SSoundFXPlayerEntityBinding ZSoundFXEffectBase::CreatePlayer(const ZRuntimeResourceID& p_ridSound)
 {
     if (!m_pSoundPlayerSpawner)
     {
         return {};
     }
 
-    auto s_RootEntity = m_pSoundPlayerSpawner->SpawnAs<ZSpatialEntity>();
-    if (!s_RootEntity)
+    auto s_Player = SSoundFXPlayerEntityBinding(m_pSoundPlayerSpawner->Spawn());
+    if (!s_Player)
     {
         Logger::Debug(TAG "Failed to spawn SFX player entity.");
         return {};
     }
 
-    s_RootEntity.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(p_Position);
-    Utils::SetProperty<ZRuntimeResourceID>(s_RootEntity.m_entityRef, "m_pMainEvent", p_SoundResource);
-
-    s_RootEntity.m_entityRef.SignalInputPin("Start");
-
-    return s_RootEntity.m_entityRef;
+    s_Player.m_pMainEvent = p_ridSound;
+    return s_Player;
 }

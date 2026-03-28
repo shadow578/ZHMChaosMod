@@ -6,6 +6,7 @@
 
 #include "Helpers/ZTemplateEntitySpawner.h"
 #include "Effects/Base/Companion/ZCompanionModDependentEffectBase.h"
+#include "Entity/Bindings/SSoundFXPlayerEntityBinding.h"
 
 /**
  * Reusable base for spawning sound effect players in the world.
@@ -15,6 +16,10 @@
 class ZSoundFXEffectBase : public virtual IChaosEffect, public virtual ZCompanionModDependentEffectBase
 {
   public:
+    ZSoundFXEffectBase() : ZCompanionModDependentEffectBase(CompanionModUtil::SVersion(1, 4, 0)) // (new) SFXPlayer in 1.4.0
+    {
+    }
+
     void LoadResources() override;
     void OnClearScene() override;
     void OnDrawDebugUI() override;
@@ -24,11 +29,14 @@ class ZSoundFXEffectBase : public virtual IChaosEffect, public virtual ZCompanio
   protected:
     /**
      * Play a sound effect at the given position
-     * @param p_Position position to play from
-     * @param p_SoundResource sound effect to play. Requires .pc_wwisebank resource.
+     * @param p_mPosition position to play from
+     * @param p_ridSound sound to play. Requires .pc_wwisebank resource that is already loaded.
+     * @param p_bMusic whether the sound is music (uses ZMusicEventEntity) or sfx (uses ZAudioEventEntity)
      */
-    ZEntityRef PlayAt(const SMatrix& p_Position, const ZRuntimeResourceID& p_SoundResource);
+    SSoundFXPlayerEntityBinding PlayAt(const SMatrix& p_mPosition, const ZRuntimeResourceID& p_ridSound, const bool p_bMusic = false);
+    SSoundFXPlayerEntityBinding CreatePlayer(const ZRuntimeResourceID& p_ridSound);
 
   private:
     std::unique_ptr<ZTemplateEntitySpawner> m_pSoundPlayerSpawner;
+    bool m_bDebugAsMusic = false;
 };

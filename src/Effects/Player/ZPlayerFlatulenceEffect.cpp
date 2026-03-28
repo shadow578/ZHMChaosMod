@@ -70,7 +70,7 @@ void ZPlayerFlatulenceEffect::Start()
 
             // set player as parent of entities
             Utils::SetProperty<TEntityRef<ZSpatialEntity>>(s_rPoisonEntity, "m_eidParent", s_rPlayerSpatial);
-            Utils::SetProperty<TEntityRef<ZSpatialEntity>>(s_rSFXEntity, "m_eidParent", s_rPlayerSpatial);
+            Utils::SetProperty<TEntityRef<ZSpatialEntity>>(s_rSFXEntity.m_rEntity, "m_eidParent", s_rPlayerSpatial);
         }
     }
 }
