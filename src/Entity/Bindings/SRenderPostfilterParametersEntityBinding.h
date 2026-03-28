@@ -8,6 +8,8 @@
 // note: this is only partial, only things i care about and got to work are here
 struct SRenderPostfilterParametersEntityBinding : SEntityBinding
 {
+    using SEntityBinding::SEntityBinding;
+
     PROPERTY(bool, m_bFogEnabled);           // enable fog
     PROPERTY(bool, m_bFogGlobal);            // fog is global / only in some area box ?
     PROPERTY(float32, m_fFogDensity);        // fog density. 0.0 - 1.0 for normal use, at 3.0 screen is solid fog

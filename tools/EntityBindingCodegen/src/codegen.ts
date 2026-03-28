@@ -48,6 +48,8 @@ export function generate(
 // ${entityPath || ""}
 struct S${entityInfo.metadata.name || "Entity"}Binding : public SEntityBinding
 {
+  using SEntityBinding::SEntityBinding;
+
 `;
 
   for (const property of entityInfo.properties) {

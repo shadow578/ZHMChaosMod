@@ -5,6 +5,8 @@
 
 struct SAIModifierRoleBinding : SEntityBinding
 {
+    using SEntityBinding::SEntityBinding;
+
     PROPERTY(bool, m_bIgnoreLowNoise);
     PROPERTY(bool, m_bIgnoreSillyHitman);
     PROPERTY(bool, m_bIgnoreAnnoyingHitman);

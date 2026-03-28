@@ -10,6 +10,8 @@
 // NPCActor_FollowPlayerHelper.entity.patch.json in version 1.3.0 of Companion Mod.
 struct SFollowPlayerHelperBinding : SEntityBinding
 {
+    using SEntityBinding::SEntityBinding;
+
     PROPERTY_RO(ZEntityRef, m_rAIModifierRole); // Reference to ZAIModifierRole sub-entity
     MEMBER_BINDING(SAIModifierRoleBinding, m_AIModifierRoleBinding, m_rAIModifierRole);
 

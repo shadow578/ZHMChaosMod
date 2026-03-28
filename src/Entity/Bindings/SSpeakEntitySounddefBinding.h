@@ -4,6 +4,8 @@
 // [modules:/zspeakentity_sounddef.class].pc_entitytype
 struct SSpeakEntitySounddefBinding : SEntityBinding
 {
+    using SEntityBinding::SEntityBinding;
+
     PROPERTY(ZEntityRef, m_rActor);            // actor who will speak
     PROPERTY_RO(ZEntityRef, m_rSpeakingActor); // while speaking == m_rActor, null when not speaking
     PROPERTY(EGestureCategory, m_eGesture);    // gesture to play while speaking

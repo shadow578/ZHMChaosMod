@@ -8,6 +8,8 @@ class ZPostfilterBlendEntity;
 // [modules:/zpostfilterlayerentity.class].pc_entitytype
 struct SPostfilterLayerEntityBinding : SEntityBinding
 {
+    using SEntityBinding::SEntityBinding;
+
     PROPERTY(TEntityRef<IRenderPostfilterParametersEntity>, m_parametersEntity);
     PROPERTY(TEntityRef<ZPostfilterGraphBaseNode>, m_postfilterGraphNode);
     PROPERTY(TEntityRef<ZPostfilterBlendEntity>, m_blendNode);

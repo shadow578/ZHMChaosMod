@@ -4,6 +4,8 @@
 // [assembly:/_pro/design/gamecore/interactionbase.template?/interaction_subaction_noinvestigate.entitytemplate].pc_entityblueprint (partial)
 struct SInteractionSubactionEntityBinding : SEntityBinding
 {
+    using SEntityBinding::SEntityBinding;
+
     PROPERTY(TEntityRef<ZSpatialEntity>, m_rContextObjectSpatial); // Spatial where the prompt appears
     PROPERTY(ZString, m_sPromptText);                              // main prompt text
     PROPERTY(ZString, m_sPromptDescriptionText);                   // prompt subtext

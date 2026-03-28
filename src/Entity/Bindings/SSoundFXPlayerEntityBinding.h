@@ -7,6 +7,8 @@ class ZSpatialEntity;
 // introduced by companion mod, SFXPlayer.entity.json
 struct SSoundFXPlayerEntityBinding : public SEntityBinding
 {
+    using SEntityBinding::SEntityBinding;
+
     PROPERTY(ZRuntimeResourceID, m_pMainEvent); // Sound to play. Requires .pc_wwisebank resource that is already loaded.
 
     INPUT_PIN(StartSFX);   // Start Playing SFX (via ZAudioEventEntity)
