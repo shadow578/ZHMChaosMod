@@ -1,7 +1,7 @@
 #pragma once
 #include "Effects/Base/Companion/ZCompanionModDependentEffectBase.h"
 
-#include "Helpers/EntityBindings/SShootAtHelperBinding.h"
+#include "Entity/Bindings/SShootAtHelperBinding.h"
 
 /**
  * Base class for effects that use the NPCActor custom weapon control helper from Companion Mod.

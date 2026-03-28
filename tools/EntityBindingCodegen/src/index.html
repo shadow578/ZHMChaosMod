@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entity Binding Code Generation Tool</title>
+
+  <style>
+    @import './index.css';
+  </style>
+</head>
+
+<body>
+  <div class="content-body">
+    <h1 class="title">Entity Binding Code Generation Tool</h1>
+    <p class="tagline">Quickly generate entity binding from Entity Template</p>
+
+    <div class="card">
+      <div style="display: flex; flex-direction: row; align-items: center;">
+        <h2>Inputs</h2>
+
+        <div style="flex-grow: 1;"></div>
+
+        <button id="clear">Clear</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column;">
+        <label for="binding_name">Binding name</label>
+        <input type="text" id="binding_name" name="binding_name" placeholder="MyEntity" />
+
+        <div class="vspace"></div>
+
+        <label for="hash_or_path">Template Hash or resource Path</label>
+        <input list="hash_or_path_suggestions" type="text" id="hash_or_path" name="hash_or_path"
+          placeholder="[modules:/zentity.class].pc_entitytype" />
+
+        <datalist id="hash_or_path_suggestions">
+        </datalist>
+
+        <div class="vspace"></div>
+
+        <label for="entity_json">Entity Template JSON</label>
+        <input type="file" id="entity_json_file" accept=".json">
+        <textarea id="entity_json" name="entity_json" rows="10" cols="50" style="width: 70rem;"
+          placeholder="Paste Entity Template (CPPT or TEMP) JSON here"></textarea>
+
+        <div class="vspace"></div>
+
+        <button id="generate">Generate</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display: flex; flex-direction: row; align-items: center;">
+        <h2>Output</h2>
+
+        <div style="flex-grow: 1;"></div>
+
+        <button id="copy_button">Copy to Clipboard</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column;">
+        <textarea id="output_area" name="output_area" rows="15" cols="80" readonly></textarea>
+      </div>
+    </div>
+
+    <script type="module">
+      import "./index.ts"
+    </script>
+  </div>
+</body>
+
+</html>

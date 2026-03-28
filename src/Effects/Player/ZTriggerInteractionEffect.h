@@ -3,7 +3,7 @@
 
 #include <Glacier/ZSpatialEntity.h>
 
-#include "Helpers/EntityBindings/SInteractionSubactionEntityBinding.h"
+#include "Entity/Bindings/SInteractionSubactionEntityBinding.h"
 
 #include <vector>
 

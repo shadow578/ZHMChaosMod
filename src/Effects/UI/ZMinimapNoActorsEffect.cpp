@@ -2,15 +2,9 @@
 
 #include "Registry.h"
 #include "Helpers/EntityUtils.h"
+#include "Entity/EntityIds.h"
 
 #define TAG "[ZMinimapNoActorsEffect] "
-
-/**
- * Static Entity ID for Minimap entity.
- * There should only ever be one of these, so we can just lookup by ID.
- * assembly:_PRO/scenes/bricks/gameessentials.brick, UI>IngameMenu>MapMenu>InGameMapSetup>MiniMap
- */
-constexpr uint64_t c_nMinimapRootId = 0xccda0a613b5d88cb;
 
 const std::string c_sMinimapTypePropertyName = "m_eMapType";
 
@@ -26,8 +20,9 @@ void ZMinimapNoActorsEffect::Stop()
 
 void ZMinimapNoActorsEffect::SetMinimapType(const EMapType p_eMapType)
 {
+    // There should only ever be one entity with this ID, so we can just find the first result.
     auto s_rMinimapRoot = Utils::ZEntityFinder()
-                              .EntityID(c_nMinimapRootId)
+                              .EntityID(EntityId::HM3::GameEssentials::Minimap)
                               .FindFirst();
 
     if (!s_rMinimapRoot || !Utils::SetProperty<EMapType>(s_rMinimapRoot, c_sMinimapTypePropertyName, p_eMapType))

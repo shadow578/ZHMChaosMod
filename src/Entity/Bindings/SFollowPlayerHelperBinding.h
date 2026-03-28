@@ -1,5 +1,5 @@
 #pragma once
-#include "Helpers/EntityBinding.h"
+#include "Entity/Bindings/EntityBinding.h"
 
 #include "SAIModifierRoleBinding.h"
 
@@ -8,9 +8,9 @@
 // [assembly:/templates/gameplay/ai2/actors.template?/npcactor.entitytemplate].pc_entitytype
 // Sub-entity _ChaosMod_FollowPlayerHelper of NPCActor, introduced by patch
 // NPCActor_FollowPlayerHelper.entity.patch.json in version 1.3.0 of Companion Mod.
-struct SFollowPlayerHelperBinding
+struct SFollowPlayerHelperBinding : SEntityBinding
 {
-    BINDING_CONSTRUCTOR(SFollowPlayerHelperBinding);
+    using SEntityBinding::SEntityBinding;
 
     PROPERTY_RO(ZEntityRef, m_rAIModifierRole); // Reference to ZAIModifierRole sub-entity
     MEMBER_BINDING(SAIModifierRoleBinding, m_AIModifierRoleBinding, m_rAIModifierRole);

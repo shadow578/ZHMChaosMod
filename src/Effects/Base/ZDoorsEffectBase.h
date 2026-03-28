@@ -1,7 +1,7 @@
 #pragma once
 #include "IChaosEffect.h"
 
-#include "Helpers/EntityBindings/SHM5SingleDoor2Binding.h"
+#include "Entity/Bindings/SHM5SingleDoor2Binding.h"
 
 #include <vector>
 

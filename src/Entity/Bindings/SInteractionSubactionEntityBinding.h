@@ -1,10 +1,10 @@
 #pragma once
-#include "Helpers/EntityBinding.h"
+#include "Entity/Bindings/EntityBinding.h"
 
 // [assembly:/_pro/design/gamecore/interactionbase.template?/interaction_subaction_noinvestigate.entitytemplate].pc_entityblueprint (partial)
-struct SInteractionSubactionEntityBinding
+struct SInteractionSubactionEntityBinding : SEntityBinding
 {
-    BINDING_CONSTRUCTOR(SInteractionSubactionEntityBinding);
+    using SEntityBinding::SEntityBinding;
 
     PROPERTY(TEntityRef<ZSpatialEntity>, m_rContextObjectSpatial); // Spatial where the prompt appears
     PROPERTY(ZString, m_sPromptText);                              // main prompt text

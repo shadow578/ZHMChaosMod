@@ -4,8 +4,8 @@
 #include <Glacier/ZEntity.h>
 
 #include "Helpers/EntityUtils.h"
-#include "Helpers/EntityBindings/SPostfilterLayerEntityBinding.h"
-#include "Helpers/EntityBindings/SRenderPostfilterParametersEntityBinding.h"
+#include "Entity/Bindings/SPostfilterLayerEntityBinding.h"
+#include "Entity/Bindings/SRenderPostfilterParametersEntityBinding.h"
 
 /**
  * Reusable base providing access to the render postfilter graph.

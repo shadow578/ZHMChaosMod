@@ -4,6 +4,7 @@
 #include <imgui.h>
 
 #include "Registry.h"
+#include "Entity/EntityIds.h"
 
 #define TAG "[ZRenderPostfilterEffectBase] "
 
@@ -15,13 +16,7 @@ void ZRenderPostfilterEffectBase::OnEnterScene()
     const auto& s_rPostfilterLayerEntity = Utils::ZEntityFinder()
                                                // we use a pre-defined ZPostFilterLayerEntity "CustomPFController".
                                                // that way, we can bypass having to modify the PF Graph, at the cost of only having one postfilter effect to use.
-                                               //
-                                               // to find the entity id, look in entity template
-                                               // "assembly:/_pro/effects/templates/postfilters/fx_pf_postfiltercontroller.template?/fx_pf_postfiltercontroller.entitytemplate"
-                                               // for the ZPostFilterLayerEntity in this path:
-                                               // "FX_PF_PostfilterController/CustomPFController/PostfilterLayerEntity11"
-                                               // (yes, IOI got really bad at naming things here...)
-                                               .EntityID(0x87805acc41dd775e)
+                                               .EntityID(EntityId::HM3::FXPFPostFilterController::CustomPFLayer)
 
                                                // there should only be one
                                                .FindFirst();

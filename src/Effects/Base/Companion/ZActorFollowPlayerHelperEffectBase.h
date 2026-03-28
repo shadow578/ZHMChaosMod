@@ -1,7 +1,7 @@
 #pragma once
 #include "Effects/Base/Companion/ZCompanionModDependentEffectBase.h"
 
-#include "Helpers/EntityBindings/SFollowPlayerHelperBinding.h"
+#include "Entity/Bindings/SFollowPlayerHelperBinding.h"
 
 /**
  * Base class for effects that use the NPCActor custom player follow helper from Companion Mod.

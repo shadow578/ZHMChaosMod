@@ -1,14 +1,14 @@
 #pragma once
-#include "Helpers/EntityBinding.h"
+#include "Entity/Bindings/EntityBinding.h"
 
 class IRenderPostfilterParametersEntity;
 class ZPostfilterGraphBaseNode;
 class ZPostfilterBlendEntity;
 
 // [modules:/zpostfilterlayerentity.class].pc_entitytype
-struct SPostfilterLayerEntityBinding
+struct SPostfilterLayerEntityBinding : SEntityBinding
 {
-    BINDING_CONSTRUCTOR(SPostfilterLayerEntityBinding);
+    using SEntityBinding::SEntityBinding;
 
     PROPERTY(TEntityRef<IRenderPostfilterParametersEntity>, m_parametersEntity);
     PROPERTY(TEntityRef<ZPostfilterGraphBaseNode>, m_postfilterGraphNode);

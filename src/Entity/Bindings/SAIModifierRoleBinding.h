@@ -1,11 +1,11 @@
 #pragma once
-#include "Helpers/EntityBinding.h"
+#include "Entity/Bindings/EntityBinding.h"
 
 #include <Glacier/Enums.h>
 
-struct SAIModifierRoleBinding
+struct SAIModifierRoleBinding : SEntityBinding
 {
-    BINDING_CONSTRUCTOR(SAIModifierRoleBinding);
+    using SEntityBinding::SEntityBinding;
 
     PROPERTY(bool, m_bIgnoreLowNoise);
     PROPERTY(bool, m_bIgnoreSillyHitman);

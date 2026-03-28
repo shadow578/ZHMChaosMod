@@ -1,10 +1,10 @@
 #pragma once
-#include "Helpers/EntityBinding.h"
+#include "Entity/Bindings/EntityBinding.h"
 
 // [modules:/zaicrippleentity.class].pc_entitytype
-struct SAICrippleEntityBinding
+struct SAICrippleEntityBinding : SEntityBinding
 {
-    BINDING_CONSTRUCTOR(SAICrippleEntityBinding);
+    using SEntityBinding::SEntityBinding;
 
     INPUT_PIN(SetHeroInvincible); // make player invincible
     INPUT_PIN(SetHeroVulnerable); // make player vulnerable again after being invincible

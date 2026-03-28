@@ -1,12 +1,12 @@
 #pragma once
-#include "Helpers/EntityBinding.h"
+#include "Entity/Bindings/EntityBinding.h"
 
 #include <Glacier/Enums.h>
 
 // [assembly:/_pro/design/templates/camera/pictureinpicture.template?/pip_camera_custom_event.entitytemplate].pc_entitytype
-struct SPIPCameraCustomEventBindingBinding
+struct SPIPCameraCustomEventBindingBinding : SEntityBinding
 {
-    BINDING_CONSTRUCTOR(SPIPCameraCustomEventBindingBinding);
+    using SEntityBinding::SEntityBinding;
 
     // ZSpatialEntity
     PROPERTY(TEntityRef<ZSpatialEntity>, m_eidParent); // Camera spatial parent

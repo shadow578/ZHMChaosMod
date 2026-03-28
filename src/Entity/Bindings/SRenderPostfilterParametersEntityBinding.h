@@ -1,14 +1,14 @@
 #pragma once
-#include "Helpers/EntityBinding.h"
+#include "Entity/Bindings/EntityBinding.h"
 
 #include <Glacier/ZMath.h>
 #include <Glacier/SColorRGB.h>
 
 // [modules:/zrenderpostfilterparametersentity.class].pc_entitytype
 // note: this is only partial, only things i care about and got to work are here
-struct SRenderPostfilterParametersEntityBinding
+struct SRenderPostfilterParametersEntityBinding : SEntityBinding
 {
-    BINDING_CONSTRUCTOR(SRenderPostfilterParametersEntityBinding);
+    using SEntityBinding::SEntityBinding;
 
     PROPERTY(bool, m_bFogEnabled);           // enable fog
     PROPERTY(bool, m_bFogGlobal);            // fog is global / only in some area box ?

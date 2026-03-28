@@ -1,10 +1,10 @@
 #pragma once
-#include "Helpers/EntityBinding.h"
+#include "Entity/Bindings/EntityBinding.h"
 
 // [modules:/zspeakentity_sounddef.class].pc_entitytype
-struct SSpeakEntitySounddefBinding
+struct SSpeakEntitySounddefBinding : SEntityBinding
 {
-    BINDING_CONSTRUCTOR(SSpeakEntitySounddefBinding);
+    using SEntityBinding::SEntityBinding;
 
     PROPERTY(ZEntityRef, m_rActor);            // actor who will speak
     PROPERTY_RO(ZEntityRef, m_rSpeakingActor); // while speaking == m_rActor, null when not speaking

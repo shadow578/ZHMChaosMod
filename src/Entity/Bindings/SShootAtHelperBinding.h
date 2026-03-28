@@ -1,5 +1,5 @@
 #pragma once
-#include "Helpers/EntityBinding.h"
+#include "Entity/Bindings/EntityBinding.h"
 
 #include <Glacier/ZSpatialEntity.h>
 #include <Glacier/Enums.h>
@@ -7,9 +7,9 @@
 // [assembly:/templates/gameplay/ai2/actors.template?/npcactor.entitytemplate].pc_entitytype
 // Sub-entity _ChaosMod_ShootAtHelper of NPCActor, introduced by patch
 // NPCActor_ShootAtHelper.entity.patch.json in version 1.3.0 of Companion Mod.
-struct SShootAtHelperBinding
+struct SShootAtHelperBinding : SEntityBinding
 {
-    BINDING_CONSTRUCTOR(SShootAtHelperBinding);
+    using SEntityBinding::SEntityBinding;
 
     PROPERTY_RO(TEntityRef<ZSpatialEntity>, m_rTarget); // Target spatial to shoot at. A ray will be cast from the weapon to this spatial. Note that by default, the spatial is parented to the actor.
 
