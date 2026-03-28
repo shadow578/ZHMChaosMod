@@ -9,6 +9,7 @@
 
 #include "Registry.h"
 #include "Helpers/EntityUtils.h"
+#include "Entity/EntityIds.h"
 
 #define TAG "[ZActorToWineEffect] "
 
@@ -102,7 +103,7 @@ void ZActorToWineEffect::OnActorPerished(TEntityRef<ZActor> p_rActor)
         {
             // [assembly:/templates/gameplay/ai2/actors.template?/npcactor.entitytemplate].pc_entitytype
             // sub-entity "PhysicsSystem" of "NPCActor"
-            if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x66aaaad61b6a51a5); s_nIdx != -1)
+            if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::NPCActor::PhysicsSystem); s_nIdx != -1)
             {
                 if (auto* s_pEntity = s_pBlueprint->GetSubEntity(p_rActor.m_entityRef.m_pObj, s_nIdx))
                 {

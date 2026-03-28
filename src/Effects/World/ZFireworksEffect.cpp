@@ -7,6 +7,7 @@
 #include "Registry.h"
 #include "Helpers/EntityUtils.h"
 #include "Helpers/PlayerUtils.h"
+#include "Entity/EntityIds.h"
 
 void ZFireworksEffect::LoadResources()
 {
@@ -44,7 +45,7 @@ void ZFireworksEffect::Start()
     if (auto* s_pBlueprint = s_rFireworksBarge.GetBlueprintFactory())
     {
         // Fireworks
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x3fa6ea87b6e7bfec); s_nIdx != -1)
+        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::FXFireworksLaunchpad::Fireworks); s_nIdx != -1)
         {
             if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
             {
@@ -53,7 +54,7 @@ void ZFireworksEffect::Start()
         }
 
         // firework_swirlmachine_a
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x0d26e9029d9cdb1a); s_nIdx != -1)
+        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::FXFireworksLaunchpad::FireworkSwirlMachine1); s_nIdx != -1)
         {
             if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
             {
@@ -62,7 +63,7 @@ void ZFireworksEffect::Start()
         }
 
         // firework_swirlmachine_a01
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x03c72250d57f0356); s_nIdx != -1)
+        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::FXFireworksLaunchpad::FireworkSwirlMachine2); s_nIdx != -1)
         {
             if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
             {
@@ -71,7 +72,7 @@ void ZFireworksEffect::Start()
         }
 
         // TimerSimple
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0xbc53160f645abffc); s_nIdx != -1)
+        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::FXFireworksLaunchpad::TimerSimple); s_nIdx != -1)
         {
             if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
             {
@@ -80,7 +81,7 @@ void ZFireworksEffect::Start()
         }
 
         // TimerSimple01
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x36a50d14be2f2f88); s_nIdx != -1)
+        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::FXFireworksLaunchpad::TimerSimple01); s_nIdx != -1)
         {
             if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
             {
@@ -89,7 +90,7 @@ void ZFireworksEffect::Start()
         }
 
         // TimerSimple02
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0xdd9b974ddf3feda5); s_nIdx != -1)
+        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::FXFireworksLaunchpad::TimerSimple02); s_nIdx != -1)
         {
             if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
             {
@@ -98,7 +99,7 @@ void ZFireworksEffect::Start()
         }
 
         // TimerSimple03
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x3ac42cc89a95ba81); s_nIdx != -1)
+        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::FXFireworksLaunchpad::TimerSimple03); s_nIdx != -1)
         {
             if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
             {

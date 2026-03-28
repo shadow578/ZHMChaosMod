@@ -4,14 +4,9 @@
 
 #include "Registry.h"
 #include "Helpers/EntityUtils.h"
+#include "Entity/EntityIds.h"
 
 #define TAG "[ZNoHUDEffect] "
-
-/**
- * Static Entity ID for HUD MASTER_ROOT entity.
- * assembly:_PRO/scenes/bricks/gameessentials.brick, UI>MASTER_ROOT
- */
-constexpr uint64_t c_nHUDRootId = 0x77bed13890286553;
 
 const std::string c_sHudVisibilityPropertyName = "m_bIsVisible";
 
@@ -28,7 +23,7 @@ void ZNoHUDEffect::Stop()
 void ZNoHUDEffect::SetHUDVisibility(const bool p_bVisible)
 {
     auto s_HUDRoot = Utils::ZEntityFinder()
-                         .EntityID(c_nHUDRootId)
+                         .EntityID(EntityId::HM3::GameEssentials::MasterRoot)
                          .FindFirst();
 
     if (!s_HUDRoot)

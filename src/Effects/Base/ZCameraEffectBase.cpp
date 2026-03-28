@@ -10,6 +10,7 @@
 
 #include "Helpers/Utils.h"
 #include "Helpers/CameraUtils.h"
+#include "Entity/EntityIds.h"
 
 #define TAG "[ZCameraEffectBase] "
 
@@ -117,7 +118,7 @@ bool ZCameraEffectBase::EnsureCameraEntity()
 
     // inside the template, grab camera entity "HM5MainCamera01"
     auto s_CameraBpFactory = m_CameraHolderEntity.GetBlueprintFactory();
-    if (const auto idx = s_CameraBpFactory->GetSubEntityIndex(0x151b9072f9d0dc77); idx != -1)
+    if (const auto idx = s_CameraBpFactory->GetSubEntityIndex(EntityId::HM3::CompositeEntityNoRenderDestination::HM5MainCamera01); idx != -1)
     {
         if (const auto s_Ent = s_CameraBpFactory->GetSubEntity(m_CameraHolderEntity.m_pObj, idx))
         {

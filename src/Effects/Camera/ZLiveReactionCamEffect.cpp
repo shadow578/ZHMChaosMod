@@ -11,6 +11,7 @@
 #include "Helpers/EntityUtils.h"
 
 #include "Entity/Bindings/SPIPCameraCustomEventBinding.h"
+#include "Entity/EntityIds.h"
 
 void ZLiveReactionCamEffect::LoadResources()
 {
@@ -162,7 +163,7 @@ void ZLiveReactionCamEffect::SpawnLiveReactionCam(TEntityRef<ZSpatialEntity> p_r
     // there's no direct way to disable this, but we can manipulate the look-at trigger to effectively never trigger
     if (auto* s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(m_rPIPCameraEntity))
     {
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(0x2c2b10f742467d79); s_nIdx != -1)
+        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::PiPCameraCustomEvent::LookAtTrigger); s_nIdx != -1)
         {
             if (auto* s_pLookAtTrigger = s_pBlueprint->GetSubEntity(m_rPIPCameraEntity.m_pObj, s_nIdx); s_pLookAtTrigger != nullptr)
             {

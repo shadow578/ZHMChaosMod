@@ -4,15 +4,9 @@
 
 #include "Helpers/Utils.h"
 #include "Helpers/EntityUtils.h"
+#include "Entity/EntityIds.h"
 
 #define TAG "[ZGravityModifierEffectBase] "
-
-/**
- * Static Entity ID for PhysicsWorld entity.
- * There should only ever be one of these, so we can just lookup by ID.
- * [assembly:/_pro/effects/templates/logic/fx_logic_physicsworld.template?/fx_logic_physicsworld.entitytemplate].pc_entitytype, PhysicsWorld
- */
-constexpr uint64_t c_nPhysicsWorldId = 0x859611037148f21b;
 
 /**
  * Property name for gravity SVector3 property.
@@ -28,8 +22,9 @@ void ZGravityModifierEffectBase::RestoreDefaultGravity()
 
 void ZGravityModifierEffectBase::SetGravity(const SVector3 p_vGravity)
 {
+    // there should only ever be one of these, so we can just lookup by ID.
     auto s_rPhysicsEntity = Utils::ZEntityFinder()
-                                .EntityID(c_nPhysicsWorldId)
+                                .EntityID(EntityId::HM3::FXLogicPhysicsWorld::PhysicsWorld)
                                 .FindFirst();
 
     if (!s_rPhysicsEntity)
