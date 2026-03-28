@@ -56,8 +56,16 @@ void ZSoundFXEffectBase::OnDrawDebugUI()
 SSoundFXPlayerEntityBinding ZSoundFXEffectBase::PlayAt(const SMatrix& p_mPosition, const ZRuntimeResourceID& p_ridSound, const bool p_bMusic)
 {
     auto s_Player = CreatePlayer(p_ridSound);
+    if (!s_Player)
+    {
+        return {};
+    }
 
-    s_Player.QuerySpatial().m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(p_mPosition);
+    
+    if (auto s_rSpatial = s_Player.QuerySpatial())
+    {
+        s_rSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(p_mPosition);
+    }
 
     if (p_bMusic)
     {

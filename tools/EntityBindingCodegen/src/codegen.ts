@@ -11,7 +11,7 @@ function generatePin(pin: EntityPin, pinDef?: PinDefinition): string {
   // "INPUT_PIN(NAME)" or "OUTPUT_PIN(NAME)" depending on direction
   // If pinDef is provided, add a comment with the description for use with intellisense
   let code = `${pin.direction.toUpperCase()}_PIN(${pin.name});`;
-  if (pinDef) {
+  if (pinDef && pinDef.description) {
     code += ` // ${pinDef.description}`;
   }
 
