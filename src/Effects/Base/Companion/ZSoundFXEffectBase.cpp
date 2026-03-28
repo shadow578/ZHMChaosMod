@@ -61,7 +61,6 @@ SSoundFXPlayerEntityBinding ZSoundFXEffectBase::PlayAt(const SMatrix& p_mPositio
         return {};
     }
 
-    
     if (auto s_rSpatial = s_Player.QuerySpatial())
     {
         s_rSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(p_mPosition);
