@@ -247,7 +247,7 @@ bool Utils::SetRagdollPhysicsEnabled(TEntityRef<ZActor> p_rActor, const bool p_b
     ZEntityRef s_rPhysicsSystem = Utils::GetSubEntity(p_rActor.m_entityRef, EntityId::HM3::NPCActor::PhysicsSystem);
     if (!s_rPhysicsSystem)
     {
-        Logger::Debug(TAG "could not get PhysicsSystem sub-entity of NPCActor", p_rActor.m_pInterfaceRef->GetActorName());
+        Logger::Debug(TAG "could not get PhysicsSystem sub-entity of NPCActor {}", p_rActor.m_pInterfaceRef ? p_rActor.m_pInterfaceRef->GetActorName() : "<null>");
         return false;
     }
 
