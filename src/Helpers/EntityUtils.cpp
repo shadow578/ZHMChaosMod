@@ -7,8 +7,14 @@
 #include <Logging.h>
 
 #include <queue>
+#include <limits>
 
 #define TAG "[EntityUtils] "
+
+// something defines a max macro, and it breaks std::numeric_limits::max()
+#ifdef max
+#undef max
+#endif
 
 std::vector<ZEntityRef> Utils::ZEntityFinder::Find(const size_t p_nMaxResults) const
 {
@@ -210,11 +216,43 @@ std::string Utils::GetEntityTypeName(const ZEntityRef& p_Entity)
     return "";
 }
 
+/// Heuristic checks for validity of blueprint factory pointers, checking for common failure cases after.
+static bool IsValidBlueprintFactoryPointer(ZEntityBlueprintFactoryBase* p_pBpFactory)
+{
+    // nullptr?
+    if (!p_pBpFactory)
+    {
+#if _DEBUG
+        Logger::Error(TAG "Blueprint factory pointer is null.");
+#endif
+
+        return false;
+    }
+
+    // seen invalid pointers with all bits set, check that too
+    std::uintptr_t s_nPtr = reinterpret_cast<std::uintptr_t>(p_pBpFactory);
+    if (s_nPtr == std::numeric_limits<std::uintptr_t>::max())
+    {
+#if _DEBUG
+        Logger::Error(TAG "Blueprint factory pointer is 0xFFFF(...).");
+#endif
+
+        return false;
+    }
+
+    // hopefully OK
+    return true;
+}
+
 ZEntityBlueprintFactoryBase* Utils::GetEntityBlueprintFactoryFor(ZEntityRef p_rEntity)
 {
     // has BP factory?
     if (auto* s_pBpFactory = p_rEntity.GetBlueprintFactory())
     {
+        if (!IsValidBlueprintFactoryPointer(s_pBpFactory))
+        {
+            return nullptr;
+        }
         return s_pBpFactory;
     }
 
@@ -225,6 +263,10 @@ ZEntityBlueprintFactoryBase* Utils::GetEntityBlueprintFactoryFor(ZEntityRef p_rE
         if (const auto s_nSubIndex = s_pParentBPFactory->GetSubEntityIndex(s_nEntityId); s_nSubIndex != -1)
         {
             auto* s_pBPFactory = s_pParentBPFactory->GetSubEntityBlueprint(s_nSubIndex);
+            if (!IsValidBlueprintFactoryPointer(s_pBPFactory))
+            {
+                return nullptr;
+            }
 
             // if aspect, get template sub-blueprint
             // TODO untested, does this work?!
@@ -237,10 +279,41 @@ ZEntityBlueprintFactoryBase* Utils::GetEntityBlueprintFactoryFor(ZEntityRef p_rE
                 s_pBPFactory = reinterpret_cast<ZEntityBlueprintFactoryBase*>(s_pAspectBPFactory->m_aBlueprintFactories[s_AspectSubIndex.m_nSubentityIdx]);
             }
 
+            // may have re-resolved the bp pointer (aspect entity), so check again to be sure.
+            if (!IsValidBlueprintFactoryPointer(s_pBPFactory))
+            {
+                return nullptr;
+            }
             return s_pBPFactory;
         }
     }
 
     // no luck :(
     return nullptr;
+}
+
+ZEntityRef Utils::GetSubEntity(const ZEntityRef p_rParent, const uint64_t p_nSubEntityId, ZEntityBlueprintFactoryBase* p_pForcedBPFactory)
+{
+    if (!p_rParent)
+    {
+        return {};
+    }
+
+    if (auto* s_pBpFactory = p_pForcedBPFactory ? p_pForcedBPFactory : GetEntityBlueprintFactoryFor(p_rParent))
+    {
+        if (!IsValidBlueprintFactoryPointer(s_pBpFactory))
+        {
+            return {};
+        }
+
+        if (const auto idx = s_pBpFactory->GetSubEntityIndex(p_nSubEntityId); idx != -1)
+        {
+            if (const auto s_Ent = s_pBpFactory->GetSubEntity(p_rParent.m_pObj, idx))
+            {
+                return ZEntityRef(s_Ent);
+            }
+        }
+    }
+
+    return {};
 }

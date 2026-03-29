@@ -72,4 +72,11 @@ namespace Utils
      * @note When a weapon is already equipped and p_bReplaceMainWeapon is false, this function will return false.
      */
     bool AddAndEquipWeapon(TEntityRef<ZActor> p_rActor, const ZRepositoryID& p_ridWeapon, bool p_bReplaceMainWeapon = true);
+
+    /**
+     * Enable or disable ragdoll physics for an actor.
+     * @param p_rActor Actor to enable/disable ragdoll physics for.
+     * @param p_bEnablePhysicsSystem Whether to enable or disable the physics system.
+     */
+    bool SetRagdollPhysicsEnabled(TEntityRef<ZActor> p_rActor, const bool p_bEnablePhysicsSystem);
 }; // namespace Utils

@@ -112,6 +112,15 @@ namespace Utils
     ZEntityBlueprintFactoryBase* GetEntityBlueprintFactoryFor(ZEntityRef p_rEntity);
 
     /**
+     * Get a sub-entity of an entity by its id.
+     * @param p_rParent The parent entity reference.
+     * @param p_nSubEntityId The entity id of the sub-entity to get, as per entity template.
+     * @param p_pForcedBPFactory Optional blueprint factory to use instead of retrieving from the parent entity. Use only if you know what you're doing.
+     * @return The sub-entity reference, or invalid if not found.
+     */
+    ZEntityRef GetSubEntity(const ZEntityRef p_rParent, const uint64_t p_nSubEntityId, ZEntityBlueprintFactoryBase* p_pForcedBPFactory = nullptr);
+
+    /**
      * safely get a property from an entity. Returns std::nullopt if failed or invalid.
      * @template T The property type.
      * @param p_rEntity The entity to get the property from. if invalid, returns std::nullopt.
