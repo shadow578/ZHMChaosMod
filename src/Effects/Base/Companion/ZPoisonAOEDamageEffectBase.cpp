@@ -118,21 +118,6 @@ ZEntityRef ZPoisonAOEDamageEffectBase::Spawn(const SParams& p_Params)
 
 bool ZPoisonAOEDamageEffectBase::GetPoisonKeywordEntity(const EPoisonType p_eType, ZEntityRef p_RootEntity, ZEntityRef& p_KeywordEntity)
 {
-    auto* s_pPropRTBpFactory = p_RootEntity.GetBlueprintFactory();
-    if (!s_pPropRTBpFactory)
-    {
-        Logger::Debug(TAG "Could not get blueprint factory.");
-        return false;
-    }
-
-    if (const auto idx = s_pPropRTBpFactory->GetSubEntityIndex(static_cast<int>(p_eType)); idx != -1)
-    {
-        if (const auto s_Ent = s_pPropRTBpFactory->GetSubEntity(p_RootEntity.m_pObj, idx))
-        {
-            p_KeywordEntity = s_Ent;
-            return true;
-        }
-    }
-
-    return false;
+    p_KeywordEntity = Utils::GetSubEntity(p_RootEntity, static_cast<uint64_t>(p_eType));
+    return !!p_KeywordEntity;
 }

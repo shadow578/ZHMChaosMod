@@ -10,6 +10,7 @@
 
 #include "Helpers/Utils.h"
 #include "Helpers/CameraUtils.h"
+#include "Helpers/EntityUtils.h"
 #include "Entity/EntityIds.h"
 
 #define TAG "[ZCameraEffectBase] "
@@ -117,13 +118,11 @@ bool ZCameraEffectBase::EnsureCameraEntity()
     }
 
     // inside the template, grab camera entity "HM5MainCamera01"
-    auto s_CameraBpFactory = m_CameraHolderEntity.GetBlueprintFactory();
-    if (const auto idx = s_CameraBpFactory->GetSubEntityIndex(EntityId::HM3::CompositeEntityNoRenderDestination::HM5MainCamera01); idx != -1)
+    m_EffectCameraEntity = Utils::GetSubEntity(m_CameraHolderEntity, EntityId::HM3::CompositeEntityNoRenderDestination::HM5MainCamera01);
+    if (!m_EffectCameraEntity)
     {
-        if (const auto s_Ent = s_CameraBpFactory->GetSubEntity(m_CameraHolderEntity.m_pObj, idx))
-        {
-            m_EffectCameraEntity = s_Ent;
-        }
+        Logger::Debug(TAG "Could not find camera entity in spawned entity.");
+        return false;
     }
 
     // ensure the overhead camera entity implements

@@ -161,18 +161,10 @@ void ZLiveReactionCamEffect::SpawnLiveReactionCam(TEntityRef<ZSpatialEntity> p_r
 
     // by default, the PIP is automatically closed when looking at it (via look-at trigger)
     // there's no direct way to disable this, but we can manipulate the look-at trigger to effectively never trigger
-    if (auto* s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(m_rPIPCameraEntity))
+    if (auto s_rLookAtTrigger = Utils::GetSubEntity(m_rPIPCameraEntity, EntityId::HM3::PiPCameraCustomEvent::LookAtTrigger))
     {
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::PiPCameraCustomEvent::LookAtTrigger); s_nIdx != -1)
-        {
-            if (auto* s_pLookAtTrigger = s_pBlueprint->GetSubEntity(m_rPIPCameraEntity.m_pObj, s_nIdx); s_pLookAtTrigger != nullptr)
-            {
-                auto s_rLookAtTrigger = ZEntityRef(s_pLookAtTrigger);
-
-                Utils::SetProperty<int32>(s_rLookAtTrigger, "m_nTriggerCount", 0);
-                Utils::SetProperty<float32>(s_rLookAtTrigger, "m_fTriggerDelay", 9999.0f);
-            }
-        }
+        Utils::SetProperty<int32>(s_rLookAtTrigger, "m_nTriggerCount", 0);
+        Utils::SetProperty<float32>(s_rLookAtTrigger, "m_fTriggerDelay", 9999.0f);
     }
 }
 

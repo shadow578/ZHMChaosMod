@@ -45,67 +45,25 @@ void ZFireworksEffect::Start()
     if (auto* s_pBlueprint = s_rFireworksBarge.GetBlueprintFactory())
     {
         // Fireworks
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::FXFireworksLaunchpad::Fireworks); s_nIdx != -1)
-        {
-            if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
-            {
-                s_rFireworksFXEntity = ZEntityRef(s_pEntity);
-            }
-        }
+        s_rFireworksFXEntity = Utils::GetSubEntity(s_rFireworksBarge, EntityId::HM3::FXFireworksLaunchpad::Fireworks, s_pBlueprint);
 
         // firework_swirlmachine_a
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::FXFireworksLaunchpad::FireworkSwirlMachine1); s_nIdx != -1)
-        {
-            if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
-            {
-                s_rSwirlMachine1 = ZEntityRef(s_pEntity);
-            }
-        }
+        s_rSwirlMachine1 = Utils::GetSubEntity(s_rFireworksBarge, EntityId::HM3::FXFireworksLaunchpad::FireworkSwirlMachine1, s_pBlueprint);
 
         // firework_swirlmachine_a01
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::FXFireworksLaunchpad::FireworkSwirlMachine2); s_nIdx != -1)
-        {
-            if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
-            {
-                s_rSwirlMachine2 = ZEntityRef(s_pEntity);
-            }
-        }
+        s_rSwirlMachine2 = Utils::GetSubEntity(s_rFireworksBarge, EntityId::HM3::FXFireworksLaunchpad::FireworkSwirlMachine2, s_pBlueprint);
 
         // TimerSimple
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::FXFireworksLaunchpad::TimerSimple); s_nIdx != -1)
-        {
-            if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
-            {
-                s_rTimer0 = ZEntityRef(s_pEntity);
-            }
-        }
+        s_rTimer0 = Utils::GetSubEntity(s_rFireworksBarge, EntityId::HM3::FXFireworksLaunchpad::TimerSimple, s_pBlueprint);
 
         // TimerSimple01
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::FXFireworksLaunchpad::TimerSimple01); s_nIdx != -1)
-        {
-            if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
-            {
-                s_rTimer1 = ZEntityRef(s_pEntity);
-            }
-        }
+        s_rTimer1 = Utils::GetSubEntity(s_rFireworksBarge, EntityId::HM3::FXFireworksLaunchpad::TimerSimple01, s_pBlueprint);
 
         // TimerSimple02
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::FXFireworksLaunchpad::TimerSimple02); s_nIdx != -1)
-        {
-            if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
-            {
-                s_rTimer2 = ZEntityRef(s_pEntity);
-            }
-        }
+        s_rTimer2 = Utils::GetSubEntity(s_rFireworksBarge, EntityId::HM3::FXFireworksLaunchpad::TimerSimple02, s_pBlueprint);
 
         // TimerSimple03
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::FXFireworksLaunchpad::TimerSimple03); s_nIdx != -1)
-        {
-            if (auto* s_pEntity = s_pBlueprint->GetSubEntity(s_rFireworksBarge.m_pObj, s_nIdx))
-            {
-                s_rTimer3 = ZEntityRef(s_pEntity);
-            }
-        }
+        s_rTimer3 = Utils::GetSubEntity(s_rFireworksBarge, EntityId::HM3::FXFireworksLaunchpad::TimerSimple03, s_pBlueprint);
     }
     if (!s_rFireworksFXEntity)
     {
