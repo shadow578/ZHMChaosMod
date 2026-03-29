@@ -9,6 +9,7 @@
 
 #include "Registry.h"
 #include "Helpers/EntityUtils.h"
+#include "Helpers/ActorUtils.h"
 #include "Entity/EntityIds.h"
 
 #define TAG "[ZActorToWineEffect] "
@@ -97,30 +98,8 @@ void ZActorToWineEffect::OnActorPerished(TEntityRef<ZActor> p_rActor)
             return;
         }
 
-        // aquire ref to physics entity
-        ZEntityRef s_rPhysicsSystem;
-        if (auto* s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(p_rActor.m_entityRef))
-        {
-            // [assembly:/templates/gameplay/ai2/actors.template?/npcactor.entitytemplate].pc_entitytype
-            // sub-entity "PhysicsSystem" of "NPCActor"
-            if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::NPCActor::PhysicsSystem); s_nIdx != -1)
-            {
-                if (auto* s_pEntity = s_pBlueprint->GetSubEntity(p_rActor.m_entityRef.m_pObj, s_nIdx))
-                {
-                    s_rPhysicsSystem = ZEntityRef(s_pEntity);
-                }
-            }
-        }
-
         // disable physics of ragdoll so the TP sticks
-        if (s_rPhysicsSystem)
-        {
-            s_rPhysicsSystem.SetProperty("m_bActive", false);
-        }
-        else
-        {
-            Logger::Debug(TAG "could not get PhysicsSystem sub-entity of NPCActor {}", p_rActor.m_pInterfaceRef->GetActorName());
-        }
+        Utils::SetRagdollPhysicsEnabled(p_rActor, false);
 
         // setting the body invisible does NOT prevent interactions, so teleport out of the way
         s_mActorTransform.Pos.x = 0.f;

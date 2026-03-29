@@ -121,18 +121,7 @@ std::vector<std::pair<TEntityRef<ZActor>, float32>> Utils::GetNearbyActors(
 
 TEntityRef<ZSpatialEntity> Utils::GetActorHeadAttachEntity(const TEntityRef<ZActor> p_rActor)
 {
-    if (auto* s_pBlueprint = Utils::GetEntityBlueprintFactoryFor(p_rActor.m_entityRef))
-    {
-        if (const auto s_nIdx = s_pBlueprint->GetSubEntityIndex(EntityId::HM3::NPCActor::Head); s_nIdx != -1)
-        {
-            if (auto* s_pHead = s_pBlueprint->GetSubEntity(p_rActor.m_entityRef.m_pObj, s_nIdx); s_pHead != nullptr)
-            {
-                return TEntityRef<ZSpatialEntity>(ZEntityRef(s_pHead));
-            }
-        }
-    }
-
-    return {};
+    return TEntityRef<ZSpatialEntity>(GetSubEntity(p_rActor.m_entityRef, EntityId::HM3::NPCActor::Head));
 }
 
 TEntityRef<ZHM5ItemWeapon> Utils::GetMainWeapon(const TEntityRef<ZActor> p_rActor)
@@ -251,4 +240,16 @@ bool Utils::AddAndEquipWeapon(TEntityRef<ZActor> p_rActor, const ZRepositoryID& 
     };
     p_rActor.m_pInterfaceRef->m_pInventoryHandler->m_aPendingItems.push_back(s_PendingItem);
     return true;
+}
+
+bool Utils::SetRagdollPhysicsEnabled(TEntityRef<ZActor> p_rActor, const bool p_bEnablePhysicsSystem)
+{
+    ZEntityRef s_rPhysicsSystem = Utils::GetSubEntity(p_rActor.m_entityRef, EntityId::HM3::NPCActor::PhysicsSystem);
+    if (!s_rPhysicsSystem)
+    {
+        Logger::Debug(TAG "could not get PhysicsSystem sub-entity of NPCActor", p_rActor.m_pInterfaceRef->GetActorName());
+        return false;
+    }
+
+    return Utils::SetProperty<bool>(s_rPhysicsSystem, "m_bActive", p_bEnablePhysicsSystem);
 }
