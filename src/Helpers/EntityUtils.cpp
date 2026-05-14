@@ -135,7 +135,7 @@ bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprin
     return true;
 }
 
-std::string Utils::GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFactoryBase* p_pFactory, int p_nSubIndex)
+std::string_view Utils::GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFactoryBase* p_pFactory, int p_nSubIndex)
 {
     if (!p_Entity)
     {
@@ -188,7 +188,7 @@ std::string Utils::GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFac
     return "";
 }
 
-std::string Utils::GetEntityTypeName(const ZEntityRef& p_Entity)
+std::string_view Utils::GetEntityTypeName(const ZEntityRef& p_Entity)
 {
     if (!p_Entity)
     {
