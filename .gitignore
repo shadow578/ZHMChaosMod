@@ -380,3 +380,6 @@ CMakeUserPresets.json
 
 # ZHMChaosMod BuildInfo.h
 src/BuildInfo.cpp
+
+# Photoshop Files (image resources)
+*.psd
