@@ -110,10 +110,11 @@ bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprin
     if (m_sEntityName.has_value())
     {
         std::string s_sSubEntityName;
-        if (m_mEntityNameCache.find(p_rEntity) != m_mEntityNameCache.end())
+        auto it = m_mEntityNameCache.find(p_rEntity);
+        if (it != m_mEntityNameCache.end())
         {
             // retrive from cache
-            s_sSubEntityName = m_mEntityNameCache[p_rEntity];
+            s_sSubEntityName = it->second;
         }
         else
         {
@@ -121,7 +122,7 @@ bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprin
             s_sSubEntityName = GetEntityName(p_rEntity, p_pParentFactory, p_nSubIndex);
             if (!s_sSubEntityName.empty())
             {
-                m_mEntityNameCache[p_rEntity] = s_sSubEntityName;
+                m_mEntityNameCache.insert({p_rEntity, s_sSubEntityName});
             }
         }
 
@@ -135,10 +136,11 @@ bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprin
     if (m_sEntityType.has_value())
     {
         std::string s_sSubEntityType;
-        if (m_mEntityTypeNameCache.find(p_rEntity) != m_mEntityTypeNameCache.end())
+        auto it = m_mEntityTypeNameCache.find(p_rEntity);
+        if (it != m_mEntityTypeNameCache.end())
         {
             // retrive from cache
-            s_sSubEntityType = m_mEntityTypeNameCache[p_rEntity];
+            s_sSubEntityType = it->second;
         }
         else
         {
@@ -146,7 +148,7 @@ bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprin
             s_sSubEntityType = GetEntityTypeName(p_rEntity);
             if (!s_sSubEntityType.empty())
             {
-                m_mEntityTypeNameCache[p_rEntity] = s_sSubEntityType;
+                m_mEntityTypeNameCache.insert({p_rEntity, s_sSubEntityType});
             }
         }
 
