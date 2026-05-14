@@ -13,7 +13,6 @@
 
 namespace Utils
 {
-
     class ZEntityFinder
     {
       public:
@@ -89,6 +88,17 @@ namespace Utils
         std::optional<ZRuntimeResourceID> m_ridBlueprint = std::nullopt;
 
         bool Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprintFactoryBase* p_pParentFactory, ZEntityBlueprintFactoryBase* p_pSubFactory, int p_nSubIndex) const;
+      
+      private:
+        static std::unordered_map<ZEntityRef, std::string, ZEntityRef::hasher> m_mEntityNameCache;
+        static std::unordered_map<ZEntityRef, std::string, ZEntityRef::hasher> m_mEntityTypeNameCache;
+
+      public:
+        static void InvalidateCache()
+        {
+            m_mEntityNameCache.clear();
+            m_mEntityTypeNameCache.clear();
+        }
     };
 
     /**

@@ -11,6 +11,7 @@
 #include "Helpers/Utils.h"
 #include "Helpers/CompanionMod.h"
 #include "Helpers/Repository/ZHMRepositoryHelper.h"
+#include "Helpers/EntityUtils.h"
 
 #include "Registry.h"
 #include "ZConfigurationAccessor.h"
@@ -159,6 +160,8 @@ void ChaosMod::OnLoadOrClearScene()
     {
         s_pVoting->EndVote();
     }
+
+    Utils::ZEntityFinder::InvalidateCache();
 }
 
 void ChaosMod::LoadConfiguration()

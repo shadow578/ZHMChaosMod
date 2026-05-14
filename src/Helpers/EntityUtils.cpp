@@ -16,6 +16,9 @@
 #undef max
 #endif
 
+std::unordered_map<ZEntityRef, std::string, ZEntityRef::hasher> Utils::ZEntityFinder::m_mEntityNameCache;
+std::unordered_map<ZEntityRef, std::string, ZEntityRef::hasher> Utils::ZEntityFinder::m_mEntityTypeNameCache;
+
 std::vector<ZEntityRef> Utils::ZEntityFinder::Find(const size_t p_nMaxResults) const
 {
     std::vector<ZEntityRef> s_aFoundEntities;
@@ -106,7 +109,22 @@ bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprin
     // check entity name
     if (m_sEntityName.has_value())
     {
-        const auto s_sSubEntityName = GetEntityName(p_rEntity, p_pParentFactory, p_nSubIndex);
+        std::string s_sSubEntityName;
+        if (m_mEntityNameCache.find(p_rEntity) != m_mEntityNameCache.end())
+        {
+            // retrive from cache
+            s_sSubEntityName = m_mEntityNameCache[p_rEntity];
+        }
+        else
+        {
+            // cache miss, get name then cache it
+            s_sSubEntityName = GetEntityName(p_rEntity, p_pParentFactory, p_nSubIndex);
+            if (!s_sSubEntityName.empty())
+            {
+                m_mEntityNameCache[p_rEntity] = s_sSubEntityName;
+            }
+        }
+
         if (s_sSubEntityName != m_sEntityName.value())
         {
             return false;
@@ -116,7 +134,22 @@ bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprin
     // check entity type
     if (m_sEntityType.has_value())
     {
-        const auto s_sSubEntityType = GetEntityTypeName(p_rEntity);
+        std::string s_sSubEntityType;
+        if (m_mEntityTypeNameCache.find(p_rEntity) != m_mEntityTypeNameCache.end())
+        {
+            // retrive from cache
+            s_sSubEntityType = m_mEntityTypeNameCache[p_rEntity];
+        }
+        else
+        {
+            // cache miss, get type name then cache it
+            s_sSubEntityType = GetEntityTypeName(p_rEntity);
+            if (!s_sSubEntityType.empty())
+            {
+                m_mEntityTypeNameCache[p_rEntity] = s_sSubEntityType;
+            }
+        }
+
         if (s_sSubEntityType != m_sEntityType.value())
         {
             return false;
