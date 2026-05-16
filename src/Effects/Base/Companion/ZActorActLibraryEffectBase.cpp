@@ -6,3 +6,8 @@ SStandWaitingActEntityBinding ZActorActLibraryEffectBase::GetStandWaitingBinding
 {
     return SStandWaitingActEntityBinding(Utils::GetSubEntity(p_rActor.m_entityRef, EntityId::CompanionMod::NPCActor::ActLibrary::StandWaiting));
 }
+
+SStandDanceMatActEntityBinding ZActorActLibraryEffectBase::GetStandDanceMatBinding(const TEntityRef<ZActor> p_rActor) const
+{
+    return SStandDanceMatActEntityBinding(Utils::GetSubEntity(p_rActor.m_entityRef, EntityId::CompanionMod::NPCActor::ActLibrary::StandDanceMat));
+}

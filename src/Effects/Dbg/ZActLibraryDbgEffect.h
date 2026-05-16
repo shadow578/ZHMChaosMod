@@ -24,4 +24,5 @@ class ZActLibraryDbgEffect final : public ZActorActLibraryEffectBase
     TEntityRef<ZActor> m_rTargetActor;
 
     void DrawUIForStandWaiting();
+    void DrawUIForStandDanceMat();
 };

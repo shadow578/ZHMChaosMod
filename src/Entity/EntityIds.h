@@ -114,6 +114,9 @@ namespace EntityId
             {
                 // > StandWaiting
                 constexpr entityId_t StandWaiting = 0xcafe02c567bba106;
+
+                // > StandDanceMat
+                constexpr entityId_t StandDanceMat = 0xcafe09562b9ec7ed;
             } // namespace ActLibrary
         } // namespace NPCActor
     } // namespace CompanionMod

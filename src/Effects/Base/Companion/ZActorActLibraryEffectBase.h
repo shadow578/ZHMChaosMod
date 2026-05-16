@@ -2,6 +2,7 @@
 #include "Effects/Base/Companion/ZCompanionModDependentEffectBase.h"
 
 #include "Entity/Bindings/ActLibrary/SStandWaitingActEntityBinding.h"
+#include "Entity/Bindings/ActLibrary/SStandDanceMatActEntityBinding.h"
 
 /**
  * Base class for effects that use the NPCActor custom act library from Companion Mod.
@@ -17,4 +18,7 @@ class ZActorActLibraryEffectBase : public virtual ZCompanionModDependentEffectBa
   protected:
     // Act_MR_Stand_Waiting
     SStandWaitingActEntityBinding GetStandWaitingBinding(const TEntityRef<ZActor> p_rActor) const;
+
+    // Act_MR_Stand_Dance_Mat
+    SStandDanceMatActEntityBinding GetStandDanceMatBinding(const TEntityRef<ZActor> p_rActor) const;
 };
