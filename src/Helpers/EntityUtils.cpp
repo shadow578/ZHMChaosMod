@@ -33,7 +33,9 @@ std::vector<ZEntityRef> Utils::ZEntityFinder::Find(const size_t p_nMaxResults) c
         return s_aFoundEntities;
     }
 
-    std::queue<std::pair<ZEntityBlueprintFactoryBase*, ZEntityRef>> s_qNodeQueue;
+    std::vector<std::pair<ZEntityBlueprintFactoryBase*, ZEntityRef>> s_aNodeQueue;
+    size_t s_nCurrentQueueIndex = 0;
+
     for (const auto& s_Brick : s_pSceneCtx->m_aLoadedBricks)
     {
         const auto s_Entity = s_Brick.m_EntityRef;
@@ -48,13 +50,13 @@ std::vector<ZEntityRef> Utils::ZEntityFinder::Find(const size_t p_nMaxResults) c
             continue;
         }
 
-        s_qNodeQueue.emplace(s_pBpFactory, s_Entity);
+        s_aNodeQueue.emplace_back(s_pBpFactory, s_Entity);
     }
 
-    while (!s_qNodeQueue.empty())
+    while (s_nCurrentQueueIndex < s_aNodeQueue.size())
     {
-        auto [s_pCurrentFactory, s_CurrentRoot] = s_qNodeQueue.front();
-        s_qNodeQueue.pop();
+        auto [s_pCurrentFactory, s_CurrentRoot] = s_aNodeQueue[s_nCurrentQueueIndex];
+        s_nCurrentQueueIndex++;
 
         // go through each sub-entity
         const auto s_SubEntityCount = s_pCurrentFactory->GetSubEntitiesCount();
@@ -71,7 +73,7 @@ std::vector<ZEntityRef> Utils::ZEntityFinder::Find(const size_t p_nMaxResults) c
             // if the sub-entity has a factory with more sub-entities, add it to the queue.
             if (s_pSubEntityFactory && s_pSubEntityFactory->GetSubEntitiesCount() > 0)
             {
-                s_qNodeQueue.emplace(s_pSubEntityFactory, s_SubEntity);
+                s_aNodeQueue.emplace_back(s_pSubEntityFactory, s_SubEntity);
             }
 
             // add if matches
@@ -135,7 +137,7 @@ bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprin
     return true;
 }
 
-std::string Utils::GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFactoryBase* p_pFactory, int p_nSubIndex)
+std::string_view Utils::GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFactoryBase* p_pFactory, int p_nSubIndex)
 {
     if (!p_Entity)
     {
@@ -188,7 +190,7 @@ std::string Utils::GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFac
     return "";
 }
 
-std::string Utils::GetEntityTypeName(const ZEntityRef& p_Entity)
+std::string_view Utils::GetEntityTypeName(const ZEntityRef& p_Entity)
 {
     if (!p_Entity)
     {

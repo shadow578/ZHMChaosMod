@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <string>
+#include <string_view>
 #include <optional>
 
 #define TAG "[EntityUtils] "
@@ -97,13 +98,13 @@ namespace Utils
      * @param p_pFactory Entity Blueprint pointer. If nullptr, attempt to find from entity ref.
      * @param p_nSubIndex Entity sub-index in blueprint. If -1, attempt to find from entity ref.
      */
-    std::string GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFactoryBase* p_pFactory = nullptr, int p_nSubIndex = -1);
+    std::string_view GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFactoryBase* p_pFactory = nullptr, int p_nSubIndex = -1);
 
     /**
      * Attempt to get the (primary) type name of an entity.
      * @param p_Entity Entity reference.
      */
-    std::string GetEntityTypeName(const ZEntityRef& p_Entity);
+    std::string_view GetEntityTypeName(const ZEntityRef& p_Entity);
 
     /**
      * Attempt to get the blueprint factory of an entity, even if it's a sub-entity.
