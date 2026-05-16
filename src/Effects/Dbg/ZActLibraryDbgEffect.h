@@ -25,4 +25,5 @@ class ZActLibraryDbgEffect final : public ZActorActLibraryEffectBase
 
     void DrawUIForStandWaiting();
     void DrawUIForStandDanceMat();
+    void DrawUIForLambicDance();
 };

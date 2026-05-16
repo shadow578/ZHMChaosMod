@@ -11,3 +11,8 @@ SStandDanceMatActEntityBinding ZActorActLibraryEffectBase::GetStandDanceMatBindi
 {
     return SStandDanceMatActEntityBinding(Utils::GetSubEntity(p_rActor.m_entityRef, EntityId::CompanionMod::NPCActor::ActLibrary::StandDanceMat));
 }
+
+SLambicDanceActEntityBinding ZActorActLibraryEffectBase::GetLambicDanceBinding(const TEntityRef<ZActor> p_rActor) const
+{
+    return SLambicDanceActEntityBinding(Utils::GetSubEntity(p_rActor.m_entityRef, EntityId::CompanionMod::NPCActor::ActLibrary::LambicDance));
+}

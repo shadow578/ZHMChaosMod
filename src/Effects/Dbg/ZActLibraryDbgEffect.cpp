@@ -39,13 +39,14 @@ void ZActLibraryDbgEffect::OnDrawDebugUI()
 
     DrawUIForStandWaiting();
     DrawUIForStandDanceMat();
+    DrawUIForLambicDance();
 }
 
 void ZActLibraryDbgEffect::DrawUIForStandWaiting()
 {
     ImGui::PushID("##stand_waiting");
 
-    if (ImGui::CollapsingHeader("ACT Stand Waiting"))
+    if (ImGui::CollapsingHeader("Act_MR_Stand_Waiting"))
     {
 
         auto s_Binding = GetStandWaitingBinding(m_rTargetActor);
@@ -103,7 +104,7 @@ void ZActLibraryDbgEffect::DrawUIForStandDanceMat()
 {
     ImGui::PushID("##stand_dance_mat");
 
-    if (ImGui::CollapsingHeader("ACT Stand Dance Mat"))
+    if (ImGui::CollapsingHeader("Act_MR_Stand_Dance_Mat"))
     {
 
         auto s_Binding = GetStandDanceMatBinding(m_rTargetActor);
@@ -131,6 +132,46 @@ void ZActLibraryDbgEffect::DrawUIForStandDanceMat()
         if (ImGui::Button("Disable Expert Mode"))
         {
             s_Binding.SetNormalMode();
+        }
+
+        if (ImGui::Button("Set Spatial to Player Position"))
+        {
+            if (const auto s_rPlayer = Utils::GetLocalPlayer())
+            {
+                if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
+                {
+                    if (const auto s_rWaypointSpatial = s_Binding.QuerySpatial())
+                    {
+                        s_rWaypointSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_pPlayerSpatial->GetObjectToWorldMatrix());
+                    }
+                }
+            }
+        }
+    }
+
+    ImGui::PopID();
+}
+
+void ZActLibraryDbgEffect::DrawUIForLambicDance()
+{
+    ImGui::PushID("##lambic_dance");
+
+    if (ImGui::CollapsingHeader("Act_MR_Lambic_Dance"))
+    {
+
+        auto s_Binding = GetLambicDanceBinding(m_rTargetActor);
+        auto s_bActive = s_Binding.m_bActive.value_or(false);
+
+        ImGui::Checkbox("Active", &s_bActive);
+
+        if (ImGui::Button("Start Act"))
+        {
+            s_Binding.Start();
+        }
+
+        if (ImGui::Button("Cancel Act"))
+        {
+            s_Binding.Cancel();
         }
 
         if (ImGui::Button("Set Spatial to Player Position"))

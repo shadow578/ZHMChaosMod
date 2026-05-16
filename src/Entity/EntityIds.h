@@ -117,6 +117,9 @@ namespace EntityId
 
                 // > StandDanceMat
                 constexpr entityId_t StandDanceMat = 0xcafe09562b9ec7ed;
+
+                // > LambicDance
+                constexpr entityId_t LambicDance = 0xcafefcb429365be4;
             } // namespace ActLibrary
         } // namespace NPCActor
     } // namespace CompanionMod
