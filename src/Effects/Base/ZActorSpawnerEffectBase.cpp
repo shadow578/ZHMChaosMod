@@ -34,7 +34,7 @@ void ZActorSpawnerEffectBase::OnDrawDebugUI()
     ImGui::TextUnformatted(fmt::format("Prop: {}", m_pActorSpawner->ToString()).c_str());
 }
 
-TEntityRef<ZActor> ZActorSpawnerEffectBase::SpawnActor(const SMatrix m_mPosition, const std::string& p_sOutfitRepositoryId)
+TEntityRef<ZActor> ZActorSpawnerEffectBase::SpawnActor(const SMatrix m_mPosition, const std::string& p_sName, const std::string& p_sOutfitRepositoryId, const uint8_t p_nCharsetIndex, const uint8_t p_nOutfitVariationIndex)
 {
     if (!m_pActorSpawner || !m_pActorSpawner->IsAvailable())
     {
@@ -62,10 +62,10 @@ TEntityRef<ZActor> ZActorSpawnerEffectBase::SpawnActor(const SMatrix m_mPosition
 
     const auto s_rActor = m_pActorSpawner->SpawnAs<ZActor>();
 
-    s_rActor.m_pInterfaceRef->m_sActorName = "noname";
+    s_rActor.m_pInterfaceRef->m_sActorName = ZString(p_sName);
     s_rActor.m_pInterfaceRef->m_bStartEnabled = true;
-    s_rActor.m_pInterfaceRef->m_nOutfitCharset = 0;
-    s_rActor.m_pInterfaceRef->m_nOutfitVariation = 0;
+    s_rActor.m_pInterfaceRef->m_nOutfitCharset = p_nCharsetIndex;
+    s_rActor.m_pInterfaceRef->m_nOutfitVariation = p_nOutfitVariationIndex;
     s_rActor.m_pInterfaceRef->m_OutfitRepositoryID = s_ridOutfit;
     s_rActor.m_pInterfaceRef->m_eRequiredVoiceVariation = EActorVoiceVariation::eAVV_Undefined;
 
@@ -81,7 +81,7 @@ TEntityRef<ZActor> ZActorSpawnerEffectBase::SpawnActor(const SMatrix m_mPosition
         return {};
     }
 
-    if (Utils::SetActorOutfit(s_rActor, s_sOutfitCommonName, 0, 0))
+    if (Utils::SetActorOutfit(s_rActor, s_sOutfitCommonName, p_nCharsetIndex, p_nOutfitVariationIndex))
     {
         return s_rActor;
     }
