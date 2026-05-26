@@ -24,8 +24,8 @@ class ZActorSpawnerEffectBase : public virtual IChaosEffect
      * Spawn a new actor at the given position, equipping the given outfit.
      * @param p_mPosition Position & orientation of the spawned actor.
      * @param p_sName Name of the actor.
-     * @param p_sOutfitRepositoryId Repository ID of the outfit to equip the actor with. 
-     *        Requires a outfit of type Actor. 
+     * @param p_sOutfitRepositoryId Repository ID of the outfit to equip the actor with.
+     *        Requires a outfit of type Actor.
      *        Note that the global outfit kit must be available. This method will not load it!
      * @param p_nCharsetIndex Index of the charset to use. Only used if the outfit has multiple charsets.
      * @param p_nOutfitVariationIndex Index of the outfit variation to use.
