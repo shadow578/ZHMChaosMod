@@ -40,6 +40,7 @@ void ZActLibraryDbgEffect::OnDrawDebugUI()
     DrawUIForStandWaiting();
     DrawUIForStandDanceMat();
     DrawUIForLambicDance();
+    DrawUIForFlamingoDance();
 }
 
 void ZActLibraryDbgEffect::DrawUIForStandWaiting()
@@ -163,6 +164,51 @@ void ZActLibraryDbgEffect::DrawUIForLambicDance()
         auto s_bActive = s_Binding.m_bActive.value_or(false);
 
         ImGui::Checkbox("Active", &s_bActive);
+
+        if (ImGui::Button("Start Act"))
+        {
+            s_Binding.Start();
+        }
+
+        if (ImGui::Button("Cancel Act"))
+        {
+            s_Binding.Cancel();
+        }
+
+        if (ImGui::Button("Set Spatial to Player Position"))
+        {
+            if (const auto s_rPlayer = Utils::GetLocalPlayer())
+            {
+                if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
+                {
+                    if (const auto s_rWaypointSpatial = s_Binding.QuerySpatial())
+                    {
+                        s_rWaypointSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_pPlayerSpatial->GetObjectToWorldMatrix());
+                    }
+                }
+            }
+        }
+    }
+
+    ImGui::PopID();
+}
+
+void ZActLibraryDbgEffect::DrawUIForFlamingoDance()
+{
+    ImGui::PushID("##flamingo_dance");
+
+    if (ImGui::CollapsingHeader("Act_MR_Stand_Mascot_Entertain"))
+    {
+        auto s_Binding = GetFlamingoDanceBinding(m_rTargetActor);
+        auto s_bActive = s_Binding.m_bActive.value_or(false);
+        auto s_nMode = s_Binding.m_nMode.value_or(0);
+
+        ImGui::Checkbox("Active", &s_bActive);
+
+        if (ImGui::InputInt("Mode", &s_nMode))
+        {
+            s_Binding.m_nMode = s_nMode;
+        }
 
         if (ImGui::Button("Start Act"))
         {

@@ -16,3 +16,8 @@ SLambicDanceActEntityBinding ZActorActLibraryEffectBase::GetLambicDanceBinding(c
 {
     return SLambicDanceActEntityBinding(Utils::GetSubEntity(p_rActor.m_entityRef, EntityId::CompanionMod::NPCActor::ActLibrary::LambicDance));
 }
+
+SFlamingoDanceActEntityBinding ZActorActLibraryEffectBase::GetFlamingoDanceBinding(const TEntityRef<ZActor> p_rActor) const
+{
+    return SFlamingoDanceActEntityBinding(Utils::GetSubEntity(p_rActor.m_entityRef, EntityId::CompanionMod::NPCActor::ActLibrary::FlamingoDance));
+}

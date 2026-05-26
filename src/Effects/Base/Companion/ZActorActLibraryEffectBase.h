@@ -4,6 +4,7 @@
 #include "Entity/Bindings/ActLibrary/SStandWaitingActEntityBinding.h"
 #include "Entity/Bindings/ActLibrary/SStandDanceMatActEntityBinding.h"
 #include "Entity/Bindings/ActLibrary/SLambicDanceActEntityBinding.h"
+#include "Entity/Bindings/ActLibrary/SFlamingoDanceActEntityBinding.h"
 
 /**
  * Base class for effects that use the NPCActor custom act library from Companion Mod.
@@ -25,4 +26,7 @@ class ZActorActLibraryEffectBase : public virtual ZCompanionModDependentEffectBa
 
     // Act_MR_Lambic_Dance
     SLambicDanceActEntityBinding GetLambicDanceBinding(const TEntityRef<ZActor> p_rActor) const;
+
+    // Act_MR_Stand_Mascot_Entertain
+    SFlamingoDanceActEntityBinding GetFlamingoDanceBinding(const TEntityRef<ZActor> p_rActor) const;
 };

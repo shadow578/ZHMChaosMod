@@ -120,6 +120,9 @@ namespace EntityId
 
                 // > LambicDance
                 constexpr entityId_t LambicDance = 0xcafefcb429365be4;
+
+                // > FlamingoDance
+                constexpr entityId_t FlamingoDance = 0xcafecaa57d32d0a0;
             } // namespace ActLibrary
         } // namespace NPCActor
     } // namespace CompanionMod
