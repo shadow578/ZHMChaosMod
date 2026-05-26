@@ -13,7 +13,14 @@ class ZActorsDanceEffect : public ZActorActLibraryEffectBase
     }
 
   private:
-    bool m_bUseLambicDance = false;
+    enum class EDanceStyle
+    {
+        Lambic,   // Act_MR_Lambic_Dance
+        DanceMat, // Act_MR_Stand_Dance_Mat
+        Flamingo  // Act_MR_Stand_Mascot_Entertain
+    };
+
+    EDanceStyle m_DanceStyle = EDanceStyle::Lambic;
 
     void SetAllActorsDancing(const bool p_bDancing);
 };

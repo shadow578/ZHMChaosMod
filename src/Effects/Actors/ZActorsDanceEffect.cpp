@@ -10,7 +10,9 @@
 
 void ZActorsDanceEffect::Start()
 {
-    m_bUseLambicDance = Math::GetRandomBool(0.5f);
+    const auto s_nDanceStyle = Math::GetRandomNumber<int>(0, 2);
+    Logger::Info(TAG "Selected Dance Style {}", s_nDanceStyle);
+    m_DanceStyle = static_cast<EDanceStyle>(s_nDanceStyle);
 
     SetAllActorsDancing(true);
 }
@@ -30,9 +32,10 @@ void ZActorsDanceEffect::SetAllActorsDancing(const bool p_bDancing)
             continue;
         }
 
-        if (m_bUseLambicDance)
+        switch (m_DanceStyle)
         {
-            // Act_MR_Lambic_Dance:
+        case EDanceStyle::Lambic: // Act_MR_Lambic_Dance
+        {
             if (auto s_Helper = GetLambicDanceBinding(s_rActor))
             {
                 if (p_bDancing)
@@ -41,7 +44,7 @@ void ZActorsDanceEffect::SetAllActorsDancing(const bool p_bDancing)
                     {
                         // move target spatial to actor position
                         s_rActSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_rActorSpatial.m_pInterfaceRef->GetObjectToWorldMatrix());
-                        
+
                         // start act, without snapping to pos
                         s_Helper.m_MovementType = ZActBehaviorEntity_EMovementType::MT_WALK;
                         s_Helper.Start();
@@ -52,10 +55,11 @@ void ZActorsDanceEffect::SetAllActorsDancing(const bool p_bDancing)
                     s_Helper.Cancel();
                 }
             }
+
+            break;
         }
-        else
+        case EDanceStyle::DanceMat: // Act_MR_Stand_Dance_Mat
         {
-            // Act_MR_Stand_Dance_Mat:
             if (auto s_Helper = GetStandDanceMatBinding(s_rActor))
             {
                 if (p_bDancing)
@@ -78,6 +82,37 @@ void ZActorsDanceEffect::SetAllActorsDancing(const bool p_bDancing)
                     s_Helper.Cancel();
                 }
             }
+
+            break;
+        }
+        case EDanceStyle::Flamingo: // Act_MR_Stand_Mascot_Entertain
+        {
+            if (auto s_Helper = GetFlamingoDanceBinding(s_rActor))
+            {
+                if (p_bDancing)
+                {
+                    if (auto s_rActSpatial = s_Helper.QuerySpatial())
+                    {
+                        // move target spatial to actor position
+                        s_rActSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_rActorSpatial.m_pInterfaceRef->GetObjectToWorldMatrix());
+
+                        // select default mode
+                        // TODO: use different modes ???
+                        s_Helper.m_nMode = SFlamingoDanceActEntityBinding::MODE_DEFAULT;
+
+                        // start act, without snapping to pos
+                        s_Helper.m_MovementType = ZActBehaviorEntity_EMovementType::MT_WALK;
+                        s_Helper.Start();
+                    }
+                }
+                else
+                {
+                    s_Helper.Cancel();
+                }
+            }
+
+            break;
+        }
         }
     }
 }
