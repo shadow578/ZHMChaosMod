@@ -4,6 +4,8 @@
 #include <Logging.h>
 
 #include <Glacier/ZSpatialEntity.h>
+#include <Glacier/ZOutfit.h>
+#include <Glacier/ZContentKitManager.h>
 
 #include "Helpers/EntityUtils.h"
 #include "Entity/EntityIds.h"
@@ -252,4 +254,58 @@ bool Utils::SetRagdollPhysicsEnabled(TEntityRef<ZActor> p_rActor, const bool p_b
     }
 
     return Utils::SetProperty<bool>(s_rPhysicsSystem, "m_bActive", p_bEnablePhysicsSystem);
+}
+
+bool Utils::SetActorOutfit(TEntityRef<ZActor> p_rActor, const std::string& p_sCommonName, const uint8_t p_nCharsetIndex, const uint8_t p_nOutfitVariationIndex)
+{
+    if (!p_rActor)
+    {
+        return false;
+    }
+
+    // find outfit by common name
+    const auto* s_pContentKitManager = Globals::ContentKitManager;
+    if (!s_pContentKitManager)
+    {
+        return false;
+    }
+
+    TEntityRef<ZGlobalOutfitKit> s_rOutfitToEquip;
+    for (const auto& s_KV : s_pContentKitManager->m_repositoryGlobalOutfitKits)
+    {
+        const auto& s_rOutfit = s_KV.second;
+        if (!s_rOutfit)
+        {
+            continue;
+        }
+
+        const auto s_sOutfitCommonName = s_rOutfit.m_pInterfaceRef->m_sCommonName;
+        if (p_sCommonName == s_sOutfitCommonName.c_str())
+        {
+            s_rOutfitToEquip = s_rOutfit;
+            break;
+        }
+    }
+
+    if (!s_rOutfitToEquip)
+    {
+        Logger::Error(TAG "SetActorOutfit: No outfit kit found with common name '{}'", p_sCommonName);
+        return false;
+    }
+
+    if (p_nCharsetIndex >= s_rOutfitToEquip.m_pInterfaceRef->m_aCharSets.size())
+    {
+        Logger::Error(TAG "SetActorOutfit: Invalid charset index {} for outfit '{}'", p_nCharsetIndex, p_sCommonName);
+        return false;
+    }
+
+    Functions::ZActor_SetOutfit->Call(
+        p_rActor.m_pInterfaceRef,
+        s_rOutfitToEquip,
+        p_nCharsetIndex,
+        p_nOutfitVariationIndex,
+        false
+    );
+
+    return true;
 }

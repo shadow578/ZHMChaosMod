@@ -79,4 +79,15 @@ namespace Utils
      * @param p_bEnablePhysicsSystem Whether to enable or disable the physics system.
      */
     bool SetRagdollPhysicsEnabled(TEntityRef<ZActor> p_rActor, const bool p_bEnablePhysicsSystem);
+
+    /**
+     * Set actor outfit by common name.
+     * @param p_rActor Actor to set outfit for.
+     * @param p_sCommonName Outfit common name (e.g. "Crowd_Civilian_European_Casual_Male").
+     *                      Only Outfits with CharacterType "Actor" are supported.
+     *                      Note that the global outfit kit must be available. This method will not load it!
+     * @param p_nCharsetIndex Index of the charset to use. Only used if the outfit has multiple charsets.
+     * @param p_nOutfitVariationIndex Index of the outfit variation to use.
+     */
+    bool SetActorOutfit(TEntityRef<ZActor> p_rActor, const std::string& p_sCommonName, const uint8_t p_nCharsetIndex = 0, const uint8_t p_nOutfitVariationIndex = 0);
 }; // namespace Utils

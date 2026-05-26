@@ -107,4 +107,30 @@ namespace Math
             .b = (std::sin(s_fT + (2.0f * c_fTwoPi / 3.0f)) + 1.0f) * 0.5f
         };
     }
+
+    /**
+     * Clamp a given number to be within [min, max].
+     * @template T Number type. Supports arithmetic types.
+     * @param p_Val Value to clamp.
+     * @param p_Min Minimum value, inclusive.
+     * @param p_Max Maximum value, inclusive.
+     */
+    template <typename T>
+    static T Clamp(const T p_Val, const T p_Min, const T p_Max)
+    {
+        static_assert(std::is_arithmetic<T>::value, "Clamp only supports arithmetic types.");
+
+        if (p_Val < p_Min)
+        {
+            return p_Min;
+        }
+        else if (p_Val > p_Max)
+        {
+            return p_Max;
+        }
+        else
+        {
+            return p_Val;
+        }
+    }
 }; // namespace Math

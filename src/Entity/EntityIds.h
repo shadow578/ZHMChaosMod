@@ -107,6 +107,23 @@ namespace EntityId
             /// NPCActor_ShootAtHelper.entity.patch
             /// NPCActor > _ChaosMod_ShootAtHelper
             constexpr entityId_t ShootAtHelper = 0xcafe18d8b8ef4c24;
+
+            // NPCActor/ActLibrary.entity.patch
+            // NPCActor > _ChaosMod_ActLibrary
+            namespace ActLibrary
+            {
+                // > StandWaiting
+                constexpr entityId_t StandWaiting = 0xcafe02c567bba106;
+
+                // > StandDanceMat
+                constexpr entityId_t StandDanceMat = 0xcafe09562b9ec7ed;
+
+                // > LambicDance
+                constexpr entityId_t LambicDance = 0xcafefcb429365be4;
+
+                // > FlamingoDance
+                constexpr entityId_t FlamingoDance = 0xcafecaa57d32d0a0;
+            } // namespace ActLibrary
         } // namespace NPCActor
     } // namespace CompanionMod
 } // namespace EntityId
