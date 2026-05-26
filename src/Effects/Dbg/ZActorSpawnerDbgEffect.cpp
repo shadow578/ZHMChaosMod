@@ -2,6 +2,7 @@
 #include "ZActorSpawnerDbgEffect.h"
 
 #include <imgui.h>
+#include <Logging.h>
 
 #include <Glacier/ZHitman5.h>
 #include <Glacier/ZSpatialEntity.h>

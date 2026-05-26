@@ -61,6 +61,10 @@ TEntityRef<ZActor> ZActorSpawnerEffectBase::SpawnActor(const SMatrix m_mPosition
     const std::string s_sOutfitCommonName = s_opsOutfitCommonName.value()->c_str();
 
     const auto s_rActor = m_pActorSpawner->SpawnAs<ZActor>();
+    if (!s_rActor)
+    {
+        return {};
+    }
 
     s_rActor.m_pInterfaceRef->m_sActorName = ZString(p_sName);
     s_rActor.m_pInterfaceRef->m_bStartEnabled = true;

@@ -8,7 +8,6 @@
 #include <Glacier/ZContentKitManager.h>
 
 #include "Helpers/EntityUtils.h"
-#include "Helpers/ZTemplateEntitySpawner.h"
 #include "Entity/EntityIds.h"
 
 #define TAG "[ActorUtils] "
