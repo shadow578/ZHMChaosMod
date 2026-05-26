@@ -1,3 +1,4 @@
+#pragma once
 #include "IChaosEffect.h"
 
 #include "Helpers/ZTemplateEntitySpawner.h"

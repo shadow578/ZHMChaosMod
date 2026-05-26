@@ -5,7 +5,7 @@
 
 // [assembly:/_pro/chaosmod/seagull_mayhem.entitytemplate].pc_entitytype
 // introduced by companion mod in Version 1.4.0.
-struct SSeagullMayhemBinding : public SEntityBinding
+struct SSeagullMayhemEntityBinding : public SEntityBinding
 {
     using SEntityBinding::SEntityBinding;
 

@@ -1,17 +1,13 @@
 #include "ZSeagullMayhemEffect.h"
 
-#include <Logging.h>
 #include <imgui.h>
 
 #include <Glacier/ZSpatialEntity.h>
 
 #include "Registry.h"
-#include "Helpers/EntityUtils.h"
 #include "Helpers/PlayerUtils.h"
 
 #include "Entity/Bindings/SSeagullMayhemEntityBinding.h"
-
-#define TAG "[ZSeagullMayhemEffect] "
 
 void ZSeagullMayhemEffect::LoadResources()
 {
@@ -21,6 +17,7 @@ void ZSeagullMayhemEffect::LoadResources()
 void ZSeagullMayhemEffect::OnClearScene()
 {
     m_pEffectSpawner = nullptr;
+    m_bDoSpawnOnNextUpdate = false;
 }
 
 bool ZSeagullMayhemEffect::Available() const
@@ -55,7 +52,7 @@ void ZSeagullMayhemEffect::OnSlowUpdate(const float32 p_fDeltaTime, const float3
         {
             if (auto s_rEffectEntity = m_pEffectSpawner->Spawn())
             {
-                auto s_Binding = SSeagullMayhemBinding(s_rEffectEntity);
+                auto s_Binding = SSeagullMayhemEntityBinding(s_rEffectEntity);
 
                 // parent to player
                 s_Binding.m_eidParent = s_rPlayerSpatial;
