@@ -42,7 +42,15 @@ class ZPlayerTeleportMovementEffect : public IChaosEffect
     };
     static std::string_view StateToName(const EState p_eState);
 
-    bool PerformTeleport();
+
+    enum class ETeleportResult
+    {
+        SUCCESS,
+        FAILURE, // generic failure (e.g. cannot raycast because player ref is invalid)
+        NO_HIT  // raycast did not hit anything
+    };
+
+    ETeleportResult PerformTeleport();
 
     EState m_eState = EState::DISABLED;
     float32 m_fCooldownRemaining = 0.0f;

@@ -103,10 +103,18 @@ void ZPlayerTeleportMovementEffect::OnFrameUpdate(const SGameUpdateEvent& p_Upda
     switch (m_eState)
     {
     case EState::TELEPORT_NEXT_FRAME: {
-        if (PerformTeleport())
+        const auto s_eResult = PerformTeleport();
+
+        // if teleported (or for some reason failed to teleport, tho that should be unlikely), go to cooldown.
+        // in case we simply didn't hit anything, skip the cooldown and go directly to waiting for input.
+        if (s_eResult != ETeleportResult::NO_HIT)
         {
             m_eState = EState::COOLDOWN;
             m_fCooldownRemaining = m_fCooldownTime;
+        }
+        else // ETeleportResult::NO_HIT
+        {
+            m_eState = EState::WAIT_FOR_INPUT;
         }
         break;
     }
@@ -123,21 +131,21 @@ void ZPlayerTeleportMovementEffect::OnFrameUpdate(const SGameUpdateEvent& p_Upda
     }
 }
 
-bool ZPlayerTeleportMovementEffect::PerformTeleport()
+ZPlayerTeleportMovementEffect::ETeleportResult ZPlayerTeleportMovementEffect::PerformTeleport()
 {
     // get main camera position and orientation
     ZEntityRef s_rCamera;
     if (!Utils::GetActiveCamera(s_rCamera))
     {
         Logger::Error(TAG "Failed to get active camera");
-        return false;
+        return ETeleportResult::FAILURE;
     }
 
     const auto s_rCameraSpatial = TEntityRef<ZSpatialEntity>(s_rCamera);
     if (!s_rCameraSpatial)
     {
         Logger::Error(TAG "Failed to get camera spatial");
-        return false;
+        return ETeleportResult::FAILURE;
     }
 
     const auto s_mCameraTransform = s_rCameraSpatial.m_pInterfaceRef->GetObjectToWorldMatrix();
@@ -147,7 +155,7 @@ bool ZPlayerTeleportMovementEffect::PerformTeleport()
     if (!*Globals::CollisionManager)
     {
         Logger::Error(TAG "CollisionManager not available");
-        return false;
+        return ETeleportResult::FAILURE;
     }
 
     ZRayQueryInput s_RayInput{
@@ -160,7 +168,7 @@ bool ZPlayerTeleportMovementEffect::PerformTeleport()
     if (!(*Globals::CollisionManager)->RayCastClosestHit(s_RayInput, &s_RayOutput))
     {
         Logger::Warn(TAG "Raycast did not hit anything!");
-        return false;
+        return ETeleportResult::NO_HIT;
     }
 
     const auto s_vPosition = s_RayOutput.m_vPosition;
@@ -170,14 +178,14 @@ bool ZPlayerTeleportMovementEffect::PerformTeleport()
     if (!s_rPlayer)
     {
         Logger::Error(TAG "Failed to get local player");
-        return false;
+        return ETeleportResult::FAILURE;
     }
 
     const auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_rPlayer.m_entityRef);
     if (!s_rPlayerSpatial)
     {
         Logger::Error(TAG "Failed to get player spatial");
-        return false;
+        return ETeleportResult::FAILURE;
     }
 
     auto s_mPlayerTransform = s_rPlayerSpatial.m_pInterfaceRef->GetObjectToWorldMatrix();
@@ -185,7 +193,7 @@ bool ZPlayerTeleportMovementEffect::PerformTeleport()
     s_rPlayerSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_mPlayerTransform);
 
     Logger::Debug(TAG "Performed teleport successfully!");
-    return true;
+    return ETeleportResult::SUCCESS;
 }
 
 DEFINE_PLUGIN_DETOUR(ZPlayerTeleportMovementEffect, double, OnInputActionAnalog, ZInputAction* th, int a2)
