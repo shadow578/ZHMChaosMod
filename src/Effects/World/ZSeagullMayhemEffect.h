@@ -33,4 +33,8 @@ class ZSeagullMayhemEffect : public virtual IChaosEffect, public virtual ZCompan
   private:
     std::unique_ptr<ZTemplateEntitySpawner> m_pEffectSpawner;
     bool m_bDoSpawnOnNextUpdate = false;
+
+    bool m_bRandomizeParticleCount = true;
+    float32 m_fParticleCount = 150.f;
+    float32 m_fEmissionTime = 5.f;
 };
