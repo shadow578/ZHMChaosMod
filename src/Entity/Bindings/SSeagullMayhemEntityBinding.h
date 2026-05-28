@@ -11,6 +11,8 @@ struct SSeagullMayhemEntityBinding : public SEntityBinding
 
     PROPERTY(TEntityRef<ZSpatialEntity>, m_eidParent); // Parent spatial of the effect. Seagulls will spawn around this spatial.
     PROPERTY(float32, m_fTimeToLiveSeconds);           // Time until seagull particles are despawned. Since there's no way to stop the effect, you'll have to set this to match the effect duration. Default is 30 seconds.
+    PROPERTY(float32, m_fParticleCount);               // Number of particles to spawn. Default is 150. Maximum is 1000.
+    PROPERTY(float32, m_fEmissionTimeSeconds);         // For how long the particles should be emitted. Default is 5 seconds.
 
     INPUT_PIN(Activate); // Start spawning the particles. Once activated, particles will be emitted for 5 seconds. After m_fTimeToLiveSeconds, the particles will automatically despawned. After initial particle emmission, Activate() can be called again.
 

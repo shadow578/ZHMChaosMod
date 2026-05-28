@@ -5,7 +5,9 @@
 #include <Glacier/ZSpatialEntity.h>
 
 #include "Registry.h"
+#include "Helpers/Math.h"
 #include "Helpers/PlayerUtils.h"
+#include "Helpers/ImGuiExtras.h"
 
 #include "Entity/Bindings/SSeagullMayhemEntityBinding.h"
 
@@ -28,6 +30,9 @@ bool ZSeagullMayhemEffect::Available() const
 void ZSeagullMayhemEffect::OnDrawDebugUI()
 {
     ImGui::TextUnformatted(fmt::format("Prop: {}", m_pEffectSpawner->ToString()).c_str());
+
+    ImGuiEx::DragFloat("Particle Count", &m_fParticleCount, 1.0f, 1000.0f);
+    ImGuiEx::DragFloat("Emission Time", &m_fEmissionTime, 0.5f, 30.0f);
 }
 
 void ZSeagullMayhemEffect::Start()
@@ -60,6 +65,12 @@ void ZSeagullMayhemEffect::OnSlowUpdate(const float32 p_fDeltaTime, const float3
                 // set effect TTL to remaining effect time, or at least 10 seconds
                 auto s_fEffectTTL = p_fEffectTimeRemaining > 10.0f ? p_fEffectTimeRemaining : 10.0f;
                 s_Binding.m_fTimeToLiveSeconds = s_fEffectTTL;
+
+                // randomly spawn A LOT more particles instead of the normal amount
+                m_fParticleCount = Math::GetRandomBool(.05f) ? 900.f : 150.f;
+
+                s_Binding.m_fParticleCount = m_fParticleCount;
+                s_Binding.m_fEmissionTimeSeconds = m_fEmissionTime;
 
                 // go!
                 s_Binding.Activate();
