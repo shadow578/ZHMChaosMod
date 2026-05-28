@@ -70,7 +70,7 @@ void ZPlayerTeleportMovementEffect::DrawConfigUI(ZConfigurationAccessor* p_pConf
 {
     IChaosEffect::DrawConfigUI(p_pConfiguration);
 
-    if (ImGuiEx::DragFloat("Cooldown Time", &m_fCooldownTime, 1.0f, 60.0f, "%.2f s"))
+    if (ImGuiEx::DragFloat("Cooldown Time", &m_fCooldownTime, 0.5f, 30.0f, "%.2f s"))
     {
         p_pConfiguration->SetDouble("Cooldown", m_fCooldownTime);
     }
