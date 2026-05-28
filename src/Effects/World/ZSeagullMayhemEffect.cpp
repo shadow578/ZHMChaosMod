@@ -31,7 +31,12 @@ void ZSeagullMayhemEffect::OnDrawDebugUI()
 {
     ImGui::TextUnformatted(fmt::format("Prop: {}", m_pEffectSpawner->ToString()).c_str());
 
+    ImGui::Checkbox("Randomize Particle Count", &m_bRandomizeParticleCount);
+
+    ImGui::BeginDisabled(m_bRandomizeParticleCount);
     ImGuiEx::DragFloat("Particle Count", &m_fParticleCount, 1.0f, 1000.0f);
+    ImGui::EndDisabled();
+
     ImGuiEx::DragFloat("Emission Time", &m_fEmissionTime, 0.5f, 30.0f);
 }
 
@@ -66,8 +71,11 @@ void ZSeagullMayhemEffect::OnSlowUpdate(const float32 p_fDeltaTime, const float3
                 auto s_fEffectTTL = p_fEffectTimeRemaining > 10.0f ? p_fEffectTimeRemaining : 10.0f;
                 s_Binding.m_fTimeToLiveSeconds = s_fEffectTTL;
 
-                // randomly spawn A LOT more particles instead of the normal amount
-                m_fParticleCount = Math::GetRandomBool(.05f) ? 900.f : 150.f;
+                if (m_bRandomizeParticleCount)
+                {
+                    // randomly spawn A LOT more particles instead of the normal amount
+                    m_fParticleCount = Math::GetRandomBool(.05f) ? 900.f : 150.f;
+                }
 
                 s_Binding.m_fParticleCount = m_fParticleCount;
                 s_Binding.m_fEmissionTimeSeconds = m_fEmissionTime;
