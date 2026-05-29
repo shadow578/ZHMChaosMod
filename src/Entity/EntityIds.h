@@ -92,6 +92,16 @@ namespace EntityId
             /// FX_Fireworks_LaunchPad > Fireworks > TimerSimple03
             constexpr entityId_t TimerSimple03 = 0x3ac42cc89a95ba81;
         } // namespace FXFireworksLaunchpad
+
+        /// [assembly:/templates/ui/mapsetup.template?/minimap.entitytemplate].pc_entitytype
+        namespace Minimap
+        {
+            /// Minimap > Container
+            constexpr entityId_t Container = 0x2ffb0f5ca9c6a9cc;
+
+            /// Minimap > hud_StatusMarkers
+            constexpr entityId_t HUDStatusMarkers = 0xe528fc056fd72ddd;
+        } // namespace Minimap
     } // namespace HM3
 
     /// Entities defined in ZHMChaosMod SMF Companion Mod
