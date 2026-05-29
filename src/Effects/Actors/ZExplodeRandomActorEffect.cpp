@@ -47,7 +47,7 @@ void ZExplodeRandomActorEffect::OnDrawDebugUI()
 
     if (ImGui::Button("Teleport to last site"))
     {
-        Utils::TeleportPlayerTo(m_LastTargetPos);
+        Utils::TeleportPlayer(m_LastTargetPos);
     }
 
     ImGui::SeparatorText("ZExplosionEffectBase");

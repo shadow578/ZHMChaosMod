@@ -108,12 +108,10 @@ void ZFireworksEffect::Start()
     // move FX to player
     if (auto s_rFireworksFXSpatial = TEntityRef<ZSpatialEntity>(s_rFireworksFXEntity))
     {
-        if (auto s_rPlayer = Utils::GetLocalPlayer())
+        SMatrix s_mPlayerTransform;
+        if (Utils::GetPlayerTransform(s_mPlayerTransform))
         {
-            if (auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_rPlayer.m_entityRef))
-            {
-                s_rFireworksFXSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_rPlayerSpatial.m_pInterfaceRef->GetObjectToWorldMatrix());
-            }
+            s_rFireworksFXSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_mPlayerTransform);
         }
     }
 

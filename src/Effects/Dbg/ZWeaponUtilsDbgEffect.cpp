@@ -18,16 +18,13 @@ void ZWeaponUtilsDbgEffect::OnDrawDebugUI()
 {
     if (ImGui::Button("Select Nearest Actor"))
     {
-        if (const auto s_rPlayer = Utils::GetLocalPlayer())
+        SMatrix s_mPlayerTransform;
+        if (Utils::GetPlayerTransform(s_mPlayerTransform))
         {
-            if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
+            const auto s_vPlayerPosition = s_mPlayerTransform.Pos;
+            if (const auto s_aNearby = Utils::GetNearbyActors(s_vPlayerPosition, 1); !s_aNearby.empty())
             {
-                const auto s_vPlayerPos = s_pPlayerSpatial->GetObjectToWorldMatrix().Trans;
-
-                if (const auto s_aNearby = Utils::GetNearbyActors(s_vPlayerPos, 1); !s_aNearby.empty())
-                {
-                    m_rTargetActor = s_aNearby.front().first;
-                }
+                m_rTargetActor = s_aNearby.front().first;
             }
         }
     }

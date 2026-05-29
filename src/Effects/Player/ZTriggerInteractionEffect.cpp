@@ -42,19 +42,12 @@ bool ZTriggerInteractionEffect::Available() const
 
 void ZTriggerInteractionEffect::Start()
 {
-    const auto s_rPlayer = Utils::GetLocalPlayer();
-    if (!s_rPlayer)
+    SMatrix s_mPlayerTransform;
+    if (!Utils::GetPlayerTransform(s_mPlayerTransform))
     {
         return;
     }
-
-    const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>();
-    if (!s_pPlayerSpatial)
-    {
-        return;
-    }
-
-    const auto s_vPlayerPosition = s_pPlayerSpatial->GetObjectToWorldMatrix().Trans;
+    const auto s_vPlayerPosition = s_mPlayerTransform.Pos;
 
     std::vector<SInteractionSubactionEntityBinding> s_aNearbyInteractions;
     for (auto& s_rBinding : m_aInteractionEntities)

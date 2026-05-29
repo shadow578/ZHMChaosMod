@@ -20,19 +20,11 @@ void ZExplodeActorsOnTouchEffect::OnSlowUpdate(const float32 p_fDeltaTime, const
     }
 
     // get player pos
-    const auto s_Player = Utils::GetLocalPlayer();
-    if (!s_Player)
+    SMatrix s_PlayerWM;
+    if (!Utils::GetPlayerTransform(s_PlayerWM))
     {
         return;
     }
-
-    const auto s_PlayerSpatial = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
-    if (!s_PlayerSpatial)
-    {
-        return;
-    }
-
-    const auto s_PlayerWM = s_PlayerSpatial->GetObjectToWorldMatrix();
 
     // spawn explosion at all nearby actors
     m_fNearestActorDistance = 9999.0f;

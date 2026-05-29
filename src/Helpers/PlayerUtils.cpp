@@ -14,21 +14,52 @@ TEntityRef<ZHitman5> Utils::GetLocalPlayer()
     return SDK()->GetLocalPlayer();
 }
 
-bool Utils::TeleportPlayerTo(const SMatrix p_Position)
+bool Utils::GetPlayerTransform(SMatrix& p_mTransform)
 {
-    auto s_Player = Utils::GetLocalPlayer();
-    if (!s_Player.m_entityRef)
+    const auto s_rPlayer = Utils::GetLocalPlayer();
+    if (!s_rPlayer.m_entityRef)
     {
         return false;
     }
 
-    auto s_PlayerSpatialEntity = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
-    if (!s_PlayerSpatialEntity)
+    const auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_rPlayer.m_entityRef);
+    if (!s_rPlayerSpatial)
     {
         return false;
     }
 
-    s_PlayerSpatialEntity->SetObjectToWorldMatrixFromEditor(p_Position);
+    p_mTransform = s_rPlayerSpatial.m_pInterfaceRef->GetObjectToWorldMatrix();
+    return true;
+}
+
+bool Utils::TeleportPlayer(const SMatrix p_mTransform, SMatrix& p_mOldTransform, const bool p_bPreserveRotation)
+{
+    const auto s_rPlayer = Utils::GetLocalPlayer();
+    if (!s_rPlayer.m_entityRef)
+    {
+        return false;
+    }
+
+    const auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_rPlayer.m_entityRef);
+    if (!s_rPlayerSpatial)
+    {
+        return false;
+    }
+
+    auto s_mTransform = s_rPlayerSpatial.m_pInterfaceRef->GetObjectToWorldMatrix();
+    p_mOldTransform = s_mTransform;
+
+    if (p_bPreserveRotation)
+    {
+        s_mTransform.Pos = p_mTransform.Pos;
+    }
+    else
+    {
+        s_mTransform = p_mTransform;
+    }
+
+    // FIXME: this fails when the player is in certain actions (e.g. on a ledge)
+    s_rPlayerSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_mTransform);
     return true;
 }
 

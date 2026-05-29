@@ -58,22 +58,18 @@ void ZPoisonAOEDamageEffectBase::OnDrawDebugUI()
 
     if (ImGui::Button("Spawn DBG Nearby"))
     {
-        if (const auto s_Player = Utils::GetLocalPlayer())
+        SMatrix s_mPlayerTransform;
+        if (Utils::GetPlayerTransform(s_mPlayerTransform))
         {
-            if (const auto s_PlayerSpatial = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>())
-            {
-                auto s_WM = s_PlayerSpatial->GetObjectToWorldMatrix();
+            // ~10 forward
+            const auto s_Forward = (-s_mPlayerTransform.Backward).Normalized();
+            s_mPlayerTransform.Trans += s_Forward * 10.0f;
 
-                // ~10 forward
-                const auto s_Forward = (-s_WM.Backward).Normalized();
-                s_WM.Trans += s_Forward * 10.0f;
-
-                SParams s_Params{
-                    .m_Position = s_WM,
-                    .m_eType = m_eDebugPoisonType
-                };
-                Spawn(s_Params);
-            }
+            SParams s_Params{
+                .m_Position = s_mPlayerTransform,
+                .m_eType = m_eDebugPoisonType
+            };
+            Spawn(s_Params);
         }
     }
 

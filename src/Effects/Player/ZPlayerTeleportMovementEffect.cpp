@@ -174,23 +174,11 @@ ZPlayerTeleportMovementEffect::ETeleportResult ZPlayerTeleportMovementEffect::Pe
     const auto s_vPosition = s_RayOutput.m_vPosition;
 
     // teleport player to hit position, preserve rotation
-    const auto s_rPlayer = Utils::GetLocalPlayer();
-    if (!s_rPlayer)
+    if (!Utils::TeleportPlayer(s_vPosition))
     {
-        Logger::Error(TAG "Failed to get local player");
+        Logger::Error(TAG "Failed to teleport player");
         return ETeleportResult::FAILURE;
     }
-
-    const auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_rPlayer.m_entityRef);
-    if (!s_rPlayerSpatial)
-    {
-        Logger::Error(TAG "Failed to get player spatial");
-        return ETeleportResult::FAILURE;
-    }
-
-    auto s_mPlayerTransform = s_rPlayerSpatial.m_pInterfaceRef->GetObjectToWorldMatrix();
-    s_mPlayerTransform.Pos = s_vPosition;
-    s_rPlayerSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_mPlayerTransform);
 
     Logger::Debug(TAG "Performed teleport successfully!");
     return ETeleportResult::SUCCESS;

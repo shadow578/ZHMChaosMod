@@ -183,16 +183,14 @@ bool ZPlayerNoSlowdownEffect::IsBelowTargetVelocity() const
 
 void ZPlayerNoSlowdownEffect::Explode()
 {
-    if (const auto s_rPlayer = Utils::GetLocalPlayer())
+    SMatrix s_mPlayerTransform;
+    if (Utils::GetPlayerTransform(s_mPlayerTransform))
     {
-        if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
-        {
-            SExplosionParams s_Params{
-                .m_Position = s_pPlayerSpatial->GetObjectToWorldMatrix(),
-                .m_fTargetStrength = 500.0f, // deader than dead
-            };
-            SpawnExplosion(s_Params);
-        }
+        SExplosionParams s_Params{
+            .m_Position = s_mPlayerTransform,
+            .m_fTargetStrength = 500.0f, // deader than dead
+        };
+        SpawnExplosion(s_Params);
     }
 }
 

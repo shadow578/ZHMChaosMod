@@ -32,14 +32,10 @@ bool ZActorDanceGroupEffect::Available() const
 
 void ZActorDanceGroupEffect::Start()
 {
-
-    if (const auto s_rPlayer = Utils::GetLocalPlayer())
+    SMatrix s_mPos;
+    if (Utils::GetPlayerTransform(s_mPos))
     {
-        if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
-        {
-            auto s_mPos = s_pPlayerSpatial->GetObjectToWorldMatrix();
-            SpawnAt(s_mPos);
-        }
+        SpawnAt(s_mPos);
     }
 }
 

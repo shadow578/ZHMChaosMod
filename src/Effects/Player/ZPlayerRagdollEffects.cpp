@@ -20,6 +20,11 @@ void ZPlayerRagdollWithImpulseEffect::Start()
     ZPlayerRagdollEffectBase::Start();
 
     const auto s_HitmanSpatial = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
+    if (!s_HitmanSpatial)
+    {
+        return;
+    }
+
     auto s_WM = s_HitmanSpatial->GetObjectToWorldMatrix();
 
     Functions::ZRagdollHandler_ApplyImpulseOnRagdoll->Call(

@@ -17,16 +17,13 @@ void ZActLibraryDbgEffect::OnDrawDebugUI()
 {
     if (ImGui::Button("Select Nearest Actor"))
     {
-        if (const auto s_rPlayer = Utils::GetLocalPlayer())
+        SMatrix s_mPlayerTransform;
+        if (Utils::GetPlayerTransform(s_mPlayerTransform))
         {
-            if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
+            const auto s_vPlayerPosition = s_mPlayerTransform.Pos;
+            if (const auto s_aNearby = Utils::GetNearbyActors(s_vPlayerPosition, 1); !s_aNearby.empty())
             {
-                const auto s_vPlayerPos = s_pPlayerSpatial->GetObjectToWorldMatrix().Trans;
-
-                if (const auto s_aNearby = Utils::GetNearbyActors(s_vPlayerPos, 1); !s_aNearby.empty())
-                {
-                    m_rTargetActor = s_aNearby.front().first;
-                }
+                m_rTargetActor = s_aNearby.front().first;
             }
         }
     }
@@ -85,14 +82,12 @@ void ZActLibraryDbgEffect::DrawUIForStandWaiting()
 
         if (ImGui::Button("Set Spatial to Player Position"))
         {
-            if (const auto s_rPlayer = Utils::GetLocalPlayer())
+            SMatrix s_mPlayerTransform;
+            if (Utils::GetPlayerTransform(s_mPlayerTransform))
             {
-                if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
+                if (const auto s_rWaypointSpatial = s_Binding.QuerySpatial())
                 {
-                    if (const auto s_rWaypointSpatial = s_Binding.QuerySpatial())
-                    {
-                        s_rWaypointSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_pPlayerSpatial->GetObjectToWorldMatrix());
-                    }
+                    s_rWaypointSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_mPlayerTransform);
                 }
             }
         }
@@ -137,14 +132,12 @@ void ZActLibraryDbgEffect::DrawUIForStandDanceMat()
 
         if (ImGui::Button("Set Spatial to Player Position"))
         {
-            if (const auto s_rPlayer = Utils::GetLocalPlayer())
+            SMatrix s_mPlayerTransform;
+            if (Utils::GetPlayerTransform(s_mPlayerTransform))
             {
-                if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
+                if (const auto s_rWaypointSpatial = s_Binding.QuerySpatial())
                 {
-                    if (const auto s_rWaypointSpatial = s_Binding.QuerySpatial())
-                    {
-                        s_rWaypointSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_pPlayerSpatial->GetObjectToWorldMatrix());
-                    }
+                    s_rWaypointSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_mPlayerTransform);
                 }
             }
         }
@@ -177,14 +170,12 @@ void ZActLibraryDbgEffect::DrawUIForLambicDance()
 
         if (ImGui::Button("Set Spatial to Player Position"))
         {
-            if (const auto s_rPlayer = Utils::GetLocalPlayer())
+            SMatrix s_mPlayerTransform;
+            if (Utils::GetPlayerTransform(s_mPlayerTransform))
             {
-                if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
+                if (const auto s_rWaypointSpatial = s_Binding.QuerySpatial())
                 {
-                    if (const auto s_rWaypointSpatial = s_Binding.QuerySpatial())
-                    {
-                        s_rWaypointSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_pPlayerSpatial->GetObjectToWorldMatrix());
-                    }
+                    s_rWaypointSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_mPlayerTransform);
                 }
             }
         }
@@ -222,14 +213,12 @@ void ZActLibraryDbgEffect::DrawUIForFlamingoDance()
 
         if (ImGui::Button("Set Spatial to Player Position"))
         {
-            if (const auto s_rPlayer = Utils::GetLocalPlayer())
+            SMatrix s_mPlayerTransform;
+            if (Utils::GetPlayerTransform(s_mPlayerTransform))
             {
-                if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
+                if (const auto s_rWaypointSpatial = s_Binding.QuerySpatial())
                 {
-                    if (const auto s_rWaypointSpatial = s_Binding.QuerySpatial())
-                    {
-                        s_rWaypointSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_pPlayerSpatial->GetObjectToWorldMatrix());
-                    }
+                    s_rWaypointSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_mPlayerTransform);
                 }
             }
         }

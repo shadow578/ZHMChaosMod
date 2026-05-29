@@ -75,19 +75,12 @@ void ZNearbyActorSpeakEffect::OnSlowUpdate(const float32 p_fDeltaTime, const flo
 
 void ZNearbyActorSpeakEffect::FindAndRemoveSpeakersNearby()
 {
-    const auto s_rPlayer = Utils::GetLocalPlayer();
-    if (!s_rPlayer)
+    SMatrix s_mPlayerTransform;
+    if (!Utils::GetPlayerTransform(s_mPlayerTransform))
     {
         return;
     }
-
-    const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>();
-    if (!s_pPlayerSpatial)
-    {
-        return;
-    }
-
-    const auto s_vPlayerPosition = s_pPlayerSpatial->GetObjectToWorldMatrix().Trans;
+    const auto s_vPlayerPosition = s_mPlayerTransform.Pos;
 
     for (auto& [s_rActor, s_fDistance] : Utils::GetNearbyActors(s_vPlayerPosition))
     {

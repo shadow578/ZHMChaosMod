@@ -105,7 +105,7 @@ void ZSwapTargetsEffect::OnDrawDebugUI()
         const auto* s_pActor = s_rTarget.m_entityRef.QueryInterface<ZActor>();
         if (ImGui::Button(s_pActor->m_sActorName.c_str()))
         {
-            Utils::TeleportPlayerTo(s_rTarget.m_pInterfaceRef->GetObjectToWorldMatrix());
+            Utils::TeleportPlayer(s_rTarget.m_pInterfaceRef->GetObjectToWorldMatrix());
         }
     }
 }

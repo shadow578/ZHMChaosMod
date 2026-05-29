@@ -59,7 +59,7 @@ bool ZReturnToSpawnEffect::Available() const
 void ZReturnToSpawnEffect::Start()
 {
     const auto s_SpawnPoint = Math::SelectRandomElement(m_aSpawnPoints);
-    Utils::TeleportPlayerTo(s_SpawnPoint);
+    Utils::TeleportPlayer(s_SpawnPoint);
 }
 
 void ZReturnToSpawnEffect::OnDrawDebugUI()
@@ -71,7 +71,7 @@ void ZReturnToSpawnEffect::OnDrawDebugUI()
     {
         if (ImGui::Button(fmt::format("[{}]", i).c_str()))
         {
-            Utils::TeleportPlayerTo(s_SpawnPoint);
+            Utils::TeleportPlayer(s_SpawnPoint);
         }
 
         i++;
