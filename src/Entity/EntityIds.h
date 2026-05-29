@@ -21,6 +21,9 @@ namespace EntityId
 
             /// Scene > [GameEssentials.brick] > UI > IngameMenu > MapMenu > InGameMapSetup > Minimap
             constexpr entityId_t Minimap = 0xccda0a613b5d88cb;
+
+            /// Scene > [GameEssentials.brick] > UI > HUD > hud_Reticle
+            constexpr entityId_t HUDReticle = 0x497de7558620e74b;
         } // namespace GameEssentials
 
         /// [assembly:/templates/gameplay/ai2/actors.template?/npcactor.entitytemplate].pc_entitytype
