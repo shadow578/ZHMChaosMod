@@ -32,36 +32,28 @@ void ZTeleportEffect::OnDrawDebugUI()
 
 void ZTeleportEffect::DoTeleport(const ETeleportDirection p_eDirection)
 {
-    auto s_Player = Utils::GetLocalPlayer();
-    if (!s_Player.m_entityRef)
+    SMatrix s_mPlayerTransform;
+    if (!Utils::GetPlayerTransform(s_mPlayerTransform))
     {
         return;
     }
-
-    auto s_PlayerSpatialEntity = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>();
-    if (!s_PlayerSpatialEntity)
-    {
-        return;
-    }
-
-    auto s_WM = s_PlayerSpatialEntity->GetObjectToWorldMatrix();
 
     switch (p_eDirection)
     {
     case ETeleportDirection::Up: {
-        s_WM.Trans.z += Math::GetRandomNumber(1.0f, 100.0f);
+        s_mPlayerTransform.Trans.z += Math::GetRandomNumber(1.0f, 100.0f);
         break;
     }
     case ETeleportDirection::Forward: {
-        const auto s_Forward = (-s_WM.Backward).Normalized();
-        s_WM.Trans += s_Forward * Math::GetRandomNumber(1.0f, 10.0f);
+        const auto s_Forward = (-s_mPlayerTransform.Backward).Normalized();
+        s_mPlayerTransform.Trans += s_Forward * Math::GetRandomNumber(1.0f, 10.0f);
         break;
     }
     default:
         break;
     }
 
-    s_PlayerSpatialEntity->SetObjectToWorldMatrixFromEditor(s_WM);
+    Utils::TeleportPlayer(s_mPlayerTransform);
 }
 
 REGISTER_CHAOS_EFFECT(ZTeleportEffect)

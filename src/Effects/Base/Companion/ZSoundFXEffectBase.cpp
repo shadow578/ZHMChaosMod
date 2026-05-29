@@ -33,18 +33,14 @@ void ZSoundFXEffectBase::OnDrawDebugUI()
 
     if (ImGui::Button("Play Test SFX"))
     {
-        if (const auto s_Player = Utils::GetLocalPlayer())
+        SMatrix s_mPlayerTransform;
+        if (Utils::GetPlayerTransform(s_mPlayerTransform))
         {
-            if (const auto s_PlayerSpatial = s_Player.m_entityRef.QueryInterface<ZSpatialEntity>())
-            {
-                auto s_WM = s_PlayerSpatial->GetObjectToWorldMatrix();
+            const auto s_Forward = (-s_mPlayerTransform.Backward).Normalized();
+            s_mPlayerTransform.Trans += s_Forward * 5.0f;
 
-                const auto s_Forward = (-s_WM.Backward).Normalized();
-                s_WM.Trans += s_Forward * 5.0f;
-
-                const auto s_RuntimeResourceId = ResId<"[assembly:/sound/wwise/exportedwwisedata/events/item_events/sfx_explosives/proximityexplosive_rubberduck/play_duckarmed.wwiseevent].pc_wwisebank">;
-                PlayAt(s_WM, s_RuntimeResourceId, m_bDebugAsMusic);
-            }
+            const auto s_RuntimeResourceId = ResId<"[assembly:/sound/wwise/exportedwwisedata/events/item_events/sfx_explosives/proximityexplosive_rubberduck/play_duckarmed.wwiseevent].pc_wwisebank">;
+            PlayAt(s_mPlayerTransform, s_RuntimeResourceId, m_bDebugAsMusic);
         }
     }
 

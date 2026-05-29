@@ -53,28 +53,27 @@ void ZFollowingActorCameraEffect::Start()
     }
 
     // get player location
-    if (const auto s_rPlayer = Utils::GetLocalPlayer())
+    SMatrix s_mPlayerTransform;
+    if (!Utils::GetPlayerTransform(s_mPlayerTransform))
     {
-        if (const auto s_rPlayerSpatial = TEntityRef<ZSpatialEntity>(s_rPlayer.m_entityRef))
-        {
-            const auto s_vPlayerPosition = s_rPlayerSpatial.m_pInterfaceRef->GetObjectToWorldMatrix().Pos;
-
-            // select the closest actor to the player to follow
-            // limit to 100 units
-            const auto& s_arActors = Utils::GetNearbyActors(
-                s_vPlayerPosition,
-                1,    // max count
-                100.f // max distance
-            );
-            if (s_arActors.size() < 1)
-            {
-                Logger::Error(TAG "No nearby actor found!");
-                return;
-            }
-
-            MakeActorFollowingCameraPerson(s_arActors[0].first);
-        }
+        return;
     }
+    const auto s_vPlayerPosition = s_mPlayerTransform.Pos;
+
+    // select the closest actor to the player to follow
+    // limit to 100 units
+    const auto& s_arActors = Utils::GetNearbyActors(
+        s_vPlayerPosition,
+        1,    // max count
+        100.f // max distance
+    );
+    if (s_arActors.size() < 1)
+    {
+        Logger::Error(TAG "No nearby actor found!");
+        return;
+    }
+
+    MakeActorFollowingCameraPerson(s_arActors[0].first);
 }
 
 void ZFollowingActorCameraEffect::Stop()

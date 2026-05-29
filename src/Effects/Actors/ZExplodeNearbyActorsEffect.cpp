@@ -14,19 +14,11 @@
 void ZExplodeNearbyActorsEffect::Start()
 {
     // get player pos
-    const auto s_rPlayer = Utils::GetLocalPlayer();
-    if (!s_rPlayer)
+    SMatrix s_mPlayerTrans;
+    if (!Utils::GetPlayerTransform(s_mPlayerTrans))
     {
         return;
     }
-
-    const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>();
-    if (!s_pPlayerSpatial)
-    {
-        return;
-    }
-
-    const auto s_mPlayerTrans = s_pPlayerSpatial->GetObjectToWorldMatrix();
 
     // spawn explosion at all nearby actors
     for (const auto& s_rActor : Utils::GetActors(false, false))

@@ -515,18 +515,17 @@ void ZSpeakEntityEffectBase::OnDrawDebugUI()
 
 void ZSpeakEntityEffectBase::DebugSpeakAtNearestActor()
 {
-    if (const auto s_rPlayer = Utils::GetLocalPlayer())
+    SMatrix s_mPlayerTransform;
+    if (!Utils::GetPlayerTransform(s_mPlayerTransform))
     {
-        if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
-        {
-            const auto s_vPlayerPos = s_pPlayerSpatial->GetObjectToWorldMatrix().Trans;
+        return;
+    }
+    const auto s_vPlayerPosition = s_mPlayerTransform.Pos;
 
-            if (const auto s_aNearby = Utils::GetNearbyActors(s_vPlayerPos, 1); !s_aNearby.empty())
-            {
-                const auto s_rActor = s_aNearby.front().first;
-                Speak(s_rActor.m_entityRef, m_eDebugSoundDef, m_eDebugGestureCategory, m_bDebugAllowInterrupt);
-            }
-        }
+    if (const auto s_aNearby = Utils::GetNearbyActors(s_vPlayerPosition, 1); !s_aNearby.empty())
+    {
+        const auto s_rActor = s_aNearby.front().first;
+        Speak(s_rActor.m_entityRef, m_eDebugSoundDef, m_eDebugGestureCategory, m_bDebugAllowInterrupt);
     }
 }
 

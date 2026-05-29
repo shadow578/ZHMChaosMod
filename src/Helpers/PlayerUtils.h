@@ -16,10 +16,30 @@ namespace Utils
     TEntityRef<ZHitman5> GetLocalPlayer();
 
     /**
-     * Teleport the player.
-     * @param p_Position Target transform to set.
+     * Get the player's current transform. 
      */
-    bool TeleportPlayerTo(const SMatrix p_Position);
+    bool GetPlayerTransform(SMatrix& p_mTransform);
+
+    /**
+     * Teleport the player.
+     * @param p_mTransform The new transform for the player.
+     * @param p_mOldTransform Output parameter to receive the player's old transform
+     * @param p_bPreserveRotation If true, the player's current rotation and scale (XAxis, YAxis, ZAxis) will be preserved and only the position (Pos) from p_mTransform will be applied.
+     */
+    bool TeleportPlayer(const SMatrix p_mTransform, SMatrix& p_mOldTransform, const bool p_bPreserveRotation = false);
+    inline bool TeleportPlayer(const SMatrix p_mTransform, const bool p_bPreserveRotation = false)
+    {
+        SMatrix s_mOldTransform;
+        return TeleportPlayer(p_mTransform, s_mOldTransform, p_bPreserveRotation);
+    }
+    inline bool TeleportPlayer(const float4 p_vPosition)
+    {
+        // construct matrix for teleport.
+        // NOTE: with p_bPreserveRotation=true, only Pos is applied, so the values of XAxis/YAxis/ZAxis don't matter.
+        SMatrix s_mTransform = SMatrix();
+        s_mTransform.Pos = p_vPosition;
+        return TeleportPlayer(s_mTransform, true);
+    }
 
     /**
      * Set player outfit by common name.

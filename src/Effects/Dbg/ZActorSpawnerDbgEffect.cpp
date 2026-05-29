@@ -27,25 +27,21 @@ void ZActorSpawnerDbgEffect::OnDrawDebugUI()
 
     if (ImGui::Button("Spawn Actor"))
     {
-        if (const auto s_rPlayer = Utils::GetLocalPlayer())
+        SMatrix s_mPlayerTransform;
+        if (Utils::GetPlayerTransform(s_mPlayerTransform))
         {
-            if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
+            // ~10 forward
+            const auto s_vForward = (-s_mPlayerTransform.Backward).Normalized();
+            s_mPlayerTransform.Trans += s_vForward * 10.0f;
+
+            auto s_rNewActor = SpawnActor(s_mPlayerTransform, m_szActorName, m_szOutfitRepositoryID, m_nCharsetIndex, m_nOutfitVariationIndex);
+            if (s_rNewActor)
             {
-                auto s_mPos = s_pPlayerSpatial->GetObjectToWorldMatrix();
-
-                // ~10 forward
-                const auto s_vForward = (-s_mPos.Backward).Normalized();
-                s_mPos.Trans += s_vForward * 10.0f;
-
-                auto s_rNewActor = SpawnActor(s_mPos, m_szActorName, m_szOutfitRepositoryID, m_nCharsetIndex, m_nOutfitVariationIndex);
-                if (s_rNewActor)
-                {
-                    m_rTargetActor = s_rNewActor;
-                }
-                else
-                {
-                    Logger::Error(TAG "Failed to spawn actor!");
-                }
+                m_rTargetActor = s_rNewActor;
+            }
+            else
+            {
+                Logger::Error(TAG "Failed to spawn actor!");
             }
         }
     }
@@ -54,16 +50,14 @@ void ZActorSpawnerDbgEffect::OnDrawDebugUI()
     ImGui::SeparatorText("ActorUtils::SetActorOutfit()");
     if (ImGui::Button("Select Nearest Actor"))
     {
-        if (const auto s_rPlayer = Utils::GetLocalPlayer())
+        SMatrix s_mPlayerTransform;
+        if (Utils::GetPlayerTransform(s_mPlayerTransform))
         {
-            if (const auto s_pPlayerSpatial = s_rPlayer.m_entityRef.QueryInterface<ZSpatialEntity>())
-            {
-                const auto s_vPlayerPos = s_pPlayerSpatial->GetObjectToWorldMatrix().Trans;
+            const auto s_vPlayerPosition = s_mPlayerTransform.Pos;
 
-                if (const auto s_aNearby = Utils::GetNearbyActors(s_vPlayerPos, 1); !s_aNearby.empty())
-                {
-                    m_rTargetActor = s_aNearby.front().first;
-                }
+            if (const auto s_aNearby = Utils::GetNearbyActors(s_vPlayerPosition, 1); !s_aNearby.empty())
+            {
+                m_rTargetActor = s_aNearby.front().first;
             }
         }
     }
