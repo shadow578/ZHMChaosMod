@@ -20,7 +20,7 @@ class ZLargeMinimapEffect : public IChaosEffect
     std::string GetDisplayName(const bool p_bVoting) const override
     {
         return "Maximap";
-    }    
+    }
 
   private: // config
     bool m_bReduceAlpha = false;

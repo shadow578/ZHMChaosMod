@@ -26,7 +26,6 @@ struct SZUIControlEntityBinding : public SEntityBinding
     PROPERTY(ZEntityRef, m_pLayoutEntity);
     PROPERTY(bool, m_bIsVisible);
 
-
     // [modules:/zuicontrollayoutlegacyaspect.class].pc_entitytype
     PROPERTY(bool, m_bIsLegacyLayoutActive);
     PROPERTY(ZUIControlLayoutLegacyAspect_EAlignmentType, m_eAlignmentType);
