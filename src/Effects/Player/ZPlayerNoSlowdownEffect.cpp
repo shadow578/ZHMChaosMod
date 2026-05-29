@@ -184,7 +184,7 @@ bool ZPlayerNoSlowdownEffect::IsBelowTargetVelocity() const
 void ZPlayerNoSlowdownEffect::Explode()
 {
     SMatrix s_mPlayerTransform;
-    if (!Utils::GetPlayerTransform(s_mPlayerTransform))
+    if (Utils::GetPlayerTransform(s_mPlayerTransform))
     {
         SExplosionParams s_Params{
             .m_Position = s_mPlayerTransform,

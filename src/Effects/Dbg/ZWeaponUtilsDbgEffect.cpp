@@ -19,7 +19,7 @@ void ZWeaponUtilsDbgEffect::OnDrawDebugUI()
     if (ImGui::Button("Select Nearest Actor"))
     {
         SMatrix s_mPlayerTransform;
-        if (!Utils::GetPlayerTransform(s_mPlayerTransform))
+        if (Utils::GetPlayerTransform(s_mPlayerTransform))
         {
             const auto s_vPlayerPosition = s_mPlayerTransform.Pos;
             if (const auto s_aNearby = Utils::GetNearbyActors(s_vPlayerPosition, 1); !s_aNearby.empty())
