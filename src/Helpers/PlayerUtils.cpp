@@ -58,6 +58,7 @@ bool Utils::TeleportPlayer(const SMatrix p_mTransform, SMatrix& p_mOldTransform,
         s_mTransform = p_mTransform;
     }
 
+    // FIXME: this fails when the player is in certain actions (e.g. on a ledge)
     s_rPlayerSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_mTransform);
     return true;
 }

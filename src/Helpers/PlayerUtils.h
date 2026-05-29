@@ -16,7 +16,7 @@ namespace Utils
     TEntityRef<ZHitman5> GetLocalPlayer();
 
     /**
-     * Get the player's current transform. 
+     * Get the player's current transform.
      */
     bool GetPlayerTransform(SMatrix& p_mTransform);
 

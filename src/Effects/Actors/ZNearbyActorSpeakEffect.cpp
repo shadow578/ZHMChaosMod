@@ -74,7 +74,7 @@ void ZNearbyActorSpeakEffect::OnSlowUpdate(const float32 p_fDeltaTime, const flo
 }
 
 void ZNearbyActorSpeakEffect::FindAndRemoveSpeakersNearby()
-{   
+{
     SMatrix s_mPlayerTransform;
     if (!Utils::GetPlayerTransform(s_mPlayerTransform))
     {
