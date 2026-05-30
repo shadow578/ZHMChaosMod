@@ -2,9 +2,13 @@
 
 bool ZCompanionModDependentEffectBase::Available() const
 {
+    return IChaosEffect::Available() && HasCompanionMod();
+}
+
+bool ZCompanionModDependentEffectBase::HasCompanionMod(const CompanionModUtil::SVersion p_MinimumVersion) const
+{
     const auto s_Metadata = CompanionModUtil::LoadCompanionModInfo(false);
 
-    return IChaosEffect::Available()
-           && s_Metadata.m_bPresent
+    return s_Metadata.m_bPresent
            && s_Metadata.m_Version >= m_MinimumVersion;
 }

@@ -74,7 +74,6 @@ void ZLiveTvEffect::OnDrawDebugUI()
 
 void ZLiveTvEffect::Start()
 {
-
     auto s_pVideoResource = Math::SelectRandomElement(m_aVideoResources);
     if (s_pVideoResource && s_pVideoResource->IsAvailable())
     {
