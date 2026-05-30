@@ -14,31 +14,16 @@ void ZCustomReticleEffect::LoadResources()
 {
     ZHUDImageVideoViewEffectBase::LoadResources();
 
-#define ADD_IMAGE(PATH, ALLOW_H_FLIP, ALLOW_V_FLIP)                                                      \
-    if (auto s_pResource = ZResourceProvider::Create<PATH>(); s_pResource && s_pResource->IsAvailable()) \
-    {                                                                                                    \
-        Logger::Debug(TAG "Loaded resource: " PATH);                                                     \
-        SReticleImageItem s_Item = {std::move(s_pResource), ALLOW_H_FLIP, ALLOW_V_FLIP};                 \
-        m_aReticleImages.emplace_back(s_Item);                                                           \
-    }                                                                                                    \
-    else                                                                                                 \
-    {                                                                                                    \
-        Logger::Warn(TAG "Failed to load resource: " PATH);                                              \
-    }
-
-    // NOTE: images must be in chunk0 for this to work
-    // NOTE: this assumes images are 1920x1080.
-    // NOTE: second and third parameter specifies whether the image may be flipped horizontally / vertically.
-    if (HasCompanionMod(CompanionModUtil::SVersion(1, 4, 0)))
+    m_pImageResource = ZResourceProvider::Create(m_sImageResourcePath);
+    if (m_pImageResource && m_pImageResource->IsAvailable())
     {
-        ADD_IMAGE("[assembly:/_pro/chaosmod/custom_reticle/gura.png].pc_gfx", true, false);
-        ADD_IMAGE("[assembly:/_pro/chaosmod/custom_reticle/spiderman.png].pc_gfx", false, false);
-        ADD_IMAGE("[assembly:/_pro/chaosmod/custom_reticle/leo.png].pc_gfx", true, false);
-        ADD_IMAGE("[assembly:/_pro/chaosmod/custom_reticle/amogus.png].pc_gfx", true, false);
-        ADD_IMAGE("[assembly:/_pro/chaosmod/custom_reticle/clickbait.png].pc_gfx", false, false);
+        Logger::Debug(TAG "Loaded resource: {}", m_sImageResourcePath);
     }
-
-#undef ADD_IMAGE
+    else
+    {
+        Logger::Warn(TAG "Failed to load resource: {}", m_sImageResourcePath);
+        m_pImageResource = nullptr;
+    }
 }
 
 void ZCustomReticleEffect::OnEnterScene()
@@ -54,50 +39,27 @@ void ZCustomReticleEffect::OnEnterScene()
 void ZCustomReticleEffect::OnClearScene()
 {
     ZHUDImageVideoViewEffectBase::OnClearScene();
-    m_aReticleImages.clear();
+    m_pImageResource = nullptr;
     m_ReticleView = {};
+    m_OriginalReticle = {};
     m_bTrackReticle = false;
 }
 
 bool ZCustomReticleEffect::Available() const
 {
     return ZHUDImageVideoViewEffectBase::Available()
-           && !m_aReticleImages.empty()
-           && m_ReticleView;
+           && m_pImageResource && m_pImageResource->IsAvailable()
+           && m_ReticleView
+           && m_OriginalReticle;
 }
 
 void ZCustomReticleEffect::OnDrawDebugUI()
 {
-    int i = 0;
-    for (const auto& s_Item : m_aReticleImages)
-    {
-        const auto& s_pResource = s_Item.m_pResource;
-
-        if (ImGui::Button(("SET##" + std::to_string(i)).c_str()))
-        {
-            m_ReticleView.m_ridImage = s_pResource->GetResourceID();
-        }
-
-        ImGui::SameLine();
-        std::string s_sFlipInfo = "";
-        if (s_Item.m_bAllowFlipHorizontal)
-        {
-            s_sFlipInfo += "H";
-        }
-        if (s_Item.m_bAllowFlipVertical)
-        {
-            s_sFlipInfo += "V";
-        }
-        ImGui::TextUnformatted(s_sFlipInfo.c_str());
-
-        ImGui::SameLine();
-        ImGui::TextUnformatted(fmt::format("{}", s_pResource->ToString()).c_str());
-
-        i++;
-    }
+    ImGui::Checkbox("Allow Flip Horizontal", &m_bAllowFlipHorizontal);
+    ImGui::Checkbox("Allow Flip Vertical", &m_bAllowFlipVertical);
 
     ImGui::BeginDisabled();
-    ImGui::Checkbox("Track Reticle", &m_bTrackReticle);
+    ImGui::Checkbox("Is Tracking Reticle", &m_bTrackReticle);
     ImGui::EndDisabled();
 
     if (ImGui::Button("Flip Horizontal"))
@@ -122,22 +84,20 @@ void ZCustomReticleEffect::OnDrawDebugUI()
 
 void ZCustomReticleEffect::Start()
 {
-    const auto s_Reticle = Math::SelectRandomElement(m_aReticleImages);
-    const auto& s_pImageResource = s_Reticle.m_pResource;
-    if (!s_pImageResource || !s_pImageResource->IsAvailable())
+    if (!m_pImageResource || !m_pImageResource->IsAvailable())
     {
         Logger::Error(TAG "Failed to set reticle image!");
         return;
     }
 
-    m_ReticleView.m_ridImage = s_pImageResource->GetResourceID();
+    m_ReticleView.m_ridImage = m_pImageResource->GetResourceID();
 
     auto s_vSize = SVector2(1.f, 1.f);
-    if (s_Reticle.m_bAllowFlipHorizontal && Math::GetRandomBool(.5f))
+    if (m_bAllowFlipHorizontal && Math::GetRandomBool(.5f))
     {
         s_vSize.x *= -1.f;
     }
-    if (s_Reticle.m_bAllowFlipVertical && Math::GetRandomBool(.5f))
+    if (m_bAllowFlipVertical && Math::GetRandomBool(.5f))
     {
         s_vSize.y *= -1.f;
     }
@@ -167,4 +127,42 @@ void ZCustomReticleEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, 
     }
 }
 
-REGISTER_CHAOS_EFFECT(ZCustomReticleEffect);
+REGISTER_CHAOS_EFFECT_PARAM(
+    gura,
+    ZCustomReticleEffect,
+    "gura",                                                     // name
+    "Gura",                                                     // display name
+    "[assembly:/_pro/chaosmod/custom_reticle/gura.png].pc_gfx", // res path
+    true,                                                       // allow H-flip
+    false                                                       // allow V-flip
+);
+REGISTER_CHAOS_EFFECT_PARAM(
+    spiderman,
+    ZCustomReticleEffect,
+    "spiderman",                                                    // name
+    "Spiderman",                                                    // display name
+    "[assembly:/_pro/chaosmod/custom_reticle/spiderman.png].pc_gfx" // res path
+);
+REGISTER_CHAOS_EFFECT_PARAM(
+    leo,
+    ZCustomReticleEffect,
+    "leo",                                                     // name
+    "Leo",                                                     // display name
+    "[assembly:/_pro/chaosmod/custom_reticle/leo.png].pc_gfx", // res path
+    true                                                       // allow H-flip
+);
+REGISTER_CHAOS_EFFECT_PARAM(
+    amogus,
+    ZCustomReticleEffect,
+    "amogus",                                                     // name
+    "Amogus",                                                     // display name
+    "[assembly:/_pro/chaosmod/custom_reticle/amogus.png].pc_gfx", // res path
+    true                                                          // allow H-flip
+);
+REGISTER_CHAOS_EFFECT_PARAM(
+    clickbait,
+    ZCustomReticleEffect,
+    "clickbait",                                                    // name
+    "Clickbait",                                                    // display name
+    "[assembly:/_pro/chaosmod/custom_reticle/clickbait.png].pc_gfx" // res path
+);
