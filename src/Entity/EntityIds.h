@@ -138,5 +138,12 @@ namespace EntityId
                 constexpr entityId_t FlamingoDance = 0xcafecaa57d32d0a0;
             } // namespace ActLibrary
         } // namespace NPCActor
+
+        /// [assembly:/_pro/scenes/bricks/gameessentialsbase.brick].pc_entitytype
+        namespace GameEssentials
+        {
+            /// Scene > [GameEssentials.brick] > ChaosMod_HUD_IV
+            constexpr entityId_t HUDImageVideoView = 0xcafe9dc9c6868fa4;
+        } // namespace GameEssentials
     } // namespace CompanionMod
 } // namespace EntityId
