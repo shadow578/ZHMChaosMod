@@ -10,6 +10,8 @@
 
 void ZLiveTvEffect::LoadResources()
 {
+    ZHUDImageVideoViewEffectBase::LoadResources();
+
 #define ADD_VIDEO(PATH)                                                                                  \
     if (auto s_pResource = ZResourceProvider::Create<PATH>(); s_pResource && s_pResource->IsAvailable()) \
     {                                                                                                    \
@@ -35,26 +37,17 @@ void ZLiveTvEffect::LoadResources()
 #undef ADD_VIDEO
 }
 
-void ZLiveTvEffect::OnEnterScene()
-{
-    ZHUDImageVideoViewEffectBase::OnEnterScene();
-}
-
 void ZLiveTvEffect::OnClearScene()
 {
     ZHUDImageVideoViewEffectBase::OnClearScene();
     m_aVideoResources.clear();
+    m_aActiveVideoViews.clear();
 }
 
 bool ZLiveTvEffect::Available() const
 {
     return ZHUDImageVideoViewEffectBase::Available()
            && !m_aVideoResources.empty();
-}
-
-bool ZLiveTvEffect::IsCompatibleWith(const IChaosEffect* p_pOther) const
-{
-    return ZHUDImageVideoViewEffectBase::IsCompatibleWith(p_pOther);
 }
 
 void ZLiveTvEffect::OnDrawDebugUI()
@@ -73,6 +66,8 @@ void ZLiveTvEffect::OnDrawDebugUI()
         i++;
     }
 
+    ImGui::TextUnformatted(fmt::format("Currently Active: {}", m_aActiveVideoViews.size()).c_str());
+
     ImGui::SeparatorText("ZHUDImageVideoViewEffectBase");
     ZHUDImageVideoViewEffectBase::OnDrawDebugUI();
 }
@@ -90,16 +85,18 @@ void ZLiveTvEffect::Start()
 
 void ZLiveTvEffect::Stop()
 {
-    if (auto s_View = GetImageAndVideoViewBinding())
+    for (auto s_View : m_aActiveVideoViews)
     {
         s_View.m_bVideoIsVisible = false;
         s_View.StopVideo();
     }
+
+    m_aActiveVideoViews.clear();
 }
 
 void ZLiveTvEffect::PlayVideo(const ZRuntimeResourceID& p_ridVideo)
 {
-    auto s_View = GetImageAndVideoViewBinding();
+    auto s_View = SpawnImageAndVideoView();
     if (!s_View)
     {
         return;
@@ -120,6 +117,8 @@ void ZLiveTvEffect::PlayVideo(const ZRuntimeResourceID& p_ridVideo)
     s_View.m_bVideoIsVisible = true;
 
     s_View.PlayVideo();
+
+    m_aActiveVideoViews.emplace_back(s_View);
 }
 
 REGISTER_CHAOS_EFFECT(ZLiveTvEffect);

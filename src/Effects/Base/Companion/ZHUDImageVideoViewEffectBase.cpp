@@ -2,38 +2,28 @@
 
 #include <imgui.h>
 
-#include "Helpers/Utils.h"
-#include "Helpers/EntityUtils.h"
-#include "Entity/EntityIds.h"
-
-void ZHUDImageVideoViewEffectBase::OnEnterScene()
+void ZHUDImageVideoViewEffectBase::LoadResources()
 {
-    m_rImageVideoView = Utils::ZEntityFinder()
-                            .EntityID(EntityId::CompanionMod::GameEssentials::HUDImageVideoView)
-                            .FindFirst();
+    m_pViewSpawner = ZTemplateEntitySpawner::Create<"[assembly:/_pro/chaosmod/hud_image_video_view.entitytemplate].pc_entitytype">();
 }
 
 void ZHUDImageVideoViewEffectBase::OnClearScene()
 {
-    m_rImageVideoView = {};
+    m_rLastSpawnedViewEntity = {};
+    m_pViewSpawner = nullptr;
 }
 
 bool ZHUDImageVideoViewEffectBase::Available() const
 {
     return ZCompanionModDependentEffectBase::Available()
-           && m_rImageVideoView;
-}
-
-bool ZHUDImageVideoViewEffectBase::IsCompatibleWith(const IChaosEffect* p_pOther) const
-{
-    return ZCompanionModDependentEffectBase::IsCompatibleWith(p_pOther)
-           // only one video / image view is available, so only one effect at a time
-           && !Utils::IsInstanceOf<ZHUDImageVideoViewEffectBase>(p_pOther);
+           && m_pViewSpawner && m_pViewSpawner->IsAvailable();
 }
 
 void ZHUDImageVideoViewEffectBase::OnDrawDebugUI()
 {
-    auto s_View = GetImageAndVideoViewBinding();
+    ImGui::TextUnformatted(fmt::format("Prop: {}", m_pViewSpawner->ToString()).c_str());
+
+    auto s_View = SImageVideoViewEntityBinding(m_rLastSpawnedViewEntity);
     if (!s_View)
     {
         return;
@@ -117,7 +107,7 @@ void ZHUDImageVideoViewEffectBase::OnDrawDebugUI()
     }
 }
 
-SImageVideoViewEntityBinding ZHUDImageVideoViewEffectBase::GetImageAndVideoViewBinding() const
+SImageVideoViewEntityBinding ZHUDImageVideoViewEffectBase::SpawnImageAndVideoView() const
 {
-    return SImageVideoViewEntityBinding(m_rImageVideoView);
+    return SImageVideoViewEntityBinding(m_pViewSpawner->Spawn());
 }

@@ -8,10 +8,8 @@ class ZLiveTvEffect : public ZHUDImageVideoViewEffectBase
 {
   public:
     void LoadResources() override;
-    void OnEnterScene() override;
     void OnClearScene() override;
     bool Available() const override;
-    bool IsCompatibleWith(const IChaosEffect* p_pOther) const override;
 
     void OnDrawDebugUI() override;
 
@@ -25,6 +23,7 @@ class ZLiveTvEffect : public ZHUDImageVideoViewEffectBase
 
   private:
     std::vector<std::shared_ptr<ZResourceProvider>> m_aVideoResources;
+    std::vector<SImageVideoViewEntityBinding> m_aActiveVideoViews;
 
     void PlayVideo(const ZRuntimeResourceID& p_ridVideo);
 };
