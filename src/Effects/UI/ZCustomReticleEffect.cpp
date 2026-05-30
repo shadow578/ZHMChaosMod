@@ -32,6 +32,10 @@ void ZCustomReticleEffect::LoadResources()
     if (HasCompanionMod(CompanionModUtil::SVersion(1, 4, 0)))
     {
         ADD_IMAGE("[assembly:/_pro/chaosmod/custom_reticle/gura.png].pc_gfx", true, false);
+        ADD_IMAGE("[assembly:/_pro/chaosmod/custom_reticle/spiderman.png].pc_gfx", false, false);
+        ADD_IMAGE("[assembly:/_pro/chaosmod/custom_reticle/leo.png].pc_gfx", true, false);
+        ADD_IMAGE("[assembly:/_pro/chaosmod/custom_reticle/amogus.png].pc_gfx", true, false);
+        ADD_IMAGE("[assembly:/_pro/chaosmod/custom_reticle/clickbait.png].pc_gfx", false, false);
     }
 
 #undef ADD_IMAGE
