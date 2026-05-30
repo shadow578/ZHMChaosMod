@@ -25,7 +25,6 @@ struct SImageVideoViewEntityBinding : public SEntityBinding
     PROPERTY(bool, m_bVideoIsVisible);        // is the video view visible? note that image and video overlap.
     PROPERTY(ZRuntimeResourceID, m_ridImage); // resource id displayed in the image view. must be loaded beforehand. supports .pc_gfx
     PROPERTY(ZRuntimeResourceID, m_ridVideo); // resource id of the video. must be loaded beforehand. supports .pc_gfxv
-    //PROPERTY(bool, m_bVideoVolumeOn);         // is the video sound on (true) or muted (false)?
     PROPERTY(bool, m_bVideoLoop);             // should the video loop?
 
     INPUT_PIN(PlayVideo); // start playing the video. before playback starts, the video is not shown.
