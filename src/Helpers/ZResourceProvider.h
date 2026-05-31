@@ -25,6 +25,11 @@ class ZResourceProvider
         return std::make_unique<ZResourceProvider>(ResPath.Value, ResId<ResPath>);
     }
 
+    static std::unique_ptr<ZResourceProvider> Create(const std::string& p_sResourcePath)
+    {
+        return std::make_unique<ZResourceProvider>(p_sResourcePath, ZRuntimeResourceID::FromString(p_sResourcePath));
+    }
+
     ZResourceProvider(const std::string p_sResourcePath, const ZRuntimeResourceID p_ResourceId);
     ~ZResourceProvider();
 

@@ -21,6 +21,9 @@ namespace EntityId
 
             /// Scene > [GameEssentials.brick] > UI > IngameMenu > MapMenu > InGameMapSetup > Minimap
             constexpr entityId_t Minimap = 0xccda0a613b5d88cb;
+
+            /// Scene > [GameEssentials.brick] > UI > HUD > hud_Reticle
+            constexpr entityId_t HUDReticle = 0x497de7558620e74b;
         } // namespace GameEssentials
 
         /// [assembly:/templates/gameplay/ai2/actors.template?/npcactor.entitytemplate].pc_entitytype
@@ -92,6 +95,16 @@ namespace EntityId
             /// FX_Fireworks_LaunchPad > Fireworks > TimerSimple03
             constexpr entityId_t TimerSimple03 = 0x3ac42cc89a95ba81;
         } // namespace FXFireworksLaunchpad
+
+        /// [assembly:/templates/ui/mapsetup.template?/minimap.entitytemplate].pc_entitytype
+        namespace Minimap
+        {
+            /// Minimap > Container
+            constexpr entityId_t Container = 0x2ffb0f5ca9c6a9cc;
+
+            /// Minimap > hud_StatusMarkers
+            constexpr entityId_t HUDStatusMarkers = 0xe528fc056fd72ddd;
+        } // namespace Minimap
     } // namespace HM3
 
     /// Entities defined in ZHMChaosMod SMF Companion Mod
@@ -125,5 +138,13 @@ namespace EntityId
                 constexpr entityId_t FlamingoDance = 0xcafecaa57d32d0a0;
             } // namespace ActLibrary
         } // namespace NPCActor
+
+        /// [assembly:/_pro/scenes/bricks/gameessentialsbase.brick].pc_entitytype
+        namespace GameEssentials
+        {
+            /// fake_disconnect_dialog.entity.patch
+            /// Scene > [GameEssentials.brick] > ChaosMod > UI_Modal_Disconnected_FAKE
+            constexpr entityId_t UIModalDisconnectedFake = 0xcafe56ad817d7725;
+        } // namespace GameEssentials
     } // namespace CompanionMod
 } // namespace EntityId
