@@ -138,5 +138,13 @@ namespace EntityId
                 constexpr entityId_t FlamingoDance = 0xcafecaa57d32d0a0;
             } // namespace ActLibrary
         } // namespace NPCActor
+
+        /// [assembly:/_pro/scenes/bricks/gameessentialsbase.brick].pc_entitytype
+        namespace GameEssentials
+        {
+            /// fake_disconnect_dialog.entity.patch
+            /// Scene > [GameEssentials.brick] > ChaosMod > UI_Modal_Disconnected_FAKE
+            constexpr entityId_t UIModalDisconnectedFake = 0xcafe56ad817d7725;
+        } // namespace GameEssentials
     } // namespace CompanionMod
 } // namespace EntityId
