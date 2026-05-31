@@ -9,6 +9,7 @@
 #include <Glacier/SGameUpdateEvent.h>
 
 #include "Registry.h"
+#include "Helpers/Utils.h"
 #include "Helpers/EntityUtils.h"
 
 #include "Entity/EntityIds.h"
@@ -50,6 +51,17 @@ bool ZRotateUIRootEffect::Available() const
 {
     return IChaosEffect::Available()
            && m_rUIRoot;
+}
+
+bool ZRotateUIRootEffect::IsCompatibleWith(const IChaosEffect* p_Other) const
+{
+    return IChaosEffect::IsCompatibleWith(p_Other)
+
+           // doesn't work when no HUD
+           && !Utils::IsInstanceOf<ZNoHUDEffect>(p_Other)
+
+           // two instances of this effect would conflict with each other
+           && !Utils::IsInstanceOf<ZRotateUIRootEffect>(p_Other);
 }
 
 void ZRotateUIRootEffect::OnDrawDebugUI()

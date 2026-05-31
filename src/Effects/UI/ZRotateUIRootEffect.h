@@ -18,6 +18,8 @@ class ZRotateUIRootEffect : public IChaosEffect
     void OnEnterScene() override;
     void OnClearScene() override;
     bool Available() const override;
+    bool IsCompatibleWith(const IChaosEffect* p_Other) const override;
+
     void OnDrawDebugUI() override;
 
     void Start() override;

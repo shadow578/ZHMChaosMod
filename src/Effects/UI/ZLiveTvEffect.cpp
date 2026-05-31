@@ -12,6 +12,8 @@ void ZLiveTvEffect::LoadResources()
 {
     ZHUDImageVideoViewEffectBase::LoadResources();
 
+    m_aVideoResources.clear();
+
 #define ADD_VIDEO(PATH)                                                                                  \
     if (auto s_pResource = ZResourceProvider::Create<PATH>(); s_pResource && s_pResource->IsAvailable()) \
     {                                                                                                    \
