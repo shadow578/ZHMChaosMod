@@ -5,7 +5,7 @@
 
 // [assembly:/_pro/scenes/bricks/gameessentialsbase.brick].pc_entitytype
 // entity "ChaosMod_HUD_IV" added by companion mod version 1.4.0 via patch cm_hud_image_and_video_view.entity.patch.json
-// NOTE: position and size are shared by both image and video, but behave diffently. use debug tool to ensure proper positioning.
+// NOTE: position and size are shared by both image and video, but behave differently. use debug tool to ensure proper positioning.
 struct SImageVideoViewEntityBinding : public SEntityBinding
 {
     using SEntityBinding::SEntityBinding;

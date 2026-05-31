@@ -18,8 +18,6 @@
 
 #define TAG "[ZRotateUIRootEffect] "
 
-constexpr float32 c_fPI = 3.14159f;
-
 void ZRotateUIRootEffect::OnEngineInitialized()
 {
     const ZMemberDelegate<ZRotateUIRootEffect, void(const SGameUpdateEvent&)> s_Delegate(this, &ZRotateUIRootEffect::OnFrameUpdateAlways);

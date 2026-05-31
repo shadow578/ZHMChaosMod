@@ -91,7 +91,7 @@ void ZLargeMinimapEffect::SetMaximap(const bool p_bEnabled)
         // set maximap configuration
         // to find these, you'll have to test manually.
         // it seems to me that IOI's doing some weird offset in a offset kinda thing, but idk
-        // i didn't look to much into it
+        // i didn't look too much into it
         s_ContainerBinding.m_vSize = SVector2(75.f, 75.f);
         s_ContainerBinding.m_eAlignmentType = ZUIControlLayoutLegacyAspect_EAlignmentType::E_ALIGNMENT_TYPE_Center;
         s_ContainerBinding.m_vPositionOffset = SVector3(405.f, 405.f, 0.f);

@@ -107,7 +107,8 @@ void ZHUDImageVideoViewEffectBase::OnDrawDebugUI()
     }
 }
 
-SImageVideoViewEntityBinding ZHUDImageVideoViewEffectBase::SpawnImageAndVideoView() const
+SImageVideoViewEntityBinding ZHUDImageVideoViewEffectBase::SpawnImageAndVideoView()
 {
-    return SImageVideoViewEntityBinding(m_pViewSpawner->Spawn());
+    m_rLastSpawnedViewEntity = m_pViewSpawner->Spawn();
+    return SImageVideoViewEntityBinding(m_rLastSpawnedViewEntity);
 }

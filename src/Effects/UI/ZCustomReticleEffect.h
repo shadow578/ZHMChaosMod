@@ -1,3 +1,4 @@
+#pragma once
 #include "Effects/Base/Companion/ZHUDImageVideoViewEffectBase.h"
 
 #include "Helpers/ZResourceProvider.h"

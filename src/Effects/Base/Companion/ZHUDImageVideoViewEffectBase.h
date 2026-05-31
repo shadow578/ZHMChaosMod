@@ -27,7 +27,7 @@ class ZHUDImageVideoViewEffectBase : public virtual ZCompanionModDependentEffect
     void OnDrawDebugUI() override;
 
   protected:
-    SImageVideoViewEntityBinding SpawnImageAndVideoView() const;
+    SImageVideoViewEntityBinding SpawnImageAndVideoView();
 
   private:
     std::unique_ptr<ZTemplateEntitySpawner> m_pViewSpawner;
