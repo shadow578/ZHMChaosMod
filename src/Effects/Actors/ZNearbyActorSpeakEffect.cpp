@@ -183,7 +183,7 @@ float32 ZNearbyActorSpeakEffect::GetRepetitionDelay() const
 
     const float32 s_fVariance = Math::GetRandomNumber<float32>(-m_fRepetitionDelayVariance, m_fRepetitionDelayVariance);
     const float32 s_fDelay = m_fRepetitionDelay + s_fVariance;
-    return max(s_fDelay, 0.0f);
+    return std::max(s_fDelay, 0.0f);
 }
 
 REGISTER_CHAOS_EFFECT_PARAM(curse, ZNearbyActorSpeakEffect, "curse", "Cussocalypse",

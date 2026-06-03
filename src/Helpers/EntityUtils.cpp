@@ -11,11 +11,6 @@
 
 #define TAG "[EntityUtils] "
 
-// something defines a max macro, and it breaks std::numeric_limits::max()
-#ifdef max
-#undef max
-#endif
-
 std::vector<ZEntityRef> Utils::ZEntityFinder::Find(const size_t p_nMaxResults) const
 {
     std::vector<ZEntityRef> s_aFoundEntities;
