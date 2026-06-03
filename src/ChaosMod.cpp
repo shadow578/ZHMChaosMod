@@ -11,6 +11,7 @@
 #include "Helpers/Utils.h"
 #include "Helpers/CompanionMod.h"
 #include "Helpers/Repository/ZHMRepositoryHelper.h"
+#include "Helpers/UpdateCheck/ZUpdateCheck.h"
 
 #include "Registry.h"
 #include "ZConfigurationAccessor.h"
@@ -23,6 +24,7 @@ ChaosMod::ChaosMod() : m_fFullEffectDuration(60.0f),
                        m_EffectTimer(std::bind(&ChaosMod::OnEffectTimerTrigger, this), 30.0f),
                        m_bEffectTimersUseRealtime(false),
                        m_SlowUpdateTimer(std::bind(&ChaosMod::OnEffectSlowUpdate, this), 0.2f, ZTimer::ETimeMode::RealTime, true), // ~5 FPS
+                       m_pUpdateCheck(std::make_unique<ZUpdateCheck>()),
                        m_pConfiguration(std::make_unique<ZConfigurationAccessor>(this, "ChaosMod"))
 {
 }
@@ -72,6 +74,17 @@ void ChaosMod::Init()
     m_pVotingIntegration = GetDefaultVotingIntegration();
 
     LoadConfiguration();
+
+    bool s_bUpdateCheckDefault =
+#ifdef _DEBUG
+        false;
+#else
+        true;
+#endif
+    if (m_pConfiguration->GetBool("CheckForUpdates", s_bUpdateCheckDefault))
+    {
+        m_pUpdateCheck->CheckUpdatesAsync();
+    }
 }
 
 void ChaosMod::OnEngineInitialized()

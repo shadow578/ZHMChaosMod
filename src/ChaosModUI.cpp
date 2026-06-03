@@ -12,6 +12,7 @@
 #include "Helpers/CompanionMod.h"
 #include "Helpers/ZPerfCounter.h"
 #include "Helpers/Utils.h"
+#include "Helpers/UpdateCheck/ZUpdateCheck.h"
 
 #include "BuildInfo.h"
 
@@ -122,6 +123,25 @@ void ChaosMod::DrawMainUI(const bool p_bHasFocus)
 
         ImGui::SeparatorText("About");
         ImGui::TextWrapped(fmt::format("ZHMChaosMod Version {}, developed by {}.", BuildInfo::GetDisplayVersion(), m_sAuthorNames).c_str());
+
+        switch (m_pUpdateCheck->GetResult())
+        {
+        case ZUpdateCheck::EResult::None:
+        default:
+            break;
+        case ZUpdateCheck::EResult::Checking:
+            ImGui::TextUnformatted("Checking for updates...");
+            break;
+        case ZUpdateCheck::EResult::UpToDate:
+            ImGui::TextUnformatted("You are using the latest version of the Chaos Mod.");
+            break;
+        case ZUpdateCheck::EResult::UpdateAvailable:
+            ImGui::TextLinkOpenURL(fmt::format("An update is available: {}", m_pUpdateCheck->GetLatestVersion()).c_str(), m_pUpdateCheck->GetUpdateUrl().c_str());
+            break;
+        case ZUpdateCheck::EResult::Failed:
+            ImGui::TextUnformatted("Failed to check for updates.");
+            break;
+        }
     }
 
     ImGui::PopFont();

@@ -10,6 +10,8 @@ namespace BuildInfo
     extern const std::string c_sBuildTag;
 
     extern const std::string c_sRemoteUrl;
+    extern const std::string c_sRepoOwner;
+    extern const std::string c_sRepoName;
     extern const std::string c_sBranch;
     extern const std::string c_sCommit;
     extern const bool c_bIsDirty;

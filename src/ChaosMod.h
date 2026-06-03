@@ -13,6 +13,8 @@
 #include <functional>
 #include <memory>
 
+class ZUpdateCheck;
+
 class ZConfigurationAccessor;
 
 class ChaosMod : public IPluginInterface
@@ -35,6 +37,7 @@ class ChaosMod : public IPluginInterface
   private: // Misc.
     ZTimer m_SlowUpdateTimer;
     std::queue<std::function<void()>> m_qDeferredFrameUpdateActions;
+    std::unique_ptr<ZUpdateCheck> m_pUpdateCheck;
 
     void ForeachEffect(const bool p_bIsLifecycleCall, std::function<void(std::shared_ptr<IChaosEffect> p_pEffect)> p_Callback);
 
