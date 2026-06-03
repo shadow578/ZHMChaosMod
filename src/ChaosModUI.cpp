@@ -127,8 +127,9 @@ void ChaosMod::DrawMainUI(const bool p_bHasFocus)
         switch (m_pUpdateCheck->GetResult())
         {
         case ZUpdateCheck::EResult::None:
-        case ZUpdateCheck::EResult::Checking:
         default:
+            break;
+        case ZUpdateCheck::EResult::Checking:
             ImGui::TextUnformatted("Checking for updates...");
             break;
         case ZUpdateCheck::EResult::UpToDate:

@@ -11,6 +11,14 @@
 
 using json = nlohmann::json;
 
+ZUpdateCheck::~ZUpdateCheck()
+{
+    if (m_UpdateCheckThread.joinable())
+    {
+        m_UpdateCheckThread.join();
+    }
+}
+
 void ZUpdateCheck::CheckUpdatesAsync()
 {
     std::lock_guard s_Lock(m_ResultMutex);
@@ -66,7 +74,20 @@ void ZUpdateCheck::CheckUpdatesInternal()
         return;
     }
 
-    const auto s_ResponseJson = json::parse(s_pResponse->body);
+    json s_ResponseJson;
+    try
+    {
+        s_ResponseJson = json::parse(s_pResponse->body);
+    }
+    catch (const json::exception& e)
+    {
+        Logger::Error(TAG "Failed to parse update check response as JSON: {}", e.what());
+        {
+            std::lock_guard s_Lock(m_ResultMutex);
+            m_eResult = EResult::Failed;
+        }
+        return;
+    }
 
     const auto s_sName = s_ResponseJson.value("name", "");
     const auto s_sTagName = s_ResponseJson.value("tag_name", "");

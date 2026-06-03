@@ -57,9 +57,10 @@ if(NOT GIT_DESCRIBE_RESULT EQUAL 0)
 endif()
 
 # parse repo owner and name from remote url
-if(GIT_REMOTE_URL MATCHES "([^/]+)/([^/]+)\\.git$")
-    set(GIT_REPO_OWNER "${CMAKE_MATCH_1}")
-    set(GIT_REPO_NAME "${CMAKE_MATCH_2}")
+if(GIT_REMOTE_URL MATCHES "([^/]+)/([^/]+)/?$")
+     set(GIT_REPO_OWNER "${CMAKE_MATCH_1}")
+     set(GIT_REPO_NAME "${CMAKE_MATCH_2}")
+     string(REGEX REPLACE "\\.git$" "" GIT_REPO_NAME "${GIT_REPO_NAME}")
 else()
     set(GIT_REPO_OWNER "")
     set(GIT_REPO_NAME "")

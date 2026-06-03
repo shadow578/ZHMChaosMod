@@ -1,6 +1,7 @@
 #pragma once
 #include <thread>
 #include <mutex>
+#include <string>
 
 class ZUpdateCheck
 {
@@ -13,6 +14,8 @@ class ZUpdateCheck
         UpdateAvailable,
         Failed
     };
+
+    ~ZUpdateCheck();
 
     /**
      * Start an asynchronous check for updates.
