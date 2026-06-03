@@ -39,7 +39,7 @@ void ChaosMod::UpdateTestMode(const float32 p_fDeltaTime)
 
             m_fTestmodeTimeToNextEffect = m_fTestmodeInterval;
         }
-        
+
         m_nTestmodeEffectIndex = (m_nTestmodeEffectIndex + 1) % s_aEffects.size();
     }
 }
