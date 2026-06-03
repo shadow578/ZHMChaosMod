@@ -39,7 +39,7 @@ class ZUpdateCheck
     }
 
     /**
-     * Get the update URL that a user can visit to download the latest version. 
+     * Get the update URL that a user can visit to download the latest version.
      */
     std::string GetUpdateUrl() const;
 
