@@ -2,6 +2,8 @@
 
 #include <Logging.h>
 
+#include <Glacier/SGameUpdateEvent.h>
+
 #include "Registry.h"
 #include "Helpers/EntityUtils.h"
 #include "Helpers/PlayerUtils.h"
@@ -88,8 +90,8 @@ void ZTriggerInteractionEffect::Start()
         s_Interaction = Math::SelectRandomElement(m_aInteractionEntities);
     }
 
-    // trigger!
-    s_Interaction.Execute();
+    m_CurrentInteraction = s_Interaction;
+    m_fTimeToInteractionStart = .5f; // need some delay to allow for teleport to happen
 
     const std::string s_sPromptText = s_Interaction.m_sPromptText.value_or("").c_str();
     const std::string s_sPromptDescriptionText = s_Interaction.m_sPromptDescriptionText.value_or("").c_str();
@@ -107,7 +109,27 @@ void ZTriggerInteractionEffect::Start()
         }
     }
 
-    Logger::Debug(TAG "Triggered interaction: {}", m_sLastInteractionText);
+    if (auto s_roContextObjectSpatial = s_Interaction.m_rContextObjectSpatial; s_roContextObjectSpatial.has_value() && s_roContextObjectSpatial.value())
+    {
+        const auto s_mTrans = s_roContextObjectSpatial->m_pInterfaceRef->GetObjectToWorldMatrix();
+        Utils::TeleportPlayer(s_mTrans.Pos); // preserve player rotation
+    }
+
+    Logger::Debug(TAG "Queued interaction trigger: {}", m_sLastInteractionText);
+}
+
+void ZTriggerInteractionEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)
+{
+    if (m_fTimeToInteractionStart > 0.f)
+    {
+        m_fTimeToInteractionStart -= static_cast<float32>(p_UpdateEvent.m_GameTimeDelta.ToSeconds());
+        if (m_fTimeToInteractionStart <= 0.f)
+        {
+            m_fTimeToInteractionStart = -1.f;
+            m_CurrentInteraction.Execute();
+            Logger::Debug(TAG "Trigger Interaction: {}", m_sLastInteractionText);
+        }
+    }
 }
 
 REGISTER_CHAOS_EFFECT_PARAM(world, ZTriggerInteractionEffect, "world", "Trigger Random Interaction", 9999.0f);

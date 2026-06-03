@@ -23,6 +23,8 @@ class ZTriggerInteractionEffect : public IChaosEffect
 
     void Start();
 
+    void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining) override;
+
     std::string GetName() const
     {
         return IChaosEffect::GetName() + "_" + m_sNameSuffix;
@@ -49,4 +51,7 @@ class ZTriggerInteractionEffect : public IChaosEffect
     const float32 m_fRadius;
     std::vector<SInteractionSubactionEntityBinding> m_aInteractionEntities;
     std::string m_sLastInteractionText;
+
+    SInteractionSubactionEntityBinding m_CurrentInteraction;
+    float32 m_fTimeToInteractionStart = -1.f;
 };
