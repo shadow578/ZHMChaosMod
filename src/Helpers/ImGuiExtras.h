@@ -43,7 +43,7 @@ namespace ImGuiEx
         const auto s_vTextSize = ImGui::CalcTextSize(p_sOverlayText);
         const auto s_fTextWidth = s_vTextSize.x + (p_fTextPadding * 2.0f);
         const auto s_fWindowWidth = ImGui::GetContentRegionAvail().x;
-        const auto s_fBarWidth = max(s_fWindowWidth, s_fTextWidth);
+        const auto s_fBarWidth = std::max(s_fWindowWidth, s_fTextWidth);
 
         // Draw progress bar without overlay text
         ImGui::ProgressBar(p_fFraction, ImVec2(s_fBarWidth, 0.0f), "");
