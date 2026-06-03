@@ -133,4 +133,4 @@ void ZTriggerInteractionEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEv
 }
 
 REGISTER_CHAOS_EFFECT_PARAM(world, ZTriggerInteractionEffect, "world", "Trigger Random Interaction", 9999.0f);
-// REGISTER_CHAOS_EFFECT_PARAM(nearby, ZTriggerInteractionEffect, "nearby", "Trigger Nearby Interaction", 50.0f);
+REGISTER_CHAOS_EFFECT_PARAM(nearby, ZTriggerInteractionEffect, "nearby", "Trigger Nearby Interaction", 50.0f);
