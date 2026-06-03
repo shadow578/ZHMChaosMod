@@ -31,15 +31,16 @@ void ChaosMod::UpdateTestMode(const float32 p_fDeltaTime)
         }
 
         auto s_pEffect = s_aEffects[m_nTestmodeEffectIndex];
-        if (s_pEffect)
+        if (s_pEffect && s_pEffect->IsEnabled())
         {
             Logger::Info(TAG "[TM] Activating effect '{}'", s_pEffect->GetName());
             m_pEffectForDebug = s_pEffect;
             ActivateEffect(s_pEffect, m_fTestmodeInterval - 1.0f);
-        }
 
+            m_fTestmodeTimeToNextEffect = m_fTestmodeInterval;
+        }
+        
         m_nTestmodeEffectIndex = (m_nTestmodeEffectIndex + 1) % s_aEffects.size();
-        m_fTestmodeTimeToNextEffect = m_fTestmodeInterval;
     }
 }
 
