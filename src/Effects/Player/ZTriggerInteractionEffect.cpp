@@ -1,6 +1,7 @@
 #include "ZTriggerInteractionEffect.h"
 
 #include <Logging.h>
+#include <imgui.h>
 
 #include <Glacier/SGameUpdateEvent.h>
 
@@ -8,6 +9,7 @@
 #include "Helpers/EntityUtils.h"
 #include "Helpers/PlayerUtils.h"
 #include "Helpers/Math.h"
+#include "ZConfigurationAccessor.h"
 
 #define TAG "[ZTriggerInteractionEffect] "
 
@@ -71,23 +73,58 @@ void ZTriggerInteractionEffect::Start()
     }
 
     SInteractionSubactionEntityBinding s_Interaction;
+    auto s_bIsInteractionValid = false;
     if (!s_aNearbyInteractions.empty())
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 50; i++)
         {
             s_Interaction = Math::SelectRandomElement(s_aNearbyInteractions);
 
-            // "Leave Mission" interactions tend to break the game
-            if (s_Interaction.m_sPromptText.value_or("") != "Leave Mission")
+            if (m_bOnlyUseableInteractions)
             {
-                break;
+                if (const auto s_Condition = s_Interaction.GetVisibleAndUseableCondition())
+                {
+                    if (!s_Condition.m_bValue.value_or(false))
+                    {
+                        continue;
+                    }
+                }
             }
+
+            if (const auto s_Condition = s_Interaction.GetVisibleCondition())
+            {
+                if (!s_Condition.m_bValue.value_or(false))
+                {
+                    continue;
+                }
+            }
+
+            // "Leave Mission" interactions tend to break the game
+            if (s_Interaction.m_sPromptText.value_or("") == "Leave Mission")
+            {
+                continue;
+            }
+
+            // "Disguise" interactions can crash
+            if (s_Interaction.m_sPromptText.value_or("") == "Disguise")
+            {
+                continue;
+            }
+
+            s_bIsInteractionValid = true;
+            break;
         }
     }
     else
     {
         Logger::Debug(TAG "No interaction entities found within radius {}, selecting from all available!", m_fRadius);
         s_Interaction = Math::SelectRandomElement(m_aInteractionEntities);
+    }
+
+    if (!s_bIsInteractionValid)
+    {
+        Logger::Debug(TAG "Couldn't find a valid interaction, aborting!");
+        return;
     }
 
     m_CurrentInteraction = s_Interaction;
@@ -129,6 +166,23 @@ void ZTriggerInteractionEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEv
             m_CurrentInteraction.Execute();
             Logger::Debug(TAG "Trigger Interaction: {}", m_sLastInteractionText);
         }
+    }
+}
+
+void ZTriggerInteractionEffect::LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration)
+{
+    m_bOnlyUseableInteractions = p_pConfiguration->GetBool("OnlyUseable", m_bOnlyUseableInteractions);
+}
+
+void ZTriggerInteractionEffect::DrawConfigUI(ZConfigurationAccessor* p_pConfiguration)
+{
+    if (ImGui::Checkbox("Only Useable Interactions", &m_bOnlyUseableInteractions))
+    {
+        p_pConfiguration->SetBool("OnlyUseable", m_bOnlyUseableInteractions);
+    }
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip("If enabled, only interactions that are currently useable (e.g. required item is present) will be triggered. Otherwise, any interaction can be triggered, which may cause issues during the animation or (rare) game crashes.");
     }
 }
 

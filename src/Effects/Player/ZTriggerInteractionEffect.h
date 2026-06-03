@@ -45,6 +45,12 @@ class ZTriggerInteractionEffect : public IChaosEffect
         return EDuration::OneShot;
     }
 
+    void LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration) override;
+    void DrawConfigUI(ZConfigurationAccessor* p_pConfiguration) override;
+
+  private:
+    bool m_bOnlyUseableInteractions = false;
+
   private:
     const std::string m_sNameSuffix;
     const std::string m_sDisplayName;
