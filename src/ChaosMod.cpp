@@ -75,7 +75,16 @@ void ChaosMod::Init()
 
     LoadConfiguration();
 
-    m_pUpdateCheck->CheckUpdatesAsync();
+    bool s_bUpdateCheckDefault =
+#ifdef _DEBUG
+        false;
+#else
+        true;
+#endif
+    if (m_pConfiguration->GetBool("CheckForUpdates", s_bUpdateCheckDefault))
+    {
+        m_pUpdateCheck->CheckUpdatesAsync();
+    }
 }
 
 void ChaosMod::OnEngineInitialized()
