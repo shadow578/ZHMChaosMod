@@ -104,3 +104,9 @@ struct SEntityBinding
     {                                                \
         return TEntityRef<INTERFACE>(m_rEntity);     \
     }
+
+#define SUBENTITY_BINDING(BINDING_TYPE, NAME, SUBENTITY_ID)                \
+    inline BINDING_TYPE Get##NAME() const                                  \
+    {                                                                      \
+        return BINDING_TYPE(Utils::GetSubEntity(m_rEntity, SUBENTITY_ID)); \
+    }

@@ -23,6 +23,8 @@ class ZTriggerInteractionEffect : public IChaosEffect
 
     void Start();
 
+    void OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining) override;
+
     std::string GetName() const
     {
         return IChaosEffect::GetName() + "_" + m_sNameSuffix;
@@ -43,10 +45,19 @@ class ZTriggerInteractionEffect : public IChaosEffect
         return EDuration::OneShot;
     }
 
+    void LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration) override;
+    void DrawConfigUI(ZConfigurationAccessor* p_pConfiguration) override;
+
+  private:
+    bool m_bOnlyUseableInteractions = false;
+
   private:
     const std::string m_sNameSuffix;
     const std::string m_sDisplayName;
     const float32 m_fRadius;
     std::vector<SInteractionSubactionEntityBinding> m_aInteractionEntities;
     std::string m_sLastInteractionText;
+
+    SInteractionSubactionEntityBinding m_CurrentInteraction;
+    float32 m_fTimeToInteractionStart = -1.f;
 };

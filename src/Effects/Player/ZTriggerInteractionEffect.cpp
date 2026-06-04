@@ -1,11 +1,15 @@
 #include "ZTriggerInteractionEffect.h"
 
 #include <Logging.h>
+#include <imgui.h>
+
+#include <Glacier/SGameUpdateEvent.h>
 
 #include "Registry.h"
 #include "Helpers/EntityUtils.h"
 #include "Helpers/PlayerUtils.h"
 #include "Helpers/Math.h"
+#include "ZConfigurationAccessor.h"
 
 #define TAG "[ZTriggerInteractionEffect] "
 
@@ -69,27 +73,57 @@ void ZTriggerInteractionEffect::Start()
     }
 
     SInteractionSubactionEntityBinding s_Interaction;
+    auto s_bIsInteractionValid = false;
     if (!s_aNearbyInteractions.empty())
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 50; i++)
         {
             s_Interaction = Math::SelectRandomElement(s_aNearbyInteractions);
 
-            // "Leave Mission" interactions tend to break the game
-            if (s_Interaction.m_sPromptText.value_or("") != "Leave Mission")
+            if (m_bOnlyUseableInteractions)
             {
-                break;
+                if (const auto s_Condition = s_Interaction.GetVisibleAndUseableCondition())
+                {
+                    if (!s_Condition.m_bValue.value_or(false))
+                    {
+                        continue;
+                    }
+                }
             }
+
+            if (const auto s_Condition = s_Interaction.GetVisibleCondition())
+            {
+                if (!s_Condition.m_bValue.value_or(false))
+                {
+                    continue;
+                }
+            }
+
+            // "Leave Mission" interactions tend to break the game
+            if (s_Interaction.m_sPromptText.value_or("") == "Leave Mission")
+            {
+                continue;
+            }
+
+            // "Disguise" interactions can crash
+            if (s_Interaction.m_sPromptText.value_or("") == "Disguise")
+            {
+                continue;
+            }
+
+            s_bIsInteractionValid = true;
+            break;
         }
     }
-    else
+
+    if (!s_bIsInteractionValid)
     {
-        Logger::Debug(TAG "No interaction entities found within radius {}, selecting from all available!", m_fRadius);
-        s_Interaction = Math::SelectRandomElement(m_aInteractionEntities);
+        Logger::Debug(TAG "Couldn't find a valid interaction, aborting!");
+        return;
     }
 
-    // trigger!
-    s_Interaction.Execute();
+    m_CurrentInteraction = s_Interaction;
+    m_fTimeToInteractionStart = .5f; // need some delay to allow for teleport to happen
 
     const std::string s_sPromptText = s_Interaction.m_sPromptText.value_or("").c_str();
     const std::string s_sPromptDescriptionText = s_Interaction.m_sPromptDescriptionText.value_or("").c_str();
@@ -107,8 +141,49 @@ void ZTriggerInteractionEffect::Start()
         }
     }
 
-    Logger::Debug(TAG "Triggered interaction: {}", m_sLastInteractionText);
+    if (auto s_roContextObjectSpatial = s_Interaction.m_rContextObjectSpatial; s_roContextObjectSpatial.has_value() && s_roContextObjectSpatial.value())
+    {
+        const auto s_mTrans = s_roContextObjectSpatial->m_pInterfaceRef->GetObjectToWorldMatrix();
+        Utils::TeleportPlayer(s_mTrans.Pos); // preserve player rotation
+    }
+
+    Logger::Debug(TAG "Queued interaction trigger: {}", m_sLastInteractionText);
+}
+
+void ZTriggerInteractionEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEvent, const float32 p_fEffectTimeRemaining)
+{
+    if (m_fTimeToInteractionStart > 0.f)
+    {
+        m_fTimeToInteractionStart -= static_cast<float32>(p_UpdateEvent.m_GameTimeDelta.ToSeconds());
+        if (m_fTimeToInteractionStart <= 0.f)
+        {
+            m_fTimeToInteractionStart = -1.f;
+            m_CurrentInteraction.Execute();
+            Logger::Debug(TAG "Trigger Interaction: {}", m_sLastInteractionText);
+        }
+    }
+}
+
+void ZTriggerInteractionEffect::LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration)
+{
+    IChaosEffect::LoadConfiguration(p_pConfiguration);
+
+    m_bOnlyUseableInteractions = p_pConfiguration->GetBool("OnlyUseable", m_bOnlyUseableInteractions);
+}
+
+void ZTriggerInteractionEffect::DrawConfigUI(ZConfigurationAccessor* p_pConfiguration)
+{
+    IChaosEffect::DrawConfigUI(p_pConfiguration);
+
+    if (ImGui::Checkbox("Only Useable Interactions", &m_bOnlyUseableInteractions))
+    {
+        p_pConfiguration->SetBool("OnlyUseable", m_bOnlyUseableInteractions);
+    }
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::SetTooltip("If enabled, only interactions that are currently useable (e.g. required item is present) will be triggered. Otherwise, any interaction can be triggered, which may cause issues during the animation or (rare) game crashes.");
+    }
 }
 
 REGISTER_CHAOS_EFFECT_PARAM(world, ZTriggerInteractionEffect, "world", "Trigger Random Interaction", 9999.0f);
-// REGISTER_CHAOS_EFFECT_PARAM(nearby, ZTriggerInteractionEffect, "nearby", "Trigger Nearby Interaction", 50.0f);
+REGISTER_CHAOS_EFFECT_PARAM(nearby, ZTriggerInteractionEffect, "nearby", "Trigger Nearby Interaction", 50.0f);
