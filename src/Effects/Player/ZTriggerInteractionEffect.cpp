@@ -115,11 +115,6 @@ void ZTriggerInteractionEffect::Start()
             break;
         }
     }
-    else
-    {
-        Logger::Debug(TAG "No interaction entities found within radius {}, selecting from all available!", m_fRadius);
-        s_Interaction = Math::SelectRandomElement(m_aInteractionEntities);
-    }
 
     if (!s_bIsInteractionValid)
     {
@@ -171,11 +166,15 @@ void ZTriggerInteractionEffect::OnFrameUpdate(const SGameUpdateEvent& p_UpdateEv
 
 void ZTriggerInteractionEffect::LoadConfiguration(const ZConfigurationAccessor* p_pConfiguration)
 {
+    IChaosEffect::LoadConfiguration(p_pConfiguration);
+
     m_bOnlyUseableInteractions = p_pConfiguration->GetBool("OnlyUseable", m_bOnlyUseableInteractions);
 }
 
 void ZTriggerInteractionEffect::DrawConfigUI(ZConfigurationAccessor* p_pConfiguration)
 {
+    IChaosEffect::DrawConfigUI(p_pConfiguration);
+
     if (ImGui::Checkbox("Only Useable Interactions", &m_bOnlyUseableInteractions))
     {
         p_pConfiguration->SetBool("OnlyUseable", m_bOnlyUseableInteractions);
