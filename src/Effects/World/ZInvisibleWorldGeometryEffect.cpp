@@ -1,11 +1,8 @@
 #include "ZInvisibleWorldGeometryEffect.h"
 
 #include <Logging.h>
-#include <imgui.h>
 
 #include "Registry.h"
-#include "Helpers/EntityUtils.h"
-#include "Helpers/Math.h"
 
 #define TAG "[ZInvisibleWorldGeometryEffect] "
 

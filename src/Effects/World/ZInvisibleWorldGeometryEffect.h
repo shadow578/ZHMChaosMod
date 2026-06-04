@@ -1,8 +1,6 @@
 #pragma once
 #include "IChaosEffect.h"
 
-#include <Glacier/ZEntity.h>
-
 #include <vector>
 
 #include "Entity/Bindings/SZRoomEntityBinding.h"
