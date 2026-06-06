@@ -7,38 +7,22 @@
 
 #include "Helpers/HookingHelpers.h"
 
-class ZMagazineUpdateModifierEffect : public IChaosEffect
+class ZWeaponPrecisionOverrideEffect : public IChaosEffect
 {
   public:
-    enum class EApplyTo
-    {
-        Player,
-        Actor,
-        All // Actors + Player
-    };
-
-    enum class EKind
-    {
-        UnlimitedMags,
-        EmptyMags,
-        SingleBulletMags
-    };
-
-    ZMagazineUpdateModifierEffect(
+    ZWeaponPrecisionOverrideEffect(
         const std::string p_sNameSuffix,
         const std::string s_sDisplayName,
-        const EApplyTo p_eApplyTo,
-        const EKind p_eKind
+        const float32 p_fPrecisionFactor
     )
         : m_sNameSuffix(p_sNameSuffix),
           m_sDisplayName(s_sDisplayName),
-          m_eApplyTo(p_eApplyTo),
-          m_eKind(p_eKind)
+          m_fPrecisionFactor(p_fPrecisionFactor)
     {
         ADD_BASE_CLASS_DETOUR_INSTANCE();
     }
 
-    ~ZMagazineUpdateModifierEffect()
+    ~ZWeaponPrecisionOverrideEffect()
     {
         REMOVE_BASE_CLASS_DETOUR_INSTANCE();
     }
@@ -47,6 +31,8 @@ class ZMagazineUpdateModifierEffect : public IChaosEffect
     void OnModUnload() override;
     bool Available() const override;
     bool IsCompatibleWith(const IChaosEffect* p_pOtherEffect) const override;
+
+    void OnDrawDebugUI() override;
 
     void Start() override;
     void Stop() override;
@@ -64,19 +50,18 @@ class ZMagazineUpdateModifierEffect : public IChaosEffect
   private:
     std::string m_sNameSuffix;
     std::string m_sDisplayName;
-    EApplyTo m_eApplyTo;
-    EKind m_eKind;
+    float32 m_fPrecisionFactor;
 
   private:
     bool m_bActive = false;
 
-    DECLARE_BASE_CLASS_INSTANCES_HELPER(ZMagazineUpdateModifierEffect);
+    DECLARE_BASE_CLASS_INSTANCES_HELPER(ZWeaponPrecisionOverrideEffect);
 
     DECLARE_BASE_CLASS_DETOUR(
-        ZMagazineUpdateModifierEffect,
-        void,
-        ZHM5ItemWeapon_SetBulletsInMagazine,
-        IFirearm* th,
-        int32_t p_nBullets
+        ZWeaponPrecisionOverrideEffect,
+        bool,
+        ZHM5ItemWeapon_FireProjectiles,
+        ZHM5ItemWeapon* th,
+        bool bMayStartSound
     );
 };

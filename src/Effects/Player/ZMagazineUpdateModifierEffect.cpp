@@ -31,10 +31,6 @@ bool ZMagazineUpdateModifierEffect::IsCompatibleWith(const IChaosEffect* p_pOthe
            && !Utils::IsInstanceOf<ZMagazineUpdateModifierEffect>(p_pOtherEffect);
 }
 
-void ZMagazineUpdateModifierEffect::OnDrawDebugUI()
-{
-}
-
 void ZMagazineUpdateModifierEffect::Start()
 {
     m_bActive = true;
