@@ -27,9 +27,6 @@
  * };
  *
  * cpp (ZSomeHookBaseEffect.cpp):
- * // define list of instances, this must be done ONCE per base class, in a cpp file
- * DEFINE_BASE_CLASS_INSTANCES_HELPER(ZSomeHookBaseEffect);
- *
  * // define your hook implementation as you normally would, but use DEFINE_BASE_CLASS_DETOUR instead of DEFINE_PLUGIN_DETOUR
  * // also, you need to specify the parameter names *without* type specifiers via MAKE_FORWARD_PARAMS.
  * DEFINE_BASE_CLASS_DETOUR(ZSomeHookBaseEffect, void, SomeHook, MAKE_FORWARD_PARAMS(...), ...)
@@ -40,17 +37,18 @@
 #pragma once
 #include <IPluginInterface.h> // for DECLARE_PLUGIN_DETOUR
 
-#define DECLARE_BASE_CLASS_INSTANCES_HELPER(BaseClass) \
-    static std::vector<BaseClass*> m_aInstancesForDetours;
-
-#define DEFINE_BASE_CLASS_INSTANCES_HELPER(BaseClass) \
-    std::vector<BaseClass*> BaseClass::m_aInstancesForDetours;
+#define DECLARE_BASE_CLASS_INSTANCES_HELPER(BaseClass)         \
+    static std::vector<BaseClass*>& __GetDetourInstances()     \
+    {                                                          \
+        static std::vector<BaseClass*> g_aInstancesForDetours; \
+        return g_aInstancesForDetours;                         \
+    }
 
 #define ADD_BASE_CLASS_DETOUR_INSTANCE() \
-    m_aInstancesForDetours.push_back(this);
+    __GetDetourInstances().push_back(this);
 
 #define REMOVE_BASE_CLASS_DETOUR_INSTANCE() \
-    m_aInstancesForDetours.erase(std::remove(m_aInstancesForDetours.begin(), m_aInstancesForDetours.end(), this), m_aInstancesForDetours.end());
+    __GetDetourInstances().erase(std::remove(__GetDetourInstances().begin(), __GetDetourInstances().end(), this), __GetDetourInstances().end());
 
 #define DECLARE_BASE_CLASS_DETOUR(BaseClass, ReturnType, DetourName, ...)  \
     DECLARE_PLUGIN_DETOUR(BaseClass, ReturnType, DetourName, __VA_ARGS__); \
@@ -62,7 +60,7 @@
 #define DEFINE_BASE_CLASS_DETOUR(BaseClass, ReturnType, DetourName, ForwardParams, ...) \
     DEFINE_PLUGIN_DETOUR(BaseClass, ReturnType, DetourName, __VA_ARGS__)                \
     {                                                                                   \
-        for (auto& s_pInstance : m_aInstancesForDetours)                                \
+        for (auto& s_pInstance : __GetDetourInstances())                                \
         {                                                                               \
             const auto s_Result = s_pInstance->DetourName##_Impl ForwardParams;         \
             if (s_Result.m_HasReturnVal)                                                \

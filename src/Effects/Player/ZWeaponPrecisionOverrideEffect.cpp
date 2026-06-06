@@ -47,8 +47,6 @@ void ZWeaponPrecisionOverrideEffect::Stop()
     m_bActive = false;
 }
 
-DEFINE_BASE_CLASS_INSTANCES_HELPER(ZWeaponPrecisionOverrideEffect);
-
 DEFINE_BASE_CLASS_DETOUR(
     ZWeaponPrecisionOverrideEffect,
     bool,

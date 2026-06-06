@@ -49,8 +49,6 @@ void ZRecoilModifierEffect::Stop()
     m_bActive = false;
 }
 
-DEFINE_BASE_CLASS_INSTANCES_HELPER(ZRecoilModifierEffect);
-
 DEFINE_BASE_CLASS_DETOUR(
     ZRecoilModifierEffect,
     void,

@@ -41,8 +41,6 @@ void ZMagazineUpdateModifierEffect::Stop()
     m_bActive = false;
 }
 
-DEFINE_BASE_CLASS_INSTANCES_HELPER(ZMagazineUpdateModifierEffect);
-
 DEFINE_BASE_CLASS_DETOUR(
     ZMagazineUpdateModifierEffect,
     void,

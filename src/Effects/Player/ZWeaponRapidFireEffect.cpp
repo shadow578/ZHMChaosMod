@@ -43,8 +43,6 @@ void ZWeaponRapidFireEffect::Stop()
     m_bActive = false;
 }
 
-DEFINE_BASE_CLASS_INSTANCES_HELPER(ZWeaponRapidFireEffect);
-
 DEFINE_BASE_CLASS_DETOUR(
     ZWeaponRapidFireEffect,
     bool,
