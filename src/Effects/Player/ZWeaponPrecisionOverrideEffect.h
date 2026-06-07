@@ -7,7 +7,7 @@
 
 #include "Helpers/HookingHelpers.h"
 
-class ZWeaponPrecisionOverrideEffect : public IChaosEffect
+class ZWeaponPrecisionOverrideEffect : public virtual IChaosEffect // virtual inheritance to allow for ZPlayerJuggernautEffect
 {
   public:
     ZWeaponPrecisionOverrideEffect(

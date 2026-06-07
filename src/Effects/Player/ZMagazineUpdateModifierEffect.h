@@ -7,7 +7,7 @@
 
 #include "Helpers/HookingHelpers.h"
 
-class ZMagazineUpdateModifierEffect : public IChaosEffect
+class ZMagazineUpdateModifierEffect : public virtual IChaosEffect // virtual inheritance to allow for ZPlayerJuggernautEffect
 {
   public:
     enum class EApplyTo

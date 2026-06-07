@@ -6,7 +6,7 @@
 
 #include "Helpers/HookingHelpers.h"
 
-class ZRecoilModifierEffect : public IChaosEffect
+class ZRecoilModifierEffect : public virtual IChaosEffect // virtual inheritance to allow for ZPlayerJuggernautEffect
 {
   public:
     ZRecoilModifierEffect(

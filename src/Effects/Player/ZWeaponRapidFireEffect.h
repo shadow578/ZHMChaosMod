@@ -7,7 +7,7 @@
 
 #include "Helpers/HookingHelpers.h"
 
-class ZWeaponRapidFireEffect : public IChaosEffect
+class ZWeaponRapidFireEffect : public virtual IChaosEffect // virtual inheritance to allow for ZPlayerJuggernautEffect
 {
   public:
     ZWeaponRapidFireEffect()
