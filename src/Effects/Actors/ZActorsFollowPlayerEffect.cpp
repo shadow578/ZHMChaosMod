@@ -25,8 +25,8 @@ void ZActorsFollowPlayerEffect::SetActorsFollowPlayer(const bool p_bFollow)
             if (p_bFollow)
             {
                 // make following actors ignore sillyness
-                s_FollowHelper.m_AIModifierRoleBinding.m_bIgnoreAnnoyingHitman = true;
-                s_FollowHelper.m_AIModifierRoleBinding.m_bIgnoreSillyHitman = true;
+                s_FollowHelper.m_AIModifierBinding.m_bIgnoreAnnoyingHitman = true;
+                s_FollowHelper.m_AIModifierBinding.m_bIgnoreSillyHitman = true;
 
                 s_FollowHelper.m_fMinTetherRange = 2.f;
                 s_FollowHelper.m_fMaxTetherRange = 5.f;
