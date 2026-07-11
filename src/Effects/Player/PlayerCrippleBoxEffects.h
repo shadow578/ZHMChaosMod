@@ -1,17 +1,6 @@
 #pragma once
 #include "Effects/Base/ZPlayerCrippleBoxEffectBase.h"
 
-class ZUnlimitedAmmoEffect : public ZPlayerCrippleBoxEffectBase
-{
-  public:
-    void Start() override;
-
-    std::string GetDisplayName(const bool p_bVoting) const override
-    {
-        return "Unlimited Ammo";
-    }
-};
-
 class ZPlayerPacifistEffect : public ZPlayerCrippleBoxEffectBase
 {
   public:
