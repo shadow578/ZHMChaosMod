@@ -70,7 +70,14 @@ DEFINE_BASE_CLASS_DETOUR(
         const auto s_rPlayer = Utils::GetLocalPlayer();
         const auto s_bOwnedByPlayer = s_pWeapon->m_pOwner == s_rPlayer.m_entityRef;
 
+        // player owns and effect targets actor only?
         if (s_bOwnedByPlayer && m_eApplyTo == EApplyTo::Actor)
+        {
+            return {HookAction::Continue()};
+        }
+
+        // actor owns and effect targets player only?
+        if (!s_bOwnedByPlayer && m_eApplyTo == EApplyTo::Player)
         {
             return {HookAction::Continue()};
         }
