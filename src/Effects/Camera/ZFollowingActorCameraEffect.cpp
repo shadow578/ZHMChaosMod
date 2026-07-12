@@ -4,6 +4,7 @@
 #include <imgui.h>
 
 #include "Registry.h"
+#include "ZConfigurationAccessor.h"
 #include "Helpers/ActorUtils.h"
 #include "Helpers/PlayerUtils.h"
 #include "Helpers/EntityUtils.h"
@@ -84,7 +85,7 @@ void ZFollowingActorCameraEffect::Stop()
     if (m_rFollowingActor)
     {
         auto s_FollowHelper = GetFollowHelperFor(m_rFollowingActor);
-        s_FollowHelper.StopFollowHitman();
+        s_FollowHelper.StopFollowHitmanIgnoreEverything();
 
         m_rFollowingActor = {};
         m_rFollowingActorHeadAttach = {};
@@ -132,15 +133,8 @@ void ZFollowingActorCameraEffect::MakeActorFollowingCameraPerson(const TEntityRe
     s_FollowHelper.m_fMinTetherRange = 2.f;
     s_FollowHelper.m_fMaxTetherRange = 5.f;
 
-    // make actor ignore most everything so they keep following
-    s_FollowHelper.m_AIModifierRoleBinding.m_bIgnoreLowNoise = true;
-    s_FollowHelper.m_AIModifierRoleBinding.m_bIgnoreSillyHitman = true;
-    s_FollowHelper.m_AIModifierRoleBinding.m_bIgnoreAnnoyingHitman = true;
-    s_FollowHelper.m_AIModifierRoleBinding.m_bIgnoreDistractions = true;
-    s_FollowHelper.m_AIModifierRoleBinding.m_bIgnoreAccidents = true;
-    s_FollowHelper.m_AIModifierRoleBinding.m_bNeverSpectate = true;
-
-    s_FollowHelper.StartFollowHitman();
+    // make the actor follow the player, ignoring everything they do (e.g. shooting etc)
+    s_FollowHelper.StartFollowHitmanIgnoreEverything();
 
     // attach camera to the actor's head
     m_rFollowingActorHeadAttach = Utils::GetActorHeadAttachEntity(p_rActor);

@@ -14,6 +14,7 @@ struct SLambicDanceActEntityBinding : public SEntityBinding
     PROPERTY(ZActBehaviorEntity_EMovementType, m_MovementType);  // NPC movement type. either MT_WALK or MT_SNAP. Cannot be changed after Start is triggered.
     PROPERTY_RO(bool, m_bActive);                                // Whether act is active.
     PROPERTY_RO(TEntityRef<ZSpatialEntity>, m_rWaypointSpatial); // Spatial that NPC will perform act at. Location cannot be changed after Start is triggered.
+    PROPERTY(ESituationAvailability, m_eSituationType);          // Set Situation type / priority. ESA_AMBIENCE can be overriden by most other behavior, while ESA_OVR_ALL overrides all.
 
     INPUT_PIN(Start);  // Start act. NPC will stop current act and start moving towards m_rWaypointSpatial, then perform dance animation there.
     INPUT_PIN(Cancel); // Cancel act. NPC will resume normal behaviour.

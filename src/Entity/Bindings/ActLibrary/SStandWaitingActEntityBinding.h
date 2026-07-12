@@ -16,6 +16,7 @@ struct SStandWaitingActEntityBinding : public SEntityBinding
     PROPERTY_RO(bool, m_bEndOnReached);                          // Whether end-on-reached is enabled.
     PROPERTY(float32, m_fEndOnReachedDistance);                  // Distance for end-on-reached.
     PROPERTY_RO(TEntityRef<ZSpatialEntity>, m_rWaypointSpatial); // Spatial that NPC will perform act at. Location cannot be changed after Start is triggered.
+    PROPERTY(ESituationAvailability, m_eSituationType);          // Set Situation type / priority. ESA_AMBIENCE can be overriden by most other behavior, while ESA_OVR_ALL overrides all.
 
     INPUT_PIN(Start);               // Start act. NPC will stop current act and start moving towards m_rWaypointSpatial, then wait there.
     INPUT_PIN(Cancel);              // Cancel act. NPC will resume normal behaviour.

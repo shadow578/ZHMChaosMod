@@ -22,6 +22,7 @@ struct SFlamingoDanceActEntityBinding : public SEntityBinding
     PROPERTY(ZActBehaviorEntity_EMovementType, m_MovementType);  // NPC movement type. either MT_WALK or MT_SNAP. Cannot be changed after Start is triggered.
     PROPERTY_RO(bool, m_bActive);                                // Whether act is active.
     PROPERTY_RO(TEntityRef<ZSpatialEntity>, m_rWaypointSpatial); // Spatial that NPC will perform act at. Location cannot be changed after Start is triggered.
+    PROPERTY(ESituationAvailability, m_eSituationType);          // Set Situation type / priority. ESA_AMBIENCE can be overriden by most other behavior, while ESA_OVR_ALL overrides all.
 
     PROPERTY(int32, m_nMode); // Flamingo dance mode / type. Not well tested yet, keep at MODE_DEFAULT to be safe. Refer to MODE_* constants for available values. Cannot be changed after Start is triggered.
 
