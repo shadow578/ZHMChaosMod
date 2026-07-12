@@ -8,7 +8,7 @@ namespace BehaviorTreeMatch
     static const ZString BT_AMBIENCE("BT_AMBIENCE"); // lowest priority
 
     static const ZString BT_OVERRIDE("BT_OVERRIDE");
-    static const ZString BT_OVERRIDE_STANDING("BT_OVERRIDE_STANDING"); 
+    static const ZString BT_OVERRIDE_STANDING("BT_OVERRIDE_STANDING");
     static const ZString BT_OVERRIDE_CURIOUS("BT_OVERRIDE_CURIOUS");
     static const ZString BT_OVERRIDE_CAUTIOUS("BT_OVERRIDE_CAUTIOUS");
     static const ZString BT_OVERRIDE_SENTRY("BT_OVERRIDE_SENTRY");

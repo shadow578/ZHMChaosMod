@@ -30,6 +30,6 @@ struct SAIModifierBinding : public SEntityBinding
     PROPERTY(bool, m_bBlockDeath);
     PROPERTY(bool, m_bSuppressSocialGreeting);
 
-    INPUT_PIN(Set);       // Set the modifiers
-    INPUT_PIN(Clear);     // Clear the modifiers
+    INPUT_PIN(Set);   // Set the modifiers
+    INPUT_PIN(Clear); // Clear the modifiers
 };
