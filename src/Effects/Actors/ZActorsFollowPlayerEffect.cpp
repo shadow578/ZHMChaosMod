@@ -31,15 +31,33 @@ void ZActorsFollowPlayerEffect::SetActorsFollowPlayer(const bool p_bFollow)
                 s_FollowHelper.m_fMinTetherRange = 2.f;
                 s_FollowHelper.m_fMaxTetherRange = 5.f;
 
+                // go extra fast to be a lot more unsetteling
+                s_FollowHelper.m_eMaxMoveSpeed = EMoveSpeed::MS_Flash;
+
                 // go!
-                s_FollowHelper.StartFollowHitman();
+                if (m_bActorsIgnoreAllElse)
+                {
+                    s_FollowHelper.StartFollowHitmanIgnoreEverything();
+                }
+                else
+                {
+                    s_FollowHelper.StartFollowHitman();
+                }
             }
             else
             {
-                s_FollowHelper.StopFollowHitman();
+                if (m_bActorsIgnoreAllElse)
+                {
+                    s_FollowHelper.StopFollowHitmanIgnoreEverything();
+                }
+                else
+                {
+                    s_FollowHelper.StopFollowHitman();
+                }
             }
         }
     }
 }
 
-REGISTER_CHAOS_EFFECT(ZActorsFollowPlayerEffect);
+REGISTER_CHAOS_EFFECT_PARAM(normal, ZActorsFollowPlayerEffect, /* Ignore All Else? */ false);
+REGISTER_CHAOS_EFFECT_PARAM(nobrain, ZActorsFollowPlayerEffect, /* Ignore All Else? */ true);
