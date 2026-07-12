@@ -15,6 +15,7 @@ struct SStandDanceMatActEntityBinding : public SEntityBinding
     PROPERTY_RO(bool, m_bActive);                                // Whether act is active.
     PROPERTY(bool, m_bExpertMode);                               // Whether dance animation uses normal or expert mode. Expert mode is faster. Cannot be changed after Start is triggered.
     PROPERTY_RO(TEntityRef<ZSpatialEntity>, m_rWaypointSpatial); // Spatial that NPC will perform act at. Location cannot be changed after Start is triggered.
+    PROPERTY(ESituationAvailability, m_eSituationType);          // Set Situation type / priority. ESA_AMBIENCE can be overriden by most other behavior, while ESA_OVR_ALL overrides all.
 
     INPUT_PIN(Start);         // Start act. NPC will stop current act and start moving towards m_rWaypointSpatial, then perform dance animation there. If m_bExpertMode is true, NPC will perform expert mode dance animation, which is faster than normal mode.
     INPUT_PIN(Cancel);        // Cancel act. NPC will resume normal behaviour.
