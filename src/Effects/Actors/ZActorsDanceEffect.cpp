@@ -45,6 +45,9 @@ void ZActorsDanceEffect::SetAllActorsDancing(const bool p_bDancing)
                         // move target spatial to actor position
                         s_rActSpatial.m_pInterfaceRef->SetObjectToWorldMatrixFromEditor(s_rActorSpatial.m_pInterfaceRef->GetObjectToWorldMatrix());
 
+                        // ignore everything else
+                        s_Helper.m_eSituationType = ESituationAvailability::ESA_OVR_ALL;
+
                         // start act, without snapping to pos
                         s_Helper.m_MovementType = ZActBehaviorEntity_EMovementType::MT_WALK;
                         s_Helper.Start();
@@ -71,6 +74,9 @@ void ZActorsDanceEffect::SetAllActorsDancing(const bool p_bDancing)
 
                         // randomly set expert mode for 20% of actors
                         s_Helper.m_bExpertMode = Math::GetRandomBool(0.2f);
+
+                        // ignore everything else
+                        s_Helper.m_eSituationType = ESituationAvailability::ESA_OVR_ALL;
 
                         // start act, without snapping to pos
                         s_Helper.m_MovementType = ZActBehaviorEntity_EMovementType::MT_WALK;
@@ -99,6 +105,9 @@ void ZActorsDanceEffect::SetAllActorsDancing(const bool p_bDancing)
                         // select default mode
                         // TODO: use different modes ???
                         s_Helper.m_nMode = SFlamingoDanceActEntityBinding::MODE_DEFAULT;
+
+                        // ignore everything else
+                        s_Helper.m_eSituationType = ESituationAvailability::ESA_OVR_ALL;
 
                         // start act, without snapping to pos
                         s_Helper.m_MovementType = ZActBehaviorEntity_EMovementType::MT_WALK;
