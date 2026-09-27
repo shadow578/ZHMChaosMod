@@ -271,9 +271,25 @@ ZEntityBlueprintFactoryBase* Utils::GetEntityBlueprintFactoryFor(ZEntityRef p_rE
             {
                 const auto* s_pAspectBPFactory = reinterpret_cast<const ZAspectEntityBlueprintFactory*>(s_pBPFactory);
 
-                const auto s_AspectSubIndex = s_pAspectBPFactory->m_aSubEntitiesLookUp[s_nSubIndex];
+                int s_AspectSubIndex = -1;
+                if (s_pAspectBPFactory->m_aSubEntitiesLookUp.m_pBegin && s_pAspectBPFactory->m_aSubEntitiesLookUp.m_pEnd)
+                {
+                    for (auto it = s_pAspectBPFactory->m_aSubEntitiesLookUp.m_pBegin; it != s_pAspectBPFactory->m_aSubEntitiesLookUp.m_pEnd; ++it)
+                    {
+                        if (it->m_nAspectIdx == s_nSubIndex)
+                        {
+                            s_AspectSubIndex = it->m_nSubentityIdx;
+                            break;
+                        }
+                    }
+                }
 
-                s_pBPFactory = reinterpret_cast<ZEntityBlueprintFactoryBase*>(s_pAspectBPFactory->m_aBlueprintFactories[s_AspectSubIndex.m_nSubentityIdx]);
+                if (s_AspectSubIndex == -1)
+                {
+                    return nullptr;
+                }
+
+                s_pBPFactory = reinterpret_cast<ZEntityBlueprintFactoryBase*>(s_pAspectBPFactory->m_aBlueprintFactories[s_AspectSubIndex]);
             }
 
             // may have re-resolved the bp pointer (aspect entity), so check again to be sure.
