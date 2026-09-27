@@ -68,18 +68,14 @@ DEFINE_PLUGIN_DETOUR(ZDisableInputsEffect, bool, OnInputActionDigital, ZInputAct
     return HookResult<bool>(HookAction::Continue());
 }
 
-DEFINE_PLUGIN_DETOUR(ZDisableInputsEffect, double, OnInputActionAnalog, ZInputAction* th, int a2)
+DEFINE_PLUGIN_DETOUR(ZDisableInputsEffect, float32, OnInputActionAnalog, ZInputAction* th, int a2)
 {
     if (m_bEnable)
     {
-        // note: hook uses float32, but typed as float64.
-        // so we need to unpack and repack to/from float32.
-        auto s_fValue = 0.0f;
-        auto s_fValueReturn = *Utils::CastRaw<float64>(&s_fValue);
-        return {HookAction::Return(), s_fValueReturn};
+        return {HookAction::Return(), 0.0f};
     }
 
-    return HookResult<float64>(HookAction::Continue());
+    return HookResult<float32>(HookAction::Continue());
 }
 
 REGISTER_CHAOS_EFFECT(ZDisableInputsEffect)

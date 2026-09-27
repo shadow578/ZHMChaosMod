@@ -54,5 +54,5 @@ class ZPlayerTeleportMovementEffect : public IChaosEffect
     EState m_eState = EState::DISABLED;
     float32 m_fCooldownRemaining = 0.0f;
 
-    DECLARE_PLUGIN_DETOUR(ZPlayerTeleportMovementEffect, double, OnInputActionAnalog, ZInputAction* th, int a2);
+    DECLARE_PLUGIN_DETOUR(ZPlayerTeleportMovementEffect, float32, OnInputActionAnalog, ZInputAction* th, int a2);
 };

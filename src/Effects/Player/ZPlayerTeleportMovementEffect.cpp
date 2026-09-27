@@ -184,7 +184,7 @@ ZPlayerTeleportMovementEffect::ETeleportResult ZPlayerTeleportMovementEffect::Pe
     return ETeleportResult::SUCCESS;
 }
 
-DEFINE_PLUGIN_DETOUR(ZPlayerTeleportMovementEffect, double, OnInputActionAnalog, ZInputAction* th, int a2)
+DEFINE_PLUGIN_DETOUR(ZPlayerTeleportMovementEffect, float32, OnInputActionAnalog, ZInputAction* th, int a2)
 {
     if (m_eState != EState::DISABLED)
     {
@@ -194,11 +194,7 @@ DEFINE_PLUGIN_DETOUR(ZPlayerTeleportMovementEffect, double, OnInputActionAnalog,
         const bool s_bIsHorizontalMovement = s_sName == InputActionNames::Keyboard::c_sHorizontal || s_sName == InputActionNames::Controller::c_sLeftStickHorizontal;
         if (s_bIsVerticalMovement || s_bIsHorizontalMovement)
         {
-            auto s_fValueRaw = p_Hook->CallOriginal(th, a2);
-
-            // note: hook uses float32, but typed as float64.
-            // so we need to unpack and repack to/from float32.
-            auto s_fValue = *Utils::CastRaw<float32>(&s_fValueRaw);
+            auto s_fValue = p_Hook->CallOriginal(th, a2);
 
             // for positive vertical movement (= walk forward), trigger teleport
             // only if above threshold to prevent accidental activation (only relevant for controllers!)
@@ -207,15 +203,11 @@ DEFINE_PLUGIN_DETOUR(ZPlayerTeleportMovementEffect, double, OnInputActionAnalog,
                 m_eState = EState::TELEPORT_NEXT_FRAME;
             }
 
-            // disable all movement via inputs while active
-            s_fValue = 0.0f;
-
-            auto s_fValueReturn = *Utils::CastRaw<float64>(&s_fValue);
-            return {HookAction::Return(), s_fValueReturn};
+            return {HookAction::Return(), 0.0f};
         }
     }
 
-    return HookResult<float64>(HookAction::Continue());
+    return HookResult<float32>(HookAction::Continue());
 }
 
 std::string_view ZPlayerTeleportMovementEffect::StateToName(const EState p_eState)
