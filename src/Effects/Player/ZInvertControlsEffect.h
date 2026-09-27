@@ -22,5 +22,5 @@ class ZInvertControlsEffect : public IChaosEffect
   private:
     bool m_bEnable = false;
 
-    DECLARE_PLUGIN_DETOUR(ZInvertControlsEffect, double, OnInputActionAnalog, ZInputAction* th, int a2);
+    DECLARE_PLUGIN_DETOUR(ZInvertControlsEffect, float32, OnInputActionAnalog, ZInputAction* th, int a2);
 };

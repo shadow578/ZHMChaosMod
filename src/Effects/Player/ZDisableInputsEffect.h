@@ -28,5 +28,5 @@ class ZDisableInputsEffect : public IChaosEffect
     bool m_bEnable = false;
 
     DECLARE_PLUGIN_DETOUR(ZDisableInputsEffect, bool, OnInputActionDigital, ZInputAction* th, int a2);
-    DECLARE_PLUGIN_DETOUR(ZDisableInputsEffect, double, OnInputActionAnalog, ZInputAction* th, int a2);
+    DECLARE_PLUGIN_DETOUR(ZDisableInputsEffect, float32, OnInputActionAnalog, ZInputAction* th, int a2);
 };

@@ -27,5 +27,5 @@ class ZForceForwardMovementEffect : public IChaosEffect
   private:
     bool m_bEnable = false;
 
-    DECLARE_PLUGIN_DETOUR(ZForceForwardMovementEffect, double, OnInputActionAnalog, ZInputAction* th, int a2);
+    DECLARE_PLUGIN_DETOUR(ZForceForwardMovementEffect, float32, OnInputActionAnalog, ZInputAction* th, int a2);
 };
