@@ -7,7 +7,8 @@
 #include <Logging.h>
 
 #include <queue>
-#include <limits>
+
+#include "Utils.h"
 
 #define TAG "[EntityUtils] "
 
@@ -134,7 +135,7 @@ bool Utils::ZEntityFinder::Evaluate(const ZEntityRef& p_rEntity, ZEntityBlueprin
 
 std::string_view Utils::GetEntityName(const ZEntityRef& p_Entity, ZEntityBlueprintFactoryBase* p_pFactory, int p_nSubIndex)
 {
-    if (!p_Entity)
+    if (!IsReasonableEntityRef(p_Entity))
     {
         return "";
     }
@@ -187,7 +188,7 @@ std::string_view Utils::GetEntityName(const ZEntityRef& p_Entity, ZEntityBluepri
 
 std::string_view Utils::GetEntityTypeName(const ZEntityRef& p_Entity)
 {
-    if (!p_Entity)
+    if (!IsReasonableEntityRef(p_Entity))
     {
         return "";
     }
@@ -216,28 +217,15 @@ std::string_view Utils::GetEntityTypeName(const ZEntityRef& p_Entity)
 /// Heuristic checks for validity of blueprint factory pointers, checking for common failure cases after.
 static bool IsValidBlueprintFactoryPointer(ZEntityBlueprintFactoryBase* p_pBpFactory)
 {
-    // nullptr?
-    if (!p_pBpFactory)
+    if (!Utils::IsReasonablePointer(p_pBpFactory))
     {
 #if _DEBUG
-        Logger::Error(TAG "Blueprint factory pointer is null.");
+        Logger::Error(TAG "Got likely invalid blueprint factory pointer {}.", p_pBpFactory);
 #endif
 
         return false;
     }
 
-    // seen invalid pointers with all bits set, check that too
-    std::uintptr_t s_nPtr = reinterpret_cast<std::uintptr_t>(p_pBpFactory);
-    if (s_nPtr == std::numeric_limits<std::uintptr_t>::max())
-    {
-#if _DEBUG
-        Logger::Error(TAG "Blueprint factory pointer is 0xFFFF(...).");
-#endif
-
-        return false;
-    }
-
-    // hopefully OK
     return true;
 }
 
@@ -307,7 +295,7 @@ ZEntityBlueprintFactoryBase* Utils::GetEntityBlueprintFactoryFor(ZEntityRef p_rE
 
 ZEntityRef Utils::GetSubEntity(const ZEntityRef p_rParent, const uint64_t p_nSubEntityId, ZEntityBlueprintFactoryBase* p_pForcedBPFactory)
 {
-    if (!p_rParent)
+    if (!IsReasonableEntityRef(p_rParent))
     {
         return {};
     }
@@ -329,4 +317,36 @@ ZEntityRef Utils::GetSubEntity(const ZEntityRef p_rParent, const uint64_t p_nSub
     }
 
     return {};
+}
+
+
+bool Utils::IsReasonableEntityRef(const ZEntityRef& p_rEntity)
+{
+    if (!p_rEntity)
+    {
+        return false;
+    }
+
+    if (!Utils::IsReasonablePointer(p_rEntity.m_pObj))
+    {
+        return false;
+    }
+
+    if (!Utils::IsReasonablePointer(p_rEntity.GetEntity()))
+    {
+        return false;
+    }
+
+    if (!Utils::IsReasonablePointer(p_rEntity->GetType()))
+    {
+        return false;
+    }
+
+    const auto s_nEid = p_rEntity->GetType()->m_nEntityID;
+    if (s_nEid == 0 || s_nEid == 0xFFFFFFFF)
+    {
+        return false;
+    }
+
+    return true;
 }

@@ -122,6 +122,12 @@ namespace Utils
     ZEntityRef GetSubEntity(const ZEntityRef p_rParent, const uint64_t p_nSubEntityId, ZEntityBlueprintFactoryBase* p_pForcedBPFactory = nullptr);
 
     /**
+     * Check if an entity reference is reasonable, i.e. not null and not likely to be invalid.
+     * @param p_rEntity The entity reference to check.
+     */
+    bool IsReasonableEntityRef(const ZEntityRef& p_rEntity);
+
+    /**
      * safely get a property from an entity. Returns std::nullopt if failed or invalid.
      * @template T The property type.
      * @param p_rEntity The entity to get the property from. if invalid, returns std::nullopt.
@@ -130,7 +136,7 @@ namespace Utils
     template <typename T>
     std::optional<T> GetProperty(const ZEntityRef& p_rEntity, const std::string& p_sProperty)
     {
-        if (!p_rEntity)
+        if (!IsReasonableEntityRef(p_rEntity))
         {
             return std::nullopt;
         }
@@ -156,7 +162,7 @@ namespace Utils
     template <typename T>
     inline bool SetProperty(ZEntityRef& p_rEntity, const std::string& p_sProperty, const T& p_Value, bool p_bInvokeChangeHandlers = true)
     {
-        if (!p_rEntity)
+        if (!IsReasonableEntityRef(p_rEntity))
         {
             return false;
         }
