@@ -10,6 +10,8 @@
 #include <string_view>
 #include <optional>
 
+#include "Utils.h"
+
 #define TAG "[EntityUtils] "
 
 namespace Utils
@@ -126,6 +128,12 @@ namespace Utils
      * @param p_rEntity The entity reference to check.
      */
     bool IsReasonableEntityRef(const ZEntityRef& p_rEntity);
+    template <typename T>
+    inline bool IsReasonableEntityRef(const TEntityRef<T>& p_rEntity)
+    {
+        return IsReasonableEntityRef(p_rEntity.m_entityRef) 
+            && Utils::IsReasonablePointer(p_rEntity.m_pInterfaceRef);
+    }
 
     /**
      * safely get a property from an entity. Returns std::nullopt if failed or invalid.

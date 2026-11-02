@@ -8,8 +8,6 @@
 
 #include <queue>
 
-#include "Utils.h"
-
 #define TAG "[EntityUtils] "
 
 std::vector<ZEntityRef> Utils::ZEntityFinder::Find(const size_t p_nMaxResults) const
@@ -220,7 +218,7 @@ static bool IsValidBlueprintFactoryPointer(ZEntityBlueprintFactoryBase* p_pBpFac
     if (!Utils::IsReasonablePointer(p_pBpFactory))
     {
 #if _DEBUG
-        Logger::Error(TAG "Got likely invalid blueprint factory pointer {}.", p_pBpFactory);
+        Logger::Error(TAG "Got likely invalid blueprint factory pointer {:016X}.", reinterpret_cast<uintptr_t>(p_pBpFactory));
 #endif
 
         return false;
@@ -343,7 +341,7 @@ bool Utils::IsReasonableEntityRef(const ZEntityRef& p_rEntity)
     }
 
     const auto s_nEid = p_rEntity->GetType()->m_nEntityID;
-    if (s_nEid == 0 || s_nEid == 0xFFFFFFFF)
+    if (s_nEid == 0 /* || s_nEid == 0xFFFFFFFF */)
     {
         return false;
     }

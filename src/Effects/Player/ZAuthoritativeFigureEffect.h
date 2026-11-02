@@ -15,6 +15,7 @@ class ZAuthoritativeFigureEffect : public IChaosEffect
     void Start() override;
     void Stop() override;
     bool Available() const override;
+    void OnDrawDebugUI() override;
 
     std::string GetDisplayName(const bool p_bVoting) const override
     {
