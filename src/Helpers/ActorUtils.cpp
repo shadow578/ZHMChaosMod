@@ -23,7 +23,9 @@ std::vector<TEntityRef<ZActor>> Utils::GetActors(const bool p_bIncludeDead, cons
 
     for (auto& s_rActor : Globals::ActorManager->m_activatedActors)
     {
-        if (!s_rActor)
+        if (!s_rActor
+            || !Utils::IsReasonableEntityRef(s_rActor)
+            || !s_rActor.m_pInterfaceRef->m_bEnabled)
         {
             continue;
         }

@@ -46,4 +46,14 @@ namespace Utils
      * Convert a string to lowercase, without modifying the input string.
      */
     std::string ToLower(const std::string& p_sInput);
+
+    /**
+     * Heuristic check if a pointer can be considered reasonable, checking
+     * for common failure cases observed in the engine.
+     * If this function returns false, the pointer is likely invalid and should not be dereferenced.
+     * TL;DR: this is basically a fancy nullptr check.
+     *
+     * @param p_pPtr Pointer to check.
+     */
+    bool IsReasonablePointer(const void* p_pPtr);
 }; // namespace Utils

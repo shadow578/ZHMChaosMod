@@ -6,6 +6,7 @@
 #include <Glacier/ZSpatialEntity.h>
 #include <Glacier/ZContentKitManager.h>
 
+#include "Helpers/Utils.h"
 #include "Helpers/EntityUtils.h"
 #include "Entity/EntityIds.h"
 
@@ -66,13 +67,13 @@ bool Utils::TeleportPlayer(const SMatrix p_mTransform, SMatrix& p_mOldTransform,
 bool Utils::SetPlayerOutfit(const std::string& p_sCommonName, TEntityRef<ZGlobalOutfitKit>& p_OutfitOut)
 {
     const auto s_Player = Utils::GetLocalPlayer();
-    if (!s_Player)
+    if (!Utils::IsReasonableEntityRef(s_Player))
     {
         return false;
     }
 
     const auto* s_pContentKitManager = Globals::ContentKitManager;
-    if (!s_pContentKitManager)
+    if (!Utils::IsReasonablePointer(s_pContentKitManager))
     {
         return false;
     }
@@ -80,7 +81,7 @@ bool Utils::SetPlayerOutfit(const std::string& p_sCommonName, TEntityRef<ZGlobal
     for (const auto& s_KV : s_pContentKitManager->m_repositoryGlobalOutfitKits)
     {
         const auto& s_OutfitKit = s_KV.second;
-        if (!s_OutfitKit || !s_OutfitKit.m_pInterfaceRef)
+        if (!Utils::IsReasonableEntityRef(s_OutfitKit))
         {
             continue;
         }

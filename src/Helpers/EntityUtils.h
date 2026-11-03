@@ -10,6 +10,8 @@
 #include <string_view>
 #include <optional>
 
+#include "Utils.h"
+
 #define TAG "[EntityUtils] "
 
 namespace Utils
@@ -122,6 +124,18 @@ namespace Utils
     ZEntityRef GetSubEntity(const ZEntityRef p_rParent, const uint64_t p_nSubEntityId, ZEntityBlueprintFactoryBase* p_pForcedBPFactory = nullptr);
 
     /**
+     * Check if an entity reference is reasonable, i.e. not null and not likely to be invalid.
+     * @param p_rEntity The entity reference to check.
+     */
+    bool IsReasonableEntityRef(const ZEntityRef& p_rEntity);
+    template <typename T>
+    inline bool IsReasonableEntityRef(const TEntityRef<T>& p_rEntity)
+    {
+        return IsReasonableEntityRef(p_rEntity.m_entityRef)
+               && Utils::IsReasonablePointer(p_rEntity.m_pInterfaceRef);
+    }
+
+    /**
      * safely get a property from an entity. Returns std::nullopt if failed or invalid.
      * @template T The property type.
      * @param p_rEntity The entity to get the property from. if invalid, returns std::nullopt.
@@ -130,15 +144,21 @@ namespace Utils
     template <typename T>
     std::optional<T> GetProperty(const ZEntityRef& p_rEntity, const std::string& p_sProperty)
     {
-        if (!p_rEntity)
+        if (!IsReasonableEntityRef(p_rEntity))
         {
             return std::nullopt;
         }
 
         auto s_PropValue = p_rEntity.GetProperty<T>(p_sProperty);
+        if (s_PropValue.IsEmpty())
+        {
+            Logger::Debug(TAG "Failed to get '{}' on EID {:016X}: was null.", p_sProperty, p_rEntity ? p_rEntity.GetEntity()->GetType()->m_nEntityID : 0);
+            return std::nullopt;
+        }
+
         if (!s_PropValue.Is<T>())
         {
-            Logger::Warn(TAG "Failed to get '{}' on EID {:016X}", p_sProperty, p_rEntity ? p_rEntity.GetEntity()->GetType()->m_nEntityID : 0);
+            Logger::Warn(TAG "Failed to get '{}' on EID {:016X}: type is mismatched!", p_sProperty, p_rEntity ? p_rEntity.GetEntity()->GetType()->m_nEntityID : 0);
             return std::nullopt;
         }
 
@@ -156,7 +176,7 @@ namespace Utils
     template <typename T>
     inline bool SetProperty(ZEntityRef& p_rEntity, const std::string& p_sProperty, const T& p_Value, bool p_bInvokeChangeHandlers = true)
     {
-        if (!p_rEntity)
+        if (!IsReasonableEntityRef(p_rEntity))
         {
             return false;
         }
