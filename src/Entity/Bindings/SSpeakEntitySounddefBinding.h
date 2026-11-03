@@ -1,13 +1,15 @@
 #pragma once
 #include "Entity/Bindings/EntityBinding.h"
 
+class ZActor;
+
 // [modules:/zspeakentity_sounddef.class].pc_entitytype
 struct SSpeakEntitySounddefBinding : SEntityBinding
 {
     using SEntityBinding::SEntityBinding;
 
     PROPERTY(ZEntityRef, m_rActor);            // actor who will speak
-    PROPERTY_RO(ZEntityRef, m_rSpeakingActor); // while speaking == m_rActor, null when not speaking
+    PROPERTY_RO(TEntityRef<ZActor>, m_rSpeakingActor); // while speaking == m_rActor, null when not speaking
     PROPERTY(EGestureCategory, m_eGesture);    // gesture to play while speaking
     PROPERTY(EActorSoundDefs, m_eSoundDef);    // sounddef to speak
     PROPERTY(bool, m_bAllowInterrupt);         // allow interrupting currently playing speech with this one
