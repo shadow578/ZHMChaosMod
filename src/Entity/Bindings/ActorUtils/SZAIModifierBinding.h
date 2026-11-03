@@ -5,10 +5,14 @@
 
 // [modules:/zaimodifieractor.class].pc_entitytype
 // [modules:/zaimodifierrole.class].pc_entitytype
-struct SAIModifierBinding : public SEntityBinding
+// [assembly:/templates/gameplay/ai2/actors.template?/npcactor.entitytemplate].pc_entitytype
+// Sub-entity _ChaosMod_ActorUtils/AIModifierActor of NPCActor, introduced by patch
+// NPCActor/ActorUtils.entity.patch.json in version 1.6.0 of Companion Mod.
+struct SZAIModifierActorBinding : public SEntityBinding
 {
     using SEntityBinding::SEntityBinding;
 
+    PROPERTY(ZEntityRef, m_pActor); // actor reference, set to parent actor in ActorUtils patch.
     PROPERTY(EAIModifierScope, m_nScope);
     PROPERTY(bool, m_bIgnoreLowNoise);
     PROPERTY(bool, m_bIgnoreSillyHitman);

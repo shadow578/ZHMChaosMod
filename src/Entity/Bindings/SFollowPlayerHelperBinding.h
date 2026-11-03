@@ -1,7 +1,7 @@
 #pragma once
 #include "Entity/Bindings/EntityBinding.h"
 
-#include "SAIModifierBinding.h"
+#include "ActorUtils/SZAIModifierBinding.h"
 #include "Entity/BehaviorTreeMatch.h"
 
 #include <Glacier/Enums.h>
@@ -14,7 +14,7 @@ struct SFollowPlayerHelperBinding : SEntityBinding
     using SEntityBinding::SEntityBinding;
 
     PROPERTY_RO(ZEntityRef, m_rAIModifier); // Reference to ZAIModifier sub-entity
-    MEMBER_BINDING(SAIModifierBinding, m_AIModifierBinding, m_rAIModifier);
+    MEMBER_BINDING(SZAIModifierActorBinding, m_AIModifierBinding, m_rAIModifier);
 
     PROPERTY(float32, m_fMinTetherRange);   // Minimum distance to the player before the stops walking
     PROPERTY(float32, m_fMaxTetherRange);   // Maximum distance to the player before the actor starts moving to catch up

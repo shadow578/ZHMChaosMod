@@ -137,6 +137,29 @@ namespace EntityId
                 // > FlamingoDance
                 constexpr entityId_t FlamingoDance = 0xcafecaa57d32d0a0;
             } // namespace ActLibrary
+
+            // NPCActor/ActorUtils.entity.patch
+            // NPCActor > _ChaosMod_ActorUtils
+            namespace ActorUtils
+            {
+                // > ActorAIPerceptibilityDisable
+                constexpr entityId_t ActorAIPerceptibilityDisable = 0xcafe14e90caae055;
+
+                // > ActorProxy
+                constexpr entityId_t ActorProxy = 0xcafe0197a1ed5c09;
+
+                // > AIGoal
+                constexpr entityId_t AIGoal = 0xcafe0197a1ed5c09;
+
+                // > AIModifierActor
+                constexpr entityId_t AIModifierActor = 0xcafe0197a1ed5c09;
+
+                // > RagdollAttacher
+                constexpr entityId_t RagdollAttacher = 0xcafe5aad523a40be;
+
+                // > SpeakEntity_SoundDef
+                constexpr entityId_t SpeakEntitySoundDef = 0xcafe9f18b9d9e7a5;
+            } // namespace ActorUtils
         } // namespace NPCActor
 
         /// [assembly:/_pro/scenes/bricks/gameessentialsbase.brick].pc_entitytype

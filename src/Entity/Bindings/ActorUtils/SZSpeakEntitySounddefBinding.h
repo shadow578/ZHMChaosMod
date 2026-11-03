@@ -4,11 +4,14 @@
 class ZActor;
 
 // [modules:/zspeakentity_sounddef.class].pc_entitytype
-struct SSpeakEntitySounddefBinding : SEntityBinding
+// [assembly:/templates/gameplay/ai2/actors.template?/npcactor.entitytemplate].pc_entitytype
+// Sub-entity _ChaosMod_ActorUtils/SpeakEntity_SoundDef of NPCActor, introduced by patch
+// NPCActor/ActorUtils.entity.patch.json in version 1.6.0 of Companion Mod.
+struct SZSpeakEntitySounddefBinding : SEntityBinding
 {
     using SEntityBinding::SEntityBinding;
 
-    PROPERTY(ZEntityRef, m_rActor);                    // actor who will speak
+    PROPERTY(ZEntityRef, m_rActor);                    // actor who will speak. Set to parent actor in ActorUtils.
     PROPERTY_RO(TEntityRef<ZActor>, m_rSpeakingActor); // while speaking == m_rActor, null when not speaking
     PROPERTY(EGestureCategory, m_eGesture);            // gesture to play while speaking
     PROPERTY(EActorSoundDefs, m_eSoundDef);            // sounddef to speak
@@ -21,9 +24,9 @@ struct SSpeakEntitySounddefBinding : SEntityBinding
     // INPUT_PIN(SetIActor);
     // INPUT_PIN(SetIActor_Actor);
 
-    OUTPUT_PIN(Completed);
-    OUTPUT_PIN(Done);
-    OUTPUT_PIN(Aborted);
+    // OUTPUT_PIN(Completed);
+    // OUTPUT_PIN(Done);
+    // OUTPUT_PIN(Aborted);
 
     inline bool IsSpeaking() const
     {
