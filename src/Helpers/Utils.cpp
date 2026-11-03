@@ -104,7 +104,7 @@ bool Utils::IsReasonablePointer(const void* p_pPtr)
     {
         return false;
     }
-    */   
+    */
 
     // looks reasonable enough
     return true;

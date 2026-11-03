@@ -42,8 +42,8 @@ void ZAuthoritativeFigureEffect::Start()
     m_bOriginalWeaponsAllowed = m_SelectedOutfit.m_pInterfaceRef->m_bWeaponsAllowed;
 
     // make outfit a authoritative figure
-    //m_SelectedOutfit.m_pInterfaceRef->m_bAuthorityFigure = true;
-    //m_SelectedOutfit.m_pInterfaceRef->m_bWeaponsAllowed = true;
+    // m_SelectedOutfit.m_pInterfaceRef->m_bAuthorityFigure = true;
+    // m_SelectedOutfit.m_pInterfaceRef->m_bWeaponsAllowed = true;
 }
 
 void ZAuthoritativeFigureEffect::Stop()
@@ -53,8 +53,8 @@ void ZAuthoritativeFigureEffect::Stop()
         return;
     }
 
-    //m_SelectedOutfit.m_pInterfaceRef->m_bAuthorityFigure = m_bOriginalAuthorityFigure;
-    //m_SelectedOutfit.m_pInterfaceRef->m_bWeaponsAllowed = m_bOriginalWeaponsAllowed;
+    // m_SelectedOutfit.m_pInterfaceRef->m_bAuthorityFigure = m_bOriginalAuthorityFigure;
+    // m_SelectedOutfit.m_pInterfaceRef->m_bWeaponsAllowed = m_bOriginalWeaponsAllowed;
 }
 
 bool ZAuthoritativeFigureEffect::Available() const
@@ -62,13 +62,12 @@ bool ZAuthoritativeFigureEffect::Available() const
     return IChaosEffect::Available() && Globals::ContentKitManager != nullptr;
 }
 
-
 void ZAuthoritativeFigureEffect::OnDrawDebugUI()
 {
     ImGui::TextUnformatted("Outfits:");
     for (auto s_sOutfitName : m_aOutfitCommonNames)
     {
-        if (ImGui::Button(s_sOutfitName.c_str())) 
+        if (ImGui::Button(s_sOutfitName.c_str()))
         {
             if (!Utils::SetPlayerOutfit(s_sOutfitName, m_SelectedOutfit))
             {

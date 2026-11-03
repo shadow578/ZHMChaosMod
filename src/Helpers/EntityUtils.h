@@ -131,8 +131,8 @@ namespace Utils
     template <typename T>
     inline bool IsReasonableEntityRef(const TEntityRef<T>& p_rEntity)
     {
-        return IsReasonableEntityRef(p_rEntity.m_entityRef) 
-            && Utils::IsReasonablePointer(p_rEntity.m_pInterfaceRef);
+        return IsReasonableEntityRef(p_rEntity.m_entityRef)
+               && Utils::IsReasonablePointer(p_rEntity.m_pInterfaceRef);
     }
 
     /**

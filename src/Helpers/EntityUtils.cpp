@@ -59,16 +59,16 @@ std::vector<ZEntityRef> Utils::ZEntityFinder::Find(const size_t p_nMaxResults) c
             const ZEntityRef s_rSubEntity = s_pCurrentFactory->GetSubEntity(s_rCurrentRoot.m_pObj, i);
             const auto s_pSubEntityFactory = s_pCurrentFactory->GetSubEntityBlueprint(i);
 
-            if (!s_rSubEntity 
-                || !s_rSubEntity->GetType() 
+            if (!s_rSubEntity
+                || !s_rSubEntity->GetType()
                 || !Utils::IsReasonableEntityRef(s_rSubEntity))
             {
                 continue;
             }
 
             // if the sub-entity has a factory with more sub-entities, add it to the queue.
-            if (s_pSubEntityFactory 
-                && Utils::IsReasonablePointer(s_pSubEntityFactory) 
+            if (s_pSubEntityFactory
+                && Utils::IsReasonablePointer(s_pSubEntityFactory)
                 && s_pSubEntityFactory->GetSubEntitiesCount() > 0)
             {
                 s_aNodeQueue.emplace_back(s_pSubEntityFactory, s_rSubEntity);
