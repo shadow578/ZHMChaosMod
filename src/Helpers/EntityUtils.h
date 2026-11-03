@@ -150,9 +150,15 @@ namespace Utils
         }
 
         auto s_PropValue = p_rEntity.GetProperty<T>(p_sProperty);
+        if (s_PropValue.IsEmpty())
+        {
+            Logger::Debug(TAG "Failed to get '{}' on EID {:016X}: was null.", p_sProperty, p_rEntity ? p_rEntity.GetEntity()->GetType()->m_nEntityID : 0);
+            return std::nullopt;
+        }
+
         if (!s_PropValue.Is<T>())
         {
-            Logger::Warn(TAG "Failed to get '{}' on EID {:016X}", p_sProperty, p_rEntity ? p_rEntity.GetEntity()->GetType()->m_nEntityID : 0);
+            Logger::Warn(TAG "Failed to get '{}' on EID {:016X}: type is mismatched!", p_sProperty, p_rEntity ? p_rEntity.GetEntity()->GetType()->m_nEntityID : 0);
             return std::nullopt;
         }
 

@@ -32,48 +32,52 @@ std::vector<ZEntityRef> Utils::ZEntityFinder::Find(const size_t p_nMaxResults) c
 
     for (const auto& s_Brick : s_pSceneCtx->m_aLoadedBricks)
     {
-        const auto s_Entity = s_Brick.m_EntityRef;
-        if (!s_Entity)
+        const auto s_rEntity = s_Brick.m_EntityRef;
+        if (!Utils::IsReasonableEntityRef(s_rEntity))
         {
             continue;
         }
 
-        const auto s_pBpFactory = s_Entity.GetBlueprintFactory();
-        if (!s_pBpFactory)
+        const auto s_pBpFactory = s_rEntity.GetBlueprintFactory();
+        if (!s_pBpFactory || !Utils::IsReasonablePointer(s_pBpFactory))
         {
             continue;
         }
 
-        s_aNodeQueue.emplace_back(s_pBpFactory, s_Entity);
+        s_aNodeQueue.emplace_back(s_pBpFactory, s_rEntity);
     }
 
     while (s_nCurrentQueueIndex < s_aNodeQueue.size())
     {
-        auto [s_pCurrentFactory, s_CurrentRoot] = s_aNodeQueue[s_nCurrentQueueIndex];
+        auto [s_pCurrentFactory, s_rCurrentRoot] = s_aNodeQueue[s_nCurrentQueueIndex];
         s_nCurrentQueueIndex++;
 
         // go through each sub-entity
-        const auto s_SubEntityCount = s_pCurrentFactory->GetSubEntitiesCount();
-        for (int i = 0; i < s_SubEntityCount; ++i)
+        const auto s_nSubEntityCount = s_pCurrentFactory->GetSubEntitiesCount();
+        for (int i = 0; i < s_nSubEntityCount; ++i)
         {
-            const ZEntityRef s_SubEntity = s_pCurrentFactory->GetSubEntity(s_CurrentRoot.m_pObj, i);
+            const ZEntityRef s_rSubEntity = s_pCurrentFactory->GetSubEntity(s_rCurrentRoot.m_pObj, i);
             const auto s_pSubEntityFactory = s_pCurrentFactory->GetSubEntityBlueprint(i);
 
-            if (!s_SubEntity.GetEntity() || !s_SubEntity->GetType())
+            if (!s_rSubEntity 
+                || !s_rSubEntity->GetType() 
+                || !Utils::IsReasonableEntityRef(s_rSubEntity))
             {
                 continue;
             }
 
             // if the sub-entity has a factory with more sub-entities, add it to the queue.
-            if (s_pSubEntityFactory && s_pSubEntityFactory->GetSubEntitiesCount() > 0)
+            if (s_pSubEntityFactory 
+                && Utils::IsReasonablePointer(s_pSubEntityFactory) 
+                && s_pSubEntityFactory->GetSubEntitiesCount() > 0)
             {
-                s_aNodeQueue.emplace_back(s_pSubEntityFactory, s_SubEntity);
+                s_aNodeQueue.emplace_back(s_pSubEntityFactory, s_rSubEntity);
             }
 
             // add if matches
-            if (Evaluate(s_SubEntity, s_pCurrentFactory, s_pSubEntityFactory, i))
+            if (Evaluate(s_rSubEntity, s_pCurrentFactory, s_pSubEntityFactory, i))
             {
-                s_aFoundEntities.push_back(s_SubEntity);
+                s_aFoundEntities.push_back(s_rSubEntity);
 
                 // check max results limit
                 if (p_nMaxResults != 0 && s_aFoundEntities.size() >= p_nMaxResults)
@@ -316,7 +320,6 @@ ZEntityRef Utils::GetSubEntity(const ZEntityRef p_rParent, const uint64_t p_nSub
 
     return {};
 }
-
 
 bool Utils::IsReasonableEntityRef(const ZEntityRef& p_rEntity)
 {

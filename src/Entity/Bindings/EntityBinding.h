@@ -37,7 +37,7 @@ struct SEntityBinding
 
     operator bool() const
     {
-        return !!m_rEntity;
+        return m_rEntity && Utils::IsReasonableEntityRef(m_rEntity);
     }
 };
 
