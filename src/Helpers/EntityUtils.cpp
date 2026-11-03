@@ -323,22 +323,10 @@ ZEntityRef Utils::GetSubEntity(const ZEntityRef p_rParent, const uint64_t p_nSub
 
 bool Utils::IsReasonableEntityRef(const ZEntityRef& p_rEntity)
 {
-    if (!p_rEntity)
-    {
-        return false;
-    }
-
-    if (!Utils::IsReasonablePointer(p_rEntity.m_pObj))
-    {
-        return false;
-    }
-
-    if (!Utils::IsReasonablePointer(p_rEntity.GetEntity()))
-    {
-        return false;
-    }
-
-    if (!Utils::IsReasonablePointer(p_rEntity->GetType()))
+    if (!p_rEntity
+        || !Utils::IsReasonablePointer(p_rEntity.m_pObj)
+        || !Utils::IsReasonablePointer(p_rEntity.GetEntity())
+        || !Utils::IsReasonablePointer(p_rEntity->GetType()))
     {
         return false;
     }
