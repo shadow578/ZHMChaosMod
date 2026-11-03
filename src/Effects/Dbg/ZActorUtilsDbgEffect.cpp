@@ -103,7 +103,7 @@ void ZActorUtilsDbgEffect::DrawUIForActorProxy()
         auto s_ActorProxyBinding = GetActorProxyBinding(m_rTargetActor);
 
         const auto s_eDamageEvent = s_ActorProxyBinding.m_eDamageEvent.value_or(EDamageEvent::eDE_UNDEFINED);
-        if (ImGui::BeginCombo("s_eDamageEvent", g_mDamageEvents.at(s_eDamageEvent).c_str()))
+        if (ImGui::BeginCombo("m_eDamageEvent", g_mDamageEvents.at(s_eDamageEvent).c_str()))
         {
             for (auto [s_eDef, s_sName] : g_mDamageEvents)
             {
@@ -120,7 +120,7 @@ void ZActorUtilsDbgEffect::DrawUIForActorProxy()
         }
 
         const auto s_eDeathBehaviour = s_ActorProxyBinding.m_eDeathBehavior.value_or(EDeathBehavior::eDB_IMPACT_ANIM);
-        if (ImGui::BeginCombo("s_eDamageEvent", g_mDeathBehaviours.at(s_eDeathBehaviour).c_str()))
+        if (ImGui::BeginCombo("m_eDeathBehavior", g_mDeathBehaviours.at(s_eDeathBehaviour).c_str()))
         {
             for (auto [s_eDef, s_sName] : g_mDeathBehaviours)
             {
@@ -169,6 +169,18 @@ void ZActorUtilsDbgEffect::DrawUIForActorProxy()
         ACTOR_PROXY_ACTION_UI(BagAndTag);
 
 #undef ACTOR_PROXY_ACTION_UI
+
+
+        if (ImGui::Button("Pacify All"))
+        {
+            for (const auto& s_rActor : Utils::GetActors(false, false))
+            {
+                if (auto s_ActorProxyBinding = GetActorProxyBinding(s_rActor))
+                {
+                    s_ActorProxyBinding.PacifyActor();
+                }
+            }
+        }
     }
 
     ImGui::PopID();
@@ -249,6 +261,12 @@ void ZActorUtilsDbgEffect::DrawUIForAIGoal()
         if (ImGui::Button("Expire"))
         {
             s_AIGoalBinding.Expire();
+        }
+
+        if (ImGui::Button("Set target to player"))
+        {
+            const auto s_rPlayer = Utils::GetLocalPlayer();
+            s_AIGoalBinding.m_rTarget = s_rPlayer.m_entityRef;
         }
     }
 

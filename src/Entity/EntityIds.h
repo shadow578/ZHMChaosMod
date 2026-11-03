@@ -149,10 +149,10 @@ namespace EntityId
                 constexpr entityId_t ActorProxy = 0xcafe0197a1ed5c09;
 
                 // > AIGoal
-                constexpr entityId_t AIGoal = 0xcafe0197a1ed5c09;
+                constexpr entityId_t AIGoal = 0xcafeaffa1df4c799;
 
                 // > AIModifierActor
-                constexpr entityId_t AIModifierActor = 0xcafe0197a1ed5c09;
+                constexpr entityId_t AIModifierActor = 0xcafef54abc0eb7c5;
 
                 // > RagdollAttacher
                 constexpr entityId_t RagdollAttacher = 0xcafe5aad523a40be;
