@@ -15,7 +15,6 @@ void ZNearbyActorSpeakEffect::OnClearScene()
 {
     m_aActiveSpeakers.clear();
     m_bActive = false;
-    ZSpeakEntityEffectBase::OnClearScene();
 }
 
 void ZNearbyActorSpeakEffect::OnDrawDebugUI()
@@ -34,12 +33,6 @@ void ZNearbyActorSpeakEffect::OnDrawDebugUI()
     ImGui::TextUnformatted(fmt::format("Active Speakers #: {}", m_aActiveSpeakers.size()).c_str());
 
     ImGui::SeparatorText("ZSpeakEntityEffectBase");
-    ZSpeakEntityEffectBase::OnDrawDebugUI();
-}
-
-bool ZNearbyActorSpeakEffect::IsCompatibleWith(const IChaosEffect* p_pOtherEffect) const
-{
-    return ZSpeakEntityEffectBase::IsCompatibleWith(p_pOtherEffect) && !Utils::IsInstanceOf<ZSpeakEntityEffectBase>(p_pOtherEffect);
 }
 
 void ZNearbyActorSpeakEffect::Start()
@@ -111,18 +104,16 @@ void ZNearbyActorSpeakEffect::FindAndRemoveSpeakersNearby()
             continue;
         }
 
-        // start speaking
-        const auto s_SpeakerWrapper = Speak(
-            s_rActor.m_entityRef,
-            GetRandomSoundDef(),
-            EGestureCategory::EGC_None,
-            true,
-            false // defer start
-        );
+        // prepare speaking
+        auto s_SpeakBinding = GetSpeakEntityBinding(s_rActor);
+        s_SpeakBinding.m_eSoundDef = GetRandomSoundDef();
+        s_SpeakBinding.m_eGesture = EGestureCategory::EGC_None;
+        s_SpeakBinding.m_bAllowInterrupt = true;
+        // not calling .Start() here, that happens at a later time in RefreshActiveSpeakers().
 
         const SActiveSpeakerEntry s_NewEntry{
             .m_rActor = s_rActor.m_entityRef,
-            .m_SpeakBinding = s_SpeakerWrapper,
+            .m_SpeakBinding = s_SpeakBinding,
             .m_fTimeToNextRepetition = GetRepetitionDelay()
         };
         m_aActiveSpeakers.push_back(s_NewEntry);

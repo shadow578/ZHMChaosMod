@@ -1,11 +1,11 @@
 #pragma once
-#include "Effects/Base/ZSpeakEntityEffectBase.h"
+#include "Effects/Base/Companion/ZActorUtilsEffectBase.h"
 
 #include <Glacier/ZActor.h>
 
 #include <vector>
 
-class ZNearbyActorSpeakEffect : public ZSpeakEntityEffectBase
+class ZNearbyActorSpeakEffect : public ZActorUtilsEffectBase
 {
   public:
     ZNearbyActorSpeakEffect(
@@ -32,11 +32,9 @@ class ZNearbyActorSpeakEffect : public ZSpeakEntityEffectBase
 
     void OnDrawDebugUI() override;
 
-    bool IsCompatibleWith(const IChaosEffect* p_pOtherEffect) const override;
-
     std::string GetName() const override
     {
-        return ZSpeakEntityEffectBase::GetName() + "_" + m_sNameSuffix;
+        return IChaosEffect::GetName() + "_" + m_sNameSuffix;
     }
 
     std::string GetDisplayName(const bool p_bVoting) const override
@@ -63,7 +61,7 @@ class ZNearbyActorSpeakEffect : public ZSpeakEntityEffectBase
     struct SActiveSpeakerEntry
     {
         ZEntityRef m_rActor;
-        SSpeakEntitySounddefBinding m_SpeakBinding;
+        SZSpeakEntitySounddefBinding m_SpeakBinding;
         float32 m_fTimeToNextRepetition;
         int32 m_nRepetitions = 0;
     };
